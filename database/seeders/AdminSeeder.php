@@ -22,47 +22,8 @@ class AdminSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'email' => 'admin@bkolpo.com',
-                'password' => Hash::make('12345678'),
-                'show_password' => '12345678',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ]
-        );
-
-        // Add Nazrul
-        User::updateOrCreate(
-            ['email' => 'nazrul@gmail.com'],
-            [
-                'name' => 'Nazrul',
-                'email' => 'nazrul@gmail.com',
-                'password' => Hash::make('12345678'),
-                'show_password' => '12345678',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ]
-        );
-
-        // Add Asraful
-        User::updateOrCreate(
-            ['email' => 'asraful@gmail.com'],
-            [
-                'name' => 'Asraful',
-                'email' => 'asraful@gmail.com',
-                'password' => Hash::make('12345678'),
-                'show_password' => '12345678',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ]
-        );
-
-        // Add Zim
-        User::updateOrCreate(
-            ['email' => 'zim@gmail.com'],
-            [
-                'name' => 'Zim',
-                'email' => 'zim@gmail.com',
-                'password' => Hash::make('12345678'),
-                'show_password' => '12345678',
+                'password' => Hash::make('Admin@123#!'),
+                'show_password' => 'Admin@123#!',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]
