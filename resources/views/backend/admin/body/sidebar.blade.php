@@ -30,6 +30,7 @@
               </p>
             </a>
           </li>
+
           <li class="nav-item">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-project-diagram"></i>
@@ -40,13 +41,31 @@
             </a>
             <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{{ route('admin.branch') }}" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Branch List</p>
+                      <p>All</p>
                   </a>
                 </li>
             </ul>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ route('admin.create') }}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Create</p>
+                  </a>
+                </li>
+            </ul>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ route('admin.trashed') }}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Trashed</p>
+                  </a>
+                </li>
+            </ul>
+
           </li>
+
           <li class="nav-item">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fas fa-file-invoice-dollar"></i>
@@ -64,14 +83,32 @@
                     <i class="fas fa-angle-left right"></i>
                   </p>
                 </a>
+
                 <ul class="nav nav-treeview" style="display: none;">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('admin.ledgergroup') }}" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Group List</p>
+                      <p>All</p>
                     </a>
                   </li>
                 </ul>
+                <ul class="nav nav-treeview" style="display: none;">
+                  <li class="nav-item">
+                    <a href="{{ route('admin.ledgergroupcreate') }}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Create</p>
+                    </a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview" style="display: none;">
+                  <li class="nav-item">
+                    <a href="{{ route('admin.ledgergrouptrashed') }}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Trashed</p>
+                    </a>
+                  </li>
+                </ul>
+
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
