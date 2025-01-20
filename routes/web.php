@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\BranchController;
 use App\Http\Controllers\Backend\LedgerController;
+use App\Http\Controllers\Backend\BankCashController;
 
 
 
@@ -23,6 +24,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/create', [BranchController::class, 'AdminCreate'])->name('admin.create');
         Route::get('/trashed', [BranchController::class, 'AdminTrashed'])->name('admin.trashed');
     });
+    /* ==================== ========= =================== */
 
     /* ==================== Ledger =================== */
     //ledger/group
@@ -38,8 +40,15 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/create', [LedgerController::class, 'AdminLedgerNameCreate'])->name('admin.ledgernamecreate');
         Route::get('/trashed', [LedgerController::class, 'AdminLedgerNameTrashed'])->name('admin.ledgernametrashed');
     });
+    /* ==================== ========= =================== */
 
-    /* ==================== End HRM Management  All Routes =================== */
+    /* ==================== Bank Cash =================== */
+    Route::prefix('bank-cash')->group(function () {
+        Route::get('/', [BankCashController::class, 'AdminBankCash'])->name('admin.bankcash');
+        Route::get('/create', [BankCashController::class, 'AdminBankCashCreate'])->name('admin.bankcash.create');
+        Route::get('/trashed', [BankCashController::class, 'AdminBankCashTrashed'])->name('admin.bankcash.trashed');
+    });
+    /* ==================== ========= =================== */
 
     /* ==================== Start Chat Management  All Routes =================== */
     Route::prefix('chat')->group(function () {
