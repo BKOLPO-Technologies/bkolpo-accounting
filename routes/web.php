@@ -1,11 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\CompanyInformationController;
 use App\Http\Controllers\Backend\UserController;
-use App\Http\Controllers\Backend\RoleController;
 
 
 
@@ -18,9 +17,46 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.dashboard');
     Route::get('/logout', [AdminController::class, 'AdminDestroy'])->name('admin.logout');
 
-    /* ==================== Start HRM Management  All Routes =================== */
+    /* ==================== Branch =================== */
+    Route::prefix('branch')->group(function () {
+        Route::get('/', [BranchController::class, 'AdminBranch'])->name('admin.branch');
+        Route::get('/create', [BranchController::class, 'AdminCreate'])->name('admin.create');
+        Route::get('/trashed', [BranchController::class, 'AdminTrashed'])->name('admin.trashed');
+    });
+    /* ==================== ========= =================== */
 
-    /* ==================== End HRM Management  All Routes =================== */
+    /* ==================== Ledger =================== */
+    //ledger/group
+    Route::prefix('ledger/group')->group(function () {
+        Route::get('/', [LedgerController::class, 'AdminLedgerGroup'])->name('admin.ledgergroup');
+        Route::get('/create', [LedgerController::class, 'AdminLedgerGroupCreate'])->name('admin.ledgergroupcreate');
+        Route::get('/trashed', [LedgerController::class, 'AdminLedgerGroupTrashed'])->name('admin.ledgergrouptrashed');
+    });
+
+    //ledger/name
+    Route::prefix('ledger/name')->group(function () {
+        Route::get('/', [LedgerController::class, 'AdminLedgerName'])->name('admin.ledgername');
+        Route::get('/create', [LedgerController::class, 'AdminLedgerNameCreate'])->name('admin.ledgernamecreate');
+        Route::get('/trashed', [LedgerController::class, 'AdminLedgerNameTrashed'])->name('admin.ledgernametrashed');
+    });
+    /* ==================== ========= =================== */
+
+    /* ==================== Bank Cash =================== */
+    Route::prefix('bank-cash')->group(function () {
+        Route::get('/invoice', [BankCashController::class, 'AdminBankCashInvoice'])->name('admin.bankcash.invoice');
+        Route::get('/', [BankCashController::class, 'AdminBankCash'])->name('admin.bankcash');
+        Route::get('/create', [BankCashController::class, 'AdminBankCashCreate'])->name('admin.bankcash.create');
+        Route::get('/trashed', [BankCashController::class, 'AdminBankCashTrashed'])->name('admin.bankcash.trashed');
+    });
+    /* ==================== ========= =================== */
+
+    /* ==================== Invoice =================== */
+    Route::prefix('invoices')->group(function () {
+        Route::get('/', [InvoiceController::class, 'AdminInvoiceIndex'])->name('admin.invoice');
+        Route::get('/1', [InvoiceController::class, 'AdminInvoiceDetails'])->name('admin.invoiceDetails');
+        Route::get('/create', [InvoiceController::class, 'AdminInvoiceCreate'])->name('admin.invoiceCreate');    
+    });
+    /* ==================== ========= =================== */
 
     /* ==================== Start Company Information All Routes =================== */
     Route::prefix('company-information')->as('company-information.')->group(function () {
