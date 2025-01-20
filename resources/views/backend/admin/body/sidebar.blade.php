@@ -17,7 +17,6 @@
           <a href="{{ route('admin.dashboard') }}" class="d-block">Super Admin</a>
         </div>
       </div>
-
       <!-- SidebarSearch Form -->
       <!-- Sidebar Menu -->
       <nav class="mt-2">
@@ -322,8 +321,8 @@
                 </li>
             </ul>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
+          <li class="nav-item {{ Route::is('users.index','users.create','users.edit','users.show') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('users.index','users.create','users.edit','users.show') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-users"></i>
                 <p>
                 User
@@ -332,7 +331,7 @@
             </a>
             <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{{ route('users.index') }}" class="nav-link {{ Route::is('users.index','users.create','users.edit','users.show') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
                       <p>User List</p>
                   </a>
@@ -349,15 +348,15 @@
             </a>
             <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{{ route('roles.index') }}" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Role Manage</p>
+                      <p>Role List</p>
                   </a>
                 </li>
             </ul>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
+          <li class="nav-item {{ Route::is('company-information.index') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('company-information.index') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-cog"></i>
                 <p>
                 Settings
@@ -366,15 +365,9 @@
             </a>
             <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{{ route('company-information.index') }}" class="nav-link {{ Route::is('company-information.index') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>General</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>System</p>
+                      <p>Company Information</p>
                   </a>
                 </li>
             </ul>
