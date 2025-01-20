@@ -118,14 +118,32 @@
                     <i class="fas fa-angle-left right"></i>
                   </p>
                 </a>
+
                 <ul class="nav nav-treeview" style="display: none;">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('admin.ledgername') }}" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Name List</p>
+                      <p>All</p>
                     </a>
                   </li>
                 </ul>
+                <ul class="nav nav-treeview" style="display: none;">
+                  <li class="nav-item">
+                    <a href="{{ route('admin.ledgernamecreate') }}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Create</p>
+                    </a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview" style="display: none;">
+                  <li class="nav-item">
+                    <a href="{{ route('admin.ledgernametrashed') }}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Trashed</p>
+                    </a>
+                  </li>
+                </ul>
+
               </li>
             </ul>
           </li>

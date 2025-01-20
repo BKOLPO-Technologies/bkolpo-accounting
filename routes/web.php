@@ -32,6 +32,13 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/trashed', [LedgerController::class, 'AdminLedgerGroupTrashed'])->name('admin.ledgergrouptrashed');
     });
 
+    //ledger/name
+    Route::prefix('ledger/name')->group(function () {
+        Route::get('/', [LedgerController::class, 'AdminLedgerName'])->name('admin.ledgername');
+        Route::get('/create', [LedgerController::class, 'AdminLedgerNameCreate'])->name('admin.ledgernamecreate');
+        Route::get('/trashed', [LedgerController::class, 'AdminLedgerNameTrashed'])->name('admin.ledgernametrashed');
+    });
+
     /* ==================== End HRM Management  All Routes =================== */
 
     /* ==================== Start Chat Management  All Routes =================== */
