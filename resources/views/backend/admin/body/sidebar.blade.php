@@ -147,6 +147,7 @@
              </li>
            </ul>
          </li>
+
          <li class="nav-item">
            <a href="#" class="nav-link">
              <i class="nav-icon fas fa-university"></i>
@@ -180,6 +181,33 @@
              </li>
            </ul>
          </li>
+
+         <li class="nav-item">
+           <a href="#" class="nav-link">
+             <i class="nav-icon fa-solid fa-file-invoice"></i>
+             <p>
+               Invoice
+               <i class="fas fa-angle-left right"></i>
+             </p>
+           </a>
+           <ul class="nav nav-treeview" style="display: none;">
+             <li class="nav-item">
+               <a href="{{ route('admin.invoiceCreate') }}" class="nav-link">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>New Invoice</p>
+               </a>
+             </li>
+           </ul>
+           <ul class="nav nav-treeview" style="display: none;">
+             <li class="nav-item">
+               <a href="{{ route('admin.invoice') }}" class="nav-link">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>Manage Invoice</p>
+               </a>
+             </li>
+           </ul>
+         </li>
+
          <li class="nav-item">
            <a href="#" class="nav-link">
              <i class="nav-icon fas fa-receipt"></i>

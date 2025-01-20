@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\BranchController;
 use App\Http\Controllers\Backend\LedgerController;
+use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\BankCashController;
 
 
@@ -44,9 +45,18 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
     /* ==================== Bank Cash =================== */
     Route::prefix('bank-cash')->group(function () {
+        Route::get('/invoice', [BankCashController::class, 'AdminBankCashInvoice'])->name('admin.bankcash.invoice');
         Route::get('/', [BankCashController::class, 'AdminBankCash'])->name('admin.bankcash');
         Route::get('/create', [BankCashController::class, 'AdminBankCashCreate'])->name('admin.bankcash.create');
         Route::get('/trashed', [BankCashController::class, 'AdminBankCashTrashed'])->name('admin.bankcash.trashed');
+    });
+    /* ==================== ========= =================== */
+
+    /* ==================== Invoice =================== */
+    Route::prefix('invoices')->group(function () {
+        Route::get('/', [InvoiceController::class, 'AdminInvoiceIndex'])->name('admin.invoice');
+        Route::get('/1', [InvoiceController::class, 'AdminInvoiceDetails'])->name('admin.invoiceDetails');
+        Route::get('/create', [InvoiceController::class, 'AdminInvoiceCreate'])->name('admin.invoiceCreate');    
     });
     /* ==================== ========= =================== */
 

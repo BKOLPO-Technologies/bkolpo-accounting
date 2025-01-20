@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 class BankCashController extends Controller
 {
+    
+
     public function AdminBankCash() {
 
         $pageTitle = 'Admin Bank Cash';
