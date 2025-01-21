@@ -210,6 +210,32 @@
 
          <li class="nav-item">
            <a href="#" class="nav-link">
+             <i class="nav-icon fa-solid fa-file-invoice"></i>
+             <p>
+               Project
+               <i class="fas fa-angle-left right"></i>
+             </p>
+           </a>
+           <ul class="nav nav-treeview" style="display: none;">
+             <li class="nav-item">
+               <a href="{{ route('admin.projectCreate') }}" class="nav-link">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>New Project</p>
+               </a>
+             </li>
+           </ul>
+           <ul class="nav nav-treeview" style="display: none;">
+             <li class="nav-item">
+               <a href="{{ route('admin.project') }}" class="nav-link">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>Manage Project</p>
+               </a>
+             </li>
+           </ul>
+         </li>
+
+         <li class="nav-item">
+           <a href="#" class="nav-link">
              <i class="nav-icon fas fa-receipt"></i>
              <p>
                Voucher

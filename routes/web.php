@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\BranchController;
 use App\Http\Controllers\Backend\LedgerController;
 use App\Http\Controllers\Backend\InvoiceController;
+use App\Http\Controllers\Backend\ProjectController;
 use App\Http\Controllers\Backend\BankCashController;
 
 
@@ -57,6 +58,13 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [InvoiceController::class, 'AdminInvoiceIndex'])->name('admin.invoice');
         Route::get('/1', [InvoiceController::class, 'AdminInvoiceDetails'])->name('admin.invoiceDetails');
         Route::get('/create', [InvoiceController::class, 'AdminInvoiceCreate'])->name('admin.invoiceCreate');    
+    });
+    /* ==================== ========= =================== */
+
+    /* ==================== Projects =================== */
+    Route::prefix('projects')->group(function () {
+        Route::get('/', [ProjectController::class, 'AdminProjectIndex'])->name('admin.project');
+        Route::get('/create', [ProjectController::class, 'AdminProjectCreate'])->name('admin.projectCreate');
     });
     /* ==================== ========= =================== */
 
