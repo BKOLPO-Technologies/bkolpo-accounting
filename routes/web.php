@@ -3,11 +3,16 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Backend\AdminController;
+<<<<<<< HEAD
 use App\Http\Controllers\Backend\BranchController;
 use App\Http\Controllers\Backend\LedgerController;
 use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\ProjectController;
 use App\Http\Controllers\Backend\BankCashController;
+=======
+use App\Http\Controllers\Backend\CompanyInformationController;
+use App\Http\Controllers\Backend\UserController;
+>>>>>>> 5b788cfe4c538f6f4e9e3d730a0fcb396fece254
 
 
 
@@ -61,6 +66,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     });
     /* ==================== ========= =================== */
 
+<<<<<<< HEAD
     /* ==================== Projects =================== */
     Route::prefix('projects')->group(function () {
         Route::get('/', [ProjectController::class, 'AdminProjectIndex'])->name('admin.project');
@@ -72,7 +78,21 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::prefix('chat')->group(function () {
       
 
+=======
+    /* ==================== Start Company Information All Routes =================== */
+    Route::prefix('company-information')->as('company-information.')->group(function () {
+        Route::get('/', [CompanyInformationController::class, 'index'])->name('index');
+        Route::get('edit/{id}', [CompanyInformationController::class, 'edit'])->name('edit');
+        Route::post('update/{id}', [CompanyInformationController::class, 'update'])->name('update');
+>>>>>>> 5b788cfe4c538f6f4e9e3d730a0fcb396fece254
     });
+    /* ==================== End Company Information All Routes =================== */
+
+    /* ==================== Start Role All Routes =================== */
+    Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
+    Route::get('delete/{id}', [UserController::class, 'destroy'])->name('users.delete');
+    /* ==================== End Role All Routes =================== */
 });
 /* =============== End Admin Route  ============= */
 
