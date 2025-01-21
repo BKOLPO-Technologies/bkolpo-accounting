@@ -6,7 +6,6 @@
      <span class="brand-text fw-light">ERP <strong>Management System</strong></span>
    </a>
 
-<<<<<<< HEAD
    <!-- Sidebar -->
    <div class="sidebar">
      <!-- Sidebar user panel (optional) -->
@@ -884,4 +883,3 @@
     </div>
     <!-- /.sidebar -->
   </aside>
->>>>>>> 5b788cfe4c538f6f4e9e3d730a0fcb396fece254
