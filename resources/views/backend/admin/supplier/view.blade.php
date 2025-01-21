@@ -52,13 +52,13 @@
                                                 <div class="col-md-6">
 
                                                     <a href="#sendMail" data-toggle="modal" data-remote="false" class="btn btn-primary btn-md " data-type="reminder">
-                                                        <i class="icon-envelope"></i> Send Message 
+                                                        <i class="icon-envelope"></i> Send Message
                                                     </a>
 
                                                 </div>
                                                 <div class="col-md-6">
                                                     <a href="#" class="btn btn-warning btn-md">
-                                                        <i class="icon-pencil"></i> Edit Profile 
+                                                        <i class="icon-pencil"></i> Edit Profile
                                                     </a>
                                                 </div>
                                             </div>
@@ -186,7 +186,7 @@
 
                                             <div class="col-md-6">
                                                 <a href="#" class="btn btn-success btn-lg">
-                                                    <i class="icon-money3"></i> View Transactions 
+                                                    <i class="icon-money3"></i> View Transactions
                                                 </a>
                                             </div>
 
@@ -200,57 +200,57 @@
 
 
                         <div id="sendMail" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="emailModalLabel">Email</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="sendmail_form">
-                    <!-- Email Input -->
-                    <div class="form-group">
-                        <label for="mailtoc">Email</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="emailModalLabel">Email</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="sendmail_form">
+                                            <!-- Email Input -->
+                                            <div class="form-group">
+                                                <label for="mailtoc">Email</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                                    </div>
+                                                    <input type="email" class="form-control" id="mailtoc" name="mailtoc" placeholder="Email" value="stews@gmail.com">
+                                                </div>
+                                            </div>
+
+                                            <!-- Customer Name Input -->
+                                            <div class="form-group">
+                                                <label for="customername">Customer Name</label>
+                                                <input type="text" class="form-control" id="customername" name="customername" value="GPH Ispat Ltd.">
+                                            </div>
+
+                                            <!-- Subject Input -->
+                                            <div class="form-group">
+                                                <label for="subject">Subject</label>
+                                                <input type="text" class="form-control" id="subject" name="subject">
+                                            </div>
+
+                                            <!-- Message Input -->
+                                            <div class="form-group">
+                                                <label for="contents">Message</label>
+                                                <textarea class="form-control" id="contents" name="text" rows="4" title="Contents"></textarea>
+                                            </div>
+
+                                            <!-- Hidden Inputs -->
+                                            <input type="hidden" id="cid" name="tid" value="1">
+                                            <input type="hidden" id="action-url" value="communication/send_general">
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" id="sendNow">Send</button>
+                                    </div>
+                                </div>
                             </div>
-                            <input type="email" class="form-control" id="mailtoc" name="mailtoc" placeholder="Email" value="stews@gmail.com">
                         </div>
-                    </div>
-                    
-                    <!-- Customer Name Input -->
-                    <div class="form-group">
-                        <label for="customername">Customer Name</label>
-                        <input type="text" class="form-control" id="customername" name="customername" value="GPH Ispat Ltd.">
-                    </div>
-                    
-                    <!-- Subject Input -->
-                    <div class="form-group">
-                        <label for="subject">Subject</label>
-                        <input type="text" class="form-control" id="subject" name="subject">
-                    </div>
-                    
-                    <!-- Message Input -->
-                    <div class="form-group">
-                        <label for="contents">Message</label>
-                        <textarea class="form-control" id="contents" name="text" rows="4" title="Contents"></textarea>
-                    </div>
-                    
-                    <!-- Hidden Inputs -->
-                    <input type="hidden" id="cid" name="tid" value="1">
-                    <input type="hidden" id="action-url" value="communication/send_general">
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="sendNow">Send</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 
                         <!-- ------ -->
