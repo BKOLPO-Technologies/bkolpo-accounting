@@ -3,18 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Backend\AdminController;
-<<<<<<< HEAD
 use App\Http\Controllers\Backend\BranchController;
 use App\Http\Controllers\Backend\LedgerController;
 use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\ProjectController;
 use App\Http\Controllers\Backend\BankCashController;
-=======
 use App\Http\Controllers\Backend\CompanyInformationController;
 use App\Http\Controllers\Backend\UserController;
->>>>>>> 5b788cfe4c538f6f4e9e3d730a0fcb396fece254
-
-
+use App\Http\Controllers\Backend\RoleController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
@@ -31,7 +27,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/create', [BranchController::class, 'AdminCreate'])->name('admin.create');
         Route::get('/trashed', [BranchController::class, 'AdminTrashed'])->name('admin.trashed');
     });
-    /* ==================== ========= =================== */
 
     /* ==================== Ledger =================== */
     //ledger/group
@@ -47,7 +42,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/create', [LedgerController::class, 'AdminLedgerNameCreate'])->name('admin.ledgernamecreate');
         Route::get('/trashed', [LedgerController::class, 'AdminLedgerNameTrashed'])->name('admin.ledgernametrashed');
     });
-    /* ==================== ========= =================== */
 
     /* ==================== Bank Cash =================== */
     Route::prefix('bank-cash')->group(function () {
@@ -56,46 +50,34 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/create', [BankCashController::class, 'AdminBankCashCreate'])->name('admin.bankcash.create');
         Route::get('/trashed', [BankCashController::class, 'AdminBankCashTrashed'])->name('admin.bankcash.trashed');
     });
-    /* ==================== ========= =================== */
 
     /* ==================== Invoice =================== */
     Route::prefix('invoices')->group(function () {
         Route::get('/', [InvoiceController::class, 'AdminInvoiceIndex'])->name('admin.invoice');
-        Route::get('/1', [InvoiceController::class, 'AdminInvoiceDetails'])->name('admin.invoiceDetails');
-        Route::get('/create', [InvoiceController::class, 'AdminInvoiceCreate'])->name('admin.invoiceCreate');    
+        Route::get('/details/{id}', [InvoiceController::class, 'AdminInvoiceDetails'])->name('admin.invoiceDetails');
+        Route::get('/create', [InvoiceController::class, 'AdminInvoiceCreate'])->name('admin.invoiceCreate');
     });
-    /* ==================== ========= =================== */
 
-<<<<<<< HEAD
     /* ==================== Projects =================== */
     Route::prefix('projects')->group(function () {
         Route::get('/', [ProjectController::class, 'AdminProjectIndex'])->name('admin.project');
         Route::get('/create', [ProjectController::class, 'AdminProjectCreate'])->name('admin.projectCreate');
     });
-    /* ==================== ========= =================== */
 
-    /* ==================== Start Chat Management  All Routes =================== */
-    Route::prefix('chat')->group(function () {
-      
-
-=======
-    /* ==================== Start Company Information All Routes =================== */
+    /* ==================== Company Information =================== */
     Route::prefix('company-information')->as('company-information.')->group(function () {
         Route::get('/', [CompanyInformationController::class, 'index'])->name('index');
         Route::get('edit/{id}', [CompanyInformationController::class, 'edit'])->name('edit');
         Route::post('update/{id}', [CompanyInformationController::class, 'update'])->name('update');
->>>>>>> 5b788cfe4c538f6f4e9e3d730a0fcb396fece254
     });
-    /* ==================== End Company Information All Routes =================== */
 
-    /* ==================== Start Role All Routes =================== */
+    /* ==================== Role and User Management =================== */
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
-    Route::get('delete/{id}', [UserController::class, 'destroy'])->name('users.delete');
-    /* ==================== End Role All Routes =================== */
+    Route::get('users/delete/{id}', [UserController::class, 'destroy'])->name('users.delete');
 });
-/* =============== End Admin Route  ============= */
 
+/* =============== End Admin Route  ============= */
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
