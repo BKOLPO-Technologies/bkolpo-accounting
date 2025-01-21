@@ -13,8 +13,8 @@
          <img src="{{ asset('backend/assets/img/AdminLTELogo.png') }}" class="img-circle elevation-2" alt="User Image">
        </div>
        <div class="info">
-         <a href="{{ route('admin.dashboard') }}" class="d-block">Super Admin</a>
-       </div>
+          <a href="{{ route('admin.dashboard') }}" class="d-block">{{ Auth::user()->name }}</a>
+      </div>
      </div>
 
      <!-- SidebarSearch Form -->
@@ -463,8 +463,8 @@
                 </li>
             </ul>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
+          <li class="nav-item {{ Route::is('roles.index','roles.create','roles.edit','roles.show') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('roles.index','roles.create','roles.edit','roles.show') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-user-lock"></i>
                 <p>
                 Role
@@ -472,12 +472,14 @@
                 </p>
             </a>
             <ul class="nav nav-treeview">
+              @can('role-list')
                 <li class="nav-item">
-                  <a href="{{ route('roles.index') }}" class="nav-link">
+                  <a href="{{ route('roles.index') }}" class="nav-link {{ Route::is('roles.index','roles.create','roles.edit','roles.show') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
                       <p>Role List</p>
                   </a>
                 </li>
+              @endcan
             </ul>
           </li>
           <li class="nav-item {{ Route::is('company-information.index') ? 'menu-open' : '' }}">

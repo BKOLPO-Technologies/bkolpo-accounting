@@ -72,17 +72,23 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     });
 
     /* ==================== Role and User Management =================== */
-    Route::resource('roles', RoleController::class);
+    Route::resource('roles', RoleController::class) ->middleware([
+        'can:role-list',   
+        'can:role-create',  
+        'can:role-edit',   
+        'can:role-delete',
+    ]);
+    Route::get('roles/delete/{id}', [RoleController::class, 'destroy'])->name('roles.delete');
     Route::resource('users', UserController::class);
     Route::get('users/delete/{id}', [UserController::class, 'destroy'])->name('users.delete');
 });
 
 /* =============== End Admin Route  ============= */
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
 
 require __DIR__.'/auth.php';

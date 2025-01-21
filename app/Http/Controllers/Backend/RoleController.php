@@ -9,6 +9,8 @@ use Spatie\Permission\Models\Permission;
 use DB;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Validator;
+
 
 class RoleController extends Controller
 {
@@ -17,14 +19,6 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    function __construct()
-    {
-        $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','store']]);
-        $this->middleware('permission:role-create', ['only' => ['create','store']]);
-        $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:role-delete', ['only' => ['destroy']]);
-    }
-    
     /**
      * Display a listing of the resource.
      *
@@ -45,7 +39,8 @@ class RoleController extends Controller
     public function create(): View
     {
         $permission = Permission::get();
-        return view('backend.admin.roles.create',compact('permission'));
+        $pageTitle = 'Role Create';
+        return view('backend.admin.roles.create',compact('permission','pageTitle'));
     }
     
     /**
@@ -56,21 +51,32 @@ class RoleController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $this->validate($request, [
+        // Manually validate the request using Validator facade
+        $validator = Validator::make($request->all(), [
             'name' => 'required|unique:roles,name',
-            'permission' => 'required',
+            'permission' => 'required|array',
+            'permission.*' => 'exists:permissions,id', // Ensure each permission exists
         ]);
 
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Get the permissions array and cast each to an integer
         $permissionsID = array_map(
             function($value) { return (int)$value; },
             $request->input('permission')
         );
-    
+
+        // Create the new role
         $role = Role::create(['name' => $request->input('name')]);
+
+        // Sync the selected permissions with the role
         $role->syncPermissions($permissionsID);
-    
+
+        // Redirect back with success message
         return redirect()->route('roles.index')
-                        ->with('success','Role created successfully');
+                         ->with('success', 'Role created successfully');
     }
     /**
      * Display the specified resource.
@@ -84,8 +90,9 @@ class RoleController extends Controller
         $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
             ->where("role_has_permissions.role_id",$id)
             ->get();
-    
-        return view('backend.admin.roles.show',compact('role','rolePermissions'));
+
+        $pageTitle = 'Role View';
+        return view('backend.admin.roles.show',compact('role','rolePermissions','pageTitle'));
     }
     
     /**
@@ -101,8 +108,9 @@ class RoleController extends Controller
         $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
             ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
             ->all();
-    
-        return view('backend.admin.roles.edit',compact('role','permission','rolePermissions'));
+
+        $pageTitle = 'Role Edit';
+        return view('backend.admin.roles.edit',compact('role','permission','rolePermissions','pageTitle'));
     }
     
     /**
@@ -114,24 +122,42 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id): RedirectResponse
     {
-        $this->validate($request, [
+        // Use the Validator facade to validate the request
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'permission' => 'required',
+            'permission' => 'required|array', // Ensure permission is an array
+            'permission.*' => 'exists:permissions,id', // Ensure each permission ID exists in the permissions table
         ]);
     
+        // If validation fails, redirect back with errors
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+    
+        // Find the role by ID
         $role = Role::find($id);
+    
+        // If role doesn't exist, redirect with an error message
+        if (!$role) {
+            return redirect()->route('roles.index')->with('error', 'Role not found.');
+        }
+    
+        // Update the role's name
         $role->name = $request->input('name');
         $role->save();
-
+    
+        // Get the permission IDs from the request and cast them to integers
         $permissionsID = array_map(
             function($value) { return (int)$value; },
             $request->input('permission')
         );
     
+        // Sync the permissions with the role
         $role->syncPermissions($permissionsID);
     
+        // Redirect back with success message
         return redirect()->route('roles.index')
-                        ->with('success','Role updated successfully');
+                         ->with('success', 'Role updated successfully');
     }
     /**
      * Remove the specified resource from storage.
@@ -142,7 +168,6 @@ class RoleController extends Controller
     public function destroy($id): RedirectResponse
     {
         DB::table("roles")->where('id',$id)->delete();
-        return redirect()->route('roles.index')
-                        ->with('success','Role deleted successfully');
+        return redirect()->back()->with('success','Role deleted successfully');
     }
 }
