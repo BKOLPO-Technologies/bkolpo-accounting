@@ -224,6 +224,34 @@
           </li>
           <!-- ---------------- -->
 
+          <!-- ---Suppliers--- -->
+          <li class="nav-item {{ Route::is('admin.supplier*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('admin.supplier*') ? 'active' : '' }}">
+                <i class="nav-icon fa-solid fa-file-invoice"></i>
+                <p>
+                    Suppliers
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{ route('admin.supplier.create') }}" class="nav-link {{ Route::is('admin.supplier.create') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>New Supplier</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.supplier.index') }}" class="nav-link {{ Route::is('admin.supplier.index') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Manage Suppliers</p>
+                    </a>
+                </li>
+            </ul>
+          </li>
+
+
+          <!-- ---------------- -->
+
          <li class="nav-item">
            <a href="#" class="nav-link">
              <i class="nav-icon fas fa-receipt"></i>
