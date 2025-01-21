@@ -45,15 +45,11 @@
                                     <tr>
                                         <th>Roles</th>
                                         <td>
-                                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                                <div class="form-group">
-                                                    @if(!empty($user->getRoleNames()))
-                                                        @foreach($user->getRoleNames() as $v)
-                                                            <label class="badge badge-success">{{ $v }}</label>
-                                                        @endforeach
-                                                    @endif
-                                                </div>
-                                            </div>
+                                            @if(!empty($user->getRoleNames()))
+                                                @foreach($user->getRoleNames() as $v)
+                                                    <label class="badge badge-success">{{ $v }}</label>
+                                                @endforeach
+                                            @endif
                                         </td>
                                     </tr>
                                     <tr>

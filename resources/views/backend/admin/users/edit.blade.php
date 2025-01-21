@@ -41,100 +41,116 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                            <form method="POST" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data">
-                                @csrf
-                                @method('PUT')
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="name" class="form-label">Name
-                                            @error('name')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </label>
-                                        <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}" placeholder="Enter Name">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="email" class="form-label">Email
-                                            @error('email')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </label>
-                                        <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" placeholder="Enter Email">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="password" class="control-label">
-                                            <small class="req text-danger"></small> Password
-                                        </label>
-                                        <div class="input-group">
-                                            <input 
-                                                type="password" 
-                                                class="form-control password" 
-                                                id="password" 
-                                                name="password" 
-                                                placeholder="Enter Password"
-                                                autocomplete="off">
-                                            
-                                            <!-- Password Visibility Toggle -->
-                                            <span class="input-group-text">
-                                                <a style="cursor: pointer;"  class="show_password" onclick="showPassword('password'); return true;">
-                                                    <i class="fa fa-eye"></i>
-                                                </a>
-                                            </span>
-                                            
-                                            <!-- Generate Password -->
-                                            <span class="input-group-text">
-                                                <a style="cursor: pointer;" class="generate_password" onclick="generatePassword('password'); return false;">
-                                                    <i class="fa fa-refresh"></i>
-                                                </a>
-                                            </span>
+                                <form method="POST" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="name" class="form-label">Name
+                                                @error('name')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fa fa-user"></i></span> <!-- User icon -->
+                                                <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}" placeholder="Enter Name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email" class="form-label">Email
+                                                @error('email')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fa fa-envelope"></i></span> <!-- Email icon -->
+                                                <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" placeholder="Enter Email">
+                                            </div>
                                         </div>
                                     </div>
-                                
-                                    <div class="col-md-6 mb-3">
-                                        <label for="confirm_password" class="control-label">
-                                            <small class="req text-danger"></small> Confirm Password  <small id="passwordMatchMessage" class="text-danger font-weight-bolder"></small> <!-- Message element -->
-                                        </label>
-                                        <div class="input-group">
-                                            <input 
-                                                type="password" 
-                                                class="form-control password" 
-                                                id="confirm_password" 
-                                                name="confirm_password"
-                                                placeholder="Enter Confirm Password" 
-                                                autocomplete="off"
-                                                onkeyup="checkPasswordMatch();"> <!-- Add onkeyup event -->
-                                            
-                                            <!-- Password Visibility Toggle -->
-                                            <span class="input-group-text">
-                                                <a href="#confirm_password" class="show_password" onclick="showPassword('confirm_password'); return false;">
-                                                    <i class="fa fa-eye"></i>
-                                                </a>
-                                            </span>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="password" class="control-label">
+                                                <small class="req text-danger"></small> Password
+                                            </label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fa fa-lock"></i></span> <!-- Lock icon -->
+                                                <input 
+                                                    type="password" 
+                                                    class="form-control password" 
+                                                    id="password" 
+                                                    name="password" 
+                                                    placeholder="Enter Password"
+                                                    autocomplete="off">
+                                                
+                                                <!-- Password Visibility Toggle -->
+                                                <span class="input-group-text">
+                                                    <a style="cursor: pointer;"  class="show_password" onclick="showPassword('password'); return true;">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                </span>
+                                                
+                                                <!-- Generate Password -->
+                                                <span class="input-group-text">
+                                                    <a style="cursor: pointer;" class="generate_password" onclick="generatePassword('password'); return false;">
+                                                        <i class="fa fa-refresh"></i>
+                                                    </a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6 mb-3">
+                                            <label for="confirm_password" class="control-label">
+                                                <small class="req text-danger"></small> Confirm Password  
+                                                <small id="passwordMatchMessage" class="text-danger font-weight-bolder"></small> <!-- Message element -->
+                                            </label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fa fa-lock"></i></span> <!-- Lock icon -->
+                                                <input 
+                                                    type="password" 
+                                                    class="form-control password" 
+                                                    id="confirm_password" 
+                                                    name="confirm_password"
+                                                    placeholder="Enter Confirm Password" 
+                                                    autocomplete="off"
+                                                    onkeyup="checkPasswordMatch();"> <!-- Add onkeyup event -->
+                                                
+                                                <!-- Password Visibility Toggle -->
+                                                <span class="input-group-text">
+                                                    <a href="#confirm_password" class="show_password" onclick="showPassword('confirm_password'); return false;">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12">
-                                        <div class="form-group">
-                                            <strong>Role:</strong>
-                                            <select name="roles[]" class="form-control select2" multiple="multiple">
-                                                @foreach ($roles as $value => $label)
-                                                    <option value="{{ $value }}" {{ isset($userRole[$value]) ? 'selected' : ''}}>
-                                                        {{ $label }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12">
+                                            <div class="form-group">
+                                                <strong>Role:</strong>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fa fa-user-shield"></i></span> <!-- Shield icon -->
+                                                    <select name="roles[]" class="form-control select2" multiple="multiple">
+                                                        @foreach ($roles as $value => $label)
+                                                            <option value="{{ $value }}" {{ isset($userRole[$value]) ? 'selected' : ''}}>
+                                                                {{ $label }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;"><i class="fas fa-paper-plane"></i> Update User</button>
-                                    </div>
-                                </div> 
-                            </form>
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;">
+                                                <i class="fas fa-paper-plane"></i> Update User
+                                            </button>
+                                        </div>
+                                    </div> 
+                                </form>
                             </div>
                         </div>
                     </div>
