@@ -27,4 +27,10 @@ class SupplierController extends Controller
         return view('backend/admin/supplier/view',compact('pageTitle'));
 
     }
+
+    public function AdminSupplierEdit() {
+        $pageTitle = 'Admin Supplier Edit';
+        return view('backend/admin/supplier/edit',compact('pageTitle'));
+    }
+
 }

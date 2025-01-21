@@ -71,6 +71,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [SupplierController::class, 'AdminSupplierIndex'])->name('admin.supplier.index');
         Route::get('/create', [SupplierController::class, 'AdminSupplierCreate'])->name('admin.supplier.create');
         Route::get('/view/{id}', [SupplierController::class, 'AdminSupplierView'])->name('admin.supplier.view');
+        Route::get('/edit/{id}', [SupplierController::class, 'AdminSupplierEdit'])->name('admin.supplier.edit');
     });
 
     /* ==================== Company Information =================== */

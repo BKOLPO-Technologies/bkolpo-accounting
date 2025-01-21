@@ -57,7 +57,7 @@
 
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <a href="#" class="btn btn-warning btn-md">
+                                                    <a href="{{ route('admin.supplier.edit', ['id' => 1]) }}" class="btn btn-warning btn-md">
                                                         <i class="icon-pencil"></i> Edit Profile
                                                     </a>
                                                 </div>
