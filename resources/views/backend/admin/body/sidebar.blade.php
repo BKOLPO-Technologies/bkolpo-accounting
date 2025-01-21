@@ -201,7 +201,7 @@
           <!-- ---Project--- -->
           <li class="nav-item {{ Route::is('admin.project*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('admin.project*') ? 'active' : '' }}">
-              <i class="nav-icon fa-solid fa-file-invoice"></i>
+              <i class="fa-solid fa-sheet-plastic"></i>
               <p>
                 Project
                 <i class="fas fa-angle-left right"></i>
@@ -227,7 +227,7 @@
           <!-- ---Suppliers--- -->
           <li class="nav-item {{ Route::is('admin.supplier*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('admin.supplier*') ? 'active' : '' }}">
-                <i class="nav-icon fa-solid fa-file-invoice"></i>
+                <i class="fa-solid fa-money-check"></i>
                 <p>
                     Suppliers
                     <i class="fas fa-angle-left right"></i>
@@ -253,7 +253,7 @@
           <!-- ---Transaction--- -->
           <li class="nav-item {{ Route::is('admin.transaction*') ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ Route::is('admin.transaction*') ? 'active' : '' }}">
-                  <i class="nav-icon fa-solid fa-file-invoice"></i>
+                  <i class="fa-solid fa-tent-arrow-left-right"></i>
                   <p>
                       Transactions
                       <i class="fas fa-angle-left right"></i>
