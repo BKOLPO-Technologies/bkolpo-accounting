@@ -55,20 +55,53 @@
                                         <option value='Pending'>Pending</option>
                                         <option value='Terminated'>Terminated</option>
                                         <option value='Finished'>Finished</option>
-                                        <option value='Progress'>In Progress</option>                        </select>
+                                        <option value='Progress'>In Progress</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="form-group row">
+                            <!-- <div class="form-group row"> -->
 
-                                <label class="col-sm-2 col-form-label" for="progress">In Progress                        (in %)</label>
+                                <!-- <label class="col-sm-2 col-form-label" for="progress">In Progress (in %)</label> -->
 
-                                <div class="col-sm-10">
+                                <!-- <div class="col-sm-10">
                                     <input type="range" min="0" max="100" value="0" class="slider" id="progress" name="progress">
                                     <p><span id="prog"></span></p>
+                                </div> -->
 
-                                </div>
-                            </div>
+                                <!-- <div class="progress">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div> -->
+
+                                <!-- <style>
+                                    .custom-progress {
+                                        width: 100%;
+                                        height: 20px;
+                                        background-color: #e9ecef; 
+                                        border-radius: 10px;
+                                        overflow: hidden; 
+                                        position: relative;
+                                        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+                                    }
+
+                                    .custom-progress-bar {
+                                        height: 100%;
+                                        background-color: #007bff; 
+                                        width: 0%; 
+                                        transition: width 0.4s ease; 
+                                    }
+
+                                    .custom-progress-bar[aria-valuenow="50"] {
+                                        width: 50%;
+                                    }
+                                </style>
+
+                                <div class="col-sm-10 custom-progress">
+                                    <div class="custom-progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;"></div>
+                                </div> -->
+
+
+                            <!-- </div> -->
 
                             <div class="form-group row">
 
@@ -95,11 +128,9 @@
                                         <option value="0">Select Customer</option>
 
                                     </select>
-
-
                                 </div>
-
                             </div>
+
                             <div class="form-group row">
 
                                 <label class="col-sm-2 col-form-label"
@@ -112,6 +143,7 @@
                                     </select>
                                 </div>
                             </div>
+
                             <div class="form-group row">
 
                                 <label class="col-sm-2 col-form-label"
@@ -142,8 +174,6 @@
                                 <div class="col-sm-8">
                                     <select name="employee[]" class="form-control required select-box" multiple="multiple">
                                         <option value='10'>BusinessOwner</option><option value='12'>Ahanaf Shahriar</option><option value='13'>Asraful Islam</option><option value='14'>Rakibul Islam</option><option value='15'>Rifat Zahan Zim</option><option value='16'>Nazrul Islam</option>                        </select>
-
-
                                 </div>
                             </div>
 
@@ -269,6 +299,10 @@
 </div>
 <!-- /.content-wrapper -->
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
+<!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
+
 <script type="text/javascript">
 
     $(function () {
@@ -293,27 +327,27 @@
     $("#customer_statement").select2({
         minimumInputLength: 4,
         tags: [],
-        ajax: {
-            url: baseurl + 'search/customer_select',
-            dataType: 'json',
-            type: 'POST',
-            quietMillis: 50,
-            data: function (customer) {
-                return {
-                    customer: customer
-                };
-            },
-            processResults: function (data) {
-                return {
-                    results: $.map(data, function (item) {
-                        return {
-                            text: item.name,
-                            id: item.id
-                        }
-                    })
-                };
-            },
-        }
+        // ajax: {
+        //     url: baseurl + 'search/customer_select',
+        //     dataType: 'json',
+        //     type: 'POST',
+        //     quietMillis: 50,
+        //     data: function (customer) {
+        //         return {
+        //             customer: customer
+        //         };
+        //     },
+        //     processResults: function (data) {
+        //         return {
+        //             results: $.map(data, function (item) {
+        //                 return {
+        //                     text: item.name,
+        //                     id: item.id
+        //                 }
+        //             })
+        //         };
+        //     },
+        // }
     });
 
     $('.edate').datepicker({autoHide: true, format: 'dd-mm-yyyy'});
@@ -325,6 +359,18 @@
         textn.text($('#progress').val() + '%');
 
     });
+</script>
+
+<script>
+    function updateProgress(value) {
+    const progressBar = document.querySelector('.custom-progress-bar');
+    progressBar.style.width = value + '%';
+    progressBar.setAttribute('aria-valuenow', value);
+}
+
+// Example: Set progress to 75%
+updateProgress(75);
+
 </script>
 
 @endsection

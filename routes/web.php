@@ -2,15 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Backend\RoleController;
+use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\BranchController;
 use App\Http\Controllers\Backend\LedgerController;
 use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\ProjectController;
 use App\Http\Controllers\Backend\BankCashController;
+use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\CompanyInformationController;
-use App\Http\Controllers\Backend\UserController;
-use App\Http\Controllers\Backend\RoleController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
@@ -22,11 +23,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/logout', [AdminController::class, 'AdminDestroy'])->name('admin.logout');
 
     /* ==================== Branch =================== */
-    Route::prefix('branch')->group(function () {
-        Route::get('/', [BranchController::class, 'AdminBranch'])->name('admin.branch');
-        Route::get('/create', [BranchController::class, 'AdminCreate'])->name('admin.create');
-        Route::get('/trashed', [BranchController::class, 'AdminTrashed'])->name('admin.trashed');
-    });
+    Route::prefix('branch')->as('branch.admin.')->group(function () {
+        Route::get('/', [BranchController::class, 'AdminBranch'])->name('branch'); // branch.admin.branch
+        Route::get('/create', [BranchController::class, 'AdminCreate'])->name('create'); // branch.admin.create
+        Route::get('/trashed', [BranchController::class, 'AdminTrashed'])->name('trashed'); // branch.admin.trashed
+    }); 
 
     /* ==================== Ledger =================== */
     //ledger/group
@@ -54,7 +55,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     /* ==================== Invoice =================== */
     Route::prefix('invoices')->group(function () {
         Route::get('/', [InvoiceController::class, 'AdminInvoiceIndex'])->name('admin.invoice');
-        Route::get('/details/{id}', [InvoiceController::class, 'AdminInvoiceDetails'])->name('admin.invoiceDetails');
+        
         Route::get('/create', [InvoiceController::class, 'AdminInvoiceCreate'])->name('admin.invoiceCreate');
     });
 
@@ -62,6 +63,15 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::prefix('projects')->group(function () {
         Route::get('/', [ProjectController::class, 'AdminProjectIndex'])->name('admin.project');
         Route::get('/create', [ProjectController::class, 'AdminProjectCreate'])->name('admin.projectCreate');
+        Route::get('/details/1', [InvoiceController::class, 'AdminInvoiceDetails'])->name('admin.invoiceDetails');
+    });
+
+    /* ==================== supplier =================== */
+    Route::prefix('supplier')->group(function () {
+        Route::get('/', [SupplierController::class, 'AdminSupplierIndex'])->name('admin.supplier.index');
+        Route::get('/create', [SupplierController::class, 'AdminSupplierCreate'])->name('admin.supplier.create');
+        Route::get('/view/{id}', [SupplierController::class, 'AdminSupplierView'])->name('admin.supplier.view');
+        Route::get('/edit/{id}', [SupplierController::class, 'AdminSupplierEdit'])->name('admin.supplier.edit');
     });
 
     /* ==================== Company Information =================== */
