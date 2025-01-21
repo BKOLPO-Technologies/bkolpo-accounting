@@ -62,7 +62,7 @@
                                                         <p>No permissions assigned to this role.</p>
                                                     @endif
                                                 </td>
-                                                <td class="col-2">
+                                                <td class="col-2"> 
                                                     <!-- View Button -->
                                                     <a href="{{ route('roles.show',$role->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
