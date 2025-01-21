@@ -248,9 +248,52 @@
                 </li>
             </ul>
           </li>
-
-
           <!-- ---------------- -->
+
+          <!-- ---Transaction--- -->
+          <li class="nav-item {{ Route::is('admin.transaction*') ? 'menu-open' : '' }}">
+              <a href="#" class="nav-link {{ Route::is('admin.transaction*') ? 'active' : '' }}">
+                  <i class="nav-icon fa-solid fa-file-invoice"></i>
+                  <p>
+                      Transactions
+                      <i class="fas fa-angle-left right"></i>
+                  </p>
+              </a>
+              <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                      <a href="{{ route('admin.transaction.index') }}" class="nav-link {{ Route::is('admin.transaction.index') ? 'active' : '' }}">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>View Transactions</p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ route('admin.transaction.add') }}" class="nav-link {{ Route::is('admin.transaction.add') ? 'active' : '' }}">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>New Transactions</p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ route('admin.transaction.transfer') }}" class="nav-link {{ Route::is('admin.transaction.transfer') ? 'active' : '' }}">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>New Transfer</p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ route('admin.transaction.income') }}" class="nav-link {{ Route::is('admin.transaction.income') ? 'active' : '' }}">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Income</p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ route('admin.transaction.expense') }}" class="nav-link {{ Route::is('admin.transaction.expense') ? 'active' : '' }}">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Expense</p>
+                      </a>
+                  </li>
+              </ul>
+          </li>
+          <!-- ---------------- -->
+
 
          <li class="nav-item">
            <a href="#" class="nav-link">

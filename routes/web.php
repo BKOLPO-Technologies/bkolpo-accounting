@@ -11,6 +11,7 @@ use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\ProjectController;
 use App\Http\Controllers\Backend\BankCashController;
 use App\Http\Controllers\Backend\SupplierController;
+use App\Http\Controllers\Backend\TransactionController;
 use App\Http\Controllers\Backend\CompanyInformationController;
 
 Route::get('/', function () {
@@ -72,6 +73,15 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/create', [SupplierController::class, 'AdminSupplierCreate'])->name('admin.supplier.create');
         Route::get('/view/{id}', [SupplierController::class, 'AdminSupplierView'])->name('admin.supplier.view');
         Route::get('/edit/{id}', [SupplierController::class, 'AdminSupplierEdit'])->name('admin.supplier.edit');
+    });
+
+    /* ==================== Transactions =================== */
+    Route::prefix('transactions')->group(function () {
+        Route::get('/', [TransactionController::class, 'AdminTransactionIndex'])->name('admin.transaction.index');
+        Route::get('/add', [TransactionController::class, 'AdminTransactionAdd'])->name('admin.transaction.add');
+        Route::get('/transfer', [TransactionController::class, 'AdminTransactionTransfer'])->name('admin.transaction.transfer');
+        Route::get('/income', [TransactionController::class, 'AdminTransactionIncome'])->name('admin.transaction.income');
+        Route::get('/expense', [TransactionController::class, 'AdminTransactionExpense'])->name('admin.transaction.expense');
     });
 
     /* ==================== Company Information =================== */
