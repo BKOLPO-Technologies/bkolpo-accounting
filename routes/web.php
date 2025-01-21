@@ -22,11 +22,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/logout', [AdminController::class, 'AdminDestroy'])->name('admin.logout');
 
     /* ==================== Branch =================== */
-    Route::prefix('branch')->group(function () {
-        Route::get('/', [BranchController::class, 'AdminBranch'])->name('admin.branch');
-        Route::get('/create', [BranchController::class, 'AdminCreate'])->name('admin.create');
-        Route::get('/trashed', [BranchController::class, 'AdminTrashed'])->name('admin.trashed');
-    });
+    Route::prefix('branch')->as('branch.admin.')->group(function () {
+        Route::get('/', [BranchController::class, 'AdminBranch'])->name('branch'); // branch.admin.branch
+        Route::get('/create', [BranchController::class, 'AdminCreate'])->name('create'); // branch.admin.create
+        Route::get('/trashed', [BranchController::class, 'AdminTrashed'])->name('trashed'); // branch.admin.trashed
+    }); 
 
     /* ==================== Ledger =================== */
     //ledger/group
@@ -54,7 +54,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     /* ==================== Invoice =================== */
     Route::prefix('invoices')->group(function () {
         Route::get('/', [InvoiceController::class, 'AdminInvoiceIndex'])->name('admin.invoice');
-        Route::get('/details/{id}', [InvoiceController::class, 'AdminInvoiceDetails'])->name('admin.invoiceDetails');
+        
         Route::get('/create', [InvoiceController::class, 'AdminInvoiceCreate'])->name('admin.invoiceCreate');
     });
 
@@ -62,6 +62,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::prefix('projects')->group(function () {
         Route::get('/', [ProjectController::class, 'AdminProjectIndex'])->name('admin.project');
         Route::get('/create', [ProjectController::class, 'AdminProjectCreate'])->name('admin.projectCreate');
+        Route::get('/details/1', [InvoiceController::class, 'AdminInvoiceDetails'])->name('admin.invoiceDetails');
     });
 
     /* ==================== Company Information =================== */
