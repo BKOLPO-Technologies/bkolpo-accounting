@@ -513,7 +513,7 @@
                 <li class="nav-item">
                   <a href="{{ route('company-information.index') }}" class="nav-link {{ Route::is('company-information.index') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Company Information</p>
+                      <p>Company Information</p> 
                   </a>
                 </li>
             </ul>
