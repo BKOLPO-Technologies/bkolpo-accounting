@@ -61,7 +61,7 @@
                                                 </div>
 
                                                 <!-- Role Menu Card -->
-                                                <div class="card card-info card-outline">
+                                                <div class="card card-info card-outline shadow">
                                                     <div class="card-header d-flex justify-content-between align-items-center">
                                                         <!-- Role Menu title on the left -->
                                                         <h5 class="card-title mb-0">Role Menu</h5>
@@ -83,7 +83,7 @@
                                                                         <input type="checkbox" value="{{$value->id}}" name="permission[{{$value->id}}]" 
                                                                             class="permission-checkbox role-menu-checkbox" id="checkboxRole{{ $index }}"
                                                                             @if(in_array($value->id, $rolePermissions)) checked @endif>
-                                                                        <label for="checkboxRole{{ $index }}">{{ ucfirst(str_replace('-', ' ', $value->name)) }}</label>
+                                                                        <label for="checkboxRole{{ $index }}">{{ ucwords(str_replace('-', ' ', $value->name)) }}</label>
                                                                     </div>
                                                                 @endif
                                                             @endforeach
@@ -92,7 +92,7 @@
                                                 </div>
 
                                                 <!-- User Menu Card -->
-                                                <div class="card card-info card-outline mt-4">
+                                                <div class="card card-info card-outline shadow mt-4">
                                                     <div class="card-header d-flex justify-content-between align-items-center">
                                                         <!-- User Menu title on the left -->
                                                         <h5 class="card-title mb-0">User Menu</h5>
@@ -114,7 +114,7 @@
                                                                         <input type="checkbox" value="{{$value->id}}" name="permission[{{$value->id}}]" 
                                                                             class="permission-checkbox user-menu-checkbox" id="checkboxUser{{ $index }}"
                                                                             @if(in_array($value->id, $rolePermissions)) checked @endif>
-                                                                        <label for="checkboxUser{{ $index }}">{{ ucfirst(str_replace('-', ' ', $value->name)) }}</label>
+                                                                        <label for="checkboxUser{{ $index }}">{{ ucwords(str_replace('-', ' ', $value->name)) }}</label>
                                                                     </div>
                                                                 @endif
                                                             @endforeach

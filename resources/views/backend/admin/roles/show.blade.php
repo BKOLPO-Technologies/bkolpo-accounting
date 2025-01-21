@@ -45,7 +45,7 @@
                                                 <div class="form-group">
                                                     @if(!empty($rolePermissions) && $rolePermissions->count())
                                                         @foreach($rolePermissions as $v)
-                                                            <span class="badge badge-success">{{ $v->name }}</span>
+                                                            <span class="badge badge-success">{{ ucwords(str_replace('-', ' ', $v->name)) }}</span>
                                                         @endforeach
                                                     @else
                                                         <p>No permissions assigned to this role.</p>

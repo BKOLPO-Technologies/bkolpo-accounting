@@ -55,7 +55,7 @@
                                                     @if(!empty($rolePermissions) && $rolePermissions->count())
                                                         <div style="max-width: 700px; overflow-x: auto; white-space: nowrap;">
                                                             @foreach($rolePermissions as $v)
-                                                                <span class="badge badge-success">{{ $v->name }}</span>
+                                                                <span class="badge badge-success">{{ ucwords(str_replace('-', ' ', $v->name)) }}</span>
                                                             @endforeach
                                                         </div>
                                                     @else
