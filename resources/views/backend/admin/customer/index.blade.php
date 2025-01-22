@@ -1,6 +1,4 @@
-
-
-@extends('layouts.admin', ['pageTitle' => 'Branch List'])
+@extends('layouts.admin', ['pageTitle' => 'Customer List'])
 @section('admin')
     <link rel="stylesheet" href="{{ asset('backend/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
     <div class="content-wrapper">
@@ -39,25 +37,25 @@
                                         <tr>
                                             <th>SL</th>
                                             <th>Name</th>
-                                            <th>Location</th>
-                                            <th>Description</th>
+                                            <th>Address</th>
+                                            <th>Email</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($branches as $index => $branch)
+                                        @foreach($customers as $index => $customer)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td> 
-                                                <td>{{ $branch->name }}</td>
-                                                <td>{{ $branch->location }}</td>
-                                                <td>{{ $branch->description }}</td>
+                                                <td>{{ $customer->name }}</td>
+                                                <td>{{ $customer->address }}</td>
+                                                <td>{{ $customer->email }}</td>
                                                 <td>
 
-                                                    <a href="{{ route('branch.admin.edit', $branch->id) }}" class="btn btn-info">
+                                                    <a href="{{ route('admin.customer.edit', $customer->id) }}" class="btn btn-info">
                                                         <i class="fa-solid fa-pen"></i>
                                                     </a>
 
-                                                    <form action="{{ route('branch.admin.destroy', $branch->id) }}" method="POST" style="display: inline;">
+                                                    <form action="{{ route('branch.admin.destroy', $customer->id) }}" method="POST" style="display: inline;">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this branch?')">

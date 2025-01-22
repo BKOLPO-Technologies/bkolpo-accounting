@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\LedgerController;
 use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\ProjectController;
 use App\Http\Controllers\Backend\BankCashController;
+use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\TransactionController;
 use App\Http\Controllers\Backend\CompanyInformationController;
@@ -77,6 +78,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/create', [SupplierController::class, 'AdminSupplierCreate'])->name('admin.supplier.create');
         Route::get('/view/{id}', [SupplierController::class, 'AdminSupplierView'])->name('admin.supplier.view');
         Route::get('/edit/{id}', [SupplierController::class, 'AdminSupplierEdit'])->name('admin.supplier.edit');
+    });
+
+    /* ==================== customers =================== */
+    Route::prefix('customers')->group(function () {
+        Route::get('/', [CustomerController::class, 'AdminCustomerIndex'])->name('admin.customer.index');
+        Route::get('/create', [CustomerController::class, 'AdminCustomerCreate'])->name('admin.customer.create');
+        Route::post('/customers/store', [CustomerController::class, 'store'])->name('customers.store');
+
+        Route::get('/{id}/edit', [CustomerController::class, 'edit'])->name('admin.customer.edit');
+        Route::put('/{id}/update', [CustomerController::class, 'update'])->name('admin.customer.update');
     });
 
     /* ==================== Transactions =================== */

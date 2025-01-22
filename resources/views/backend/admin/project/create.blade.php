@@ -60,20 +60,9 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="form-group row"> -->
-
-                                <!-- <label class="col-sm-2 col-form-label" for="progress">In Progress (in %)</label> -->
-
-                                <!-- <div class="col-sm-10">
-                                    <input type="range" min="0" max="100" value="0" class="slider" id="progress" name="progress">
-                                    <p><span id="prog"></span></p>
-                                </div> -->
-
-                                <!-- <div class="progress">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div> -->
-
-                                <!-- <style>
+                            <!-- <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="progress">In Progress (in %)</label>
+                                <style>
                                     .custom-progress {
                                         width: 100%;
                                         height: 20px;
@@ -83,25 +72,20 @@
                                         position: relative;
                                         box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
                                     }
-
                                     .custom-progress-bar {
                                         height: 100%;
                                         background-color: #007bff; 
                                         width: 0%; 
                                         transition: width 0.4s ease; 
                                     }
-
                                     .custom-progress-bar[aria-valuenow="50"] {
                                         width: 50%;
                                     }
                                 </style>
-
                                 <div class="col-sm-10 custom-progress">
                                     <div class="custom-progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;"></div>
-                                </div> -->
-
-
-                            <!-- </div> -->
+                                </div>
+                            </div> -->
 
                             <div class="form-group row">
 
@@ -115,7 +99,6 @@
                                         <option value='High'>High</option>
                                         <option value='Urgent'>Urgent</option>
                                     </select>
-
 
                                 </div>
                             </div>

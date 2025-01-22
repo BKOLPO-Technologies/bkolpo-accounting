@@ -198,6 +198,33 @@
           </li>
           <!-- ---------------- -->
 
+          <!-- ---Customer--- -->
+<li class="nav-item {{ Route::is('admin.customer.*') ? 'menu-open' : '' }}">
+  <a href="#" class="nav-link {{ Route::is('admin.customer.*') ? 'active' : '' }}">
+    <i class="nav-icon fa-solid fa-users"></i>
+    <p>
+      Customers
+      <i class="fas fa-angle-left right"></i>
+    </p>
+  </a>
+  <ul class="nav nav-treeview">
+    <li class="nav-item">
+      <a href="{{ route('admin.customer.create') }}" class="nav-link {{ Route::is('admin.customer.create') ? 'active' : '' }}">
+        <i class="far fa-circle nav-icon"></i>
+        <p>New Customer</p>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ route('admin.customer.index') }}" class="nav-link {{ Route::is('admin.customer.index') ? 'active' : '' }}">
+        <i class="far fa-circle nav-icon"></i>
+        <p>Manage Customers</p>
+      </a>
+    </li>
+  </ul>
+</li>
+<!-- ---------------- -->
+
+
           <!-- ---Project--- -->
           <li class="nav-item {{ Route::is('admin.project*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('admin.project*') ? 'active' : '' }}">
