@@ -27,7 +27,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::prefix('branch')->as('branch.admin.')->group(function () {
         Route::get('/', [BranchController::class, 'AdminBranch'])->name('branch'); // branch.admin.branch
         Route::get('/create', [BranchController::class, 'AdminCreate'])->name('create'); // branch.admin.create
+        Route::post('/store', [BranchController::class, 'store'])->name('branch.store'); // branch.admin.branch.store
         Route::get('/trashed', [BranchController::class, 'AdminTrashed'])->name('trashed'); // branch.admin.trashed
+        Route::delete('/delete/{branch}', [BranchController::class, 'destroy'])->name('destroy'); // branch.admin.destroy
+        Route::get('/{branch}/edit', [BranchController::class, 'edit'])->name('edit'); // branch.admin.edit
+        Route::put('/{branch}/update', [BranchController::class, 'update'])->name('update'); // branch.admin.update
     }); 
 
     /* ==================== Ledger =================== */
