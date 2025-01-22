@@ -13,6 +13,7 @@ use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\TransactionController;
 use App\Http\Controllers\Backend\CompanyInformationController;
+use App\Http\Controllers\Backend\BranchController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
