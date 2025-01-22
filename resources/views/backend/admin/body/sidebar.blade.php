@@ -31,8 +31,8 @@
          </li>
 
          <!-- ---Branch--- -->
-         <li class="nav-item {{ Route::is('branch.admin.branch', 'branch.admin.create', 'branch.admin.trashed') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('branch.admin.branch', 'branch.admin.create', 'branch.admin.trashed') ? 'active' : '' }}">
+         <li class="nav-item {{ Route::is('branch.index', 'branch.create', 'branch.edit','branch.show') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('branch.index', 'branch.create', 'branch.edit','branch.show') ? 'active' : '' }}">
               <i class="nav-icon fas fa-project-diagram"></i>
               <p>
                 Branch
@@ -41,21 +41,9 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('branch.admin.branch') }}" class="nav-link {{ Route::is('branch.admin.branch') ? 'active' : '' }}">
+                <a href="{{ route('branch.index') }}" class="nav-link {{ Route::is('branch.index') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>All</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('branch.admin.create') }}" class="nav-link {{ Route::is('branch.admin.create') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Create</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('branch.admin.trashed') }}" class="nav-link {{ Route::is('branch.admin.trashed') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Trashed</p>
+                  <p>Branch List</p>
                 </a>
               </li>
             </ul>

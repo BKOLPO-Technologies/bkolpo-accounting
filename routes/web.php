@@ -24,10 +24,14 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/logout', [AdminController::class, 'AdminDestroy'])->name('admin.logout');
 
     /* ==================== Branch =================== */
-    Route::prefix('branch')->as('branch.admin.')->group(function () {
-        Route::get('/', [BranchController::class, 'AdminBranch'])->name('branch'); // branch.admin.branch
-        Route::get('/create', [BranchController::class, 'AdminCreate'])->name('create'); // branch.admin.create
-        Route::get('/trashed', [BranchController::class, 'AdminTrashed'])->name('trashed'); // branch.admin.trashed
+    Route::prefix('branch')->as('branch.')->group(function () {
+        Route::get('/', [BranchController::class, 'index'])->name('index');
+        Route::get('/create', [BranchController::class, 'create'])->name('create');
+        Route::post('/store', [BranchController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [BranchController::class, 'edit'])->name('edit');
+        Route::get('/update/{id}', [BranchController::class, 'update'])->name('update');
+        Route::get('/delete/{id}', [BranchController::class, 'destroy'])->name('delete');
+        Route::get('/view/{id}', [BranchController::class, 'show'])->name('show');
     }); 
 
     /* ==================== Ledger =================== */
