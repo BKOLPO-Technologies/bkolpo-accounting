@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['pageTitle' => 'Branch List'])
+@extends('layouts.admin', ['pageTitle' => 'Payment Method List'])
 @section('admin')
     <link rel="stylesheet" href="{{ asset('backend/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
     <div class="content-wrapper">
@@ -26,8 +26,8 @@
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
-                                    <a href="{{ route('branch.create') }}" class="btn btn-sm btn-success rounded-0">
-                                        <i class="fas fa-plus fa-sm"></i> Add New Branch
+                                    <a href="{{ route('payment.create') }}" class="btn btn-sm btn-success rounded-0">
+                                        <i class="fas fa-plus fa-sm"></i> Add New Payment Method
                                     </a>
                                 </div>
                             </div>
@@ -37,19 +37,17 @@
                                         <tr>
                                             <th>SL</th>
                                             <th>Name</th>
-                                            <th>Location</th>
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($branchs as $index => $branch) 
+                                        @foreach($payments as $index => $payment) 
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td> 
-                                                <td>{{ $branch->name }}</td>
-                                                <td>{{ $branch->location }}</td> 
+                                                <td>{{ $payment->name }}</td>
                                                 <td>
-                                                    @if($branch->status == 1)
+                                                    @if($payment->status == 1)
                                                         <a href="#" class="badge badge-success">
                                                             <span class="badge bg-success">Active</span>
                                                         </a>
@@ -61,15 +59,15 @@
                                                 </td>           
                                                 <td class="col-2">
                                                     <!-- View Button -->
-                                                    <a href="{{ route('branch.show',$branch->id) }}" class="btn btn-success btn-sm">
+                                                    <a href="{{ route('payment.show',$payment->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                     <!-- Edit Button -->
-                                                    <a href="{{ route('branch.edit',$branch->id) }}" class="btn btn-primary btn-sm">
+                                                    <a href="{{ route('payment.edit',$payment->id) }}" class="btn btn-primary btn-sm">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     <!-- Delete Button -->
-                                                    <a href="{{ route('branch.delete',$branch->id)}}" id="delete" class="btn btn-danger btn-sm">
+                                                    <a href="{{ route('payment.delete',$payment->id)}}" id="delete" class="btn btn-danger btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </td>

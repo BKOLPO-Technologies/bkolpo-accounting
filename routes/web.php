@@ -8,12 +8,13 @@ use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\LedgerController;
 use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\ProjectController;
-use App\Http\Controllers\Backend\BankCashController;
 use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\TransactionController;
 use App\Http\Controllers\Backend\CompanyInformationController;
 use App\Http\Controllers\Backend\BranchController;
+use App\Http\Controllers\Backend\BankController;
+use App\Http\Controllers\Backend\PaymentMethodController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
@@ -30,9 +31,31 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/create', [BranchController::class, 'create'])->name('create');
         Route::post('/store', [BranchController::class, 'store'])->name('store');
         Route::get('/edit/{id}', [BranchController::class, 'edit'])->name('edit');
-        Route::get('/update/{id}', [BranchController::class, 'update'])->name('update');
+        Route::post('/update/{id}', [BranchController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [BranchController::class, 'destroy'])->name('delete');
         Route::get('/view/{id}', [BranchController::class, 'show'])->name('show');
+    }); 
+
+    /* ==================== Bank  =================== */
+    Route::prefix('bank')->as('bank.')->group(function () {
+        Route::get('/', [BankController::class, 'index'])->name('index');
+        Route::get('/create', [BankController::class, 'create'])->name('create');
+        Route::post('/store', [BankController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [BankController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}', [BankController::class, 'update'])->name('update');
+        Route::get('/delete/{id}', [BankController::class, 'destroy'])->name('delete');
+        Route::get('/view/{id}', [BankController::class, 'show'])->name('show');
+    }); 
+
+    /* ==================== payment method  =================== */
+    Route::prefix('payment')->as('payment.')->group(function () {
+        Route::get('/', [PaymentMethodController::class, 'index'])->name('index');
+        Route::get('/create', [PaymentMethodController::class, 'create'])->name('create');
+        Route::post('/store', [PaymentMethodController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [PaymentMethodController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}', [PaymentMethodController::class, 'update'])->name('update');
+        Route::get('/delete/{id}', [PaymentMethodController::class, 'destroy'])->name('delete');
+        Route::get('/view/{id}', [PaymentMethodController::class, 'show'])->name('show');
     }); 
 
     /* ==================== Ledger =================== */
@@ -48,14 +71,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [LedgerController::class, 'AdminLedgerName'])->name('admin.ledgername');
         Route::get('/create', [LedgerController::class, 'AdminLedgerNameCreate'])->name('admin.ledgernamecreate');
         Route::get('/trashed', [LedgerController::class, 'AdminLedgerNameTrashed'])->name('admin.ledgernametrashed');
-    });
-
-    /* ==================== Bank Cash =================== */
-    Route::prefix('bank-cash')->group(function () {
-        Route::get('/invoice', [BankCashController::class, 'AdminBankCashInvoice'])->name('admin.bankcash.invoice');
-        Route::get('/', [BankCashController::class, 'AdminBankCash'])->name('admin.bankcash');
-        Route::get('/create', [BankCashController::class, 'AdminBankCashCreate'])->name('admin.bankcash.create');
-        Route::get('/trashed', [BankCashController::class, 'AdminBankCashTrashed'])->name('admin.bankcash.trashed');
     });
 
     /* ==================== Invoice =================== */

@@ -50,6 +50,46 @@
           </li>
           <!-- --- -->
 
+          <!-- ---Bank--- -->
+          <li class="nav-item {{ Route::is('bank.index', 'bank.create', 'bank.edit','bank.show') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('bank.index', 'bank.create', 'bank.edit','bank.show') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-university"></i>
+              <p>
+                Bank
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('bank.index') }}" class="nav-link {{ Route::is('bank.index', 'bank.create', 'bank.edit','bank.show') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Bank List</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- ---------------- -->
+
+          <!-- --- Payment Method --- -->
+          <li class="nav-item {{ Route::is('payment.index', 'payment.create', 'payment.edit','payment.show') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('payment.index', 'payment.create', 'payment.edit','payment.show') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-university"></i>
+              <p>
+                Payment Method
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('payment.index') }}" class="nav-link {{ Route::is('payment.index', 'payment.create', 'payment.edit','payment.show') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Payment Method List</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- ---------------- -->
+
           <!-- ---Ledger--- -->
           <li class="nav-item {{ Route::is('admin.ledgergroup*', 'admin.ledgername*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('admin.ledgergroup*', 'admin.ledgername*') ? 'active' : '' }}">
@@ -121,45 +161,6 @@
             </ul>
           </li>
           <!-- -------- -->
-
-          <!-- ---Bank Cash--- -->
-          <li class="nav-item {{ Route::is('admin.bankcash*') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('admin.bankcash*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-university"></i>
-              <p>
-                Bank Cash
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('admin.bankcash') }}" class="nav-link {{ Route::is('admin.bankcash') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>All</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.bankcash.create') }}" class="nav-link {{ Route::is('admin.bankcash.create') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Create</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.bankcash.trashed') }}" class="nav-link {{ Route::is('admin.bankcash.trashed') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Trashed</p>
-                </a>
-              </li>
-              <!-- <li class="nav-item">
-                <a href="{{ route('admin.bankcash.invoice') }}" class="nav-link {{ Route::is('admin.bankcash.invoice') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Invoice</p>
-                </a>
-              </li> -->
-            </ul>
-          </li>
-          <!-- ---------------- -->
-
           <!-- ---Invoice--- -->
           <li class="nav-item {{ Route::is('admin.invoice*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('admin.invoice*') ? 'active' : '' }}">

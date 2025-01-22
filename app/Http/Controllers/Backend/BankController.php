@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Branch;
+use App\Models\Bank;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
@@ -15,17 +15,18 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Auth;
 
-class BranchController extends Controller
+
+class BankController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $pageTitle = 'Branch List';
+        $pageTitle = 'Bank List';
 
-        $branchs = Branch::latest()->get();
-        return view('backend.admin.branch.index',compact('pageTitle','branchs'));
+        $banks = Bank::latest()->get();
+        return view('backend.admin.bank.index',compact('pageTitle','banks'));
     }
 
     /**
@@ -33,8 +34,8 @@ class BranchController extends Controller
      */
     public function create()
     {
-        $pageTitle = 'Branch Create';
-        return view('backend.admin.branch.create',compact('pageTitle'));
+        $pageTitle = 'Bank Create';
+        return view('backend.admin.bank.create',compact('pageTitle'));
     }
 
     /**
@@ -46,19 +47,19 @@ class BranchController extends Controller
         // Validate the incoming request
         $validatedData = $request->validate([
             'name' => 'required',
-            'location' => 'nullable|string',
+            'account_number' => 'nullable|string',
         ]);
 
-        // Create the branch record
-        $branch = Branch::create([
+        // Create the Bank record
+        $bank = Bank::create([
             'name'          => $request->name,
-            'location'      => $request->location,
+            'account_number'=> $request->account_number,
             'description'   => $request->description,
             'status'        => $request->status,
             'created_by'    => Auth::user()->id,
         ]);
 
-        return redirect()->route('branch.index')->with('success', 'Branch created successfully.');
+        return redirect()->route('bank.index')->with('success', 'Bank created successfully.');
     }
 
     /**
@@ -66,10 +67,10 @@ class BranchController extends Controller
      */
     public function show(string $id)
     {
-        $branch = Branch::findOrFail($id);
+        $bank = Bank::findOrFail($id);
 
-        $pageTitle = 'Branch View';
-        return view('backend.admin.branch.show', compact('branch','pageTitle'));
+        $pageTitle = 'Bank View';
+        return view('backend.admin.bank.show', compact('bank','pageTitle'));
     }
 
     /**
@@ -77,10 +78,10 @@ class BranchController extends Controller
      */
     public function edit(string $id)
     {
-        $branch = Branch::findOrFail($id);
+        $bank = Bank::findOrFail($id);
 
-        $pageTitle = 'Branch Edit';
-        return view('backend.admin.branch.edit', compact('branch','pageTitle'));
+        $pageTitle = 'Bank Edit';
+        return view('backend.admin.bank.edit', compact('bank','pageTitle'));
     }
 
     /**
@@ -93,15 +94,15 @@ class BranchController extends Controller
             'location' => 'nullable|string',
         ]);
 
-        $branch = Branch::findOrFail($id);
+        $bank = Bank::findOrFail($id);
 
-        $branch->name = $request->input('name');
-        $branch->location = $request->input('location');
-        $branch->status = $request->input('status');
-        $branch->description = $request->input('description', ''); 
-        $branch->save();
+        $bank->name = $request->input('name');
+        $bank->account_number = $request->input('account_number');
+        $bank->status = $request->input('status');
+        $bank->description = $request->input('description', ''); 
+        $bank->save();
 
-        return redirect()->route('branch.index')->with('success', 'Branch updated successfully.');
+        return redirect()->route('bank.index')->with('success', 'Bank updated successfully.');
     }
 
     /**
@@ -109,9 +110,9 @@ class BranchController extends Controller
      */
     public function destroy(string $id)
     {
-        $branch = Branch::find($id);
-        $branch->delete();
+        $bank = Bank::find($id);
+        $bank->delete();
         
-        return redirect()->route('branch.index')->with('success', 'Branch deleted successfully.');
+        return redirect()->route('bank.index')->with('success', 'Bank deleted successfully.');
     }
 }
