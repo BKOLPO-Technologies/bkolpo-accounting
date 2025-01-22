@@ -23,7 +23,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.dashboard');
     Route::get('/logout', [AdminController::class, 'AdminDestroy'])->name('admin.logout');
 
-<<<<<<< HEAD
     /* ==================== Branch =================== */
     Route::prefix('branch')->as('branch.')->group(function () {
         Route::get('/', [BranchController::class, 'index'])->name('index');
@@ -35,8 +34,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/view/{id}', [BranchController::class, 'show'])->name('show');
     }); 
 
-=======
->>>>>>> e4b71be0db2e39551b10905b930d2025fbbc30fc
     /* ==================== Ledger =================== */
     //ledger/group
     Route::prefix('ledger/group')->group(function () {
