@@ -90,6 +90,31 @@
           </li>
           <!-- ---------------- -->
 
+          <!-- ---Employee--- -->
+          <li class="nav-item {{ Route::is('admin.employee.index', 'admin.employee.add') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('admin.employee.index', 'admin.employee.add') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-users"></i>
+              <p>
+                Employee
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('admin.employee.index') }}" class="nav-link {{ Route::is('admin.employee.index') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Employee List</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.employee.add') }}" class="nav-link {{ Route::is('admin.employee.add') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Add Employee</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
           <!-- ---Ledger--- -->
           <li class="nav-item {{ Route::is('admin.ledgergroup*', 'admin.ledgername*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('admin.ledgergroup*', 'admin.ledgername*') ? 'active' : '' }}">

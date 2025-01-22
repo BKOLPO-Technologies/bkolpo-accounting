@@ -2,19 +2,20 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Backend\BankController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\AdminController;
+use App\Http\Controllers\Backend\BranchController;
 use App\Http\Controllers\Backend\LedgerController;
 use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\ProjectController;
 use App\Http\Controllers\Backend\CustomerController;
+use App\Http\Controllers\Backend\EmployeeController;
 use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\TransactionController;
-use App\Http\Controllers\Backend\CompanyInformationController;
-use App\Http\Controllers\Backend\BranchController;
-use App\Http\Controllers\Backend\BankController;
 use App\Http\Controllers\Backend\PaymentMethodController;
+use App\Http\Controllers\Backend\CompanyInformationController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
@@ -103,6 +104,13 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
         Route::get('/{id}/edit', [CustomerController::class, 'edit'])->name('admin.customer.edit');
         Route::put('/{id}/update', [CustomerController::class, 'update'])->name('admin.customer.update');
+    });
+
+    /* ==================== employee =================== */
+    Route::prefix('employee')->group(function () {
+        Route::get('/', [EmployeeController::class, 'AdminEmployeeIndex'])->name('admin.employee.index');
+        Route::get('/add', [EmployeeController::class, 'AdminEmployeeAdd'])->name('admin.employee.add');
+        Route::post('/store', [EmployeeController::class, 'store'])->name('admin.employee.store');
     });
 
     /* ==================== Transactions =================== */
