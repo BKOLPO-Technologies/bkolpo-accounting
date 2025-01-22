@@ -176,9 +176,10 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach($projects as $project)
                                 <tr>
                                     <td>1001</td>
-                                    <td>Ecommerce</td>
+                                    <td>{{ $project->title }}</td>
                                     <td>19-01-2025</td>
                                     <td>Bkolpo Construction</td>
                                     <td>Due</td>
@@ -195,6 +196,7 @@
                                         <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
                                     </td>
                                 </tr>
+                                @endforeach
 
                             </tbody>
                             <!-- <tfoot>

@@ -16,7 +16,6 @@ use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\TransactionController;
 use App\Http\Controllers\Backend\PaymentMethodController;
 use App\Http\Controllers\Backend\CompanyInformationController;
-use App\Http\Controllers\Backend\ExpenseCategoryController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
@@ -60,17 +59,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/view/{id}', [PaymentMethodController::class, 'show'])->name('show');
     }); 
 
-    /* ==================== expense category  =================== */
-    Route::prefix('expense-category')->as('expense-category.')->group(function () {
-        Route::get('/', [ExpenseCategoryController::class, 'index'])->name('index');
-        Route::get('/create', [ExpenseCategoryController::class, 'create'])->name('create');
-        Route::post('/store', [ExpenseCategoryController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [ExpenseCategoryController::class, 'edit'])->name('edit');
-        Route::post('/update/{id}', [ExpenseCategoryController::class, 'update'])->name('update');
-        Route::get('/delete/{id}', [ExpenseCategoryController::class, 'destroy'])->name('delete');
-        Route::get('/view/{id}', [ExpenseCategoryController::class, 'show'])->name('show');
-    }); 
-
     /* ==================== Ledger =================== */
     //ledger/group
     Route::prefix('ledger/group')->group(function () {
@@ -98,6 +86,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [ProjectController::class, 'AdminProjectIndex'])->name('admin.project');
         Route::get('/create', [ProjectController::class, 'AdminProjectCreate'])->name('admin.projectCreate');
         Route::get('/details/1', [InvoiceController::class, 'AdminInvoiceDetails'])->name('admin.invoiceDetails');
+        Route::post('/store', [ProjectController::class, 'store'])->name('projects.store');
     });
 
     /* ==================== supplier =================== */

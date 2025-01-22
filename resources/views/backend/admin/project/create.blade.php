@@ -1,10 +1,7 @@
 @extends('layouts.admin')
 @section('admin')
 
-
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -19,18 +16,18 @@
                     </ol>
                 </div>
             </div>
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
 
-
-    <!-- Main content -->
     <section class="content">
 
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form method="post" id="data_form" class="form-horizontal">
+                        <!-- <form method="post" id="data_form" class="form-horizontal"> -->
+                        <form method="POST" action="{{ route('projects.store') }}" id="data_form" class="form-horizontal">
+                            @csrf
 
                             <h5>Add Project</h5>
                             <hr>
@@ -108,7 +105,7 @@
                                 <div class="col-sm-10">
                                     <select name="customer" class="form-control" id="customer_statement">
                                         @foreach($customers as $customer)
-                                        <option value="0">{{ $customer->name }}</option>
+                                        <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -121,8 +118,8 @@
 
                                 <div class="col-sm-4">
                                     <select name="customerview" class="form-control">
-                                        <option value='true'>True</option>
-                                        <option value='false'>False</option>
+                                        <option value='1'>True</option>
+                                        <option value='0'>False</option>
                                     </select>
                                 </div>
                             </div>
@@ -134,8 +131,8 @@
 
                                 <div class="col-sm-4">
                                     <select name="customercomment" class="form-control">
-                                        <option value='true'>True</option>
-                                        <option value='false'>False</option>
+                                        <option value='1'>True</option>
+                                        <option value='0'>False</option>
                                     </select>
                                 </div>
                             </div>
@@ -156,7 +153,16 @@
 
                                 <div class="col-sm-8">
                                     <select name="employee[]" class="form-control required select-box" multiple="multiple">
-                                        <option value='10'>BusinessOwner</option><option value='12'>Ahanaf Shahriar</option><option value='13'>Asraful Islam</option><option value='14'>Rakibul Islam</option><option value='15'>Rifat Zahan Zim</option><option value='16'>Nazrul Islam</option>                        </select>
+                                        <!-- <option value='10'>BusinessOwner</option>
+                                        <option value='12'>Ahanaf Shahriar</option>
+                                        <option value='13'>Asraful Islam</option>
+                                        <option value='14'>Rakibul Islam</option>
+                                        <option value='15'>Rifat Zahan Zim</option>
+                                        <option value='16'>Nazrul Islam</option> -->
+                                        @foreach($employees as $employee)
+                                        <option value='1'>{{ $employee->username }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
 
