@@ -26,8 +26,8 @@
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
-                                    <a href="{{ route('branch.admin.create') }}" class="btn btn-sm btn-success rounded-0">
-                                        <i class="fas fa-plus fa-sm"></i> Add New Branch
+                                    <a href="{{ route('admin.customer.create') }}" class="btn btn-sm btn-success rounded-0">
+                                        <i class="fas fa-plus fa-sm"></i> Add New Customer
                                     </a>
                                 </div>
                             </div>

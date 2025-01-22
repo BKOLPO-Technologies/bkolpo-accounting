@@ -30,38 +30,6 @@
            </a>
          </li>
 
-         <!-- ---Branch--- -->
-         <li class="nav-item {{ Route::is('branch.admin.branch', 'branch.admin.create', 'branch.admin.trashed') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('branch.admin.branch', 'branch.admin.create', 'branch.admin.trashed') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-project-diagram"></i>
-              <p>
-                Branch
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('branch.admin.branch') }}" class="nav-link {{ Route::is('branch.admin.branch') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>All</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('branch.admin.create') }}" class="nav-link {{ Route::is('branch.admin.create') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Create</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('branch.admin.trashed') }}" class="nav-link {{ Route::is('branch.admin.trashed') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Trashed</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <!-- --- -->
-
           <!-- ---Ledger--- -->
           <li class="nav-item {{ Route::is('admin.ledgergroup*', 'admin.ledgername*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('admin.ledgergroup*', 'admin.ledgername*') ? 'active' : '' }}">
@@ -199,30 +167,30 @@
           <!-- ---------------- -->
 
           <!-- ---Customer--- -->
-<li class="nav-item {{ Route::is('admin.customer.*') ? 'menu-open' : '' }}">
-  <a href="#" class="nav-link {{ Route::is('admin.customer.*') ? 'active' : '' }}">
-    <i class="nav-icon fa-solid fa-users"></i>
-    <p>
-      Customers
-      <i class="fas fa-angle-left right"></i>
-    </p>
-  </a>
-  <ul class="nav nav-treeview">
-    <li class="nav-item">
-      <a href="{{ route('admin.customer.create') }}" class="nav-link {{ Route::is('admin.customer.create') ? 'active' : '' }}">
-        <i class="far fa-circle nav-icon"></i>
-        <p>New Customer</p>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="{{ route('admin.customer.index') }}" class="nav-link {{ Route::is('admin.customer.index') ? 'active' : '' }}">
-        <i class="far fa-circle nav-icon"></i>
-        <p>Manage Customers</p>
-      </a>
-    </li>
-  </ul>
-</li>
-<!-- ---------------- -->
+          <li class="nav-item {{ Route::is('admin.customer.*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('admin.customer.*') ? 'active' : '' }}">
+              <i class="nav-icon fa-solid fa-users"></i>
+              <p>
+                Customers
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('admin.customer.create') }}" class="nav-link {{ Route::is('admin.customer.create') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>New Customer</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.customer.index') }}" class="nav-link {{ Route::is('admin.customer.index') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Manage Customers</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- ---------------- -->
 
 
           <!-- ---Project--- -->

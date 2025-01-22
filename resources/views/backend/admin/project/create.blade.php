@@ -103,13 +103,13 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    for="pay_cat">Customer</label>
+                                <label class="col-sm-2 col-form-label" for="pay_cat">Customer</label>
 
                                 <div class="col-sm-10">
                                     <select name="customer" class="form-control" id="customer_statement">
-                                        <option value="0">Select Customer</option>
-
+                                        @foreach($customers as $customer)
+                                        <option value="0">{{ $customer->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
