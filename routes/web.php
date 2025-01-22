@@ -5,11 +5,11 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\AdminController;
-use App\Http\Controllers\Backend\BranchController;
 use App\Http\Controllers\Backend\LedgerController;
 use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\ProjectController;
 use App\Http\Controllers\Backend\BankCashController;
+use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\TransactionController;
 use App\Http\Controllers\Backend\CompanyInformationController;
@@ -23,6 +23,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.dashboard');
     Route::get('/logout', [AdminController::class, 'AdminDestroy'])->name('admin.logout');
 
+<<<<<<< HEAD
     /* ==================== Branch =================== */
     Route::prefix('branch')->as('branch.')->group(function () {
         Route::get('/', [BranchController::class, 'index'])->name('index');
@@ -34,6 +35,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/view/{id}', [BranchController::class, 'show'])->name('show');
     }); 
 
+=======
+>>>>>>> e4b71be0db2e39551b10905b930d2025fbbc30fc
     /* ==================== Ledger =================== */
     //ledger/group
     Route::prefix('ledger/group')->group(function () {
@@ -77,6 +80,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/create', [SupplierController::class, 'AdminSupplierCreate'])->name('admin.supplier.create');
         Route::get('/view/{id}', [SupplierController::class, 'AdminSupplierView'])->name('admin.supplier.view');
         Route::get('/edit/{id}', [SupplierController::class, 'AdminSupplierEdit'])->name('admin.supplier.edit');
+    });
+
+    /* ==================== customers =================== */
+    Route::prefix('customers')->group(function () {
+        Route::get('/', [CustomerController::class, 'AdminCustomerIndex'])->name('admin.customer.index');
+        Route::get('/create', [CustomerController::class, 'AdminCustomerCreate'])->name('admin.customer.create');
+        Route::post('/customers/store', [CustomerController::class, 'store'])->name('customers.store');
+
+        Route::get('/{id}/edit', [CustomerController::class, 'edit'])->name('admin.customer.edit');
+        Route::put('/{id}/update', [CustomerController::class, 'update'])->name('admin.customer.update');
     });
 
     /* ==================== Transactions =================== */

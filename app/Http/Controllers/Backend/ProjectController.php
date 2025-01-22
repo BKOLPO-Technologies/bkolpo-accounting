@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class ProjectController extends Controller
 {
@@ -14,10 +15,11 @@ class ProjectController extends Controller
 
     }
 
-    public function AdminProjectCreate() {
-
+    public function AdminProjectCreate() 
+    {
+        $customers = Customer::all();
         $pageTitle = 'Admin Project Create';
-        return view('backend/admin/project/create',compact('pageTitle'));
+        return view('backend/admin/project/create',compact('pageTitle', 'customers'));
 
     }
 }
