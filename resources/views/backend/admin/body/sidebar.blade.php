@@ -90,6 +90,26 @@
           </li>
           <!-- ---------------- -->
 
+          <!-- --- Expense Category --- -->
+          <li class="nav-item {{ Route::is('expense-category.index', 'expense-category.create', 'expense-category.edit','expense-category.show') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('expense-category.index', 'expense-category.create', 'expense-category.edit','expense-category.show') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-university"></i>
+              <p>
+                Expense Category
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('expense-category.index') }}" class="nav-link {{ Route::is('expense-category.index', 'expense-category.create', 'expense-category.edit','expense-category.show') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Expense Category List</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- ---------------- -->
+
           <!-- ---Employee--- -->
           <li class="nav-item {{ Route::is('admin.employee.index', 'admin.employee.add') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('admin.employee.index', 'admin.employee.add') ? 'active' : '' }}">
