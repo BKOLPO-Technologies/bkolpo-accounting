@@ -101,7 +101,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::post('/store', [ProjectController::class, 'store'])->name('projects.store');
         Route::delete('/delete/{id}', [ProjectController::class, 'destroy'])->name('admin.projectDelete');
         Route::get('/edit/{id}', [ProjectController::class, 'edit'])->name('admin.projectEdit');
-        Route::put('/admin/projects/{id}', [ProjectController::class, 'update'])->name('admin.projectUpdate');
+        Route::get('/view/{id}', [ProjectController::class, 'view'])->name('admin.projectView');
+        Route::put('/update/{id}', [ProjectController::class, 'update'])->name('admin.projectUpdate');
     });
 
     /* ==================== supplier =================== */

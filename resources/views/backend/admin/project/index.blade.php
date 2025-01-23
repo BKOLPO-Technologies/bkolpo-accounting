@@ -36,9 +36,9 @@
                             
                             <div id="notify" class="alert alert-success" style="display:none;">
                                 <a href="#" class="close" data-dismiss="alert">&times;</a>
-
                                 <div class="message"></div>
                             </div>
+                            
                             <div class="grid_3 grid_4">
                                 <div class="header-block">
                                     <h3 class="title">
@@ -175,11 +175,9 @@
                                     <td>{{ $project->customer->name }}</td>
                                     <td>{{ $project->status }}</td>
                                     <td>
-                                        <a type="button" class="btn btn-primary" href="#">
+                                        <a type="button" class="btn btn-primary" href="{{ route('admin.projectView', $project->id) }}">
                                             <i class="fa-regular fa-file-lines" style="margin-right: 8px;"></i>View
                                         </a>
-
-                                        <!-- <button type="submit" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></button> -->
 
                                         <a href="{{ route('admin.projectEdit', $project->id) }}" class="btn btn-info">
                                             <i class="fa-solid fa-pen-to-square"></i> Edit

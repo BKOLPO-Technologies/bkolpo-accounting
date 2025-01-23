@@ -26,12 +26,20 @@
                             @csrf
                             @method('PUT')
 
-                            <h5>Edit Project</h5>
+                            <!-- <h5>Edit Project</h5> -->
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Edit Project</h5>
+                                <a href="{{ route('admin.project')}}" class="btn btn-sm btn-danger rounded-0">
+                                    <i class="fa-solid fa-arrow-left"></i> Back To List
+                                </a>
+                            </div>
+
                             <hr>
 
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="name">Title</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <input type="text" placeholder="Project Title"
                                         class="form-control margin-bottom required" name="name" value="{{ $project->title }}">
                                 </div>
@@ -64,7 +72,7 @@
 
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="customer">Customer</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <select name="customer" class="form-control" id="customer_statement">
                                         @foreach($customers as $customer)
                                             <option value="{{ $customer->id }}" {{ $project->customer_id == $customer->id ? 'selected' : '' }}>
@@ -109,7 +117,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="pay_cat">Assign to</label>
 
-                                <div class="col-sm-8">
+                                <div class="col-sm-4">
                                     <select name="employee[]" class="form-control required select-box" multiple="multiple">
                                         @foreach($employees as $employee)
                                             <option value="{{ $employee->id }}" 
@@ -125,7 +133,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="phase">Phase</label>
 
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <input type="text" placeholder="Phase A,B,C"
                                         class="form-control margin-bottom  required" name="phase" value="{{ $project->phase }}">
                                 </div>
@@ -133,14 +141,14 @@
 
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="sdate">Start Date</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-4">
                                     <input type="text" class="form-control required" placeholder="Start Date" name="sdate" value="{{ $project->start_date }}" autocomplete="false">
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="edate">Due Date</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-4">
                                     <input type="text" class="form-control required" placeholder="End Date" name="edate" value="{{ $project->end_date }}" autocomplete="false">
                                 </div>
                             </div>
@@ -168,7 +176,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="tags">Tags</label>
 
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <input type="text" placeholder="Tags"
                                         class="form-control margin-bottom  required" name="tags" value="{{ $project->tags }}">
                                 </div>

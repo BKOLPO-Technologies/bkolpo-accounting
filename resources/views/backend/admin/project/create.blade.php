@@ -28,14 +28,22 @@
                         <form method="POST" action="{{ route('projects.store') }}" id="data_form" class="form-horizontal">
                             @csrf
 
-                            <h5>Add Project</h5>
+                            <!-- <h5>Add Project</h5> -->
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Add Project</h5>
+                                <a href="{{ route('admin.project')}}" class="btn btn-sm btn-danger rounded-0">
+                                    <i class="fa-solid fa-arrow-left"></i> Back To List
+                                </a>
+                            </div>
+
                             <hr>
 
                             <div class="form-group row">
 
                                 <label class="col-sm-2 col-form-label" for="name">Title</label>
 
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <input type="text" placeholder="Project Title"
                                         class="form-control margin-bottom  required" name="name">
                                 </div>
@@ -56,7 +64,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
+                            <!-- <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="progress">In Progress (in %)</label>
                                 <style>
                                     .custom-progress {
@@ -81,7 +89,7 @@
                                 <div class="col-sm-10 custom-progress">
                                     <div class="custom-progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;"></div>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="form-group row">
 
@@ -101,7 +109,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="pay_cat">Customer</label>
 
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <select name="customer" class="form-control" id="customer_statement">
                                         @foreach($customers as $customer)
                                         <option value="{{ $customer->id }}">{{ $customer->name }}</option>
@@ -150,7 +158,7 @@
                                 <label class="col-sm-2 col-form-label"
                                     for="pay_cat">Assign to</label>
 
-                                <div class="col-sm-8">
+                                <div class="col-sm-4">
                                     <select name="employee[]" class="form-control required select-box" multiple="multiple">
                                         <!-- <option value='10'>BusinessOwner</option>
                                         <option value='12'>Ahanaf Shahriar</option>
@@ -169,7 +177,7 @@
 
                                 <label class="col-sm-2 col-form-label" for="phase">Phase</label>
 
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <input type="text" placeholder="Phase A,B,C"
                                         class="form-control margin-bottom  required" name="phase">
                                 </div>
@@ -181,7 +189,7 @@
                                 <label class="col-sm-2 control-label"
                                     for="edate">Start Date</label>
 
-                                <div class="col-sm-2">
+                                <div class="col-sm-4">
                                     <input type="text" class="form-control required"
                                         placeholder="Start Date" name="sdate"
                                         data-toggle="datepicker" autocomplete="false">
@@ -194,7 +202,7 @@
                                 <label class="col-sm-2 control-label"
                                     for="edate">Due Date</label>
 
-                                <div class="col-sm-2">
+                                <div class="col-sm-4">
                                     <input type="text" id="pdate_2" class="form-control required edate"
                                         placeholder="End Date" name="edate"
                                         autocomplete="false" value="19-02-2025">
@@ -240,7 +248,7 @@
 
                                 <label class="col-sm-2 col-form-label" for="tags">Tags</label>
 
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <input type="text" placeholder="Tags"
                                         class="form-control margin-bottom  required" name="tags">
                                 </div>

@@ -105,6 +105,19 @@ class ProjectController extends Controller
         }
     }
 
+    public function view($id)
+    {
+        $employees = Employee::all();
+        $customers = Customer::all();
+        $project = Project::findOrFail($id);
+
+        $assignedEmployees = $project->employees->pluck('id')->toArray();
+
+        //dd($assignedEmployees);
+
+        return view('backend/admin/project/view', compact('project', 'customers', 'employees', 'assignedEmployees')); // Return the edit view
+    }
+
     public function edit($id)
     {
         $employees = Employee::all();
