@@ -1,4 +1,4 @@
-@extends('layouts.admin', [$pageTitle => 'Payment Method View'])
+@extends('layouts.admin', [$pageTitle => 'Ledger View'])
 
 @section('admin')
 <div class="content-wrapper">

@@ -95,7 +95,7 @@
             <a href="#" class="nav-link {{ Route::is('expense-category.index', 'expense-category.create', 'expense-category.edit','expense-category.show') ? 'active' : '' }}">
               <i class="nav-icon fas fa-university"></i>
               <p>
-                Expense Category
+                Ledger 
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
@@ -103,12 +103,162 @@
               <li class="nav-item">
                 <a href="{{ route('expense-category.index') }}" class="nav-link {{ Route::is('expense-category.index', 'expense-category.create', 'expense-category.edit','expense-category.show') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Expense Category List</p>
+                  <p>Ledger List</p>
                 </a>
               </li>
             </ul>
           </li>
           <!-- ---------------- -->
+
+          <!----- Start Voucher Area ----->
+          <li class="nav-item {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-receipt"></i>
+              <p>
+                Voucher
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview" style="{{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show') ? 'display: block;' : 'display: none;' }}">
+              <li class="nav-item {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show') ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Journal
+                    <i class="fas fa-angle-left right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview" style="{{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show') ? 'display: block;' : 'display: none;' }}">
+                  <li class="nav-item">
+                    <a href="{{ route('journal-voucher.index') }}" class="nav-link {{ Route::is('journal-voucher.index') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Journal List</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <!----- End Voucher Area ----->
+
+          
+         <li class="nav-item">
+           <a href="#" class="nav-link">
+             <i class="nav-icon fas fa-receipt"></i>
+             <p>
+               Report
+               <i class="fas fa-angle-left right"></i>
+             </p>
+           </a>
+           <ul class="nav nav-treeview">
+             <li class="nav-item">
+               <a href="#" class="nav-link">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>
+                   Accounts
+                   <i class="fas fa-angle-left right"></i>
+                 </p>
+               </a>
+               <ul class="nav nav-treeview" style="display: none;">
+                 <li class="nav-item">
+                   <a href="#" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Ledger</p>
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a href="#" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Trial Balance</p>
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a href="#" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Cost Of Revenue</p>
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a href="#" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Profit Or Loss Accounts</p>
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a href="#" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Retained Earnings</p>
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a href="#" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Fixed Asset Schedule</p>
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a href="#" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Balance Sheet</p>
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a href="#" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Cash Flow</p>
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a href="#" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Receive Payment</p>
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a href="#" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Notes</p>
+                   </a>
+                 </li>
+               </ul>
+             </li>
+             <li class="nav-item">
+               <a href="#" class="nav-link">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>
+                   General
+                   <i class="fas fa-angle-left right"></i>
+                 </p>
+               </a>
+               <ul class="nav nav-treeview" style="display: none;">
+                 <li class="nav-item">
+                   <a href="#" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Branch</p>
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a href="#" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Ledger</p>
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a href="#" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Bank Cash</p>
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a href="#" class="nav-link">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Voucher</p>
+                   </a>
+                 </li>
+               </ul>
+             </li>
+           </ul>
+         </li>
 
           <!-- ---Employee--- -->
           <li class="nav-item {{ Route::is('admin.employee.index', 'admin.employee.add') ? 'menu-open' : '' }}">
@@ -134,78 +284,6 @@
               </li>
             </ul>
           </li>
-
-          <!-- ---Ledger--- -->
-          <li class="nav-item {{ Route::is('admin.ledgergroup*', 'admin.ledgername*') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('admin.ledgergroup*', 'admin.ledgername*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-file-invoice-dollar"></i>
-              <p>
-                Ledger
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item {{ Route::is('admin.ledgergroup*') ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ Route::is('admin.ledgergroup*') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>
-                    Group
-                    <i class="fas fa-angle-left right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="{{ route('admin.ledgergroup') }}" class="nav-link {{ Route::is('admin.ledgergroup') ? 'active' : '' }}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>All</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ route('admin.ledgergroupcreate') }}" class="nav-link {{ Route::is('admin.ledgergroupcreate') ? 'active' : '' }}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Create</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ route('admin.ledgergrouptrashed') }}" class="nav-link {{ Route::is('admin.ledgergrouptrashed') ? 'active' : '' }}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Trashed</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item {{ Route::is('admin.ledgername*') ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ Route::is('admin.ledgername*') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>
-                    Name
-                    <i class="fas fa-angle-left right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="{{ route('admin.ledgername') }}" class="nav-link {{ Route::is('admin.ledgername') ? 'active' : '' }}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>All</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ route('admin.ledgernamecreate') }}" class="nav-link {{ Route::is('admin.ledgernamecreate') ? 'active' : '' }}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Create</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ route('admin.ledgernametrashed') }}" class="nav-link {{ Route::is('admin.ledgernametrashed') ? 'active' : '' }}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Trashed</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <!-- -------- -->
           <!-- ---Invoice--- -->
           <li class="nav-item {{ Route::is('admin.invoice*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('admin.invoice*') ? 'active' : '' }}">
@@ -354,204 +432,6 @@
               </ul>
           </li>
           <!-- ---------------- -->
-
-
-         <li class="nav-item">
-           <a href="#" class="nav-link">
-             <i class="nav-icon fas fa-receipt"></i>
-             <p>
-               Voucher
-               <i class="fas fa-angle-left right"></i>
-             </p>
-           </a>
-           <ul class="nav nav-treeview">
-             <li class="nav-item">
-               <a href="#" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>
-                   Credit
-                   <i class="fas fa-angle-left right"></i>
-                 </p>
-               </a>
-               <ul class="nav nav-treeview" style="display: none;">
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Credit List</p>
-                   </a>
-                 </li>
-               </ul>
-             </li>
-             <li class="nav-item">
-               <a href="#" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>
-                   Debit
-                   <i class="fas fa-angle-left right"></i>
-                 </p>
-               </a>
-               <ul class="nav nav-treeview" style="display: none;">
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Debit List</p>
-                   </a>
-                 </li>
-               </ul>
-             </li>
-             <li class="nav-item">
-               <a href="#" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>
-                   Journal
-                   <i class="fas fa-angle-left right"></i>
-                 </p>
-               </a>
-               <ul class="nav nav-treeview" style="display: none;">
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Journal List</p>
-                   </a>
-                 </li>
-               </ul>
-             </li>
-             <li class="nav-item">
-               <a href="#" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>
-                   Contra
-                   <i class="fas fa-angle-left right"></i>
-                 </p>
-               </a>
-               <ul class="nav nav-treeview" style="display: none;">
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Contra List</p>
-                   </a>
-                 </li>
-               </ul>
-             </li>
-           </ul>
-         </li>
-         <li class="nav-item">
-           <a href="#" class="nav-link">
-             <i class="nav-icon fas fa-receipt"></i>
-             <p>
-               Report
-               <i class="fas fa-angle-left right"></i>
-             </p>
-           </a>
-           <ul class="nav nav-treeview">
-             <li class="nav-item">
-               <a href="#" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>
-                   Accounts
-                   <i class="fas fa-angle-left right"></i>
-                 </p>
-               </a>
-               <ul class="nav nav-treeview" style="display: none;">
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Ledger</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Trial Balance</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Cost Of Revenue</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Profit Or Loss Accounts</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Retained Earnings</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Fixed Asset Schedule</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Balance Sheet</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Cash Flow</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Receive Payment</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Notes</p>
-                   </a>
-                 </li>
-               </ul>
-             </li>
-             <li class="nav-item">
-               <a href="#" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>
-                   General
-                   <i class="fas fa-angle-left right"></i>
-                 </p>
-               </a>
-               <ul class="nav nav-treeview" style="display: none;">
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Branch</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Ledger</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Bank Cash</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Voucher</p>
-                   </a>
-                 </li>
-               </ul>
-             </li>
-           </ul>
-         </li>
          <li class="nav-item">
            <a href="#" class="nav-link">
              <i class="nav-icon fas fa-language"></i>

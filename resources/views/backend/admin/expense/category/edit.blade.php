@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['pageTitle' => 'Expense Category Edit'])
+@extends('layouts.admin', ['pageTitle' => 'Ledger Edit'])
 
 @section('admin')
     <link rel="stylesheet" href="{{ asset('backend/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
@@ -44,7 +44,7 @@
                                           </label>
                                           <div class="input-group">
                                               <span class="input-group-text"><i class="fa fa-user"></i></span>
-                                              <input type="text" class="form-control" id="name" name="name" value="{{ $expensecateory->name }}" placeholder="Enter Payment Method Name">
+                                              <input type="text" class="form-control" id="name" name="name" value="{{ $expensecateory->name }}" placeholder="Enter Ledger Name">
                                           </div>
                                       </div>
                                       <div class="col-md-6 mb-2">
@@ -64,7 +64,7 @@
                                   </div>
                                   <div class="row mt-3">
                                       <div class="col-lg-12">
-                                          <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;"><i class="fas fa-paper-plane"></i> Update Expense Category</button>
+                                          <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;"><i class="fas fa-paper-plane"></i> Update Ledger</button>
                                       </div>
                                   </div> 
                               </form>

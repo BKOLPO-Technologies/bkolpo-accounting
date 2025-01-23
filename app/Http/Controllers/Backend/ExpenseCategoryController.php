@@ -21,7 +21,7 @@ class ExpenseCategoryController extends Controller
      */
     public function index()
     {
-        $pageTitle = 'Expense Category List';
+        $pageTitle = 'Ledger List';
 
         $expensecategories = ExpenseCategory::latest()->get();
         return view('backend.admin.expense.category.index',compact('pageTitle','expensecategories'));
@@ -32,7 +32,7 @@ class ExpenseCategoryController extends Controller
      */
     public function create()
     {
-        $pageTitle = 'Expense Category Create';
+        $pageTitle = 'Ledger Create';
         return view('backend.admin.expense.category.create',compact('pageTitle'));
     }
 
@@ -54,7 +54,7 @@ class ExpenseCategoryController extends Controller
             'created_by'    => Auth::user()->id,
         ]);
 
-        return redirect()->route('expense-category.index')->with('success', 'Expense Category created successfully.');
+        return redirect()->route('expense-category.index')->with('success', 'Ledger created successfully.');
     }
 
     /**
@@ -64,7 +64,7 @@ class ExpenseCategoryController extends Controller
     {
         $expensecateory = ExpenseCategory::findOrFail($id);
 
-        $pageTitle = 'Expense Category View';
+        $pageTitle = 'Ledger View';
         return view('backend.admin.expense.category.show', compact('expensecateory','pageTitle'));
     }
 
@@ -75,7 +75,7 @@ class ExpenseCategoryController extends Controller
     {
         $expensecateory = ExpenseCategory::findOrFail($id);
 
-        $pageTitle = 'Expense Category Edit';
+        $pageTitle = 'Ledger Edit';
         return view('backend.admin.expense.category.edit', compact('expensecateory','pageTitle'));
     }
 
@@ -94,7 +94,7 @@ class ExpenseCategoryController extends Controller
         $expensecateory->status = $request->input('status');
         $expensecateory->save();
 
-        return redirect()->route('expense-category.index')->with('success', 'Expense Category updated successfully.');
+        return redirect()->route('expense-category.index')->with('success', 'Ledger updated successfully.');
     }
 
     /**
@@ -105,6 +105,6 @@ class ExpenseCategoryController extends Controller
         $expensecateory = ExpenseCategory::find($id);
         $expensecateory->delete();
         
-        return redirect()->route('expense-category.index')->with('success', 'Expense Category deleted successfully.');
+        return redirect()->route('expense-category.index')->with('success', 'Ledger deleted successfully.');
     }
 }

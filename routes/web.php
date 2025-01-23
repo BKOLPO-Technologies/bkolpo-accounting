@@ -17,6 +17,7 @@ use App\Http\Controllers\Backend\TransactionController;
 use App\Http\Controllers\Backend\PaymentMethodController;
 use App\Http\Controllers\Backend\ExpenseCategoryController;
 use App\Http\Controllers\Backend\CompanyInformationController;
+use App\Http\Controllers\Backend\JournalController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
@@ -69,6 +70,17 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::post('/update/{id}', [ExpenseCategoryController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [ExpenseCategoryController::class, 'destroy'])->name('delete');
         Route::get('/view/{id}', [ExpenseCategoryController::class, 'show'])->name('show');
+    }); 
+
+    /* ==================== journal voucher  =================== */
+    Route::prefix('journal-voucher')->as('journal-voucher.')->group(function () {
+        Route::get('/', [JournalController::class, 'index'])->name('index');
+        Route::get('/create', [JournalController::class, 'create'])->name('create');
+        Route::post('/store', [JournalController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [JournalController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}', [JournalController::class, 'update'])->name('update');
+        Route::get('/delete/{id}', [JournalController::class, 'destroy'])->name('delete');
+        Route::get('/view/{id}', [JournalController::class, 'show'])->name('show');
     }); 
 
     /* ==================== Ledger =================== */
