@@ -54,7 +54,7 @@
                                                 <div class="card-block">
                                                     <div class="media">
                                                         <div class="media-body text-xs-left">
-                                                            <h3 class="pink" id="dash_0">0</h3>
+                                                            <h3 class="pink" id="dash_0">{{ $countWaitingProject }}</h3>
                                                             <span>Waiting</span>
                                                         </div>
                                                         <style>
@@ -63,7 +63,7 @@
                                                             }
 
                                                             .font-large-2 {
-                                                                font-size: 3rem; /* Adjust size as needed */
+                                                                font-size: 3rem;
                                                             }
 
                                                             .float-xs-right {
@@ -71,8 +71,6 @@
                                                             }
                                                         </style>
                                                         <div class="media-right media-middle">
-                                                            <!-- <i class="icon-clock3 pink font-large-2 float-xs-right"></i> -->
-                                                            <!-- <i class="fa-regular fa-clock"></i> -->
                                                             <i class="fa-regular fa-clock pink font-large-2 float-xs-right"></i>
                                                         </div>
                                                     </div>
@@ -86,7 +84,7 @@
                                                 <div class="card-block">
                                                     <div class="media">
                                                         <div class="media-body text-xs-left">
-                                                            <h3 class="indigo" id="dash_1">0</h3>
+                                                            <h3 class="indigo" id="dash_1">{{ $countProgressProject }}</h3>
                                                             <span>In Progress</span>
                                                         </div>
                                                         <style>
@@ -95,7 +93,6 @@
                                                             }
                                                         </style>
                                                         <div class="media-right media-middle">
-                                                            <!-- <i class="icon-spinner5 indigo font-large-2 float-xs-right"></i> -->
                                                             <i class="fa-solid fa-circle-notch indigo font-large-2 float-xs-right"></i>
                                                         </div>
                                                     </div>
@@ -118,7 +115,6 @@
                                                             }
                                                         </style>
                                                         <div class="media-right media-middle">
-                                                            <!-- <i class="icon-clipboard2 green font-large-2 float-xs-right"></i> -->
                                                             <i class="fa-regular fa-circle-check green font-large-2 float-xs-right"></i>
                                                         </div>
                                                     </div>
@@ -132,7 +128,7 @@
                                                 <div class="card-block">
                                                     <div class="media">
                                                         <div class="media-body text-xs-left">
-                                                            <h3 class="deep-cyan" id="dash_6">1</h3>
+                                                            <h3 class="deep-cyan" id="dash_6">{{ $totalProject }}</h3>
                                                             <span>Total</span>
                                                         </div>
                                                         <style>
@@ -141,7 +137,6 @@
                                                             }
                                                         </style>
                                                         <div class="media-right media-middle">
-                                                            <!-- <i class="icon-stats-bars22 deep-cyan font-large-2 float-xs-right"></i> -->
                                                             <i class="fa-solid fa-signal deep-cyan font-large-2 float-xs-right"></i>
                                                         </div>
                                                     </div>
@@ -176,16 +171,28 @@
                                 <tr>
                                     <td>1001</td>
                                     <td>{{ $project->title }}</td>
-                                    <td>19-01-2025</td>
-                                    <td>Bkolpo Construction</td>
-                                    <td>Due</td>
+                                    <td>{{ $project->end_date }}</td>
+                                    <td>{{ $project->customer->name }}</td>
+                                    <td>{{ $project->status }}</td>
                                     <td>
-                                        <a type="button" class="btn btn-primary" href="{{ route('admin.invoiceDetails') }}">
+                                        <a type="button" class="btn btn-primary" href="#">
                                             <i class="fa-regular fa-file-lines" style="margin-right: 8px;"></i>View
                                         </a>
 
-                                        <button type="submit" class="btn btn-info"><i class="fa-solid fa-download"></i></button>
-                                        <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                        <!-- <button type="submit" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></button> -->
+
+                                        <a href="{{ route('admin.projectEdit', $project->id) }}" class="btn btn-info">
+                                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                                        </a>
+
+                                        <form action="{{ route('admin.projectDelete', $project->id) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this project?')">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+
                                     </td>
                                 </tr>
                                 @endforeach

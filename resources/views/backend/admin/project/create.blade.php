@@ -56,7 +56,7 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="form-group row">
+                            <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="progress">In Progress (in %)</label>
                                 <style>
                                     .custom-progress {
@@ -81,7 +81,7 @@
                                 <div class="col-sm-10 custom-progress">
                                     <div class="custom-progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;"></div>
                                 </div>
-                            </div> -->
+                            </div>
 
                             <div class="form-group row">
 

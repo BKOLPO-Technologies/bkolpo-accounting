@@ -99,6 +99,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/create', [ProjectController::class, 'AdminProjectCreate'])->name('admin.projectCreate');
         Route::get('/details/1', [InvoiceController::class, 'AdminInvoiceDetails'])->name('admin.invoiceDetails');
         Route::post('/store', [ProjectController::class, 'store'])->name('projects.store');
+        Route::delete('/delete/{id}', [ProjectController::class, 'destroy'])->name('admin.projectDelete');
+        Route::get('/edit/{id}', [ProjectController::class, 'edit'])->name('admin.projectEdit');
+        Route::put('/admin/projects/{id}', [ProjectController::class, 'update'])->name('admin.projectUpdate');
     });
 
     /* ==================== supplier =================== */
