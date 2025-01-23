@@ -11,8 +11,8 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: black;">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('admin.ledgername') }}" style="text-decoration: none; color: black;">Ledger Name Manage</a></li>
-                        <li class="breadcrumb-item active">All</li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.project') }}" style="text-decoration: none; color: black;">Project</a></li>
+                        <li class="breadcrumb-item active">Create</li>
                     </ol>
                 </div>
             </div>
@@ -25,7 +25,6 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <!-- <form method="post" id="data_form" class="form-horizontal"> -->
                         <form method="POST" action="{{ route('projects.store') }}" id="data_form" class="form-horizontal">
                             @csrf
 

@@ -14,7 +14,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: black;">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('admin.bankcash') }}" style="text-decoration: none; color: black;">Bank Cash Manage</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.project') }}" style="text-decoration: none; color: black;">Bank Cash Manage</a></li>
                         <li class="breadcrumb-item active">All</li>
                     </ol>
                 </div>
