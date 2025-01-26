@@ -38,7 +38,7 @@ class JournalController extends Controller
     public function create()
     {
         $pageTitle = 'Journal Voucher Create';
-        $branches = ExpenseCategory::where('status',1)->latest()->get();
+        $branches = Branch::where('status',1)->latest()->get();
         $ledgers = ExpenseCategory::where('status',1)->latest()->get();
 
         // Generate a random unique transaction code
@@ -52,7 +52,7 @@ class JournalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
 
     /**

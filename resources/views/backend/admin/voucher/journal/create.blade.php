@@ -46,9 +46,9 @@
                                       <div class="col-lg-4 mb-3">
                                           <label for="branch_id">Company</label>
                                           <select name="branch_id" id="branch_id" class="form-control select2">
-                                              @foreach($branches as $branch)
-                                                  <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                                              @endforeach
+                                            @foreach($branches as $branch)
+                                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                            @endforeach
                                           </select>
                                       </div>
 
@@ -81,36 +81,40 @@
                                       <thead>
                                           <tr>
                                               <th>Ledger</th>
+                                              <th>Description</th>
                                               <th>Debit Amount</th>
                                               <th>Credit Amount</th>
                                               <th>Action</th>
                                           </tr>
                                       </thead>
-                                      <tbody>
-                                          <tr>
-                                            <td>
-                                                <select name="ledger_id[]" class="form-control select2">
-                                                    @foreach($ledgers as $ledger)
-                                                        <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                              </td>
-                                              <td>
-                                                  <input type="number" name="debit[]" class="form-control" step="0.01" value="0.00" />
-                                              </td>
-                                              <td>
-                                                  <input type="number" name="credit[]" class="form-control" step="0.01" value="0.00" />
-                                              </td>
-                                              <td>
-                                                  <button type="button" class="btn btn-success add-row"><i class="fas fa-plus"></i></button>
-                                              </td>
-                                          </tr>
-                                      </tbody>
+                                       <tbody>
+                                            <tr>
+                                                <td>
+                                                    <select name="ledger_id[]" class="form-control ">
+                                                        @foreach($ledgers as $ledger)
+                                                            <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td class="col-3">
+                                                   <textarea name="ledger_description" class="form-control" id="ledger_description" cols="1" rows="1" placeholder="Enter Description"></textarea>
+                                                </td>
+                                                <td>
+                                                    <input type="number" name="debit[]" class="form-control" step="0.01" value="0.00" />
+                                                </td>
+                                                <td>
+                                                    <input type="number" name="credit[]" class="form-control" step="0.01" value="0.00" />
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-success btn-sm add-row"><i class="fas fa-plus"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
                                   </table>
 
                                   <div class="row mt-3">
                                       <div class="col-lg-12">
-                                          <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;">
+                                          <button type="submit" class="btn btn-primary  bg-success text-light" style="float: right;">
                                               <i class="fas fa-save"></i> Save Journal Voucher
                                           </button>
                                       </div>
@@ -131,39 +135,43 @@
         // Initialize Select2 for existing rows
         $('.select2').select2();
 
-        // Handle adding a new row dynamically
-        $(document).on('click', '.add-row', function() {
-            var newRow = `
-                <tr>
-                    <td>
-                        <select name="ledger_id[]" class="form-control select2">
-                            @foreach($ledgers as $ledger)
-                                <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <input type="number" name="debit[]" class="form-control" step="0.01" value="0.00" />
-                    </td>
-                    <td>
-                        <input type="number" name="credit[]" class="form-control" step="0.01" value="0.00" />
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-danger remove-row"><i class="fas fa-minus"></i></button>
-                    </td>
-                </tr>
-            `;
-            // Append the new row to the table body
-            $('#journal-table tbody').append(newRow);
-            // Reinitialize Select2 for the new row
-            $('.select2').select2();
-        });
+        $(document).on('click', '.add-row', function () {
+    var newRow = `
+        <tr>
+            <td>
+                <select name="ledger_id[]" class="form-control">
+                    @foreach($ledgers as $ledger)
+                        <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
+                    @endforeach
+                </select>
+            </td>
+            <td class="col-3">
+                <textarea name="ledger_description[]" class="form-control" cols="1" rows="1" placeholder="Enter Description"></textarea>
+            </td>
+            <td>
+                <input type="number" name="debit[]" class="form-control" step="0.01" value="0.00" />
+            </td>
+            <td>
+                <input type="number" name="credit[]" class="form-control" step="0.01" value="0.00" />
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-minus"></i></button>
+            </td>
+        </tr>
+    `;
 
-        // Handle removing a row
-        $(document).on('click', '.remove-row', function() {
-            // Remove the row from the table
-            $(this).closest('tr').remove();
-        });
+    // Append the new row to the table body
+    $('#journal-table tbody').append(newRow);
+
+    // Reinitialize Select2 for the new row
+    $('.select2').select2();
+});
+
+// Remove row functionality
+$(document).on('click', '.remove-row', function () {
+    $(this).closest('tr').remove();
+});
+
     });
 </script>
 @endpush
