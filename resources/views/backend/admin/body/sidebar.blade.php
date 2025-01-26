@@ -50,6 +50,26 @@
           </li>
           <!-- --- -->
 
+          <!-- ---Company--- -->
+         <li class="nav-item {{ Route::is('admin.company.index') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('admin.company.index') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-project-diagram"></i>
+              <p>
+                Company
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('admin.company.index') }}" class="nav-link {{ Route::is('admin.company.index') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Company List</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- --- -->
+
           <!-- ---Bank--- -->
           <li class="nav-item {{ Route::is('bank.index', 'bank.create', 'bank.edit','bank.show') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('bank.index', 'bank.create', 'bank.edit','bank.show') ? 'active' : '' }}">

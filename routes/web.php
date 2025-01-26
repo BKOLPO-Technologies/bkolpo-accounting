@@ -8,7 +8,9 @@ use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\BranchController;
 use App\Http\Controllers\Backend\LedgerController;
+use App\Http\Controllers\Backend\CompanyController;
 use App\Http\Controllers\Backend\InvoiceController;
+use App\Http\Controllers\Backend\JournalController;
 use App\Http\Controllers\Backend\ProjectController;
 use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\EmployeeController;
@@ -17,7 +19,6 @@ use App\Http\Controllers\Backend\TransactionController;
 use App\Http\Controllers\Backend\PaymentMethodController;
 use App\Http\Controllers\Backend\ExpenseCategoryController;
 use App\Http\Controllers\Backend\CompanyInformationController;
-use App\Http\Controllers\Backend\JournalController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
@@ -38,6 +39,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/delete/{id}', [BranchController::class, 'destroy'])->name('delete');
         Route::get('/view/{id}', [BranchController::class, 'show'])->name('show');
     }); 
+
+    Route::prefix('company')->group(function () {
+        Route::get('/', [CompanyController::class, 'index'])->name('admin.company.index');
+        Route::get('/create', [CompanyController::class, 'create'])->name('admin.company.create');
+        Route::post('/store', [CompanyController::class, 'store'])->name('admin.company.store');
+        Route::get('/edit/{id}', [CompanyController::class, 'edit'])->name('admin.company.edit');
+        Route::post('/update/{id}', [CompanyController::class, 'update'])->name('admin.company.update');
+        Route::get('/delete/{id}', [CompanyController::class, 'destroy'])->name('admin.company.delete');
+        Route::get('/view/{id}', [CompanyController::class, 'show'])->name('admin.company.show');
+    });
 
     /* ==================== Bank  =================== */
     Route::prefix('bank')->as('bank.')->group(function () {
