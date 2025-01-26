@@ -51,8 +51,8 @@
           <!-- --- -->
 
           <!-- ---Company--- -->
-         <li class="nav-item {{ Route::is('admin.company.index') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('admin.company.index') ? 'active' : '' }}">
+         <li class="nav-item {{ Route::is('company.index','company.create','company.edit','company.show') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('company.index','company.create','company.edit','company.show') ? 'active' : '' }}">
               <i class="nav-icon fas fa-project-diagram"></i>
               <p>
                 Company
@@ -61,7 +61,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('admin.company.index') }}" class="nav-link {{ Route::is('admin.company.index') ? 'active' : '' }}">
+                <a href="{{ route('company.index') }}" class="nav-link {{ Route::is('company.index','company.create','company.edit','company.show') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Company List</p>
                 </a>

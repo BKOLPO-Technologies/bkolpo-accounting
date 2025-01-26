@@ -16,7 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('transaction_id'); 
             $table->decimal('credit', 10, 2)->default(0);  
             $table->decimal('debit', 10, 2)->default(0);   
-            $table->unsignedBigInteger('category_id'); 
+            $table->unsignedBigInteger('category_id');
+            $table->text('description')->nullable();
             $table->timestamps();
     
             // Add foreign key constraints

@@ -14,9 +14,9 @@ class Transaction extends Model
         return $this->hasMany(Journal::class);
     }
 
-    // Define an inverse relationship with Branch
+    // Define the inverse relationship for the credit branch
     public function branch()
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class, 'credit_branch_id');
     }
 }

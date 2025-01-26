@@ -41,13 +41,14 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     }); 
 
     Route::prefix('company')->group(function () {
-        Route::get('/', [CompanyController::class, 'index'])->name('admin.company.index');
-        Route::get('/create', [CompanyController::class, 'create'])->name('admin.company.create');
-        Route::post('/store', [CompanyController::class, 'store'])->name('admin.company.store');
-        Route::get('/edit/{id}', [CompanyController::class, 'edit'])->name('admin.company.edit');
-        Route::post('/update/{id}', [CompanyController::class, 'update'])->name('admin.company.update');
-        Route::get('/delete/{id}', [CompanyController::class, 'destroy'])->name('admin.company.delete');
-        Route::get('/view/{id}', [CompanyController::class, 'show'])->name('admin.company.show');
+        Route::get('/', [CompanyController::class, 'index'])->name('company.index');
+        Route::get('/create', [CompanyController::class, 'create'])->name('company.create');
+        Route::post('/store', [CompanyController::class, 'store'])->name('company.store');
+        Route::get('/edit/{id}', [CompanyController::class, 'edit'])->name('company.edit');
+        Route::post('/update/{id}', [CompanyController::class, 'update'])->name('company.update');
+        Route::get('/delete/{id}', [CompanyController::class, 'destroy'])->name('company.delete');
+        Route::get('/view/{id}', [CompanyController::class, 'show'])->name('company.show');
+
     });
 
     /* ==================== Bank  =================== */
@@ -92,6 +93,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::post('/update/{id}', [JournalController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [JournalController::class, 'destroy'])->name('delete');
         Route::get('/view/{id}', [JournalController::class, 'show'])->name('show');
+        Route::get('/get-branches/{companyId}', [JournalController::class, 'getBranchesByCompany']);
     }); 
 
     /* ==================== Ledger =================== */
