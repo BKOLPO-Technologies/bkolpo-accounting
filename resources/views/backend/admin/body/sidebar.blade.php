@@ -110,9 +110,9 @@
           </li>
           <!-- ---------------- -->
 
-          <!-- --- Expense Category --- -->
-          <li class="nav-item {{ Route::is('expense-category.index', 'expense-category.create', 'expense-category.edit','expense-category.show') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('expense-category.index', 'expense-category.create', 'expense-category.edit','expense-category.show') ? 'active' : '' }}">
+          <!-- --- Ledger Category --- -->
+          <li class="nav-item {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show') ? 'active' : '' }}">
               <i class="nav-icon fas fa-university"></i>
               <p>
                 Ledger 
@@ -121,9 +121,29 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('expense-category.index') }}" class="nav-link {{ Route::is('expense-category.index', 'expense-category.create', 'expense-category.edit','expense-category.show') ? 'active' : '' }}">
+                <a href="{{ route('ledger.index') }}" class="nav-link {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Ledger List</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- ---------------- -->
+
+          <!-- --- Ledger Group Category --- -->
+          <li class="nav-item {{ Route::is('ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-university"></i>
+              <p>
+                Ledger Group
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('ledger.group.index') }}" class="nav-link {{ Route::is('ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Ledger Group List</p>
                 </a>
               </li>
             </ul>

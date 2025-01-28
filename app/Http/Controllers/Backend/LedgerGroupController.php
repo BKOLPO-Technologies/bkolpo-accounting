@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ledger;
+use App\Models\LedgerGroup;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
@@ -15,26 +16,30 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Auth;
 
-class LedgerController extends Controller
+class LedgerGroupController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $pageTitle = 'Ledger List';
+        $pageTitle = 'Ledger Group List';
 
-        $ledgers = Ledger::latest()->get();
-        return view('backend.admin.ledger.index',compact('pageTitle','ledgers'));
+        $ledgers = LedgerGroup::latest()->get();
+        return view('backend.admin.ledger.group.index',compact('pageTitle','ledgers'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
+   /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        $pageTitle = 'Ledger Create';
-        return view('backend.admin.ledger.create',compact('pageTitle'));
+        $pageTitle = 'Ledger Group Create';
+        $ledgers = Ledger::where('status',1)->latest()->get();
+        return view('backend.admin.ledger.group.create',compact('pageTitle','ledgers'));
     }
 
     /**
@@ -49,13 +54,14 @@ class LedgerController extends Controller
         ]);
 
         // Create the Ledger record
-        $ledger = Ledger::create([
-            'name'          => $request->name,
+        $ledger = LedgerGroup::create([
+            'group_name'          => $request->name,
+            'ledger_id'     => $request->ledger_id,
             'status'        => $request->status,
             'created_by'    => Auth::user()->id,
         ]);
 
-        return redirect()->route('ledger.index')->with('success', 'Ledger created successfully.');
+        return redirect()->route('ledger.group.index')->with('success', 'Ledger Group created successfully.');
     }
 
     /**
@@ -63,10 +69,10 @@ class LedgerController extends Controller
      */
     public function show(string $id)
     {
-        $ledger = Ledger::findOrFail($id);
+        $ledger = LedgerGroup::findOrFail($id);
 
-        $pageTitle = 'Ledger View';
-        return view('backend.admin.ledger.show', compact('ledger','pageTitle'));
+        $pageTitle = 'Ledger Group View';
+        return view('backend.admin.ledger.group.show', compact('ledger','pageTitle'));
     }
 
     /**
@@ -74,10 +80,11 @@ class LedgerController extends Controller
      */
     public function edit(string $id)
     {
-        $ledger = Ledger::findOrFail($id);
+        $ledger = LedgerGroup::findOrFail($id);
+        $ledgers = Ledger::where('status',1)->latest()->get();
 
-        $pageTitle = 'Ledger Edit';
-        return view('backend.admin.ledger.edit', compact('ledger','pageTitle'));
+        $pageTitle = 'Ledger Group Edit';
+        return view('backend.admin.ledger.group.edit', compact('ledger','ledgers','pageTitle'));
     }
 
     /**
@@ -89,13 +96,14 @@ class LedgerController extends Controller
             'name' => 'required',
         ]);
 
-        $ledger = Ledger::findOrFail($id);
+        $ledger = LedgerGroup::findOrFail($id);
 
-        $ledger->name = $request->input('name');
+        $ledger->group_name = $request->input('name');
+        $ledger->ledger_id = $request->ledger_id;
         $ledger->status = $request->input('status');
         $ledger->save();
 
-        return redirect()->route('ledger.index')->with('success', 'Ledger updated successfully.');
+        return redirect()->route('ledger.group.index')->with('success', 'Ledger Group updated successfully.');
     }
 
     /**
@@ -103,9 +111,9 @@ class LedgerController extends Controller
      */
     public function destroy(string $id)
     {
-        $ledger = Ledger::find($id);
+        $ledger = LedgerGroup::find($id);
         $ledger->delete();
         
-        return redirect()->route('ledger.index')->with('success', 'Ledger deleted successfully.');
+        return redirect()->route('ledger.group.index')->with('success', 'Ledger Group deleted successfully.');
     }
 }

@@ -261,6 +261,10 @@
      });
    });
  </script>
+ <!-- date picker -->
+  <script>
+    
+  </script>
   @stack('js')
 </body>
 </html>

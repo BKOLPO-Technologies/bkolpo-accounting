@@ -14,9 +14,9 @@ class Journal extends Model
         return $this->belongsTo(Transaction::class);
     }
 
-    // Define an inverse relationship with ExpenseCategory
-    public function category()
+    // Define an inverse relationship with Ledger
+    public function ledger()
     {
-        return $this->belongsTo(ExpenseCategory::class);
+        return $this->belongsTo(Ledger::class);
     }
 }

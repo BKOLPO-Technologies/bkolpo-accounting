@@ -11,13 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('expense_categories', function (Blueprint $table) {
+        Schema::create('ledger_groups', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->tinyInteger('status')->nullable()->default(1)->comment('1=>Active, 0=>Inactive');
+            $table->string('group_name');
+            $table->tinyInteger('status')->nullable()->default(1)->comment('1 => Active, 0 => Inactive');
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
+            $table->foreignId('ledger_id')->constrained('ledgers') ->onDelete('cascade');
             $table->timestamps();
+            
+            // Optional: Add an index for better query performance
+            $table->index('ledger_id');
         });
     }
 
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('expense_categories');
+        Schema::dropIfExists('ledger_groups');
     }
 };

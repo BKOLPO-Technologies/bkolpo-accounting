@@ -7,7 +7,6 @@ use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\BranchController;
-use App\Http\Controllers\Backend\LedgerController;
 use App\Http\Controllers\Backend\CompanyController;
 use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\JournalController;
@@ -19,6 +18,8 @@ use App\Http\Controllers\Backend\TransactionController;
 use App\Http\Controllers\Backend\PaymentMethodController;
 use App\Http\Controllers\Backend\ExpenseCategoryController;
 use App\Http\Controllers\Backend\CompanyInformationController;
+use App\Http\Controllers\Backend\LedgerController;
+use App\Http\Controllers\Backend\LedgerGroupController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
@@ -73,15 +74,26 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/view/{id}', [PaymentMethodController::class, 'show'])->name('show');
     }); 
 
-    /* ==================== expense category  =================== */
-    Route::prefix('expense-category')->as('expense-category.')->group(function () {
-        Route::get('/', [ExpenseCategoryController::class, 'index'])->name('index');
-        Route::get('/create', [ExpenseCategoryController::class, 'create'])->name('create');
-        Route::post('/store', [ExpenseCategoryController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [ExpenseCategoryController::class, 'edit'])->name('edit');
-        Route::post('/update/{id}', [ExpenseCategoryController::class, 'update'])->name('update');
-        Route::get('/delete/{id}', [ExpenseCategoryController::class, 'destroy'])->name('delete');
-        Route::get('/view/{id}', [ExpenseCategoryController::class, 'show'])->name('show');
+    /* ==================== ledger category  =================== */
+    Route::prefix('ledger')->as('ledger.')->group(function () {
+        Route::get('/', [LedgerController::class, 'index'])->name('index');
+        Route::get('/create', [LedgerController::class, 'create'])->name('create');
+        Route::post('/store', [LedgerController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [LedgerController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}', [LedgerController::class, 'update'])->name('update');
+        Route::get('/delete/{id}', [LedgerController::class, 'destroy'])->name('delete');
+        Route::get('/view/{id}', [LedgerController::class, 'show'])->name('show');
+    });
+
+    /* ==================== ledger group category  =================== */
+    Route::prefix('ledger-group')->as('ledger.group.')->group(function () {
+        Route::get('/', [LedgerGroupController::class, 'index'])->name('index');
+        Route::get('/create', [LedgerGroupController::class, 'create'])->name('create');
+        Route::post('/store', [LedgerGroupController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [LedgerGroupController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}', [LedgerGroupController::class, 'update'])->name('update');
+        Route::get('/delete/{id}', [LedgerGroupController::class, 'destroy'])->name('delete');
+        Route::get('/view/{id}', [LedgerGroupController::class, 'show'])->name('show');
     }); 
 
     /* ==================== journal voucher  =================== */
@@ -95,21 +107,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/view/{id}', [JournalController::class, 'show'])->name('show');
         Route::get('/get-branches/{companyId}', [JournalController::class, 'getBranchesByCompany']);
     }); 
-
-    /* ==================== Ledger =================== */
-    //ledger/group
-    Route::prefix('ledger/group')->group(function () {
-        Route::get('/', [LedgerController::class, 'AdminLedgerGroup'])->name('admin.ledgergroup');
-        Route::get('/create', [LedgerController::class, 'AdminLedgerGroupCreate'])->name('admin.ledgergroupcreate');
-        Route::get('/trashed', [LedgerController::class, 'AdminLedgerGroupTrashed'])->name('admin.ledgergrouptrashed');
-    });
-
-    //ledger/name
-    Route::prefix('ledger/name')->group(function () {
-        Route::get('/', [LedgerController::class, 'AdminLedgerName'])->name('admin.ledgername');
-        Route::get('/create', [LedgerController::class, 'AdminLedgerNameCreate'])->name('admin.ledgernamecreate');
-        Route::get('/trashed', [LedgerController::class, 'AdminLedgerNameTrashed'])->name('admin.ledgernametrashed');
-    });
 
     /* ==================== Invoice =================== */
     Route::prefix('invoices')->group(function () {

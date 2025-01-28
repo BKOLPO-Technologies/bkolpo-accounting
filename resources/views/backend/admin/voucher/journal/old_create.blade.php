@@ -1,6 +1,7 @@
 @extends('layouts.admin', ['pageTitle' => 'Journal Voucher Create'])
 
 @section('admin')
+    <link rel="stylesheet" href="{{ asset('backend/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
@@ -79,9 +80,20 @@
                                     <div class="row">
                                         <!-- Date Input -->
                                         <div class="col-lg-12 mb-3">
-                                            <label for="transaction_date">Date</label>
-                                            <input type="date" id="transaction_date" name="transaction_date" class="form-control @error('transaction_date') is-invalid @enderror" value="{{ old('transaction_date', now()->format('Y-m-d')) }}" />
+                                            <label for="transaction_date">Transaction Date</label>
+                                            <input type="date" id="transaction_date" name="transaction_date" class="form-control @error('transaction_date') is-invalid @enderror" value="{{ old('transaction_date') }}" />
                                             @error('transaction_date')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+
+                                        <!-- Description Input -->
+                                        <div class="col-lg-12 mb-3">
+                                            <label for="description">Description</label>
+                                            <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror" placeholder="Enter Description" rows="2">{{ old('description') }}</textarea>
+                                            @error('description')
                                             <div class="invalid-feedback">
                                                 <i class="fas fa-exclamation-circle"></i> {{ $message }}
                                             </div>
@@ -89,55 +101,65 @@
                                         </div>
                                     </div>
 
-                                    <div class="row p-1">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered border-secondary">
-                                                <tbody>
-                                                <table class="table table-bordered border-secondary">
-                                                    <thead class="table-light">
-                                                        <tr style="background:#dcdcdc; text-align:center;">
-                                                            <th style="background:#dcdcdc;">Sl</th>
-                                                            <th>Account</th>
-                                                            <th>Reference No</th>
-                                                            <th>Description</th>
-                                                            <th>Debit</th>
-                                                            <th>Credit</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <!-- Manually added 10 rows -->
-                                                        @for ($i = 0; $i < 10; $i++)
-                                                            <tr>
-                                                                <td class="text-center">{{ $i + 1 }}</td>
-                                                                <td>
-                                                                    <select class="form-control" name="ledger_id[]">
-                                                                        <option value="">Select Account</option>
-                                                                        @foreach($ledgers as $ledger)
-                                                                            <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </td>
-                                                                <td><input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No"></td>
-                                                                <td><textarea class="form-control" name="description[]" rows="1"  placeholder="Enter Description"></textarea></td>
-                                                                <td><input type="number" class="form-control text-end debit" name="debit[]" value="0.00"  placeholder="Enter Debit Amount"></td>
-                                                                <td><input type="number" class="form-control text-end credit" name="credit[]" value="0.00"  placeholder="Enter Credit Amount"></td>
-                                                            </tr>
-                                                        @endfor
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td colspan="4" style="text-align: right; padding-right: 1rem;"><strong>Total:</strong></td>
-                                                            <td style="text-align: right;"><strong id="debitTotal">৳0.00</strong></td>
-                                                            <td style="text-align: right;"><strong id="creditTotal">৳0.00</strong></td>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
-                                                </tbody>
-                                                
-                                            </table>
-                                        </div>
+                                    <!-- Debit and Credit Table with 10 Default Rows -->
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered mt-4" id="journal-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Ledger</th>
+                                                    <th>Description</th>
+                                                    <th>Debit</th>
+                                                    <th>Credit</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <select name="ledger_id[]" class="form-control @error('ledger_id.*') is-invalid @enderror">
+                                                            <option value="">Select Ledger</option>
+                                                            @foreach($ledgers as $ledger)
+                                                                <option value="{{ $ledger->id }}" {{ old('ledger_id.0') == $ledger->id ? 'selected' : '' }}>{{ $ledger->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('ledger_id.*')
+                                                        <div class="invalid-feedback">
+                                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                                        </div>
+                                                        @enderror
+                                                    </td>
+                                                    <td>
+                                                        <textarea name="ledger_description[]" class="form-control @error('ledger_description.*') is-invalid @enderror" cols="1" rows="1" placeholder="Enter Description">{{ old('ledger_description.0') }}</textarea>
+                                                        @error('ledger_description.*')
+                                                        <div class="invalid-feedback">
+                                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                                        </div>
+                                                        @enderror
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" name="debit[]" class="form-control @error('debit.*') is-invalid @enderror" step="0.01" value="{{ old('debit.0', '0.00') }}" />
+                                                        @error('debit.*')
+                                                        <div class="invalid-feedback">
+                                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                                        </div>
+                                                        @enderror
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" name="credit[]" class="form-control @error('credit.*') is-invalid @enderror" step="0.01" value="{{ old('credit.0', '0.00') }}" />
+                                                        @error('credit.*')
+                                                        <div class="invalid-feedback">
+                                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                                        </div>
+                                                        @enderror
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-success btn-sm add-row"><i class="fas fa-plus"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    
+
                                     <div class="row mt-3">
                                         <div class="col-lg-12">
                                             <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;">
@@ -157,35 +179,46 @@
 
 @push('js')
 <script>
-    $(document).ready(function () {
-        function formatCurrency(amount) {
-            return '৳' + new Intl.NumberFormat('en-BD', { 
-                minimumFractionDigits: 2, 
-                maximumFractionDigits: 2 
-            }).format(amount);
-        }
+   $(document).ready(function() {
+        // Initialize Select2 for existing rows
+        $('.select2').select2();
 
-        function calculateTotals() {
-            let totalDebit = 0, totalCredit = 0;
+        $(document).on('click', '.add-row', function () {
+            var newRow = `
+                <tr>
+                    <td>
+                        <select name="ledger_id[]" class="form-control">
+                            @foreach($ledgers as $ledger)
+                                <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td class="col-3">
+                        <textarea name="ledger_description[]" class="form-control" cols="1" rows="1" placeholder="Enter Description"></textarea>
+                    </td>
+                    <td>
+                        <input type="number" name="debit[]" class="form-control" step="0.01" value="0.00" />
+                    </td>
+                    <td>
+                        <input type="number" name="credit[]" class="form-control" step="0.01" value="0.00" />
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-minus"></i></button>
+                    </td>
+                </tr>
+            `;
 
-            $(".debit").each(function () {
-                totalDebit += parseFloat($(this).val()) || 0;
-            });
+            // Append the new row to the table body
+            $('#journal-table tbody').append(newRow);
 
-            $(".credit").each(function () {
-                totalCredit += parseFloat($(this).val()) || 0;
-            });
-
-            $("#debitTotal").text(formatCurrency(totalDebit));
-            $("#creditTotal").text(formatCurrency(totalCredit));
-        }
-
-        $(document).on("keyup", ".debit, .credit", function () {
-            calculateTotals();
+            // Reinitialize Select2 for the new row
+            $('.select2').select2();
         });
 
-        // Call once to update if there are pre-filled values
-        calculateTotals();
+        // Remove row functionality
+        $(document).on('click', '.remove-row', function () {
+            $(this).closest('tr').remove();
+        });
     });
 
     // company to branch show
@@ -215,7 +248,7 @@
                             branchSelect.append(
                                 `<option value="${branch.id}">${branch.name}</option>`
                             );
-                            // toastr.success('Branch loaded successfully!');
+                            toastr.success('Branch loaded successfully!');
                         } else {
                             toastr.warning(response.message || 'No branch found for this company.');
                         }
@@ -232,5 +265,6 @@
             }
         });
     });
+
 </script>
 @endpush

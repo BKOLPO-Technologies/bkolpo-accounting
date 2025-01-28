@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Branch;
-use App\Models\ExpenseCategory;
+use App\Models\Ledger;
+use App\Models\LedgerGroup;
 use App\Models\Journal;
 use App\Models\Company;
 use App\Models\Transaction;
@@ -28,7 +29,7 @@ class JournalController extends Controller
      */
     public function index()
     {
-        $pageTitle = 'Journal Voucher List';
+        $pageTitle = 'Journal Entry List';
 
         $vouchers = Transaction::with('journals')->where('status',1)->latest()->get();
         return view('backend.admin.voucher.journal.index',compact('pageTitle','vouchers'));
@@ -39,10 +40,10 @@ class JournalController extends Controller
      */
     public function create()
     {
-        $pageTitle = 'Journal Voucher Create';
+        $pageTitle = 'Journal Entry';
         $branches = Branch::where('status',1)->latest()->get();
         $companies = Company::where('status',1)->latest()->get();
-        $ledgers = ExpenseCategory::where('status',1)->latest()->get();
+        $ledgers = Ledger::where('status',1)->latest()->get();
 
     $date = now()->format('mY');
 
@@ -78,64 +79,56 @@ class JournalController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
-
-        // Validate the incoming request data
-        $validatedData = $request->validate([
-            'transaction_code' => 'required',
-            'company_id' => 'required|exists:companies,id',
-            'branch_id' => 'required|exists:branches,id',
+        // Validate the request
+        $request->validate([
+            'transaction_code' => 'required|unique:journal_vouchers',
+            'company_id' => 'required',
+            'branch_id' => 'required',
             'transaction_date' => 'required|date',
+            'ledger_id' => 'required|array',
+            'ledger_id.*' => 'required|exists:ledgers,id',
+            'reference_no' => 'nullable|string',
             'description' => 'nullable|string',
+            'debit' => 'nullable|numeric',
+            'credit' => 'nullable|numeric',
         ]);
 
+        DB::beginTransaction();
+
         try {
-            // Start a database transaction
-            DB::beginTransaction();
-    
-            // Create the main transaction record
-            $transaction = new Transaction();
-            $transaction->transaction_code = $validatedData['transaction_code'];
-            $transaction->credit_branch_id = $validatedData['branch_id'];
-            $transaction->credit_account_id = $validatedData['company_id'];
-            $transaction->transaction_date = $validatedData['transaction_date'];
-            $transaction->description = $validatedData['description'];
-            $transaction->created_by = auth()->user()->id ?? null;
-            $transaction->status = 1; // Default status for Journal Voucher
-            $transaction->save();
-    
-            // Loop through the `ledger_id` array in the request
-            if ($request->has('ledger_id') && is_array($request->ledger_id)) {
-                foreach ($request->ledger_id as $key => $ledgerId) {
-                    // Skip if ledger_id is empty or invalid
-                    if (!empty($ledgerId)) {
-                        // Create a new Journal entry
-                        $transactionLedger = new Journal();
-                        $transactionLedger->transaction_id = $transaction->id;
-                        $transactionLedger->category_id = $ledgerId;      
-                        $transactionLedger->description = $request->description[$key] ?? null; 
-                        $transactionLedger->debit = $request->debit[$key] ?? 0;        
-                        $transactionLedger->credit = $request->credit[$key] ?? 0;   
-                        $transactionLedger->save();                                  
-                    }
-                }
+            // Create a new JournalVoucher
+            $journalVoucher = JournalVoucher::create([
+                'transaction_code' => $request->transaction_code,
+                'company_id' => $request->company_id,
+                'branch_id' => $request->branch_id,
+                'transaction_date' => $request->transaction_date,
+            ]);
+
+            // Save the JournalVoucherDetails
+            $details = [];
+            foreach ($request->ledger_id as $index => $ledgerId) {
+                $details[] = [
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id' => $ledgerId,
+                    'reference_no' => $request->reference_no[$index] ?? '',
+                    'description' => $request->description[$index] ?? '',
+                    'debit' => $request->debit[$index] ?? 0,
+                    'credit' => $request->credit[$index] ?? 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
             }
-            // Commit the transaction
+
+            JournalVoucherDetail::insert($details);
+
             DB::commit();
 
-            return redirect()->route('journal-voucher.index')->with('success','Transaction saved successfully.');
-
+            return redirect()->route('journal-voucher.index')->with('success', 'Journal Voucher saved successfully!');
         } catch (\Exception $e) {
-            // Rollback the transaction in case of error
             DB::rollBack();
-    
-            // Log the error for debugging
-            Log::error('Error saving transaction: ' . $e->getMessage());
-
-            return redirect()->back()->with('error','An error occurred while saving the transaction. Please try again.');
+            return back()->withErrors(['error' => 'An error occurred while saving the journal voucher']);
         }
     }
-
     /**
      * Display the specified resource.
      */
