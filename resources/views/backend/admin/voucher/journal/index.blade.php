@@ -38,11 +38,10 @@
             <th>SL</th>
             <th>Voucher No</th>
             <th>Branch Name</th>
-            <th>Date</th>
-            <!-- <th>Head Of Account Name</th>
+            <th>Head Of Account Name</th>
             <th>DR(৳)</th>
-            <th>CR(৳)</th> -->
-            <th>Status</th>
+            <th>CR(৳)</th>
+            <th>Date</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -52,33 +51,16 @@
                 <td>{{ $loop->iteration }}</td> 
                 <td>{{ $voucher->transaction_code }}</td>
                 <td>{{ $voucher->branch->name ?? 'N/A' }}</td>
-                <td>{{ \Carbon\Carbon::parse($voucher->transaction_date)->format('d F Y') }}</td>
-                <!-- <td>
-                    @foreach ($voucher->journals as $journal)
-                        <div>{{ $journal->category->name ?? 'N/A' }}</div>
-                    @endforeach
+                <td>
+                    0
                 </td>
                 <td>
-                    @foreach ($voucher->journals as $journal)
-                        <div>{{ $journal->credit }}</div>
-                    @endforeach
+                    0
                 </td>
                 <td>
-                    @foreach ($voucher->journals as $journal)
-                        <div>{{ $journal->debit }}</div>
-                    @endforeach
-                </td> -->
-                <td>
-                    @if($voucher->status == 1)
-                        <a href="#" class="badge badge-success">
-                            <span class="badge bg-success">Journal Voucher</span>
-                        </a>
-                    @else
-                        <a href="#" class="badge badge-danger">
-                            <span class="badge bg-danger">Unknown</span>
-                        </a>
-                    @endif
-                </td>           
+                    0
+                </td>  
+                <td>{{ \Carbon\Carbon::parse($voucher->transaction_date)->format('d F Y') }}</td>   
                 <td class="col-2">
                     <!-- View Button -->
                     <a href="{{ route('journal-voucher.show', $voucher->id) }}" class="btn btn-success btn-sm">
