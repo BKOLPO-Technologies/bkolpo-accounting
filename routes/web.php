@@ -7,6 +7,7 @@ use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\BranchController;
+use App\Http\Controllers\Backend\ChartOfAccountController;
 use App\Http\Controllers\Backend\CompanyController;
 use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\JournalController;
@@ -106,6 +107,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/delete/{id}', [JournalController::class, 'destroy'])->name('delete');
         Route::get('/view/{id}', [JournalController::class, 'show'])->name('show');
         Route::get('/get-branches/{companyId}', [JournalController::class, 'getBranchesByCompany']);
+    }); 
+
+    /* ==================== Chart of account =================== */
+    Route::prefix('chart_of_accounts')->as('chart_of_accounts.')->group(function () {
+        Route::get('/', [ChartOfAccountController::class, 'index'])->name('index');
+        Route::get('/create', [ChartOfAccountController::class, 'create'])->name('create');
     }); 
 
     /* ==================== Invoice =================== */

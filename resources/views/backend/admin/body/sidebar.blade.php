@@ -151,8 +151,8 @@
           <!-- ---------------- -->
 
           <!----- Start Voucher Area ----->
-          <li class="nav-item {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show') ? 'active' : '' }}">
+          <li class="nav-item {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create') ? 'active' : '' }}">
               <i class="nav-icon fas fa-receipt"></i>
               <p>
                 Voucher
@@ -176,8 +176,32 @@
                     </a>
                   </li>
                 </ul>
+
               </li>
             </ul>
+
+            <ul class="nav nav-treeview" style="{{ Route::is('chart_of_accounts.index', 'chart_of_accounts.create') ? 'display: block;' : 'display: none;' }}">
+              <li class="nav-item {{ Route::is('chart_of_accounts.index', 'chart_of_accounts.create') ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ Route::is('chart_of_accounts.index', 'chart_of_accounts.create') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Chart of account
+                    <i class="fas fa-angle-left right"></i>
+                  </p>
+                </a>
+
+                <ul class="nav nav-treeview" style="{{ Route::is('chart_of_accounts.index', 'chart_of_accounts.create') ? 'display: block;' : 'display: none;' }}">
+                  <li class="nav-item">
+                    <a href="{{ route('chart_of_accounts.index') }}" class="nav-link {{ Route::is('chart_of_accounts.index') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Chart of account</p>
+                    </a>
+                  </li>
+                </ul>
+
+              </li>
+            </ul>
+
           </li>
           <!----- End Voucher Area ----->
 
