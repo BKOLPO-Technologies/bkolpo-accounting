@@ -40,7 +40,11 @@
                                     </tr>
                                     <tr>
                                         <th>Ledger Name</th>
-                                        <td>{{ $ledger->ledger->name ?? 'N/A' }}</td>
+                                        <td>
+                                            @foreach($ledger->ledgerGroupDetails as $ledgerGroupDetail)
+                                                <p>{{ $ledgerGroupDetail->ledger->name ?? 'No Ledger' }}</p>
+                                            @endforeach
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Status</th>

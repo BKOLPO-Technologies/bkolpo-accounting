@@ -8,6 +8,8 @@ use App\Models\Branch;
 use App\Models\Ledger;
 use App\Models\LedgerGroup;
 use App\Models\Journal;
+use App\Models\JournalVoucher;
+use App\Models\JournalVoucherDetail;
 use App\Models\Company;
 use App\Models\Transaction;
 use Spatie\Permission\Models\Role;
@@ -79,18 +81,19 @@ class JournalController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         // Validate the request
         $request->validate([
             'transaction_code' => 'required|unique:journal_vouchers',
             'company_id' => 'required',
             'branch_id' => 'required',
             'transaction_date' => 'required|date',
-            'ledger_id' => 'required|array',
-            'ledger_id.*' => 'required|exists:ledgers,id',
-            'reference_no' => 'nullable|string',
-            'description' => 'nullable|string',
-            'debit' => 'nullable|numeric',
-            'credit' => 'nullable|numeric',
+            // 'ledger_id' => 'required|array',
+            // 'ledger_id.*' => 'required|exists:ledgers,id',
+            // 'reference_no' => 'nullable|string',
+            // 'description' => 'nullable|string',
+            // 'debit' => 'nullable|numeric',
+            // 'credit' => 'nullable|numeric',
         ]);
 
         DB::beginTransaction();

@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ledger_groups', function (Blueprint $table) {
+        Schema::create('ledger_group_details', function (Blueprint $table) {
             $table->id();
-            $table->string('group_name');
-            $table->tinyInteger('status')->nullable()->default(1)->comment('1 => Active, 0 => Inactive');
-            $table->string('created_by')->nullable();
-            $table->string('updated_by')->nullable();
+            $table->foreignId('ledger_group_id')->constrained('ledger_groups');  // Foreign key to ledger_groups table
+            $table->foreignId('ledger_id')->constrained('ledgers');  // Foreign key to ledgers table
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ledger_groups');
+        Schema::dropIfExists('ledger_group_details');
     }
 };

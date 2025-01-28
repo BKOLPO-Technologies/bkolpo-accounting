@@ -9,8 +9,14 @@ class LedgerGroup extends Model
     protected $guarded = [];
     
     // Relationship: A ledger group belongs to a ledger
-    public function ledger()
+    public function ledgers()
     {
-        return $this->belongsTo(Ledger::class);
+        return $this->belongsToMany(Ledger::class, 'ledger_group_details', 'ledger_group_id', 'ledger_id');
     }
+
+    public function ledgerGroupDetails()
+    {
+        return $this->hasMany(LedgerGroupDetail::class);
+    }
+    
 }
