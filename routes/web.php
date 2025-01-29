@@ -10,17 +10,15 @@ use App\Http\Controllers\Backend\BranchController;
 use App\Http\Controllers\Backend\ChartOfAccountController;
 use App\Http\Controllers\Backend\CompanyController;
 use App\Http\Controllers\Backend\InvoiceController;
-use App\Http\Controllers\Backend\JournalController;
 use App\Http\Controllers\Backend\ProjectController;
 use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\EmployeeController;
 use App\Http\Controllers\Backend\SupplierController;
-use App\Http\Controllers\Backend\TransactionController;
 use App\Http\Controllers\Backend\PaymentMethodController;
-use App\Http\Controllers\Backend\ExpenseCategoryController;
 use App\Http\Controllers\Backend\CompanyInformationController;
 use App\Http\Controllers\Backend\LedgerController;
 use App\Http\Controllers\Backend\LedgerGroupController;
+use App\Http\Controllers\Backend\JournalController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');

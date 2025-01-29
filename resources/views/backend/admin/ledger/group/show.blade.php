@@ -39,14 +39,6 @@
                                         <td>{{ $ledger->group_name ?? 'N/A' }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Ledger Name</th>
-                                        <td>
-                                            @foreach($ledger->ledgerGroupDetails as $ledgerGroupDetail)
-                                                <p>{{ $ledgerGroupDetail->ledger->name ?? 'No Ledger' }}</p>
-                                            @endforeach
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <th>Status</th>
                                         <td>
                                             @if($ledger->status)

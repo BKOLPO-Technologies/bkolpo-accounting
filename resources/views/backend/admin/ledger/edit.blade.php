@@ -48,6 +48,17 @@
                                           </div>
                                       </div>
                                       <div class="col-md-6 mb-2">
+                                            <label for="group" class="form-label">Select Group</label>
+                                            <select id="group" name="group_id[]" class="select2" multiple="multiple" style="width: 100%;">
+                                                @foreach($groups as $group)
+                                                    <option value="{{ $group->id }}" 
+                                                        {{ in_array($group->id, $ledger->groups->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                                        {{ $group->group_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                      <div class="col-md-12 mb-2">
                                           <label for="status" class="form-label">Status
                                               @error('status')
                                                   <span class="text-danger">{{ $message }}</span>

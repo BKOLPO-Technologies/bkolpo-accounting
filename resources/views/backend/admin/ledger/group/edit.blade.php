@@ -46,24 +46,7 @@
                                                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $ledgerGroup->group_name) }}" placeholder="Enter Group Name">
                                             </div>
                                         </div>
-
                                         <div class="col-md-6 mb-2">
-                                            <label for="ledgers" class="form-label">Select Ledgers
-                                                @error('ledger_ids')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </label>
-                                            <select id="ledgers" name="ledger_ids[]" class="form-control select2"  multiple="multiple">
-                                                @foreach($ledgers as $led)
-                                                    <option value="{{ $led->id }}" 
-                                                        {{ in_array($led->id, old('ledger_ids', $ledgerGroup->ledgers->pluck('id')->toArray() ?? [])) ? 'selected' : '' }}>
-                                                        {{ $led->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-
-                                        <div class="col-md-12 mb-2">
                                             <label for="status" class="form-label">Status
                                                 @error('status')
                                                     <span class="text-danger">{{ $message }}</span>

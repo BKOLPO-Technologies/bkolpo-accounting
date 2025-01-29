@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('transaction_code')->unique();
             $table->foreignId('company_id')->constrained()->onDelete('cascade');
             $table->foreignId('branch_id')->constrained()->onDelete('cascade');
-            $table->date('transaction_date');
+            $table->date('transaction_date'); 
+            $table->text('description')->nullable();
+            $table->tinyInteger('status')->default(1)->comment('0 => Draft, 1 => Pending, 2 => Approved');
             $table->timestamps();
         });
     }

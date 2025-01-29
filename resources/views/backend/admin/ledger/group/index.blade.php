@@ -37,7 +37,6 @@
                                         <tr>
                                             <th>SL</th>
                                             <th>Group Name</th>
-                                            <th>Ledger Name</th>
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
@@ -47,11 +46,6 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td> 
                                                 <td>{{ $ledger->group_name }}</td>
-                                                <td>
-                                                    @foreach($ledger->ledgerGroupDetails as $ledgerGroupDetail)
-                                                        <p>{{ $ledgerGroupDetail->ledger->name ?? 'No Ledger' }}</p>
-                                                    @endforeach
-                                                </td>
                                                 <td>
                                                     @if($ledger->status == 1)
                                                         <a href="#" class="badge badge-success">

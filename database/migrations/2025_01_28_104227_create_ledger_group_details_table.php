@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('ledger_group_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ledger_group_id')->constrained('ledger_groups');  // Foreign key to ledger_groups table
-            $table->foreignId('ledger_id')->constrained('ledgers');  // Foreign key to ledgers table
+            $table->unsignedBigInteger('ledger_id');
+            $table->unsignedBigInteger('group_id');
+            $table->foreign('ledger_id')->references('id')->on('ledgers')->onDelete('cascade');
+            $table->foreign('group_id')->references('id')->on('ledger_groups')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -48,6 +48,19 @@
                                           </div>
                                       </div>
                                       <div class="col-md-6 mb-2">
+                                            <label for="group" class="form-label">Select Group
+                                                @error('group_id')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </label>
+                                            <select id="group" name="group_id[]" class="select2" multiple="multiple" data-placeholder="Select a Group" data-dropdown-css-class="select2-purple" style="width: 100%;">
+                                                <option value="">Select Group</option>
+                                                @foreach($groups as $group)
+                                                    <option value="{{ $group->id }}" data-name="{{ $group->group_name }}">{{ $group->group_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                      <div class="col-md-12 mb-2">
                                           <label for="status" class="form-label">Status
                                               @error('status')
                                                   <span class="text-danger">{{ $message }}</span>

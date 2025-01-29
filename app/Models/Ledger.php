@@ -13,4 +13,13 @@ class Ledger extends Model
     {
         return $this->hasMany(LedgerGroup::class);
     }
+
+    public function groups() {
+        return $this->belongsToMany(LedgerGroup::class, 'ledger_group_details', 'ledger_id', 'group_id');
+    }
+
+    public function journalVoucherDetails()
+    {
+        return $this->hasMany(JournalVoucherDetail::class, 'ledger_id', 'id');
+    }
 }

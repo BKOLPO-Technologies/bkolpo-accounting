@@ -113,14 +113,29 @@
                                                                     <select class="form-control" name="ledger_id[]">
                                                                         <option value="">Select Account</option>
                                                                         @foreach($ledgers as $ledger)
-                                                                            <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
+                                                                            <option value="{{ $ledger->id }}" 
+                                                                                {{ old("ledger_id.$i") == $ledger->id ? 'selected' : '' }}>
+                                                                                {{ $ledger->name }}
+                                                                            </option>
                                                                         @endforeach
                                                                     </select>
                                                                 </td>
-                                                                <td><input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No"></td>
-                                                                <td><textarea class="form-control" name="description[]" rows="1"  placeholder="Enter Description"></textarea></td>
-                                                                <td><input type="number" class="form-control text-end debit" name="debit[]" value="0.00"  placeholder="Enter Debit Amount"></td>
-                                                                <td><input type="number" class="form-control text-end credit" name="credit[]" value="0.00"  placeholder="Enter Credit Amount"></td>
+                                                                <td>
+                                                                    <input type="text" class="form-control" name="reference_no[]" 
+                                                                        placeholder="Enter Reference No" value="{{ old("reference_no.$i") }}">
+                                                                </td>
+                                                                <td>
+                                                                    <textarea class="form-control" name="description[]" rows="1"  
+                                                                        placeholder="Enter Description">{{ old("description.$i") }}</textarea>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control text-end debit" name="debit[]" 
+                                                                        value="{{ old("debit.$i", '0.00') }}" placeholder="Enter Debit Amount">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control text-end credit" name="credit[]" 
+                                                                        value="{{ old("credit.$i", '0.00') }}" placeholder="Enter Credit Amount">
+                                                                </td>
                                                             </tr>
                                                         @endfor
                                                     </tbody>

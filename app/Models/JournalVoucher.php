@@ -13,6 +13,16 @@ class JournalVoucher extends Model
         'transaction_date',
     ];
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
     public function details()
     {
         return $this->hasMany(JournalVoucherDetail::class);

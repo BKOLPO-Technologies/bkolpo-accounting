@@ -39,6 +39,14 @@
                                         <td>{{ $ledger->name ?? 'N/A' }}</td>
                                     </tr>
                                     <tr>
+                                        <th>Group Name</th>
+                                        <td>
+                                            @foreach($ledger->groups as $group)
+                                                <span class="badge badge-info">{{ $group->group_name }}</span>
+                                            @endforeach
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <th>Status</th>
                                         <td>
                                             @if($ledger->status)

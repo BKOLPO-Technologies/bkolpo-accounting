@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ledger;
+use App\Models\LedgerGroup;
+use App\Models\LedgerGroupDetail;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
@@ -24,7 +26,7 @@ class LedgerController extends Controller
     {
         $pageTitle = 'Ledger List';
 
-        $ledgers = Ledger::latest()->get();
+        $ledgers = Ledger::with(['journalVoucherDetails'])->get();
         return view('backend.admin.ledger.index',compact('pageTitle','ledgers'));
     }
 
@@ -34,26 +36,37 @@ class LedgerController extends Controller
     public function create()
     {
         $pageTitle = 'Ledger Create';
-        return view('backend.admin.ledger.create',compact('pageTitle'));
+        $groups = LedgerGroup::where('status',1)->latest()->get();
+        return view('backend.admin.ledger.create',compact('pageTitle','groups'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {  
         // dd($request->all());
         // Validate the incoming request
-        $validatedData = $request->validate([
-            'name' => 'required',
+        $validatedData =  $request->validate([
+            'name' => 'required|string|max:255',
+            'group_id' => 'required|array',
+            'group_id.*' => 'exists:ledger_groups,id'
         ]);
-
+        
         // Create the Ledger record
         $ledger = Ledger::create([
             'name'          => $request->name,
             'status'        => $request->status,
             'created_by'    => Auth::user()->id,
         ]);
+
+        // Attach groups to Ledger
+        foreach ($request->group_id as $groupId) {
+            LedgerGroupDetail::create([
+                'ledger_id' => $ledger->id,
+                'group_id' => $groupId
+            ]);
+        }
 
         return redirect()->route('ledger.index')->with('success', 'Ledger created successfully.');
     }
@@ -74,10 +87,10 @@ class LedgerController extends Controller
      */
     public function edit(string $id)
     {
-        $ledger = Ledger::findOrFail($id);
-
+        $ledger = Ledger::with('groups')->findOrFail($id);
+        $groups = LedgerGroup::where('status', 1)->latest()->get();
         $pageTitle = 'Ledger Edit';
-        return view('backend.admin.ledger.edit', compact('ledger','pageTitle'));
+        return view('backend.admin.ledger.edit', compact('ledger','groups','pageTitle'));
     }
 
     /**
@@ -85,15 +98,21 @@ class LedgerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validatedData = $request->validate([
-            'name' => 'required',
+        $validatedData =  $request->validate([
+            'name' => 'required|string|max:255',
+            'group_id' => 'required|array',
+            'group_id.*' => 'exists:ledger_groups,id'
         ]);
+
 
         $ledger = Ledger::findOrFail($id);
 
         $ledger->name = $request->input('name');
         $ledger->status = $request->input('status');
         $ledger->save();
+
+        // Sync groups in ledger_group_details
+        $ledger->groups()->sync($request->group_id);
 
         return redirect()->route('ledger.index')->with('success', 'Ledger updated successfully.');
     }
@@ -103,7 +122,12 @@ class LedgerController extends Controller
      */
     public function destroy(string $id)
     {
-        $ledger = Ledger::find($id);
+        $ledger = Ledger::findOrFail($id);
+    
+        // Remove all related groups
+        $ledger->groups()->detach();
+    
+        // Delete ledger
         $ledger->delete();
         
         return redirect()->route('ledger.index')->with('success', 'Ledger deleted successfully.');

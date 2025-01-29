@@ -7,21 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class LedgerGroupDetail extends Model
 {
     // Define the fields that are mass-assignable
-    protected $fillable = ['ledger_group_id', 'ledger_id'];
-
-    /**
-     * Get the ledger group that owns the ledger group detail.
-     */
-    public function ledgerGroup()
-    {
-        return $this->belongsTo(LedgerGroup::class);
-    }
-
+    protected $fillable = ['group_id', 'ledger_id'];
+  
     /**
      * Get the ledger associated with the ledger group detail.
      */
-    public function ledger()
-    {
+
+    public function ledger() {
         return $this->belongsTo(Ledger::class);
+    }
+
+    public function group() {
+        return $this->belongsTo(LedgerGroup::class, 'group_id');
     }
 }

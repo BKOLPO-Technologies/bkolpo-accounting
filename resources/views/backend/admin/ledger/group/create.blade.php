@@ -47,19 +47,6 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-2">
-                                            <label for="ledger" class="form-label">Select Ledger
-                                                @error('ledger_id')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </label>
-                                            <select id="ledger" name="ledger_id[]" class="select2" multiple="multiple" data-placeholder="Select a Ledger" data-dropdown-css-class="select2-purple" style="width: 100%;">
-                                                <option value="">Select Ledger</option>
-                                                @foreach($ledgers as $ledger)
-                                                    <option value="{{ $ledger->id }}" data-name="{{ $ledger->name }}">{{ $ledger->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-md-12 mb-2">
                                             <label for="status" class="form-label">Status
                                                 @error('status')
                                                     <span class="text-danger">{{ $message }}</span>

@@ -111,31 +111,11 @@
           <!-- ---------------- -->
 
           <!-- --- Ledger Category --- -->
-          <li class="nav-item {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show') ? 'active' : '' }}">
+          <li class="nav-item {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show','ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show','ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show') ? 'active' : '' }}">
               <i class="nav-icon fas fa-university"></i>
               <p>
-                Ledger 
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('ledger.index') }}" class="nav-link {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Ledger List</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <!-- ---------------- -->
-
-          <!-- --- Ledger Group Category --- -->
-          <li class="nav-item {{ Route::is('ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-university"></i>
-              <p>
-                Ledger Group
+                Chart Of Accounts 
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
@@ -143,7 +123,11 @@
               <li class="nav-item">
                 <a href="{{ route('ledger.group.index') }}" class="nav-link {{ Route::is('ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Ledger Group List</p>
+                  <p>Group List</p>
+                </a>
+                <a href="{{ route('ledger.index') }}" class="nav-link {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Ledger List</p>
                 </a>
               </li>
             </ul>
@@ -155,31 +139,18 @@
             <a href="#" class="nav-link {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create') ? 'active' : '' }}">
               <i class="nav-icon fas fa-receipt"></i>
               <p>
-                Voucher
+              Journal
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview" style="{{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show') ? 'display: block;' : 'display: none;' }}">
-              <li class="nav-item {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show') ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show') ? 'active' : '' }}">
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('journal-voucher.index') }}" class="nav-link {{ Route::is('journal-voucher.index','journal-voucher.create') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>
-                    Journal
-                    <i class="fas fa-angle-left right"></i>
-                  </p>
+                  <p>Journal List</p>
                 </a>
-                <ul class="nav nav-treeview" style="{{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show') ? 'display: block;' : 'display: none;' }}">
-                  <li class="nav-item">
-                    <a href="{{ route('journal-voucher.index') }}" class="nav-link {{ Route::is('journal-voucher.index') ? 'active' : '' }}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Journal List</p>
-                    </a>
-                  </li>
-                </ul>
-
               </li>
             </ul>
-
             <ul class="nav nav-treeview" style="{{ Route::is('chart_of_accounts.index', 'chart_of_accounts.create') ? 'display: block;' : 'display: none;' }}">
               <li class="nav-item {{ Route::is('chart_of_accounts.index', 'chart_of_accounts.create') ? 'menu-open' : '' }}">
                 <a href="#" class="nav-link {{ Route::is('chart_of_accounts.index', 'chart_of_accounts.create') ? 'active' : '' }}">
