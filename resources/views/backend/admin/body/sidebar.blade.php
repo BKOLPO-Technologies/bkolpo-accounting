@@ -206,8 +206,8 @@
           <!----- End Voucher Area ----->
 
           
-         <li class="nav-item">
-           <a href="#" class="nav-link">
+         <li class="nav-item {{ Route::is('admin.report', 'admin.report.generalLedger') ? 'menu-open' : '' }}">
+           <a href="#" class="nav-link {{ Route::is('admin.report', 'admin.report.generalLedger') ? 'active' : '' }}">
              <i class="nav-icon fas fa-receipt"></i>
              <p>
                Report
@@ -215,8 +215,8 @@
              </p>
            </a>
            <ul class="nav nav-treeview">
-             <li class="nav-item">
-               <a href="#" class="nav-link">
+             <li class="nav-item {{ Route::is('admin.report', 'admin.report.generalLedger') ? 'menu-open' : '' }}">
+               <a href="#" class="nav-link {{ Route::is('admin.report', 'admin.report.generalLedger') ? 'active' : '' }}">
                  <i class="far fa-circle nav-icon"></i>
                  <p>
                    Accounts
@@ -224,6 +224,14 @@
                  </p>
                </a>
                <ul class="nav nav-treeview" style="display: none;">
+
+                 <li class="nav-item">
+                   <a href="{{ route('admin.report') }}" class="nav-link {{ Route::is('admin.report', 'admin.report.generalLedger') ? 'active' : '' }}">
+                     <i class="far fa-circle nav-icon"></i>
+                     <p>Report</p>
+                   </a>
+                 </li>
+
                  <li class="nav-item">
                    <a href="#" class="nav-link">
                      <i class="far fa-circle nav-icon"></i>
