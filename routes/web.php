@@ -7,7 +7,7 @@ use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\BranchController;
-use App\Http\Controllers\Backend\ChartOfAccountController;
+use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\Backend\CompanyController;
 use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\ProjectController;
@@ -130,6 +130,13 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/edit/{id}', [ProjectController::class, 'edit'])->name('admin.projectEdit');
         Route::get('/view/{id}', [ProjectController::class, 'view'])->name('admin.projectView');
         Route::put('/update/{id}', [ProjectController::class, 'update'])->name('admin.projectUpdate');
+    });
+
+    
+    /* ==================== Projects =================== */
+    Route::prefix('report')->group(function () {
+        Route::get('/', [ReportController::class, 'index'])->name('admin.report');
+        Route::get('/general-ledger', [ReportController::class, 'generalLedger'])->name('admin.report.generalLedger');
     });
 
     /* ==================== supplier =================== */
