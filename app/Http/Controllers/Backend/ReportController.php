@@ -4,18 +4,34 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Journal;
+use App\Models\JournalVoucher;
+use App\Models\JournalVoucherDetail;
+use Carbon\Carbon;
+use Auth;
+use App\Traits\TrialBalanceTrait;
 
 class ReportController extends Controller
 {
+    use TrialBalanceTrait;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $pageTitle = 'Report Index';
-
+        $pageTitle = 'Report List';
         return view('backend.admin.report.account.index',compact('pageTitle'));
     }
+
+    // trial balance report
+    public function trialBalance()
+    {
+        $pageTitle = 'Trial Balance Report';
+        $trialBalances = $this->getTrialBalance();
+        return view('backend.admin.report.account.trial_balance',compact('pageTitle','trialBalances'));
+    }
+
 
     /**
      * Display a listing of the resource.

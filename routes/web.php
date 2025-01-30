@@ -107,6 +107,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/get-branches/{companyId}', [JournalController::class, 'getBranchesByCompany']);
     }); 
 
+    /* ==================== Report =================== */
+    Route::prefix('report/accounts')->as('report.')->group(function () {
+        Route::get('/', [ReportController::class, 'index'])->name('index');
+        Route::get('/trial/balance', [ReportController::class, 'trialBalance'])->name('trial.balance');
+    });
+
     /* ==================== Chart of account =================== */
     Route::prefix('chart_of_accounts')->as('chart_of_accounts.')->group(function () {
         Route::get('/', [ChartOfAccountController::class, 'index'])->name('index');
@@ -130,13 +136,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/edit/{id}', [ProjectController::class, 'edit'])->name('admin.projectEdit');
         Route::get('/view/{id}', [ProjectController::class, 'view'])->name('admin.projectView');
         Route::put('/update/{id}', [ProjectController::class, 'update'])->name('admin.projectUpdate');
-    });
-
-    
-    /* ==================== Projects =================== */
-    Route::prefix('report')->group(function () {
-        Route::get('/', [ReportController::class, 'index'])->name('admin.report');
-        Route::get('/general-ledger', [ReportController::class, 'generalLedger'])->name('admin.report.generalLedger');
     });
 
     /* ==================== supplier =================== */

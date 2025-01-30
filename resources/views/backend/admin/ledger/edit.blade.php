@@ -58,6 +58,28 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                        <div class="col-md-6 mb-2">
+                                          <label for="debit" class="form-label">Opening Balance (DR)
+                                              @error('debit')
+                                                  <span class="text-danger">{{ $message }}</span>
+                                              @enderror
+                                          </label>
+                                          <div class="input-group">
+                                              <span class="input-group-text"><i class="fa fa-money-bill-wave"></i></span>
+                                              <input type="number" min="0" class="form-control" id="debit" name="debit" value="{{ $ledger->debit }}" placeholder="Enter Opening Balance Debit">
+                                          </div>
+                                      </div>
+                                      <div class="col-md-6 mb-2">
+                                          <label for="credit" class="form-label">Ending Balance (CR)
+                                              @error('credit')
+                                                  <span class="text-danger">{{ $message }}</span>
+                                              @enderror
+                                          </label>
+                                          <div class="input-group">
+                                              <span class="input-group-text"><i class="fa fa-money-bill-wave"></i></span>
+                                              <input type="number" min="0" class="form-control" id="credit" name="credit" value="{{ $ledger->credit }}" placeholder="Enter Ending Balance Credit">
+                                          </div>
+                                      </div>
                                       <div class="col-md-12 mb-2">
                                           <label for="status" class="form-label">Status
                                               @error('status')

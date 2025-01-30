@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['pageTitle' => 'Journal Voucher List'])
+@extends('layouts.admin', ['pageTitle' => 'Report List'])
 @section('admin')
 <link rel="stylesheet" href="{{ asset('backend/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
 <div class="content-wrapper">
@@ -29,15 +29,22 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <a href="{{ route('admin.report.generalLedger') }}">General Ledger</a>
-                                    <p>The beginning balance, transactions, and total for each account in your chart of accounts.</p>
+                            <div class="card shadow">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">Bookkeeping</h5>
                                 </div>
-                                <!-- <div class="col-sm-6">
-                                    <a href="#">General Ledger</a>
-                                    <p>The beginning balance, transactions, and total for each account in your chart of accounts.</p>
-                                </div> -->
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                        <a href="{{ route('report.trial.balance') }}" class="fw-bold text-primary">Trial Balance</a>
+                                        <p class="mb-0">This report summarises the debit and credit balances of each account on your chart of accounts during a period of time.</p>
+                                        </div>
+                                        <div class="col-lg-6">
+                                        <a href="#" class="fw-bold text-primary">Balance Sheet</a>
+                                        <p class="mb-0">What you own (assets), what you owe (liabilities), and what you invested (equity) compared to last year.</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -176,138 +176,9 @@
           </li>
           <!----- End Voucher Area ----->
 
-          
-         <!-- 
-          <li class="nav-item {{ Route::is('admin.report', 'admin.report.generalLedger') ? 'menu-open' : '' }}">
-           <a href="#" class="nav-link {{ Route::is('admin.report', 'admin.report.generalLedger') ? 'active' : '' }}">
-             <i class="nav-icon fas fa-receipt"></i>
-             <p>
-               Report
-               <i class="fas fa-angle-left right"></i>
-             </p>
-           </a>
-           <ul class="nav nav-treeview">
-             <li class="nav-item {{ Route::is('admin.report', 'admin.report.generalLedger') ? 'menu-open' : '' }}">
-               <a href="#" class="nav-link {{ Route::is('admin.report', 'admin.report.generalLedger') ? 'active' : '' }}">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>
-                   Accounts
-                   <i class="fas fa-angle-left right"></i>
-                 </p>
-               </a>
-               <ul class="nav nav-treeview" style="display: none;">
-
-                 <li class="nav-item">
-                   <a href="{{ route('admin.report') }}" class="nav-link {{ Route::is('admin.report', 'admin.report.generalLedger') ? 'active' : '' }}">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Report</p>
-                   </a>
-                 </li>
-
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Ledger</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Trial Balance</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Cost Of Revenue</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Profit Or Loss Accounts</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Retained Earnings</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Fixed Asset Schedule</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Balance Sheet</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Cash Flow</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Receive Payment</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Notes</p>
-                   </a>
-                 </li>
-               </ul>
-             </li>
-             <li class="nav-item">
-               <a href="#" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>
-                   General
-                   <i class="fas fa-angle-left right"></i>
-                 </p>
-               </a>
-               <ul class="nav nav-treeview" style="display: none;">
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Branch</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Ledger</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Bank Cash</p>
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a href="#" class="nav-link">
-                     <i class="far fa-circle nav-icon"></i>
-                     <p>Voucher</p>
-                   </a>
-                 </li>
-               </ul>
-             </li>
-           </ul>
-         </li> 
-         -->
-
           @php
               // Determine active state for menu items
-              $isReportActive = Route::is('admin.report', 'admin.report.generalLedger');
+              $isReportActive = Route::is('report.index','report.trial.balance');
           @endphp
 
           <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
@@ -330,14 +201,14 @@
                       </a>
                       <ul class="nav nav-treeview">
                           <li class="nav-item">
-                              <a href="{{ route('admin.report') }}" class="nav-link {{ Route::is('admin.report', 'admin.report.generalLedger') ? 'active' : '' }}">
+                              <a href="{{ route('report.index') }}" class="nav-link {{ Route::is('report.index') ? 'active' : '' }}">
                                   <i class="far fa-circle nav-icon"></i>
                                   <p>Report</p>
                               </a>
                           </li>
                           
                           <li class="nav-item">
-                              <a href="#" class="nav-link">
+                              <a href="{{ route('report.trial.balance') }}" class="nav-link {{ Route::is('report.trial.balance') ? 'active' : '' }}">
                                   <i class="far fa-circle nav-icon"></i>
                                   <p>Trial Balance</p>
                               </a>

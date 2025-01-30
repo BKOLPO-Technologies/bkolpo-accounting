@@ -38,6 +38,8 @@
                                             <th>SL</th>
                                             <th>Name</th>
                                             <th>Group Name</th> 
+                                            <th>Opening DR (৳)</th>
+                                            <th>Ending CR (৳)</th>
                                             <th>DR (৳)</th>
                                             <th>CR (৳)</th>
                                             <th>Status</th>
@@ -54,6 +56,8 @@
                                                         <span class="badge badge-info">{{ $group->group_name }}</span>
                                                     @endforeach
                                                 </td>
+                                                <td>৳{{ number_format($ledger->debit, 2) }}</td>
+                                                <td>৳{{ number_format($ledger->credit, 2) }}</td>
                                                 <td>৳{{ number_format($ledger->ledgerSums['debit'], 2) }}</td>  
                                                 <td>৳{{ number_format($ledger->ledgerSums['credit'], 2) }}</td>
                                                 <td>
@@ -87,7 +91,7 @@
                                     <!-- Total Row -->
                                     <tfoot>
                                         <tr>
-                                            <th colspan="3" class="text-right">Total:</th>
+                                            <th colspan="5" class="text-right">Total:</th>
                                             <th>৳{{ number_format($totals['totalDebit'], 2) }}</th> 
                                             <th>৳{{ number_format($totals['totalCredit'], 2) }}</th> 
                                             <th colspan="2"></th>

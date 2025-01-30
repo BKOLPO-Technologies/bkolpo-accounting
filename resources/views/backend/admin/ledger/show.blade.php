@@ -47,6 +47,14 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <th>Opening Balance (DR)</th>
+                                        <td>{{ $ledger->debit ?? '0.00' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Ending Balance (CR)</th>
+                                        <td>{{ $ledger->credit ?? '0.00' }}</td>
+                                    </tr>
+                                    <tr>
                                         <th>Status</th>
                                         <td>
                                             @if($ledger->status)

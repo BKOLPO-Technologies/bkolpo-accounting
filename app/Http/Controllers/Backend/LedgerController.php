@@ -67,6 +67,8 @@ class LedgerController extends Controller
         $ledger = Ledger::create([
             'name'          => $request->name,
             'status'        => $request->status,
+            'debit'        => $request->debit,
+            'credit'        => $request->credit,
             'created_by'    => Auth::user()->id,
         ]);
 
@@ -118,6 +120,8 @@ class LedgerController extends Controller
         $ledger = Ledger::findOrFail($id);
 
         $ledger->name = $request->input('name');
+        $ledger->debit = $request->input('debit');
+        $ledger->credit = $request->input('credit');
         $ledger->status = $request->input('status');
         $ledger->save();
 
