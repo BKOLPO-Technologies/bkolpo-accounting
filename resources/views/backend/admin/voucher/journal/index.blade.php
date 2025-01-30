@@ -52,9 +52,7 @@
                                                 <td>{{ $voucher->transaction_code }}</td>
                                                 <td>{{ $voucher->company->name ?? 'N/A' }} / {{ $voucher->branch->name ?? 'N/A' }}</td>
                                                 <td>
-                                                    @foreach($voucher->details->pluck('ledger.name')->filter() as $ledgerName)
-                                                        <span class="badge bg-info">{{ $ledgerName }}</span>
-                                                    @endforeach
+                                                    <strong>{{ $voucher->details->pluck('ledger.name')->filter()->implode(', ') }}</strong>
                                                 </td>
                                                 <td class="text-end">৳{{ number_format($voucher->details->sum('debit'), 2) }}</td>
                                                 <td class="text-end">৳{{ number_format($voucher->details->sum('credit'), 2) }}</td>
@@ -73,6 +71,15 @@
                                             </tr>
                                         @endforeach
                                     </tbody>
+                                    <!-- Total Row -->
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="4" class="text-right">Total:</th>
+                                            <th class="text-end">৳{{ number_format($totalDebit, 2) }}</th>
+                                            <th class="text-end">৳{{ number_format($totalCredit, 2) }}</th>
+                                            <th colspan="2"></th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
 
                                 <!-- Move all modals outside the table -->
@@ -136,16 +143,14 @@
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th colspan="4" class="text-right">Total:</th>
+                                                                <th class="text-end">৳{{ number_format($voucher->details->sum('debit'), 2) }}</th>
+                                                                <th class="text-end">৳{{ number_format($voucher->details->sum('credit'), 2) }}</th>
+                                                            </tr>
+                                                        </tfoot>
                                                     </table>
-
-                                                    <!-- Invoice Summary -->
-                                                    <div class="row mt-3">
-                                                        <div class="col-md-6"></div>
-                                                        <div class="col-md-6 text-right">
-                                                            <h5><strong>Total Debit:</strong> ৳{{ number_format($voucher->details->sum('debit'), 2) }}</h5>
-                                                            <h5><strong>Total Credit:</strong> ৳{{ number_format($voucher->details->sum('credit'), 2) }}</h5>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <!-- Close Button -->

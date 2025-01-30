@@ -45,22 +45,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
-                                            $totalDebit = 0;
-                                            $totalCredit = 0;
-                                        @endphp
-
                                         @foreach($ledgers as $ledger) 
-                                            @php
-                                                // Sum debit and credit amounts only for this ledger
-                                                $ledgerDebit = $ledger->journalVoucherDetails->where('ledger_id', $ledger->id)->sum('debit');
-                                                $ledgerCredit = $ledger->journalVoucherDetails->where('ledger_id', $ledger->id)->sum('credit');
-
-                                                // Add to total sums
-                                                $totalDebit += $ledgerDebit;
-                                                $totalCredit += $ledgerCredit;
-                                            @endphp
-
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td> 
                                                 <td>{{ $ledger->name }}</td>
@@ -69,8 +54,8 @@
                                                         <span class="badge badge-info">{{ $group->group_name }}</span>
                                                     @endforeach
                                                 </td>
-                                                <td>৳{{ number_format($ledgerDebit, 2) }}</td>  <!-- DR Amount for the specific ledger -->
-                                                <td>৳{{ number_format($ledgerCredit, 2) }}</td> <!-- CR Amount for the specific ledger -->
+                                                <td>৳{{ number_format($ledger->ledgerSums['debit'], 2) }}</td>  
+                                                <td>৳{{ number_format($ledger->ledgerSums['credit'], 2) }}</td>
                                                 <td>
                                                     @if($ledger->status == 1)
                                                         <a href="#" class="badge badge-success">
@@ -99,13 +84,12 @@
                                             </tr>
                                         @endforeach
                                     </tbody>
-
                                     <!-- Total Row -->
                                     <tfoot>
                                         <tr>
                                             <th colspan="3" class="text-right">Total:</th>
-                                            <th>৳{{ number_format($totalDebit, 2) }}</th> <!-- Total DR Amount -->
-                                            <th>৳{{ number_format($totalCredit, 2) }}</th> <!-- Total CR Amount -->
+                                            <th>৳{{ number_format($totals['totalDebit'], 2) }}</th> 
+                                            <th>৳{{ number_format($totals['totalCredit'], 2) }}</th> 
                                             <th colspan="2"></th>
                                         </tr>
                                     </tfoot>
@@ -130,6 +114,7 @@
                                                                 <th>SL</th>
                                                                 <th>Reference No</th>
                                                                 <th>Description</th>
+                                                                <th>Date</th>
                                                                 <th class="text-end">Debit (৳)</th>
                                                                 <th class="text-end">Credit (৳)</th>
                                                             </tr>
@@ -149,6 +134,7 @@
                                                                     <td>{{ $loop->iteration }}</td>
                                                                     <td>{{ $voucherDetail->reference_no }}</td>
                                                                     <td>{{ $voucherDetail->description }}</td>
+                                                                    <td> {{ date('d M, Y', strtotime($voucherDetail->journalVoucher->transaction_date)) }}</td>
                                                                     <td>৳{{ number_format($voucherDetail->debit, 2) }}</td>
                                                                     <td>৳{{ number_format($voucherDetail->credit, 2) }}</td>
                                                                 </tr>
@@ -156,7 +142,7 @@
                                                         </tbody>
                                                         <tfoot>
                                                             <tr>
-                                                                <th colspan="3" class="text-right">Total:</th>
+                                                                <th colspan="4" class="text-right">Total:</th>
                                                                 <th>৳{{ number_format($totalDebit, 2) }}</th>
                                                                 <th>৳{{ number_format($totalCredit, 2) }}</th>
                                                             </tr>

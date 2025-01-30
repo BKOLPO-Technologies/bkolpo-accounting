@@ -16,9 +16,12 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Auth;
+use App\Traits\SumLedgerAmounts;
 
 class LedgerController extends Controller
 {
+    use SumLedgerAmounts;
+
     /**
      * Display a listing of the resource.
      */
@@ -27,7 +30,14 @@ class LedgerController extends Controller
         $pageTitle = 'Ledger List';
 
         $ledgers = Ledger::with(['journalVoucherDetails'])->get();
-        return view('backend.admin.ledger.index',compact('pageTitle','ledgers'));
+
+        $ledgers->each(function ($ledger) {
+            $ledger->ledgerSums = $this->getLedgerSums($ledger);
+        });
+
+        $totals = $this->getTotalSums($ledgers);
+        
+        return view('backend.admin.ledger.index',compact('pageTitle','ledgers','totals'));
     }
 
     /**

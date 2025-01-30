@@ -38,8 +38,15 @@ class JournalController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
+        $totalDebit = $journalVouchers->sum(function ($voucher) {
+            return $voucher->details->sum('debit');
+        });
+    
+        $totalCredit = $journalVouchers->sum(function ($voucher) {
+            return $voucher->details->sum('credit');
+        });
 
-        return view('backend.admin.voucher.journal.index',compact('pageTitle','journalVouchers'));
+        return view('backend.admin.voucher.journal.index',compact('pageTitle','journalVouchers','totalDebit','totalCredit'));
     }
 
     /**
