@@ -64,7 +64,7 @@
                                                                 if ($ledger->debit > 0) {
                                                                     $balance += $ledger->total_debit - $ledger->total_credit;
                                                                 } else {
-                                                                    $balance += $ledger->total_credit - $ledger->total_debit;
+                                                                    $balance += $ledger->total_debit;
                                                                 }
 
                                                                 $totalBalance += $balance;
