@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Journal;
 use App\Models\JournalVoucher;
+use App\Models\LedgerGroup;
 use App\Models\JournalVoucherDetail;
 use Carbon\Carbon;
 use Auth;
@@ -44,6 +45,17 @@ class ReportController extends Controller
         $trialBalances = $this->getTrialBalance($fromDate, $toDate);
         return view('backend.admin.report.account.trial_balance', compact('pageTitle', 'trialBalances', 'fromDate', 'toDate'));
     }
+
+    // balance shit report
+    public function balanceShit(Request $request)
+    {
+        // dd($request->all());
+        $pageTitle = 'Balance Shit Report';
+
+        return view('backend.admin.report.account.balance_shit', compact('pageTitle'));
+    }
+
+    
 
 
     /**

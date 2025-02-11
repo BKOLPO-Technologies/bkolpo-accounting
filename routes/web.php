@@ -111,6 +111,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::prefix('report/accounts')->as('report.')->group(function () {
         Route::get('/', [ReportController::class, 'index'])->name('index');
         Route::get('/trial/balance', [ReportController::class, 'trialBalance'])->name('trial.balance');
+        Route::get('/balance/shit', [ReportController::class, 'balanceShit'])->name('balance.shit');
     });
 
     /* ==================== Chart of account =================== */

@@ -178,7 +178,7 @@
 
           @php
               // Determine active state for menu items
-              $isReportActive = Route::is('report.index','report.trial.balance');
+              $isReportActive = Route::is('report.index','report.trial.balance','report.balance.shit');
           @endphp
 
           <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
@@ -213,6 +213,14 @@
                                   <p>Trial Balance</p>
                               </a>
                           </li>
+
+                          <li class="nav-item">
+                              <a href="{{ route('report.balance.shit') }}" class="nav-link {{ Route::is('report.balance.shit') ? 'active' : '' }}">
+                                  <i class="far fa-circle nav-icon"></i>
+                                  <p>Balance Sheet</p>
+                              </a>
+                          </li>
+
                           <li class="nav-item">
                               <a href="#" class="nav-link">
                                   <i class="far fa-circle nav-icon"></i>
@@ -235,12 +243,6 @@
                               <a href="#" class="nav-link">
                                   <i class="far fa-circle nav-icon"></i>
                                   <p>Fixed Asset Schedule</p>
-                              </a>
-                          </li>
-                          <li class="nav-item">
-                              <a href="#" class="nav-link">
-                                  <i class="far fa-circle nav-icon"></i>
-                                  <p>Balance Sheet</p>
                               </a>
                           </li>
                           <li class="nav-item">

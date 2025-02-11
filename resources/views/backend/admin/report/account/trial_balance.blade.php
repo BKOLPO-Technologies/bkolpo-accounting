@@ -64,10 +64,10 @@
                                             <table id="example3" class="table-striped table-bordered" style=" width: 100%;">
                                                 <thead style="border-bottom: 2px solid black; text-align:center;">
                                                     <tr>
-                                                    <th style="width: 5%;">Sl</th> <!-- Smaller column for Sl -->
-                <th style="width: 40%;">Ledger Name</th> <!-- Larger column for Ledger Name -->
-                <th class="text-end" style="width: 5%;">Debit (৳)</th> <!-- Smaller column for Debit -->
-                <th class="text-end" style="width: 5%;">Credit (৳)</th> <!-- Smaller column for Credit -->
+                                                        <th style="width: 5%;">Sl</th>
+                                                        <th style="width: 40%;">Ledger Name</th>
+                                                        <th class="text-end" style="width: 5%;">Debit (৳)</th>
+                                                        <th class="text-end" style="width: 5%;">Credit (৳)</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
