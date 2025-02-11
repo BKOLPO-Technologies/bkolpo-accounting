@@ -68,7 +68,7 @@
                                                     ৳{{ number_format(
                                                         ($ledger->debit > 0)
                                                             ? ($ledger->debit + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit']) // If opening balance is Debit
-                                                            : ($ledger->credit + $ledger->ledgerSums['credit'] - $ledger->ledgerSums['debit']), // If opening balance is Credit
+                                                            : ($ledger->ledgerSums['debit']), // If opening balance is Credit
                                                         2
                                                     ) }}
                                                 </td>
