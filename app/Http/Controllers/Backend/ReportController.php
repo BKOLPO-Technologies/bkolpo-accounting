@@ -25,11 +25,24 @@ class ReportController extends Controller
     }
 
     // trial balance report
-    public function trialBalance()
+    public function trialBalance(Request $request)
     {
+        // dd($request->all());
         $pageTitle = 'Trial Balance Report';
-        $trialBalances = $this->getTrialBalance();
-        return view('backend.admin.report.account.trial_balance',compact('pageTitle','trialBalances'));
+
+        // Check if the request has date filters
+        if ($request->has('from_date') && $request->has('to_date')) {
+            // Use the provided date range
+            $fromDate = $request->input('from_date');
+            $toDate = $request->input('to_date');
+        } else {
+            // Default: Last 1 month from today
+            $fromDate = now()->subMonth()->format('Y-m-d'); // Last 1 month
+            $toDate = now()->format('Y-m-d'); // Today's date
+        }
+        // Fetch the trial balance data based on the date range
+        $trialBalances = $this->getTrialBalance($fromDate, $toDate);
+        return view('backend.admin.report.account.trial_balance', compact('pageTitle', 'trialBalances', 'fromDate', 'toDate'));
     }
 
 
