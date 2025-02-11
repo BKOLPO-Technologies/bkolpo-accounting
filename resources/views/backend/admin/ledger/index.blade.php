@@ -63,7 +63,7 @@
                                                 <td>৳{{ number_format($ledger->debit, 2) }}</td>
                                                 <td>৳{{ number_format($ledger->ledgerSums['debit'], 2) }}</td>  
                                                 <td>৳{{ number_format($ledger->ledgerSums['credit'], 2) }}</td>
-                                                <td>৳{{ number_format($ledger->debit + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit'], 2) }}</td>
+                                                <!-- <td>৳{{ number_format($ledger->debit + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit'], 2) }}</td> -->
                                                 <td>
                                                     ৳{{ number_format(
                                                         ($ledger->debit > 0)
