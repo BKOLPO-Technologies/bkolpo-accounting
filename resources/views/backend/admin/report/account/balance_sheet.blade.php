@@ -46,7 +46,7 @@
                                         @foreach ($ledgerGroups as $group)
                                             <h2>{{ $group->group_name ?? 'N/A' }}</h2>
                                             <div class="table-responsive">
-                                                <table id="example10" border="1" cellpadding="5" cellspacing="0" style="width: 100%;">
+                                                <table id="example10" border="1" class="table-striped table-bordered" cellpadding="5" cellspacing="0" style="width: 100%;">
                                                     <thead>
                                                         <tr>
                                                             <th style="width: 85%;"></th>
