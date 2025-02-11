@@ -55,15 +55,9 @@
                                                     </thead>
                                                     <tbody>
                                                         @php
-                                                            $groupTotalDebit = 0;
-                                                            $groupTotalCredit = 0;
+                                                            $totalBalance = 0;
                                                         @endphp
                                                         @foreach ($group->ledgers as $ledger)
-                                                            @php
-                                                                $groupTotalDebit += $ledger->total_debit;
-                                                                $groupTotalCredit += $ledger->total_credit;
-                                                            @endphp
-
                                                             @php
                                                                 $balance = $ledger->debit;
 
@@ -72,6 +66,8 @@
                                                                 } else {
                                                                     $balance += $ledger->total_credit - $ledger->total_debit;
                                                                 }
+
+                                                                $totalBalance += $balance;
                                                             @endphp
                                                             <tr>
                                                                 <td>{{ $ledger->name }}</td>
@@ -82,7 +78,7 @@
                                                     <tfoot>
                                                         <tr>
                                                             <th>Total</th>
-                                                            <th>৳{{ number_format($groupTotalDebit, 2) }}</th>
+                                                            <th>৳{{ number_format($totalBalance, 2) }}</th>
                                                         </tr>
                                                     </tfoot>
                                                 </table>
