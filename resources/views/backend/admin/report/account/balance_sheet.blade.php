@@ -63,9 +63,19 @@
                                                                 $groupTotalDebit += $ledger->total_debit;
                                                                 $groupTotalCredit += $ledger->total_credit;
                                                             @endphp
+
+                                                            @php
+                                                                $balance = $ledger->debit;
+
+                                                                if ($ledger->debit > 0) {
+                                                                    $balance += $ledger->total_debit - $ledger->total_credit;
+                                                                } else {
+                                                                    $balance += $ledger->total_credit - $ledger->total_debit;
+                                                                }
+                                                            @endphp
                                                             <tr>
                                                                 <td>{{ $ledger->name }}</td>
-                                                                <td>৳{{ number_format($ledger->total_debit, 2) }}</td>
+                                                                <td>৳{{ number_format($balance, 2) }}</td>
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
