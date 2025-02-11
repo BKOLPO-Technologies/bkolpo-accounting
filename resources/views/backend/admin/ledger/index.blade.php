@@ -36,10 +36,10 @@
                                     <thead>
                                         <tr>
                                             <th>SL</th>
+                                            <th>Date</th>
                                             <th>Name</th>
                                             <th>Group Name</th> 
                                             <th>Opening DR (৳)</th>
-                                            <th>Ending CR (৳)</th>
                                             <th>DR (৳)</th>
                                             <th>CR (৳)</th>
                                             <th>Current DR (৳)</th>
@@ -51,6 +51,9 @@
                                         @foreach($ledgers as $ledger) 
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td> 
+                                                <td>
+                                                    {{ $ledger->created_at ? \Carbon\Carbon::parse($ledger->created_at)->format('d F Y') : 'N/A' }}
+                                                </td>
                                                 <td>{{ $ledger->name }}</td>
                                                 <td>
                                                     @foreach($ledger->groups as $group)
@@ -58,7 +61,6 @@
                                                     @endforeach
                                                 </td>
                                                 <td>৳{{ number_format($ledger->debit, 2) }}</td>
-                                                <td>৳{{ number_format($ledger->credit, 2) }}</td>
                                                 <td>৳{{ number_format($ledger->ledgerSums['debit'], 2) }}</td>  
                                                 <td>৳{{ number_format($ledger->ledgerSums['credit'], 2) }}</td>
                                                 <td>৳{{ number_format($ledger->debit-$ledger->ledgerSums['credit'], 2) }}</td>
