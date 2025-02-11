@@ -148,7 +148,89 @@
       "responsive": true,
       "lengthMenu": [10, 25, 50, 100]
     });
-  });
+    // example 3
+          $("#example3").DataTable({
+          "paging": false,
+          "lengthChange": true,
+          "searching": false,
+          "ordering": false,
+          "info": false,
+          "autoWidth": false,
+          "responsive": true,
+          "buttons": [
+              {
+                  extend: "excel",
+                  className: "btn btn-info",
+                  text: '<i class="fa fa-file-excel"></i> Excel'
+              },
+              {
+                  extend: "print",
+                  className: "btn btn-warning",
+                  text: '<i class="fa fa-print"></i> Print',
+                  title: '', // Remove the default page title
+                  exportOptions: {
+                      columns: ':visible', // Ensures all visible columns are printed
+                      modifier: {
+                          page: 'all'
+                      }
+                  },
+                  customize: function (win) {
+                      // Center align content for the print view
+                      $(win.document.body).css('text-align', 'center');
+
+                      // Make the table full width with borders
+                      $(win.document.body).find('table').addClass('table table-bordered').css('width', '100%');
+
+                      // Ensure table headers are centered in the print preview
+                      $(win.document.body).find('th').css('text-align', 'center');
+
+                      // Remove the default title from the print preview
+                      $(win.document.head).find('title').remove();
+
+                      // Append custom Trial Balance Header before the table in print
+                      $(win.document.body).prepend(`
+                          <div class="text-center mb-3">
+                              <h2 class="mb-1">{{ config('app.name') }}</h2>
+                              <p class="mb-0"><strong>Trial Balance Report</strong></p>
+                              <p class="mb-0">Date: {{ now()->format('d M, Y') }}</p>
+                          </div>
+                      `);
+
+                      // Ensure the table footer (tfoot) is shown in print view
+                      var tfoot = $('tfoot').clone(); // Clone the existing footer
+                      $(win.document.body).find('table').append(tfoot); // Append it to the printed table
+
+                      // Adjust the footer for the print view
+                      $(win.document.body).find('tfoot tr').addClass('fw-bold');
+
+                      // Custom column width for print view
+                      $(win.document.body).find('th, td').each(function() {
+                          if ($(this).text().trim() === 'Sl') {
+                              $(this).css('width', '5%'); // Smaller Sl column
+                          }
+                          if ($(this).text().trim() === 'Ledger Name') {
+                              $(this).css('width', '40%'); // Larger Ledger Name column
+                          }
+                          if ($(this).text().includes('Debit') || $(this).text().includes('Credit')) {
+                              $(this).css('width', '10%'); // Smaller Debit and Credit columns
+                          }
+                      });
+
+                      // Ensure footer is displayed correctly at the bottom
+                      $(win.document.body).find('tfoot').css({
+                          "position": "relative",
+                          "bottom": "0px",
+                          "width": "100%",
+                          "text-align": "center",
+                          "font-weight": "bold",
+                          "border-top": "2px solid black"
+                      });
+                  }
+              },
+          ],
+      }).buttons().container().appendTo('#example3_wrapper .col-md-6:eq(0)');
+
+    });
 </script>
 
 

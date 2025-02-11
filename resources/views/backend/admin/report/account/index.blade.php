@@ -1,5 +1,21 @@
 @extends('layouts.admin', ['pageTitle' => 'Report List'])
 @section('admin')
+<style>
+    @media print {
+        body {
+            text-align: center !important;
+        }
+        
+        table {
+            width: 100% !important;
+            border-collapse: collapse;
+        }
+
+        .card-header {
+            display: block !important;
+        }
+    }
+</style>
 <link rel="stylesheet" href="{{ asset('backend/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
 <div class="content-wrapper">
     <div class="content-header">
