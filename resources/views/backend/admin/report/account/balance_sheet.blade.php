@@ -46,13 +46,11 @@
                                         @foreach ($ledgerGroups as $group)
                                             <h2>{{ $group->group_name ?? 'N/A' }}</h2>
                                             <div class="table-responsive">
-                                                <table id="example4" border="1" cellpadding="5" cellspacing="0" style="width: 100%;">
+                                                <table id="example10" border="1" cellpadding="5" cellspacing="0" style="width: 100%;">
                                                     <thead>
                                                         <tr>
-                                                            <th>Ledger Name</th>
-                                                            <th>Total Debit</th>
-                                                            <th>Total Credit</th>
-                                                            <th>Balance</th>
+                                                            <th style="width: 85%;"></th>
+                                                            <th style="width: 15%;">Amount (৳)</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -67,9 +65,7 @@
                                                             @endphp
                                                             <tr>
                                                                 <td>{{ $ledger->name }}</td>
-                                                                <td>{{ number_format($ledger->total_debit, 2) }}</td>
-                                                                <td>৳{{ number_format($ledger->total_credit, 2) }}</td>
-                                                                <td>৳{{ number_format($ledger->total_debit - $ledger->total_credit, 2) }}</td>
+                                                                <td>৳{{ number_format($ledger->total_debit, 2) }}</td>
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
@@ -77,8 +73,6 @@
                                                         <tr>
                                                             <th>Total</th>
                                                             <th>৳{{ number_format($groupTotalDebit, 2) }}</th>
-                                                            <th>৳{{ number_format($groupTotalCredit, 2) }}</th>
-                                                            <th>৳{{ number_format($groupTotalDebit - $groupTotalCredit, 2) }}</th>
                                                         </tr>
                                                     </tfoot>
                                                 </table>
