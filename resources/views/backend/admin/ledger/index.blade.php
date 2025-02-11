@@ -63,7 +63,7 @@
                                                 <td>৳{{ number_format($ledger->debit, 2) }}</td>
                                                 <td>৳{{ number_format($ledger->ledgerSums['debit'], 2) }}</td>  
                                                 <td>৳{{ number_format($ledger->ledgerSums['credit'], 2) }}</td>
-                                                <td>৳{{ number_format($ledger->debit-$ledger->ledgerSums['credit'], 2) }}</td>
+                                                <td>৳{{ number_format($ledger->debit+$ledger->debit-$ledger->ledgerSums['credit'], 2) }}</td>
                                                 <td>
                                                     @if($ledger->status == 1)
                                                         <a href="#" class="badge badge-success">
