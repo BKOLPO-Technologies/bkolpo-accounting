@@ -46,13 +46,26 @@ class ReportController extends Controller
         return view('backend.admin.report.account.trial_balance', compact('pageTitle', 'trialBalances', 'fromDate', 'toDate'));
     }
 
-    // balance shit report
-    public function balanceShit(Request $request)
+    // balance Sheet report
+    public function balanceSheet(Request $request)
     {
         // dd($request->all());
-        $pageTitle = 'Balance Shit Report';
+        $pageTitle = 'Balance Sheet Report';
+      // Define the date range for the report
+        $fromDate = $request->input('from_date', '2025-01-01');
+        $toDate = $request->input('to_date', '2025-12-31');
 
-        return view('backend.admin.report.account.balance_shit', compact('pageTitle'));
+        // Fetch ledger groups with their ledgers and calculate balances
+        $ledgerGroups = LedgerGroup::with(['ledgers' => function ($query) use ($fromDate, $toDate) {
+            $query->withSum(['journalVoucherDetails as total_debit' => function ($query) use ($fromDate, $toDate) {
+                $query->whereBetween('created_at', [$fromDate, $toDate]);
+            }], 'debit')
+            ->withSum(['journalVoucherDetails as total_credit' => function ($query) use ($fromDate, $toDate) {
+                $query->whereBetween('created_at', [$fromDate, $toDate]);
+            }], 'credit');
+        }])->get();
+
+        return view('backend.admin.report.account.balance_sheet', compact('pageTitle', 'ledgerGroups'));
     }
 
     

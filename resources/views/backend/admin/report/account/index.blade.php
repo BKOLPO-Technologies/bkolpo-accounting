@@ -56,7 +56,7 @@
                                         <p class="mb-0">This report summarises the debit and credit balances of each account on your chart of accounts during a period of time.</p>
                                         </div>
                                         <div class="col-lg-6">
-                                        <a href="{{ route('report.balance.shit') }}" class="fw-bold text-primary">Balance Sheet</a>
+                                        <a href="{{ route('report.balance.sheet') }}" class="fw-bold text-primary">Balance Sheet</a>
                                         <p class="mb-0">What you own (assets), what you owe (liabilities), and what you invested (equity) compared to last year.</p>
                                         </div>
                                     </div>
