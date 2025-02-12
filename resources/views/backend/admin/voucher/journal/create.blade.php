@@ -1,5 +1,4 @@
 @extends('layouts.admin', ['pageTitle' => 'Journal Voucher Create'])
-
 @section('admin')
     <div class="content-wrapper">
         <div class="content-header">
@@ -80,7 +79,7 @@
                                         <!-- Date Input -->
                                         <div class="col-lg-12 mb-3">
                                             <label for="transaction_date">Date</label>
-                                            <input type="date" id="transaction_date" name="transaction_date" class="form-control @error('transaction_date') is-invalid @enderror" value="{{ old('transaction_date', now()->format('Y-m-d')) }}" />
+                                            <input type="text" id="date" name="transaction_date" class="form-control @error('transaction_date') is-invalid @enderror" value="{{ old('transaction_date', now()->format('Y-m-d')) }}" />
                                             @error('transaction_date')
                                             <div class="invalid-feedback">
                                                 <i class="fas fa-exclamation-circle"></i> {{ $message }}

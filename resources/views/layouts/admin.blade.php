@@ -24,8 +24,6 @@
   <link rel="stylesheet" href="{{ asset('backend/dist/css/adminlte.min.css ') }}">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="{{ asset('backend/plugins/overlayScrollbars/css/OverlayScrollbars.min.css ') }}">
-  <!-- Daterange picker -->
-  <link rel="stylesheet" href="{{ asset('backend/plugins/daterangepicker/daterangepicker.css ') }}">
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('backend/plugins/summernote/summernote-bs4.min.css ') }}">
 
@@ -41,7 +39,12 @@
 
   <!-- Font Awesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+  
+  <!-- Bootstrap Datepicker -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+  <!-- Daterangepicker CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.1/daterangepicker.css">
+  
   @stack('css')
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -313,10 +316,6 @@
   });
 </script>
 
-
-
-
-
 <!-- ChartJS -->
 <script src="{{ asset('backend/plugins/chart.js/Chart.min.js')}}"></script>
 <!-- Sparkline -->
@@ -328,7 +327,6 @@
 <script src="{{ asset('backend/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
 <!-- daterangepicker -->
 <script src="{{ asset('backend/plugins/moment/moment.min.js')}}"></script>
-<script src="{{ asset('backend/plugins/daterangepicker/daterangepicker.js')}}"></script>
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{{ asset('backend/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 <!-- Summernote -->
@@ -342,94 +340,116 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('backend/dist/js/pages/dashboard.js')}}"></script>
 
+<!-- Daterangepicker JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.1/daterangepicker.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // Bootstrap Datepicker
+        $('#date').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true
+        });
+        $('#from_date').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true
+        });
+        $('#to_date').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true
+        });
+    });
+</script>
 
 
-  <!-- Toastr js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-  <!-- jQuery and Select2 JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<!-- Toastr js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<!-- jQuery and Select2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
 
-  <script>
-      toastr.options = {
-          "closeButton": true,
-          "debug": false,
-          "newestOnTop": false,
-          "progressBar": true,
-          "positionClass": "toast-top-right",
-          "preventDuplicates": true,
-          "onclick": null,
-          "showDuration": "300",
-          "hideDuration": "1000",
-          "timeOut": "3000",
-          "extendedTimeOut": "1000",
-          "showEasing": "swing",
-          "hideEasing": "linear",
-          "showMethod": "fadeIn",
-          "hideMethod": "fadeOut"
-      }
-  </script>
+<script>
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "3000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
 
-  @if ($errors->any())
-      @foreach ($errors->all() as $error)
-          <script>
-              toastr.error('{{ $error }}');
-          </script>
-      @endforeach
-  @endif
+@if ($errors->any())
+    @foreach ($errors->all() as $error)
+        <script>
+            toastr.error('{{ $error }}');
+        </script>
+    @endforeach
+@endif
 
-  @if (session()->get('warning'))
-      <script>
-          toastr.warning('{{ session()->get('warning') }}');
-      </script>
-  @endif
+@if (session()->get('warning'))
+    <script>
+        toastr.warning('{{ session()->get('warning') }}');
+    </script>
+@endif
 
-  @if (session()->get('success'))
-      <script>
-          toastr.success('{{ session()->get('success') }}');
-      </script>
-  @endif
+@if (session()->get('success'))
+    <script>
+        toastr.success('{{ session()->get('success') }}');
+    </script>
+@endif
 
-  @if (session()->get('error'))
-      <script>
-          toastr.error('{{ session()->get('error') }}');
-      </script>
-  @endif
+@if (session()->get('error'))
+    <script>
+        toastr.error('{{ session()->get('error') }}');
+    </script>
+@endif
 
-  <!-- sweetalerat link -->
- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
- <!-- sweetalerat delete data -->
- <script type="text/javascript">
-   $(function(){
-       $(document).on('click','#delete',function(e){
-         e.preventDefault();
-         var link = $(this).attr("href");
+<!-- sweetalerat link -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- sweetalerat delete data -->
+<script type="text/javascript">
+  $(function(){
+      $(document).on('click','#delete',function(e){
+        e.preventDefault();
+        var link = $(this).attr("href");
 
-         Swal.fire({
-         title: 'Are you sure?',
-         text: "Delete This Data!",
-         icon: 'warning',
-         showCancelButton: true,
-         confirmButtonColor: '#3085d6',
-         cancelButtonColor: '#d33',
-         confirmButtonText: 'Yes, delete it!'
-       }).then((result) => {
-       if (result.isConfirmed) {
-           window.location.href = link
-           Swal.fire(
-             'Deleted!',
-             'Your file has been deleted.',
-             'success'
-           )
-         }
-       })
-     });
-   });
- </script>
- <!-- date picker -->
-  <script>
-    
-  </script>
-  @stack('js')
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "Delete This Data!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+      if (result.isConfirmed) {
+          window.location.href = link
+          Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
+        }
+      })
+    });
+  });
+</script>
+<!-- Bootstrap Datepicker JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+@stack('js')
 </body>
 </html>
