@@ -60,6 +60,172 @@
                                                     </div>
                                                 </div>
 
+                                                <!-- Branch Menu Card -->
+                                                <div class="card card-info card-outline mt-4 shadow">
+                                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                                        <!-- Branch Menu title on the left -->
+                                                        <h5 class="card-title mb-0">Branch Menu</h5>
+
+                                                        <!-- Select All checkbox for the Branch Menu Card -->
+                                                        <div class="ml-auto icheck-primary d-inline">
+                                                            <input type="checkbox" class="select-all-in-card" id="selectAllBranchCard">
+                                                            <label for="selectAllBranchCard">Select All</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <div class="form-group clearfix">
+                                                            <!-- Loop through permissions and display branch-menu permissions -->
+                                                            @foreach($permission as $index => $value)
+                                                                @if(str_contains($value->name, 'branch-')) 
+                                                                    <!-- Show branch-related permissions -->
+                                                                    <div class="icheck-success d-inline mb-2 mr-3">
+                                                                        <input type="checkbox" value="{{$value->id}}" name="permission[{{$value->id}}]" 
+                                                                            class="permission-checkbox branch-menu-checkbox" id="checkboxBranch{{ $index }}"
+                                                                            @if(in_array($value->id, $rolePermissions)) checked @endif>
+                                                                        <label for="checkboxBranch{{ $index }}">{{ ucwords(str_replace('-', ' ', $value->name)) }}</label>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                 <!-- Company Menu Card -->
+                                                 <div class="card card-info card-outline mt-4 shadow">
+                                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                                        <!-- Company Menu title on the left -->
+                                                        <h5 class="card-title mb-0">Company Menu</h5>
+
+                                                        <!-- Select All checkbox for the Company Menu Card -->
+                                                        <div class="ml-auto icheck-primary d-inline">
+                                                            <input type="checkbox" class="select-all-in-card" id="selectAllCompanyCard">
+                                                            <label for="selectAllCompanyCard">Select All</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <div class="form-group clearfix">
+                                                            <!-- Loop through permissions and display company-menu permissions -->
+                                                            @foreach($permission as $index => $value)
+                                                                @if(str_contains($value->name, 'company-')) 
+                                                                    <!-- Show company-related permissions -->
+                                                                    <div class="icheck-success d-inline mb-2 mr-3">
+                                                                        <input type="checkbox" value="{{$value->id}}" name="permission[{{$value->id}}]" 
+                                                                            class="permission-checkbox company-menu-checkbox" id="checkboxCompany{{ $index }}"
+                                                                            @if(in_array($value->id, $rolePermissions)) checked @endif>
+                                                                        <label for="checkboxCompany{{ $index }}">{{ ucwords(str_replace('-', ' ', $value->name)) }}</label>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Ledger Group Menu Card -->
+                                                <div class="card card-info card-outline mt-4 shadow">
+                                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                                        <h5 class="card-title mb-0">Ledger Group Menu</h5>
+                                                        <div class="ml-auto icheck-primary d-inline">
+                                                            <input type="checkbox" class="select-all-in-card" id="selectAllLedgerGroupCard">
+                                                            <label for="selectAllLedgerGroupCard">Select All</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <div class="form-group clearfix">
+                                                            @foreach($permission as $index => $value)
+                                                                @if(str_contains($value->name, 'ledger-group-')) 
+                                                                    <div class="icheck-success d-inline mb-2 mr-3">
+                                                                        <input type="checkbox" value="{{$value->id}}" name="permission[{{$value->id}}]" 
+                                                                            class="permission-checkbox ledger-group-checkbox" id="checkboxLedgerGroup{{ $index }}"
+                                                                            @if(in_array($value->id, $rolePermissions)) checked @endif>
+                                                                        <label for="checkboxLedgerGroup{{ $index }}">{{ ucwords(str_replace('-', ' ', $value->name)) }}</label>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Ledger Menu Card -->
+                                                <div class="card card-info card-outline mt-4 shadow">
+                                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                                        <h5 class="card-title mb-0">Ledger Menu</h5>
+                                                        <div class="ml-auto icheck-primary d-inline">
+                                                            <input type="checkbox" class="select-all-in-card" id="selectAllLedgerCard">
+                                                            <label for="selectAllLedgerCard">Select All</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <div class="form-group clearfix">
+                                                            @foreach($permission as $index => $value)
+                                                                @if(str_contains($value->name, 'ledger-') && !str_contains($value->name, 'ledger-group-')) 
+                                                                    <div class="icheck-success d-inline mb-2 mr-3">
+                                                                        <input type="checkbox" value="{{$value->id}}" name="permission[{{$value->id}}]" 
+                                                                            class="permission-checkbox ledger-checkbox" id="checkboxLedger{{ $index }}"
+                                                                            @if(in_array($value->id, $rolePermissions)) checked @endif>
+                                                                        <label for="checkboxLedger{{ $index }}">{{ ucwords(str_replace('-', ' ', $value->name)) }}</label>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Journal Menu Card -->
+                                                <div class="card card-info card-outline mt-4 shadow">
+                                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                                        <h5 class="card-title mb-0">Journal Menu</h5>
+                                                        <div class="ml-auto icheck-primary d-inline">
+                                                            <input type="checkbox" class="select-all-in-card" id="selectAllJournalCard">
+                                                            <label for="selectAllJournalCard">Select All</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <div class="form-group clearfix">
+                                                            @foreach($permission as $index => $value)
+                                                                @if(str_contains($value->name, 'journal-')) 
+                                                                    <div class="icheck-success d-inline mb-2 mr-3">
+                                                                        <input type="checkbox" value="{{$value->id}}" name="permission[{{$value->id}}]" 
+                                                                            class="permission-checkbox journal-checkbox" id="checkboxJournal{{ $index }}"
+                                                                            @if(in_array($value->id, $rolePermissions)) checked @endif>
+                                                                        <label for="checkboxJournal{{ $index }}">{{ ucwords(str_replace('-', ' ', $value->name)) }}</label>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Report Menu Card -->
+                                                <div class="card card-info card-outline mt-4 shadow">
+                                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                                        <h5 class="card-title mb-0">Report Menu</h5>
+                                                        <div class="ml-auto icheck-primary d-inline">
+                                                            <input type="checkbox" class="select-all-in-card" id="selectAllReportCard">
+                                                            <label for="selectAllReportCard">Select All</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <div class="form-group clearfix">
+                                                            @foreach($permission as $index => $value)
+                                                                @if(in_array($value->name, ['report-menu', 'report-list', 'trial-balnce-report', 'balance-shit-report'])) 
+                                                                    <div class="icheck-success d-inline mb-2 mr-3">
+                                                                        <input type="checkbox" value="{{$value->id}}" name="permission[{{$value->id}}]" 
+                                                                            class="permission-checkbox report-checkbox" id="checkboxReport{{ $index }}"
+                                                                            @if(in_array($value->id, $rolePermissions)) checked @endif>
+                                                                        <label for="checkboxReport{{ $index }}">{{ ucwords(str_replace('-', ' ', $value->name)) }}</label>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <!-- Role Menu Card -->
                                                 <div class="card card-info card-outline shadow">
                                                     <div class="card-header d-flex justify-content-between align-items-center">
@@ -122,6 +288,32 @@
                                                     </div>
                                                 </div>
 
+                                                  <!-- Settings Menu Card -->
+                                                  <div class="card card-info card-outline mt-4 shadow">
+                                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                                        <h5 class="card-title mb-0">Settings Menu</h5>
+                                                        <div class="ml-auto icheck-primary d-inline">
+                                                            <input type="checkbox" class="select-all-in-card" id="selectAllSettingsCard">
+                                                            <label for="selectAllSettingsCard">Select All</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <div class="form-group clearfix">
+                                                            @foreach($permission as $index => $value)
+                                                                @if(in_array($value->name, ['setting-menu', 'dashboard-menu', 'company-information', 'profile-view', 'password-change'])) 
+                                                                    <div class="icheck-success d-inline mb-2 mr-3">
+                                                                        <input type="checkbox" value="{{$value->id}}" name="permission[{{$value->id}}]" 
+                                                                            class="permission-checkbox settings-checkbox" id="checkboxSettings{{ $index }}"
+                                                                            @if(in_array($value->id, $rolePermissions)) checked @endif>
+                                                                        <label for="checkboxSettings{{ $index }}">{{ ucwords(str_replace('-', ' ', $value->name)) }}</label>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -157,6 +349,67 @@
     // Card Select All (selects all checkboxes inside a card)
     // JavaScript to handle the "Select All" functionality for each card
     document.addEventListener("DOMContentLoaded", function() {
+        // Handle select all checkbox for Branch Menu Card
+        const selectAllBranchCard = document.getElementById('selectAllBranchCard');
+        const branchMenuCheckboxes = document.querySelectorAll('.branch-menu-checkbox');
+        
+        // Listen for change event on the Select All checkbox
+        selectAllBranchCard.addEventListener('change', function() {
+            branchMenuCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllBranchCard.checked; // Set checkbox checked state based on "Select All"
+            });
+        });
+
+        const selectAllCompanyCard = document.getElementById('selectAllCompanyCard');
+        const companyMenuCheckboxes = document.querySelectorAll('.company-menu-checkbox');
+        
+        // Listen for change event on the Select All checkbox
+        selectAllCompanyCard.addEventListener('change', function() {
+            companyMenuCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllCompanyCard.checked; // Set checkbox checked state based on "Select All"
+            });
+        });
+
+        // Ledger Group Select All
+        const selectAllLedgerGroupCard = document.getElementById('selectAllLedgerGroupCard');
+        const ledgerGroupCheckboxes = document.querySelectorAll('.ledger-group-checkbox');
+
+        selectAllLedgerGroupCard.addEventListener('change', function() {
+            ledgerGroupCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllLedgerGroupCard.checked;
+            });
+        });
+
+        // Ledger Select All
+        const selectAllLedgerCard = document.getElementById('selectAllLedgerCard');
+        const ledgerCheckboxes = document.querySelectorAll('.ledger-checkbox');
+
+        selectAllLedgerCard.addEventListener('change', function() {
+            ledgerCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllLedgerCard.checked;
+            });
+        });
+
+        // Journal Select All
+        const selectAllJournalCard = document.getElementById('selectAllJournalCard');
+        const journalCheckboxes = document.querySelectorAll('.journal-checkbox');
+
+        selectAllJournalCard.addEventListener('change', function() {
+            journalCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllJournalCard.checked;
+            });
+        });
+
+        // Report Select All
+        const selectAllReportCard = document.getElementById('selectAllReportCard');
+        const reportCheckboxes = document.querySelectorAll('.report-checkbox');
+
+        selectAllReportCard.addEventListener('change', function() {
+            reportCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllReportCard.checked;
+            });
+        });
+
         // Handle select all checkbox for Role Menu Card
         const selectAllRoleCard = document.getElementById('selectAllRoleCard');
         const roleMenuCheckboxes = document.querySelectorAll('.role-menu-checkbox');
@@ -176,6 +429,16 @@
         selectAllUserCard.addEventListener('change', function() {
             userMenuCheckboxes.forEach(function(checkbox) {
                 checkbox.checked = selectAllUserCard.checked; // Set checkbox checked state based on the "Select All"
+            });
+        });
+
+        // Settings Select All
+        const selectAllSettingsCard = document.getElementById('selectAllSettingsCard');
+        const settingsCheckboxes = document.querySelectorAll('.settings-checkbox');
+
+        selectAllSettingsCard.addEventListener('change', function() {
+            settingsCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllSettingsCard.checked;
             });
         });
     });

@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('ledgers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal('debit', 15, 2)->default(0.00);
-            $table->decimal('credit', 15, 2)->default(0.00);
+            $table->decimal('debit', 15, 2)->default(0.00)->nullable();
+            $table->decimal('credit', 15, 2)->default(0.00)->nullable();
             $table->tinyInteger('status')->nullable()->default(1)->comment('1=>Active, 0=>Inactive');
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();

@@ -26,7 +26,7 @@ Route::get('/', function () {
 
 /* =============== Start Admin Route  ============= */
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'AdminDashboard'])->middleware('can:dashboard-menu')->name('admin.dashboard');
     Route::get('/logout', [AdminController::class, 'AdminDestroy'])->name('admin.logout');
 
     /* ==================== Branch =================== */
