@@ -58,5 +58,26 @@ class AdminSeeder extends Seeder
 
         // Assign the Admin role to the user
         $user->assignRole($adminRole);
+
+        $nazrulUser = User::updateOrCreate(
+            ['email' => 'nazrul@gmail.com'],
+            [
+                'name' => 'Nazrul',
+                'email' => 'nazrul@gmail.com',
+                'password' => Hash::make('12345678'),
+                'show_password' => '12345678',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]
+        );
+
+        // Find or create the "dashboard-menu" permission
+        $dashboardPermission = Permission::firstOrCreate(['name' => 'dashboard-menu']);
+
+        // ❌ Remove all existing permissions for Nazrul (if any)
+        $nazrulUser->permissions()->detach();
+
+        // ✅ Assign only "dashboard-menu" permission to Nazrul
+        $nazrulUser->givePermissionTo($dashboardPermission);
     }
 }

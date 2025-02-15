@@ -136,14 +136,22 @@ class LedgerController extends Controller
      */
     public function destroy(string $id)
     {
+        // Step 1: Find the Ledger by ID
         $ledger = Ledger::findOrFail($id);
-    
-        // Remove all related groups
+
+        // Step 2: Check if the Ledger has any related JournalVoucherDetail
+        if ($ledger->journalVoucherDetails()->exists()) {
+            // If JournalVoucherDetails exist, you cannot delete the ledger directly
+            return redirect()->route('ledger.index')
+                            ->with('error', 'Cannot delete this Ledger because it has related Journal Voucher entries. Please delete the journal entries first.');
+        }
+
+        // Step 3: If no related JournalVoucherDetails, proceed with detaching the groups
         $ledger->groups()->detach();
-    
-        // Delete ledger
+
+        // Step 4: Delete the ledger
         $ledger->delete();
-        
+
         return redirect()->route('ledger.index')->with('success', 'Ledger deleted successfully.');
     }
 }

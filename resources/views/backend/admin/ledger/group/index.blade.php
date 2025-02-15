@@ -26,9 +26,11 @@
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                                    @can('ledger-group-create')
                                     <a href="{{ route('ledger.group.create') }}" class="btn btn-sm btn-success rounded-0">
                                         <i class="fas fa-plus fa-sm"></i> Add New Ledger Group
                                     </a>
+                                    @endcan
                                 </div>
                             </div>
                             <div class="card-body">
@@ -59,17 +61,23 @@
                                                 </td>           
                                                 <td class="col-2">
                                                     <!-- View Button -->
+                                                    @can('ledger-group-view')
                                                     <a href="{{ route('ledger.group.show',$ledger->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
+                                                    @endcan
                                                     <!-- Edit Button -->
+                                                    @can('ledger-group-edit')
                                                     <a href="{{ route('ledger.group.edit',$ledger->id) }}" class="btn btn-primary btn-sm">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
+                                                    @endcan
                                                     <!-- Delete Button -->
+                                                    @can('ledger-group-delete')
                                                     <a href="{{ route('ledger.group.delete',$ledger->id)}}" id="delete" class="btn btn-danger btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach

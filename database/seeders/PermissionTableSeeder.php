@@ -68,15 +68,20 @@ class PermissionTableSeeder extends Seeder
             'role-view',
             'role-delete',
             // Settings Permissions
-            'setting-menu',
             'dashboard-menu',
-            'company-information',
+            'setting-menu',
+            'setting-information',
+            'setting-information-edit',
             'profile-view',
             'password-change',
-         ];
-         
+        ];
+        
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::updateOrCreate(
+                ['name' => $permission], 
+                [] 
+            );
         }
+        
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Ledger;
 use App\Models\Journal;
 use App\Models\JournalVoucher;
 use App\Models\LedgerGroup;
@@ -51,25 +52,94 @@ class ReportController extends Controller
     {
         // dd($request->all());
         $pageTitle = 'Balance Sheet Report';
-      // Define the date range for the report
-        $fromDate = $request->input('from_date', '2025-01-01');
-        $toDate = $request->input('to_date', '2025-12-31');
+        // Define the date range for the report
+        $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
+        $toDate = $request->input('to_date', now()->format('Y-m-d'));
 
         // Fetch ledger groups with their ledgers and calculate balances
         $ledgerGroups = LedgerGroup::with(['ledgers' => function ($query) use ($fromDate, $toDate) {
             $query->withSum(['journalVoucherDetails as total_debit' => function ($query) use ($fromDate, $toDate) {
-                $query->whereBetween('created_at', [$fromDate, $toDate]);
+                $query->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate);
             }], 'debit')
             ->withSum(['journalVoucherDetails as total_credit' => function ($query) use ($fromDate, $toDate) {
-                $query->whereBetween('created_at', [$fromDate, $toDate]);
+                $query->whereDate('created_at', '>=', $fromDate)
+                    ->whereDate('created_at', '<=', $toDate);
             }], 'credit');
-        }])->get();
+        }])
+        ->orderBy('id', 'DESC')
+        ->get();
 
-        return view('backend.admin.report.account.balance_sheet', compact('pageTitle', 'ledgerGroups'));
+
+        
+
+        return view('backend.admin.report.account.balance_sheet', compact('pageTitle', 'ledgerGroups','fromDate','toDate'));
+    }
+
+    // ledger list
+    public function ledgerList()
+    {
+        $pageTitle = 'Ledger List';
+        $ledgers = Ledger::with(['journalVoucherDetails'])->get();
+        return view('backend.admin.report.account.ledger_list',compact('pageTitle','ledgers'));
+    }
+
+    // ledger report
+    public function ledgerReport(Request $request, $id)
+    {
+        $pageTitle = 'Ledger Report';
+
+        // Set default date range (last 1 month)
+        $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
+        $toDate = $request->input('to_date', now()->format('Y-m-d'));
+
+        // Load ledger WITHOUT journalVoucherDetails, but with filtered transactions
+        $ledger = Ledger::with([
+            'journalVoucherDetails' => function ($query) use ($fromDate, $toDate) {
+                $query->whereDate('created_at', '>=', $fromDate)
+                    ->whereDate('created_at', '<=', $toDate);
+            }
+        ])->findOrFail($id);
+
+        return view('backend.admin.report.account.ledger_report', compact('pageTitle', 'ledger', 'fromDate', 'toDate'));
+    }
+
+    // ledger group list
+    public function ledgerGroupList()
+    {
+        $pageTitle = 'Ledger Group List';
+        $ledgerGroups = LedgerGroup::latest()->orderBy('id', 'DESC')->get();
+        return view('backend.admin.report.account.ledger_group_list',compact('pageTitle','ledgerGroups'));
+    }
+
+    // ledger group report
+    public function ledgerGroupReport(Request $request, $id)
+    {
+        $pageTitle = 'Ledger Group Report';
+
+       // Set default date range (last 1 month)
+       $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
+       $toDate = $request->input('to_date', now()->format('Y-m-d'));
+
+        // Fetch ledger groups with their ledgers and calculate balances
+        $ledgerGroup = LedgerGroup::with(['ledgers' => function ($query) use ($fromDate, $toDate) {
+            $query->withSum(['journalVoucherDetails as total_debit' => function ($query) use ($fromDate, $toDate) {
+                $query->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate);
+            }], 'debit')
+            ->withSum(['journalVoucherDetails as total_credit' => function ($query) use ($fromDate, $toDate) {
+                $query->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate);
+            }], 'credit');
+        }])
+        ->orderBy('id', 'DESC')
+        ->findOrFail($id);
+
+        // dd($ledgerGroup);
+        return view('backend.admin.report.account.ledger_group_report',compact('pageTitle','ledgerGroup','fromDate','toDate'));
     }
 
     
-
 
     /**
      * Display a listing of the resource.

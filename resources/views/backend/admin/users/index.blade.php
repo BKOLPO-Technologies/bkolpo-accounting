@@ -26,9 +26,11 @@
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                                    @can('user-create')
                                     <a href="{{ route('users.create') }}" class="btn btn-sm btn-success rounded-0">
                                         <i class="fas fa-plus fa-sm"></i> Add New User
                                     </a>
+                                    @endcan
                                 </div>
                             </div>
                             <div class="card-body">
@@ -69,17 +71,23 @@
                                                 </td>           
                                                 <td class="col-2">
                                                     <!-- View Button -->
+                                                    @can('user-view')
                                                     <a href="{{ route('users.show',$user->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
+                                                    @endcan
                                                     <!-- Edit Button -->
+                                                    @can('user-edit')
                                                     <a href="{{ route('users.edit',$user->id) }}" class="btn btn-primary btn-sm">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
+                                                    @endcan
                                                     <!-- Delete Button -->
+                                                    @can('user-delete')
                                                     <a href="{{ route('users.delete',$user->id)}}" id="delete" class="btn btn-danger btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach

@@ -52,12 +52,20 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-lg-6">
-                                        <a href="{{ route('report.trial.balance') }}" class="fw-bold text-primary">Trial Balance</a>
-                                        <p class="mb-0">This report summarises the debit and credit balances of each account on your chart of accounts during a period of time.</p>
+                                            <a href="{{ route('report.trial.balance') }}" class="fw-bold text-primary">Trial Balance</a>
+                                            <p class="mb-0">This report summarises the debit and credit balances of each account on your chart of accounts during a specified period.</p>
                                         </div>
                                         <div class="col-lg-6">
-                                        <a href="{{ route('report.balance.sheet') }}" class="fw-bold text-primary">Balance Sheet</a>
-                                        <p class="mb-0">What you own (assets), what you owe (liabilities), and what you invested (equity) compared to last year.</p>
+                                            <a href="{{ route('report.balance.sheet') }}" class="fw-bold text-primary">Balance Sheet</a>
+                                            <p class="mb-0">A snapshot of your financial position at a point in time, showing what you own (assets), what you owe (liabilities), and your equity.</p>
+                                        </div>
+                                        <div class="col-lg-6 mt-2">
+                                            <a href="{{ route('report.ledger.report') }}" class="fw-bold text-primary">Ledger Report</a>
+                                            <p class="mb-0">This report provides a detailed view of the individual accounts in your chart of accounts, showing the debit and credit movements for each account during a specific period.</p>
+                                        </div>
+                                        <div class="col-lg-6 mt-2">
+                                            <a href="{{ route('report.ledger.group.report') }}" class="fw-bold text-primary">Ledger Group Report</a>
+                                            <p class="mb-0">This report categorises the ledger accounts into different groups (such as assets, liabilities, and equity) and provides a summary of their respective balances and movements over a period of time.</p>
                                         </div>
                                     </div>
                                 </div>

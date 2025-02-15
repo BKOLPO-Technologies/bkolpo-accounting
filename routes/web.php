@@ -31,23 +31,23 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
     /* ==================== Branch =================== */
     Route::prefix('branch')->as('branch.')->group(function () {
-        Route::get('/', [BranchController::class, 'index'])->name('index');
-        Route::get('/create', [BranchController::class, 'create'])->name('create');
+        Route::get('/', [BranchController::class, 'index'])->name('index')->middleware('can:branch-list');
+        Route::get('/create', [BranchController::class, 'create'])->name('create')->middleware('can:branch-create');
         Route::post('/store', [BranchController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [BranchController::class, 'edit'])->name('edit');
+        Route::get('/edit/{id}', [BranchController::class, 'edit'])->name('edit')->middleware('can:branch-edit');
         Route::post('/update/{id}', [BranchController::class, 'update'])->name('update');
-        Route::get('/delete/{id}', [BranchController::class, 'destroy'])->name('delete');
-        Route::get('/view/{id}', [BranchController::class, 'show'])->name('show');
+        Route::get('/delete/{id}', [BranchController::class, 'destroy'])->name('delete')->middleware('can:branch-delete');
+        Route::get('/view/{id}', [BranchController::class, 'show'])->name('show')->middleware('can:branch-view');
     }); 
 
     Route::prefix('company')->group(function () {
-        Route::get('/', [CompanyController::class, 'index'])->name('company.index');
-        Route::get('/create', [CompanyController::class, 'create'])->name('company.create');
+        Route::get('/', [CompanyController::class, 'index'])->name('company.index')->middleware('can:company-list');
+        Route::get('/create', [CompanyController::class, 'create'])->name('company.create')->middleware('can:company-create');
         Route::post('/store', [CompanyController::class, 'store'])->name('company.store');
-        Route::get('/edit/{id}', [CompanyController::class, 'edit'])->name('company.edit');
+        Route::get('/edit/{id}', [CompanyController::class, 'edit'])->name('company.edit')->middleware('can:company-edit');
         Route::post('/update/{id}', [CompanyController::class, 'update'])->name('company.update');
-        Route::get('/delete/{id}', [CompanyController::class, 'destroy'])->name('company.delete');
-        Route::get('/view/{id}', [CompanyController::class, 'show'])->name('company.show');
+        Route::get('/delete/{id}', [CompanyController::class, 'destroy'])->name('company.delete')->middleware('can:company-delete');
+        Route::get('/view/{id}', [CompanyController::class, 'show'])->name('company.show')->middleware('can:company-view');
 
     });
 
@@ -75,43 +75,47 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
     /* ==================== ledger category  =================== */
     Route::prefix('ledger')->as('ledger.')->group(function () {
-        Route::get('/', [LedgerController::class, 'index'])->name('index');
-        Route::get('/create', [LedgerController::class, 'create'])->name('create');
+        Route::get('/', [LedgerController::class, 'index'])->name('index')->middleware('can:ledger-list');
+        Route::get('/create', [LedgerController::class, 'create'])->name('create')->middleware('can:ledger-create');
         Route::post('/store', [LedgerController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [LedgerController::class, 'edit'])->name('edit');
+        Route::get('/edit/{id}', [LedgerController::class, 'edit'])->name('edit')->middleware('can:ledger-edit');
         Route::post('/update/{id}', [LedgerController::class, 'update'])->name('update');
-        Route::get('/delete/{id}', [LedgerController::class, 'destroy'])->name('delete');
-        Route::get('/view/{id}', [LedgerController::class, 'show'])->name('show');
+        Route::get('/delete/{id}', [LedgerController::class, 'destroy'])->name('delete')->middleware('can:ledger-delete');
+        Route::get('/view/{id}', [LedgerController::class, 'show'])->name('show')->middleware('can:ledger-view');
     });
 
     /* ==================== ledger group category  =================== */
     Route::prefix('ledger-group')->as('ledger.group.')->group(function () {
-        Route::get('/', [LedgerGroupController::class, 'index'])->name('index');
-        Route::get('/create', [LedgerGroupController::class, 'create'])->name('create');
+        Route::get('/', [LedgerGroupController::class, 'index'])->name('index')->middleware('can:ledger-group-list');
+        Route::get('/create', [LedgerGroupController::class, 'create'])->name('create')->middleware('can:ledger-group-create');
         Route::post('/store', [LedgerGroupController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [LedgerGroupController::class, 'edit'])->name('edit');
+        Route::get('/edit/{id}', [LedgerGroupController::class, 'edit'])->name('edit')->middleware('can:ledger-group-edit');
         Route::post('/update/{id}', [LedgerGroupController::class, 'update'])->name('update');
-        Route::get('/delete/{id}', [LedgerGroupController::class, 'destroy'])->name('delete');
-        Route::get('/view/{id}', [LedgerGroupController::class, 'show'])->name('show');
+        Route::get('/delete/{id}', [LedgerGroupController::class, 'destroy'])->name('delete')->middleware('can:ledger-group-delete');
+        Route::get('/view/{id}', [LedgerGroupController::class, 'show'])->name('show')->middleware('can:ledger-group-view');
     }); 
 
     /* ==================== journal voucher  =================== */
     Route::prefix('journal-voucher')->as('journal-voucher.')->group(function () {
-        Route::get('/', [JournalController::class, 'index'])->name('index');
-        Route::get('/create', [JournalController::class, 'create'])->name('create');
+        Route::get('/', [JournalController::class, 'index'])->name('index')->middleware('can:journal-list');
+        Route::get('/create', [JournalController::class, 'create'])->name('create')->middleware('can:journal-create');
         Route::post('/store', [JournalController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [JournalController::class, 'edit'])->name('edit');
+        Route::get('/edit/{id}', [JournalController::class, 'edit'])->name('edit')->middleware('can:journal-edit');
         Route::post('/update/{id}', [JournalController::class, 'update'])->name('update');
-        Route::get('/delete/{id}', [JournalController::class, 'destroy'])->name('delete');
-        Route::get('/view/{id}', [JournalController::class, 'show'])->name('show');
+        Route::get('/delete/{id}', [JournalController::class, 'destroy'])->name('delete')->middleware('can:journal-delete');
+        Route::get('/view/{id}', [JournalController::class, 'show'])->name('show')->middleware('can:journal-view');
         Route::get('/get-branches/{companyId}', [JournalController::class, 'getBranchesByCompany']);
     }); 
 
     /* ==================== Report =================== */
     Route::prefix('report/accounts')->as('report.')->group(function () {
-        Route::get('/', [ReportController::class, 'index'])->name('index');
-        Route::get('/trial/balance', [ReportController::class, 'trialBalance'])->name('trial.balance');
-        Route::get('/balance/sheet', [ReportController::class, 'balanceSheet'])->name('balance.sheet');
+        Route::get('/', [ReportController::class, 'index'])->name('index')->middleware('can:report-list');
+        Route::get('/trial/balance', [ReportController::class, 'trialBalance'])->name('trial.balance')->middleware('can:trial-balnce-report');
+        Route::get('/balance/sheet', [ReportController::class, 'balanceSheet'])->name('balance.sheet')->middleware('can:balance-shit-report');
+        Route::get('/ledger', [ReportController::class, 'ledgerList'])->name('ledger.report');
+        Route::get('/ledger/report/{id}', [ReportController::class, 'ledgerReport'])->name('ledger.single.report');
+        Route::get('/ledger/group', [ReportController::class, 'ledgerGroupList'])->name('ledger.group.report');
+        Route::get('/ledger/group/report/{id}', [ReportController::class, 'ledgerGroupReport'])->name('ledger.group.single.report');
     });
 
     /* ==================== Chart of account =================== */
@@ -175,8 +179,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
     /* ==================== Company Information =================== */
     Route::prefix('company-information')->as('company-information.')->group(function () {
-        Route::get('/', [CompanyInformationController::class, 'index'])->name('index');
-        Route::get('edit/{id}', [CompanyInformationController::class, 'edit'])->name('edit');
+        Route::get('/', [CompanyInformationController::class, 'index'])->name('index')->middleware('can:setting-information');
+        Route::get('edit/{id}', [CompanyInformationController::class, 'edit'])->name('edit')->middleware('can:setting-information-edit');
         Route::post('update/{id}', [CompanyInformationController::class, 'update'])->name('update');
     });
 
@@ -186,9 +190,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         'can:role-create',  
         'can:role-edit',   
         'can:role-delete',
+        'can:role-view',
     ]);
     Route::get('roles/delete/{id}', [RoleController::class, 'destroy'])->name('roles.delete');
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)->middleware([
+        'can:user-list',   
+        'can:user-create',  
+        'can:user-edit',   
+        'can:user-delete',   
+        'can:user-view',   
+    ]);
     Route::get('users/delete/{id}', [UserController::class, 'destroy'])->name('users.delete');
 });
 

@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             PermissionTableSeeder::class,
             AdminSeeder::class,
             CompanyInformationSeeder::class,
+            LedgerGroupSeeder::class,
+            LedgerSeeder::class,
             // Add other seeders here 
         ]);
 

@@ -26,9 +26,11 @@
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                                    @can('journal-create')
                                     <a href="{{ route('journal-voucher.create') }}" class="btn btn-sm btn-success rounded-0">
                                         <i class="fas fa-plus fa-sm"></i> Add New Journal Voucher 
                                     </a>
+                                    @endcan
                                 </div>
                             </div>
                             <div class="card-body">
@@ -58,15 +60,21 @@
                                                 <td class="text-end">৳{{ number_format($voucher->details->sum('credit'), 2) }}</td>
                                                 <td>{{ date('d M, Y', strtotime($voucher->transaction_date)) }}</td>
                                                 <td class="col-2">
+                                                    @can('journal-view')
                                                     <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#voucherModal{{ $voucher->id }}">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
+                                                    @endcan
+                                                    @can('journal-edit')
                                                     <a href="{{ route('journal-voucher.edit', $voucher->id) }}" class="btn btn-sm btn-warning text-light">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
+                                                    @endcan
+                                                    @can('journal-delete')
                                                     <button type="submit" class="btn btn-sm btn-danger delete-button">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach

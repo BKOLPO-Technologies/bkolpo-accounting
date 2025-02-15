@@ -26,9 +26,11 @@
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                                    @can('ledger-create')
                                     <a href="{{ route('ledger.create') }}" class="btn btn-sm btn-success rounded-0">
                                         <i class="fas fa-plus fa-sm"></i> Add New Ledger
                                     </a>
+                                    @endcan
                                 </div>
                             </div>
                             <div class="card-body">
@@ -47,6 +49,12 @@
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
+                                    @php
+                                        $totalOpeningDr = 0;
+                                        $totalDr = 0;
+                                        $totalCr = 0;
+                                        $totalCurrentDr = 0;
+                                    @endphp
                                     <tbody>
                                         @foreach($ledgers as $ledger) 
                                             <tr>
@@ -71,6 +79,12 @@
                                                             : ($ledger->ledgerSums['debit']), // If opening balance is Credit
                                                         2
                                                     ) }}
+                                                    @php
+                                                        // Add the current debit to total
+                                                        $totalCurrentDr += ($ledger->debit > 0)
+                                                            ? ($ledger->debit + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit'])
+                                                            : ($ledger->ledgerSums['debit']);
+                                                    @endphp
                                                 </td>
                                                 <td>
                                                     @if($ledger->status == 1)
@@ -85,17 +99,23 @@
                                                 </td>           
                                                 <td class="col-2">
                                                     <!-- View Button -->
+                                                    @can('ledger-view')
                                                     <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#ledgerModal{{ $ledger->id }}">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
+                                                    @endcan
                                                     <!-- Edit Button -->
+                                                    @can('ledger-edit')
                                                     <a href="{{ route('ledger.edit', $ledger->id) }}" class="btn btn-primary btn-sm">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
+                                                    @endcan
                                                     <!-- Delete Button -->
+                                                    @can('ledger-delete')
                                                     <a href="{{ route('ledger.delete', $ledger->id)}}" id="delete" class="btn btn-danger btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -106,7 +126,8 @@
                                             <th colspan="5" class="text-right">Total:</th>
                                             <th>৳{{ number_format($totals['totalDebit'], 2) }}</th> 
                                             <th>৳{{ number_format($totals['totalCredit'], 2) }}</th> 
-                                            <th colspan="2"></th>
+                                            <th>৳{{ number_format($totalCurrentDr, 2) }}</th>
+                                            <th colspan="3"></th>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -139,6 +160,7 @@
                                                             @php
                                                                 $totalDebit = 0;
                                                                 $totalCredit = 0;
+                                                                $openingBalance = $ledger->debit;
                                                             @endphp
                                                             
                                                             @foreach ($ledger->journalVoucherDetails as $index => $voucherDetail)
@@ -161,6 +183,19 @@
                                                                 <th colspan="4" class="text-right">Total:</th>
                                                                 <th>৳{{ number_format($totalDebit, 2) }}</th>
                                                                 <th>৳{{ number_format($totalCredit, 2) }}</th>
+                                                            </tr>
+                                                            <!-- Opening Balance -->
+                                                            <tr>
+                                                                <th colspan="5" class="text-right">Opening Balance:</th>
+                                                                <th colspan="2">৳{{ number_format($ledger->debit, 2) }}</th>
+                                                            </tr>
+
+                                                            <!-- Current Balance -->
+                                                            <tr>
+                                                                <th colspan="5" class="text-right">Current Balance:</th>
+                                                                <th colspan="2">
+                                                                    ৳{{ number_format($openingBalance + $totalDebit - $totalCredit, 2) }}
+                                                                </th>
                                                             </tr>
                                                         </tfoot>
                                                     </table>

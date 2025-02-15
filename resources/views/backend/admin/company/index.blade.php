@@ -26,9 +26,11 @@
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                                    @can('company-create')
                                     <a href="{{ route('company.create') }}" class="btn btn-sm btn-success rounded-0">
                                         <i class="fas fa-plus fa-sm"></i> Add New Company 
                                     </a>
+                                    @endcan
                                 </div>
                             </div>
                             <div class="card-body">
@@ -61,17 +63,23 @@
                                                 </td>           
                                                 <td class="col-2">
                                                     <!-- View Button -->
+                                                    @can('company-view')
                                                     <a href="{{ route('company.show',$company->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
+                                                    @endcan
                                                     <!-- Edit Button -->
+                                                    @can('company-edit')
                                                     <a href="{{ route('company.edit',$company->id) }}" class="btn btn-primary btn-sm">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
+                                                    @endcan
                                                     <!-- Delete Button -->
+                                                    @can('company-delete')
                                                     <a href="{{ route('company.delete',$company->id)}}" id="delete" class="btn btn-danger btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach

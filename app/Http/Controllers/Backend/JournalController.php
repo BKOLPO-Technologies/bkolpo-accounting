@@ -107,6 +107,12 @@ class JournalController extends Controller
             $totalDebit = 0;
             $totalCredit = 0;
             $details = [];
+
+            if (empty(array_filter($request->ledger_id))) {
+                // Send an error message and redirect back if all values are null
+                session()->flash('error', 'At least one ledger entry is required.');
+                return redirect()->back();
+            }
     
             foreach ($request->ledger_id as $index => $ledgerId) {
                 if (!empty($ledgerId)) { // Only process non-empty ledger IDs

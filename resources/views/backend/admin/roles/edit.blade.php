@@ -301,7 +301,7 @@
                                                     <div class="card-body">
                                                         <div class="form-group clearfix">
                                                             @foreach($permission as $index => $value)
-                                                                @if(in_array($value->name, ['setting-menu', 'dashboard-menu', 'company-information', 'profile-view', 'password-change'])) 
+                                                                @if(in_array($value->name, ['setting-menu', 'dashboard-menu', 'setting-information','setting-information-edit', 'profile-view', 'password-change'])) 
                                                                     <div class="icheck-success d-inline mb-2 mr-3">
                                                                         <input type="checkbox" value="{{$value->id}}" name="permission[{{$value->id}}]" 
                                                                             class="permission-checkbox settings-checkbox" id="checkboxSettings{{ $index }}"

@@ -115,10 +115,19 @@ class LedgerGroupController extends Controller
     public function destroy(string $id)
     {
         // Step 1: Find the LedgerGroup by ID
-        $ledgerGroup = LedgerGroup::findOrFail($id); 
+        $ledgerGroup = LedgerGroup::findOrFail($id);
 
+        // Step 2: Check if the LedgerGroup has related ledgers
+        if ($ledgerGroup->ledgers()->exists() || $ledgerGroup->ledgerGroupDetails()->exists()) {
+            // If there are related Ledgers or LedgerGroupDetails, prevent deletion and show an error message
+            return redirect()->route('ledger.group.index')
+                            ->with('error', 'Cannot delete this Ledger Group because it has associated ledgers or ledger details.');
+        }
+
+        // Step 3: If no related data, proceed with deletion
         $ledgerGroup->delete();
 
-        return redirect()->route('ledger.group.index')->with('success', 'Ledger Group deleted successfully.');
+        return redirect()->route('ledger.group.index')
+                     ->with('success', 'Ledger Group deleted successfully.');
     }
 }

@@ -198,7 +198,7 @@
 
           @php
               // Determine active state for menu items
-              $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet');
+              $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet','report.ledger.report','report.ledger.single.report','report.ledger.group.report','report.ledger.group.single.report');
           @endphp
 
           @can('report-menu')  
@@ -577,7 +577,7 @@
                 </p>
             </a>
             <ul class="nav nav-treeview">
-              @can('company-information')  
+              @can('setting-information')  
                 <li class="nav-item">
                   <a href="{{ route('company-information.index') }}" class="nav-link {{ Route::is('company-information.index') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>

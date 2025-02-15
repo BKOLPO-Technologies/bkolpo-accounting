@@ -129,11 +129,11 @@
                                                                 </td>
                                                                 <td>
                                                                     <input type="number" class="form-control text-end debit" name="debit[]" 
-                                                                        value="{{ old("debit.$i", '0.00') }}" placeholder="Enter Debit Amount">
+                                                                        value="{{ old("debit.$i", '') }}" placeholder="Enter Debit Amount">
                                                                 </td>
                                                                 <td>
                                                                     <input type="number" class="form-control text-end credit" name="credit[]" 
-                                                                        value="{{ old("credit.$i", '0.00') }}" placeholder="Enter Credit Amount">
+                                                                        value="{{ old("credit.$i", '') }}" placeholder="Enter Credit Amount">
                                                                 </td>
                                                             </tr>
                                                         @endfor

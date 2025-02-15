@@ -64,10 +64,13 @@
                                                 </td>
                                                 <td class="col-2"> 
                                                     <!-- View Button -->
+                                                    @can('role-view')
                                                     <a href="{{ route('roles.show',$role->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
+                                                    @endcan
                                                     <!-- Edit Button -->
+                                                    @can('role-edit')
                                                     <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-primary btn-sm"
                                                         @if($role->name == 'Admin') 
                                                             style="pointer-events: none; opacity: 0.5;" 
@@ -75,6 +78,7 @@
                                                         @endif>
                                                         <i class="fas fa-edit"></i>
                                                     </a>
+                                                    @endcan
                                                     @can('role-delete')
                                                     <!-- Delete Button -->
                                                     <a href="{{ route('roles.delete', $role->id) }}" id="delete" class="btn btn-danger btn-sm" 
