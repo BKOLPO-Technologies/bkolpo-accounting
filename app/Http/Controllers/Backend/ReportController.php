@@ -155,30 +155,37 @@ class ReportController extends Controller
     // profit & loss report
     public function ledgerProfitLoss(Request $request)
     {
-        // dd($request->all());
         $pageTitle = 'Profit & Loss Report';
 
-        // Define the date range for the report
+        // Define date range
         $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
         $toDate = $request->input('to_date', now()->format('Y-m-d'));
 
-        // Fetch Profit & Loss data from JournalVoucherDetail
-        $profitLossData = JournalVoucherDetail::whereDate('created_at', '>=', $fromDate)
-        ->whereDate('created_at', '<=', $toDate)
-        ->with('ledger')
-        ->get()
-        ->groupBy('ledger.name');  // Grouping by ledger name
+        // Fetch Ledger Groups with their Ledgers and sum up debit & credit
+        $ledgerGroups = LedgerGroup::with([
+            'ledgers' => function ($query) use ($fromDate, $toDate) {
+                $query->withSum(['journalVoucherDetails as total_debit' => function ($query) use ($fromDate, $toDate) {
+                    $query->whereDate('created_at', '>=', $fromDate)
+                    ->whereDate('created_at', '<=', $toDate);
+                }], 'debit')
+                ->withSum(['journalVoucherDetails as total_credit' => function ($query) use ($fromDate, $toDate) {
+                    $query->whereDate('created_at', '>=', $fromDate)
+                    ->whereDate('created_at', '<=', $toDate);
+                }], 'credit');
+            }
+            
+        ])->orderBy('id', 'DESC')
+        ->get();
 
-        // Calculate totals
-        $totalDebit = $profitLossData->flatten()->sum('debit');
-        $totalCredit = $profitLossData->flatten()->sum('credit');
+        // Calculate total debit, credit, and net profit/loss
+        $totalDebit = $ledgerGroups->sum(fn($group) => $group->ledgers->sum('total_debit'));
+        $totalCredit = $ledgerGroups->sum(fn($group) => $group->ledgers->sum('total_credit'));
         $netProfitLoss = $totalCredit - $totalDebit;
 
         return view('backend.admin.report.account.profit_loss_report', compact(
-            'pageTitle', 'fromDate', 'toDate', 'profitLossData', 'totalDebit', 'totalCredit', 'netProfitLoss'
+            'pageTitle', 'fromDate', 'toDate', 'ledgerGroups', 'totalDebit', 'totalCredit', 'netProfitLoss'
         ));
     }
-
 
     /**
      * Display a listing of the resource.
