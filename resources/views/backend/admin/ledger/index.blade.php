@@ -26,6 +26,9 @@
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                                    <a onclick="comingSoon()"  class="btn btn-sm btn-info rounded-0">
+                                        <i class="fas fa-file-export fa-sm"></i> Export
+                                    </a>
                                     @can('ledger-create')
                                     <a href="{{ route('ledger.create') }}" class="btn btn-sm btn-success rounded-0">
                                         <i class="fas fa-plus fa-sm"></i> Add New Ledger
