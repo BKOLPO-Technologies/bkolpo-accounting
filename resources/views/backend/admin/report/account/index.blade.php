@@ -67,6 +67,12 @@
                                             <a href="{{ route('report.ledger.group.report') }}" class="fw-bold text-primary">Ledger Group Report</a>
                                             <p class="mb-0">This report categorises the ledger accounts into different groups (such as assets, liabilities, and equity) and provides a summary of their respective balances and movements over a period of time.</p>
                                         </div>
+                                        <div class="col-lg-6 mt-2">
+                                            <a href="{{ route('report.ledger.profit.loss') }}" class="fw-bold text-primary">Profit & Loss Report</a>
+                                            <p class="mb-0">
+                                                This report categorizes ledger accounts into various groups, such as assets, liabilities, and equity, providing a comprehensive summary of their balances and financial movements over a specific period.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

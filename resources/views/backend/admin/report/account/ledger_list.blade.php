@@ -52,9 +52,10 @@
                                                 <!-- Add more information here if needed -->
                                             </div>
                                             <div class="card-footer d-flex justify-content-between">
-                                                <a href="#" onclick="comingSoon()" class="btn btn-danger btn-sm w-50 mr-2">
+                                                <button class="btn btn-danger btn-sm w-50 mr-2" 
+                                                        onclick="showPaySlip({{ $ledger->id }})">
                                                     <i class="fa fa-file-alt ml-2"></i> Pay Slip
-                                                </a>
+                                                </button>
                                                 <a href="{{ route('report.ledger.single.report', $ledger->id) }}" class="btn btn-info btn-sm w-50">
                                                     <i class="fa fa-file-alt ml-2"></i> View Report
                                                 </a>
@@ -62,6 +63,25 @@
                                         </div>
                                     </div>
                                 @endforeach
+
+                                <!-- Pay Slip Modal -->
+                                <div class="modal fade" id="paySlipModal" tabindex="-1" role="dialog" aria-labelledby="paySlipModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-xl" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-primary text-white">
+                                                <h5 class="modal-title" id="paySlipModalLabel">Pay Slip Details</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true" class="text-light">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="paySlipContent" class="text-center">
+                                                    <p>Loading...</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -74,9 +94,27 @@
 
 @push('js')
 <script>
-// Initialize Select2 if necessary
-$(document).ready(function() {
-    $('.select2').select2();
-});
+    // Initialize Select2 if necessary
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+
+    // pay slip
+    function showPaySlip(ledgerId) {
+        // Show modal
+        $('#paySlipModal').modal('show');
+
+        // Load Pay Slip data via AJAX
+        $.ajax({
+            url: "/admin/report/accounts/ledger/pay-slip/" + ledgerId, // Adjust the route as per your Laravel setup
+            type: "GET",
+            success: function(response) {
+                $("#paySlipContent").html(response);
+            },
+            error: function() {
+                $("#paySlipContent").html("<p class='text-danger'>Error loading Pay Slip details.</p>");
+            }
+        });
+    }
 </script>
 @endpush

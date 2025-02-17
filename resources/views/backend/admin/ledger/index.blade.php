@@ -126,8 +126,8 @@
                                             <th colspan="5" class="text-right">Total:</th>
                                             <th>৳{{ number_format($totals['totalDebit'], 2) }}</th> 
                                             <th>৳{{ number_format($totals['totalCredit'], 2) }}</th> 
-                                            <th>৳{{ number_format($totalCurrentDr, 2) }}</th>
-                                            <th colspan="3"></th>
+                                            <!-- <th>৳{{ number_format($totalCurrentDr, 2) }}</th> -->
+                                            <th colspan="2"></th>
                                         </tr>
                                     </tfoot>
                                 </table>

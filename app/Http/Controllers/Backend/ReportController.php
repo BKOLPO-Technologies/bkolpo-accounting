@@ -9,6 +9,7 @@ use App\Models\Journal;
 use App\Models\JournalVoucher;
 use App\Models\LedgerGroup;
 use App\Models\JournalVoucherDetail;
+use App\Models\CompanyInformation;
 use Carbon\Carbon;
 use Auth;
 use App\Traits\TrialBalanceTrait;
@@ -139,7 +140,45 @@ class ReportController extends Controller
         return view('backend.admin.report.account.ledger_group_report',compact('pageTitle','ledgerGroup','fromDate','toDate'));
     }
 
+    // ledger payslip
+    public function getLedgerPaySlip($id) {
+        $ledger = Ledger::with('journalVoucherDetails')->find($id);
+        
+        if (!$ledger) {
+            return response("<p class='text-danger'>Ledger not found.</p>", 404);
+        }
     
+        $company = CompanyInformation::first();
+        return view('backend.admin.report.account.ledger_pay_slip', compact('ledger','company'));
+    }
+
+    // profit & loss report
+    public function ledgerProfitLoss(Request $request)
+    {
+        // dd($request->all());
+        $pageTitle = 'Profit & Loss Report';
+
+        // Define the date range for the report
+        $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
+        $toDate = $request->input('to_date', now()->format('Y-m-d'));
+
+        // Fetch Profit & Loss data from JournalVoucherDetail
+        $profitLossData = JournalVoucherDetail::whereDate('created_at', '>=', $fromDate)
+        ->whereDate('created_at', '<=', $toDate)
+        ->with('ledger')
+        ->get()
+        ->groupBy('ledger.name');  // Grouping by ledger name
+
+        // Calculate totals
+        $totalDebit = $profitLossData->flatten()->sum('debit');
+        $totalCredit = $profitLossData->flatten()->sum('credit');
+        $netProfitLoss = $totalCredit - $totalDebit;
+
+        return view('backend.admin.report.account.profit_loss_report', compact(
+            'pageTitle', 'fromDate', 'toDate', 'profitLossData', 'totalDebit', 'totalCredit', 'netProfitLoss'
+        ));
+    }
+
 
     /**
      * Display a listing of the resource.

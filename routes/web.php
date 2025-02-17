@@ -116,6 +116,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/ledger/report/{id}', [ReportController::class, 'ledgerReport'])->name('ledger.single.report');
         Route::get('/ledger/group', [ReportController::class, 'ledgerGroupList'])->name('ledger.group.report');
         Route::get('/ledger/group/report/{id}', [ReportController::class, 'ledgerGroupReport'])->name('ledger.group.single.report');
+        Route::get('/ledger/pay-slip/{id}', [ReportController::class, 'getLedgerPaySlip'])->name('ledger.pay.slip');
+        Route::get('/ledger/profit/loss', [ReportController::class, 'ledgerProfitLoss'])->name('ledger.profit.loss');
+
     });
 
     /* ==================== Chart of account =================== */
