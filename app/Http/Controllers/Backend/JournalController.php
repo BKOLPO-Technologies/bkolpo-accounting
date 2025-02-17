@@ -197,8 +197,16 @@ class JournalController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        try {
+            $voucher = JournalVoucher::findOrFail($id);
+            $voucher->delete();
+
+            return redirect()->back()->with('error', 'Journal Voucher deleted successfully!.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Journal Voucher deleted successfully!.');
+        }
     }
+
 }

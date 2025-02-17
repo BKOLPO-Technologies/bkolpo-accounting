@@ -71,9 +71,9 @@
                                                     </a>
                                                     @endcan
                                                     @can('journal-delete')
-                                                    <button type="submit" class="btn btn-sm btn-danger delete-button">
+                                                    <a id="delete" href="{{ route('journal-voucher.delete', $voucher->id) }}" class="btn btn-sm btn-danger delete-button">
                                                         <i class="fas fa-trash-alt"></i>
-                                                    </button>
+                                                    </a>
                                                     @endcan
                                                 </td>
                                             </tr>
