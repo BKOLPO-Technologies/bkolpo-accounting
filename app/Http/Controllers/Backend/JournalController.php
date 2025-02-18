@@ -23,6 +23,10 @@ use Carbon\Carbon;
 use Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Session;
+use App\Exports\JournalExport;
+use App\Imports\JournalVoucherImport;
 
 class JournalController extends Controller
 {
@@ -207,6 +211,31 @@ class JournalController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Journal Voucher deleted successfully!.');
         }
+    }
+
+    // import download formate
+    public function downloadFormat()
+    {
+        return Excel::download(new JournalExport, 'Journal_Import_Template.xlsx');
+    }
+ 
+    // import
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv|max:2048', // Validate file type and size
+        ]);
+    
+        try {
+            Excel::import(new JournalVoucherImport, $request->file('file'));
+    
+            return back()->with('success', 'Journal data imported successfully!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error importing file: ' . $e->getMessage());
+        }
+
+    
+        return back()->with('success', 'Journal data imported successfully!');
     }
 
 }

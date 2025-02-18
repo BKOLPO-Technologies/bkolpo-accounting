@@ -109,6 +109,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/delete/{id}', [JournalController::class, 'destroy'])->name('delete')->middleware('can:journal-delete');
         Route::get('/view/{id}', [JournalController::class, 'show'])->name('show')->middleware('can:journal-view');
         Route::get('/get-branches/{companyId}', [JournalController::class, 'getBranchesByCompany']);
+        Route::get('/import/format', [JournalController::class, 'downloadFormat'])->name('import.format');
+        Route::post('/import', [JournalController::class, 'import'])->name('import');
     }); 
 
     /* ==================== Report =================== */
