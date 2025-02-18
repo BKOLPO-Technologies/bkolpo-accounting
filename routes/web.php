@@ -93,6 +93,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::post('/update/{id}', [LedgerGroupController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [LedgerGroupController::class, 'destroy'])->name('delete')->middleware('can:ledger-group-delete');
         Route::get('/view/{id}', [LedgerGroupController::class, 'show'])->name('show')->middleware('can:ledger-group-view');
+        Route::post('/import', [LedgerGroupController::class, 'import'])->name('import');
     }); 
 
     /* ==================== journal voucher  =================== */

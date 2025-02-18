@@ -16,6 +16,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Session;
+use App\Imports\LedgerGroupImport;
 
 class LedgerGroupController extends Controller
 {
@@ -129,5 +132,25 @@ class LedgerGroupController extends Controller
 
         return redirect()->route('ledger.group.index')
                      ->with('success', 'Ledger Group deleted successfully.');
+    }
+
+    // import
+    public function import(Request $request)
+    {
+        // Validate the uploaded file
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv,xls|max:2048'
+        ]);
+
+        try {
+            // Process the import
+            Excel::import(new LedgerGroupImport, $request->file('file'));
+
+            // Success message
+            return redirect()->back()->with('success', 'Ledger Group imported successfully!');
+        } catch (\Exception $e) {
+            // Handle errors
+            return redirect()->back()->with('error', 'Error importing file: ' . $e->getMessage());
+        }
     }
 }
