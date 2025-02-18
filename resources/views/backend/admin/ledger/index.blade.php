@@ -26,8 +26,8 @@
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
-                                    <a onclick="comingSoon()"  class="btn btn-sm btn-info rounded-0">
-                                        <i class="fas fa-file-export fa-sm"></i> Export
+                                    <a href="#" class="btn btn-sm btn-info rounded-0" data-toggle="modal" data-target="#importModal">
+                                        <i class="fas fa-file-import fa-sm"></i> Import
                                     </a>
                                     @can('ledger-create')
                                     <a href="{{ route('ledger.create') }}" class="btn btn-sm btn-success rounded-0">
@@ -220,6 +220,48 @@
             </div>
         </section>
     </div>
+    <!-- Import Ledger Modal -->
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success d-flex justify-content-between align-items-center w-100">
+                    <h5 class="modal-title" id="importModalLabel">Import Ledger</h5>
+                    <div class="d-flex align-items-center">
+                        <a href="{{ route('ledger.import.format') }}" class="btn btn-warning btn-sm mx-3">
+                            <i class="fas fa-download"></i> Download Format
+                        </a>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ route('ledger.import') }}" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label for="file-upload">Choose File</label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="file-upload" name="file" required>
+                                    <label class="custom-file-label" for="file-upload">Choose file</label>
+                                </div>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-upload"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group text-right">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-file-import"></i> Import
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('js')
@@ -227,6 +269,16 @@
     // Initialize Select2 if necessary
     $(document).ready(function() {
         $('.select2').select2();
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#file-upload').on('change', function (e) {
+            // Get the file name
+            var fileName = e.target.files[0].name;
+            // Set the label text
+            $(this).next('.custom-file-label').html(fileName);
+        });
     });
 </script>
 @endpush

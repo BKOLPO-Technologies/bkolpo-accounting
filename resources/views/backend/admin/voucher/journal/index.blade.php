@@ -27,7 +27,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
                                     <a onclick="comingSoon()"  class="btn btn-sm btn-info rounded-0">
-                                        <i class="fas fa-file-export fa-sm"></i> Export
+                                        <i class="fas fa-file-export fa-sm"></i> Import
                                     </a>
                                     @can('journal-create')
                                     <a href="{{ route('journal-voucher.create') }}" class="btn btn-sm btn-success rounded-0">

@@ -82,6 +82,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::post('/update/{id}', [LedgerController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [LedgerController::class, 'destroy'])->name('delete')->middleware('can:ledger-delete');
         Route::get('/view/{id}', [LedgerController::class, 'show'])->name('show')->middleware('can:ledger-view');
+        Route::get('/ledger/import/format', [LedgerController::class, 'downloadFormat'])->name('import.format');
+        Route::post('/import', [LedgerController::class, 'import'])->name('import');
+        
     });
 
     /* ==================== ledger group category  =================== */

@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Auth;
 use App\Traits\SumLedgerAmounts;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Session;
+use App\Exports\LedgerExport;
 
 class LedgerController extends Controller
 {
@@ -154,4 +157,60 @@ class LedgerController extends Controller
 
         return redirect()->route('ledger.index')->with('success', 'Ledger deleted successfully.');
     }
+    // import download formate
+    public function downloadFormat()
+    {
+        return Excel::download(new LedgerExport, 'Ledger_Import_Template.xlsx');
+    }
+
+    // import
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+    
+        $file = $request->file('file');
+        $data = Excel::toArray([], $file);
+        $rows = $data[0]; // Get all rows from the first sheet (index 0)
+    
+        // Skip the first row, which contains headers
+        $header = $rows[0]; // The first row (headers)
+        $rows = array_slice($rows, 1); // Remove the first row from data
+
+        // Find the actual column name containing "Group Name"
+        $groupColumn = null;
+        foreach ($header as $col) {
+            if (str_contains($col, 'Group Name')) { // Match dynamically
+                $groupColumn = $col;
+                break;
+            }
+        }
+      
+        // Loop through the rows and trim spaces around the keys and values
+        foreach ($rows as $row) {
+            // Map column headers to keys for easy access
+            $row = array_combine($header, $row); // Combine header names with data rows
+            // dd($row);
+            // Create ledger
+            $ledger = Ledger::create([
+                'name' => $row['Ledger Name'], // Access the correct column
+                'debit' => $row['Opening Balance'],
+                'credit' => $row['Ending Balance'],
+            ]);
+            // Attach ledger to group(s)
+            if (!empty($row[$groupColumn])) {
+                foreach (explode(',', $row[$groupColumn]) as $groupId) {
+                    LedgerGroupDetail::create([
+                        'ledger_id' => $ledger->id,
+                        'group_id' => trim($groupId),
+                    ]);
+                }
+            }
+        }
+    
+        return back()->with('success', 'Ledger data imported successfully!');
+    }
+
+
 }
