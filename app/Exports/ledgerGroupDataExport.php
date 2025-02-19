@@ -18,7 +18,7 @@ class ledgerGroupDataExport implements FromCollection, WithHeadings
     public function collection()
     {
         //return Ledger::all();
-        return ledgerGroup::select("id", "group_name", "status", "created_by", "updated_by")->get();
+        return LedgerGroup::select("id", "group_name", "status", "created_by", "updated_by")->get();
     }
 
     public function headings(): array
