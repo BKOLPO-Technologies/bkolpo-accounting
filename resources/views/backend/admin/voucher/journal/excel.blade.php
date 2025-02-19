@@ -69,9 +69,9 @@
                                                     <div class="modal fade" id="statusModal{{ $voucher->id }}" tabindex="-1" role="dialog" aria-labelledby="voucherModalLabel{{ $voucher->id }}" aria-hidden="true">
                                                         <div class="modal-dialog modal-lg" role="document">
                                                             <div class="modal-content">
-                                                                <div class="modal-header">
+                                                                <div class="modal-header bg-success">
                                                                     <h5 class="modal-title">Voucher No - {{ $voucher->transaction_code }}</h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
                                                                 </div>
