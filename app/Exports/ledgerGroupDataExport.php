@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\ledgerGroup;
+use App\Models\LedgerGroup;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
