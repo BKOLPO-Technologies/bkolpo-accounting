@@ -49,6 +49,7 @@ class JournalVoucherImport implements ToCollection
                     'company_id'       => $companyId,
                     'branch_id'        => $branchId,
                     'transaction_date' => $date,
+                    'status'           => 0 // Status 0 => Draft Voucher
                 ]);
                 $voucherMap[$companyId][$branchId][$date] = $voucher->id;
             }

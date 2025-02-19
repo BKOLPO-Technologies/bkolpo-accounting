@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['pageTitle' => 'Journal Voucher List'])
+@extends('layouts.admin', ['pageTitle' => 'Journal Voucher Excel Entry List'])
 @section('admin')
     <link rel="stylesheet" href="{{ asset('backend/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
     <div class="content-wrapper">
@@ -49,10 +49,7 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($journalVouchers as $key => $voucher)
-                                            @php
-                                                $isLatest = \Carbon\Carbon::parse($voucher->created_at)->isToday();
-                                            @endphp
-                                            <tr class="{{ $isLatest ? 'bg-success text-white' : 'bg-light' }}">
+                                            <tr>
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>{{ $voucher->transaction_code }}</td>
                                                 <td>{{ $voucher->company->name ?? 'N/A' }} / {{ $voucher->branch->name ?? 'N/A' }}</td>
@@ -63,20 +60,52 @@
                                                 <td class="text-end">৳{{ number_format($voucher->details->sum('credit'), 2) }}</td>
                                                 <td>{{ date('d M, Y', strtotime($voucher->transaction_date)) }}</td>
                                                 <td class="col-2">
+                                                    <!-- Status Update Button -->
+                                                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#statusModal{{ $voucher->id }}">
+                                                        <i class="fas fa-sync-alt"></i> 
+                                                    </button>
+
+                                                    <!-- Voucher Status Modal -->
+                                                    <div class="modal fade" id="statusModal{{ $voucher->id }}" tabindex="-1" role="dialog" aria-labelledby="voucherModalLabel{{ $voucher->id }}" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Voucher No - {{ $voucher->transaction_code }}</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <p>আপনি কি নিশ্চিত যে এই **ভাউচারটি** মূল তালিকায় স্থানান্তর করতে চান?</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <!-- Close Button -->
+                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                                                                        <i class="fas fa-times"></i> Close
+                                                                    </button>
+                                                                    <!-- Confirm Button -->
+                                                                    <button type="button" class="btn btn-primary" onclick="confirmTransfer({{ $voucher->id }})">
+                                                                        <i class="fas fa-check"></i> Confirm
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
                                                     @can('journal-view')
-                                                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#voucherModal{{ $voucher->id }}">
-                                                            <i class="fas fa-eye"></i>
-                                                        </button>
+                                                    <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#voucherModal{{ $voucher->id }}">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
                                                     @endcan
                                                     @can('journal-edit')
-                                                        <a href="{{ route('journal-voucher.edit', $voucher->id) }}" class="btn btn-sm btn-warning text-light">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
+                                                    <a href="{{ route('journal-voucher.edit', $voucher->id) }}" class="btn btn-sm btn-warning text-light">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
                                                     @endcan
                                                     @can('journal-delete')
-                                                        <a id="delete" href="{{ route('journal-voucher.delete', $voucher->id) }}" class="btn btn-sm btn-danger delete-button">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a>
+                                                    <a id="delete" href="{{ route('journal-voucher.delete', $voucher->id) }}" class="btn btn-sm btn-danger delete-button">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </a>
                                                     @endcan
                                                 </td>
                                             </tr>
@@ -233,6 +262,41 @@
         window.location.reload();
     }
 </script>
+<script>
+    function confirmTransfer(voucherId) {
+        $.ajax({
+            url: "{{ route('journal-voucher.update-status') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                voucher_id: voucherId
+            },
+            success: function(response) {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'ভাউচার সফলভাবে মূল তালিকায় স্থানান্তর করা হয়েছে!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                $("#statusModal" + voucherId).modal("hide"); 
+                location.reload(); 
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'কিছু সমস্যা হয়েছে! অনুগ্রহ করে পরে চেষ্টা করুন।',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        });
+    }
+</script>
+
 <script>
     $(document).ready(function () {
         $('#file-upload').on('change', function (e) {

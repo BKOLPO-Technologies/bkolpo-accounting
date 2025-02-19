@@ -40,7 +40,8 @@ class JournalController extends Controller
         // Fetch journal vouchers with related company, branch, and ledger details
         $journalVouchers = JournalVoucher::with(['company', 'branch', 'details.ledger'])
             ->orderBy('id', 'desc')
-            ->get();
+            ->where('status',1) // Status 1=>Pending Voucher
+            ->latest()->get();
 
         $totalDebit = $journalVouchers->sum(function ($voucher) {
             return $voucher->details->sum('debit');
@@ -51,6 +52,43 @@ class JournalController extends Controller
         });
 
         return view('backend.admin.voucher.journal.index',compact('pageTitle','journalVouchers','totalDebit','totalCredit'));
+    }
+
+    // excel list
+    public function excel()
+    {
+        $pageTitle = 'Journal Excel Entry List';
+
+        // Fetch journal vouchers with related company, branch, and ledger details
+        $journalVouchers = JournalVoucher::with(['company', 'branch', 'details.ledger'])
+            ->orderBy('id', 'desc')
+            ->where('status',0) // Status 0=>Draft/Excel Voucher
+            ->get();
+
+        $totalDebit = $journalVouchers->sum(function ($voucher) {
+            return $voucher->details->sum('debit');
+        });
+    
+        $totalCredit = $journalVouchers->sum(function ($voucher) {
+            return $voucher->details->sum('credit');
+        });
+
+        return view('backend.admin.voucher.journal.excel',compact('pageTitle','journalVouchers','totalDebit','totalCredit'));
+    }
+
+    // update voucher status
+    public function updateStatus(Request $request)
+    {
+        $voucher = JournalVoucher::find($request->voucher_id);
+
+        if ($voucher) {
+            $voucher->status = '1';
+            $voucher->save();
+
+            return response()->json(['message' => 'ভাউচার সফলভাবে মূল তালিকায় স্থানান্তর করা হয়েছে!']);
+        }
+
+        return response()->json(['message' => 'ভাউচার পাওয়া যায়নি!'], 404);
     }
 
     /**

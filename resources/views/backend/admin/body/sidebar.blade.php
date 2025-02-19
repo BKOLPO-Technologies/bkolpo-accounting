@@ -152,8 +152,8 @@
 
           <!----- Start Voucher Area ----->
           @can('journal-menu')  
-          <li class="nav-item {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create') ? 'active' : '' }}">
+          <li class="nav-item {{ Route::is('journal-voucher.index','journal-voucher.excel', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('journal-voucher.index','journal-voucher.excel', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create') ? 'active' : '' }}">
               <i class="nav-icon fas fa-receipt"></i>
               <p>
               Journal
@@ -169,6 +169,12 @@
                 </a>
               </li>
               @endcan
+              <li class="nav-item">
+                <a href="{{ route('journal-voucher.excel') }}" class="nav-link {{ Route::is('journal-voucher.excel') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Journal Excel Entry List</p>
+                </a>
+              </li>
             </ul>
             <!-- <ul class="nav nav-treeview" style="{{ Route::is('chart_of_accounts.index', 'chart_of_accounts.create') ? 'display: block;' : 'display: none;' }}">
               <li class="nav-item {{ Route::is('chart_of_accounts.index', 'chart_of_accounts.create') ? 'menu-open' : '' }}">

@@ -19,6 +19,7 @@ use Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Session;
 use App\Imports\LedgerGroupImport;
+use App\Exports\LedgerGroupExport;
 
 class LedgerGroupController extends Controller
 {
@@ -132,6 +133,12 @@ class LedgerGroupController extends Controller
 
         return redirect()->route('ledger.group.index')
                      ->with('success', 'Ledger Group deleted successfully.');
+    }
+
+    // import download formate
+    public function downloadFormat()
+    {
+        return Excel::download(new LedgerGroupExport, 'Ledger_Group_Import_Template.xlsx');
     }
 
     // import

@@ -11,6 +11,7 @@ class JournalVoucher extends Model
         'company_id',
         'branch_id',
         'transaction_date',
+        'status'
     ];
 
     public function company()

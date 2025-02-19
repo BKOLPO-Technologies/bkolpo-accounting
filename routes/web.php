@@ -96,12 +96,14 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::post('/update/{id}', [LedgerGroupController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [LedgerGroupController::class, 'destroy'])->name('delete')->middleware('can:ledger-group-delete');
         Route::get('/view/{id}', [LedgerGroupController::class, 'show'])->name('show')->middleware('can:ledger-group-view');
+        Route::get('/import/format', [LedgerGroupController::class, 'downloadFormat'])->name('import.format');
         Route::post('/import', [LedgerGroupController::class, 'import'])->name('import');
     }); 
 
     /* ==================== journal voucher  =================== */
     Route::prefix('journal-voucher')->as('journal-voucher.')->group(function () {
         Route::get('/', [JournalController::class, 'index'])->name('index')->middleware('can:journal-list');
+        Route::get('/excel', [JournalController::class, 'excel'])->name('excel');
         Route::get('/create', [JournalController::class, 'create'])->name('create')->middleware('can:journal-create');
         Route::post('/store', [JournalController::class, 'store'])->name('store');
         Route::get('/edit/{id}', [JournalController::class, 'edit'])->name('edit')->middleware('can:journal-edit');
@@ -111,6 +113,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/get-branches/{companyId}', [JournalController::class, 'getBranchesByCompany']);
         Route::get('/import/format', [JournalController::class, 'downloadFormat'])->name('import.format');
         Route::post('/import', [JournalController::class, 'import'])->name('import');
+        Route::post('/update-status', [JournalController::class, 'updateStatus'])->name('update-status');
+
     }); 
 
     /* ==================== Report =================== */
