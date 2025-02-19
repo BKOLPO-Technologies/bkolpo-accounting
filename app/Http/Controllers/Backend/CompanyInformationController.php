@@ -108,4 +108,10 @@ class CompanyInformationController extends Controller
         $pageTitle = 'All Import';
         return view('backend.admin.company-information.import', compact('pageTitle'));
     }
+
+    public function export()
+    {
+        $pageTitle = 'All Export';
+        return view('backend.admin.company-information.export', compact('pageTitle'));
+    }
 }
