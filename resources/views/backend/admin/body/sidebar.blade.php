@@ -568,8 +568,8 @@
           </li>
           @endcan
           @can('setting-menu')  
-          <li class="nav-item {{ Route::is('company-information.index') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('company-information.index') ? 'active' : '' }}">
+          <li class="nav-item {{ Route::is('company-information.index','company-information.import','company-information.export') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('company-information.index','company-information.import','company-information.export') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-cog"></i>
                 <p>
                 Settings
@@ -585,6 +585,24 @@
                   </a>
                 </li>
                 @endcan
+                <li class="nav-item">
+                  <a href="{{ route('company-information.import') }}" class="nav-link {{ Route::is('company-information.import') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Import</p> 
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('company-information.export') }}" class="nav-link {{ Route::is('company-information.export') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Export</p> 
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('company-information.index') }}" class="nav-link {{ Route::is('company-information.index') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Database Backup</p> 
+                  </a>
+                </li>
             </ul>
           </li>
           @endcan

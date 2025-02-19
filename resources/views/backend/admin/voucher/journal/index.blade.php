@@ -213,50 +213,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Import Journal Modal -->
-    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-success d-flex justify-content-between align-items-center w-100">
-                    <h5 class="modal-title" id="importModalLabel">Import Journal</h5>
-                    <div class="d-flex align-items-center">
-                        <a href="{{ route('journal-voucher.import.format') }}" class="btn btn-warning btn-sm mx-3">
-                            <i class="fas fa-download"></i> Download Format
-                        </a>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="{{ route('journal-voucher.import') }}" enctype="multipart/form-data">
-                        @csrf
-                        <div class="form-group">
-                            <label for="file-upload">Choose File</label>
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="file-upload" name="file" required>
-                                    <label class="custom-file-label" for="file-upload">Choose file</label>
-                                </div>
-                                <div class="input-group-append">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-upload"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group text-right">
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-file-import"></i> Import
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
 @endsection
 
 @push('js')

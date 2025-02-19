@@ -191,6 +191,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [CompanyInformationController::class, 'index'])->name('index')->middleware('can:setting-information');
         Route::get('edit/{id}', [CompanyInformationController::class, 'edit'])->name('edit')->middleware('can:setting-information-edit');
         Route::post('update/{id}', [CompanyInformationController::class, 'update'])->name('update');
+        Route::get('import', [CompanyInformationController::class, 'import'])->name('import');
+        Route::get('export', [CompanyInformationController::class, 'export'])->name('export');
     });
 
     /* ==================== Role and User Management =================== */

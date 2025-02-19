@@ -10,6 +10,12 @@ use App\Models\CompanyInformation;
 use Illuminate\Support\Facades\Storage;
 use Exception;
 use Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Session;
+use App\Exports\LedgerExport;
+use App\Imports\LedgerGroupImport;
+use App\Exports\JournalExport;
+use App\Imports\JournalVoucherImport;
 
 class CompanyInformationController extends Controller
 {
@@ -94,5 +100,12 @@ class CompanyInformationController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    
+    // import
+    public function import()
+    {
+        $pageTitle = 'All Import';
+        return view('backend.admin.company-information.import', compact('pageTitle'));
     }
 }
