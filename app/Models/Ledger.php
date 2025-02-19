@@ -6,7 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ledger extends Model
 {
-    protected $guarded = [];
+    //protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'debit',
+        'credit',
+        'status',
+        'created_by',
+        'updated_by',
+    ];
 
     // Relationship: A ledger can have many ledger groups
     public function ledgerGroups()

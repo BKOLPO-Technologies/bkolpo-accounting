@@ -197,6 +197,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::post('update/{id}', [CompanyInformationController::class, 'update'])->name('update');
         Route::get('import', [CompanyInformationController::class, 'import'])->name('import');
         Route::get('export', [CompanyInformationController::class, 'export'])->name('export');
+
+        Route::get('ledgerExport', [CompanyInformationController::class, 'ledgerExport'])->name('ledgerExport');
+        Route::get('ledgerGroupExport', [CompanyInformationController::class, 'ledgerGroupExport'])->name('ledgerGroupExport');
+        Route::get('journalExport', [CompanyInformationController::class, 'journalExport'])->name('journalExport');
     });
 
     /* ==================== Role and User Management =================== */

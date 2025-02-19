@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class LedgerGroup extends Model
 {
     protected $guarded = [];
+    //protected $fillable = ['group_id', 'ledger_id'];
     
     // Relationship: A ledger group belongs to a ledger
     public function ledgers()
