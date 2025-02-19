@@ -37,7 +37,10 @@
                                             <div class="card-body">
                                                 <div class="d-flex flex-column justify-content-center align-items-center text-center">
                                                     <p>Export your Ledger Groups easily.</p>
-                                                    <a data-toggle="modal" data-target="#importModal" class="btn btn-info">
+                                                    <!-- <a data-toggle="modal" data-target="#importModal" class="btn btn-info">
+                                                        <i class="fas fa-upload mr-1"></i> Export Now
+                                                    </a> -->
+                                                    <a href="{{ route('company-information.ledgerGroupExport') }}" class="btn btn-info">
                                                         <i class="fas fa-upload mr-1"></i> Export Now
                                                     </a>
                                                 </div>
@@ -92,7 +95,12 @@
                                             <div class="card-body">
                                                 <div class="d-flex flex-column justify-content-center align-items-center text-center">
                                                     <p>Export your Ledgers with ease.</p>
-                                                    <a data-toggle="modal" data-target="#importModal1" class="btn btn-info"><i class="fas fa-upload mr-1"></i> Export Now</a>
+                                                    <!-- <a data-toggle="modal" data-target="#importModal1" class="btn btn-info">
+                                                        <i class="fas fa-upload mr-1"></i> Export Now
+                                                    </a> -->
+                                                    <a href="{{ route('company-information.ledgerExport') }}" class="btn btn-info">
+                                                        <i class="fas fa-upload mr-1"></i> Export Now
+                                                    </a>
                                                 </div>
                                                 <!-- Import Ledger Modal -->
                                                 <div class="modal fade" id="importModal1" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
@@ -150,7 +158,12 @@
                                             <div class="card-body">
                                                 <div class="d-flex flex-column justify-content-center align-items-center text-center">
                                                     <p>Export Journal entries quickly.</p>
-                                                    <a data-toggle="modal" data-target="#importModal2" class="btn btn-info"> <i class="fas fa-upload mr-1"></i> Export Now</a>
+                                                    <!-- <a data-toggle="modal" data-target="#importModal2" class="btn btn-info"> 
+                                                        <i class="fas fa-upload mr-1"></i> Export Now
+                                                    </a> -->
+                                                    <a href="{{ route('company-information.journalExport') }}" class="btn btn-info">
+                                                        <i class="fas fa-upload mr-1"></i> Export Now
+                                                    </a>
                                                 </div>
                                                 <!-- Import Journal Modal -->
                                                 <div class="modal fade" id="importModal2" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">

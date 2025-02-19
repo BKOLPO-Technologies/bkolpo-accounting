@@ -2,20 +2,23 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use App\Models\User;
-use App\Models\CompanyInformation;
-use Illuminate\Support\Facades\Storage;
-use Exception;
 use Auth;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Session;
+use Exception;
+use App\Models\User;
+use Illuminate\Http\Request;
 use App\Exports\LedgerExport;
-use App\Imports\LedgerGroupImport;
 use App\Exports\JournalExport;
+use App\Exports\LedgerDataExport;
+use App\Exports\JournalDataExport;
+use App\Imports\LedgerGroupImport;
+use App\Models\CompanyInformation;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\JournalVoucherImport;
+use App\Exports\ledgerGroupDataExport;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyInformationController extends Controller
 {
@@ -113,5 +116,20 @@ class CompanyInformationController extends Controller
     {
         $pageTitle = 'All Export';
         return view('backend.admin.company-information.export', compact('pageTitle'));
+    }
+
+    public function ledgerExport()
+    {
+        return Excel::download(new LedgerDataExport, 'ledgerData.xlsx');
+    }
+
+    public function ledgerGroupExport()
+    {
+        return Excel::download(new ledgerGroupDataExport, 'ledgerGroupData.xlsx');
+    }
+
+    public function journalExport()
+    {
+        return Excel::download(new JournalDataExport, 'journalData.xlsx');
     }
 }
