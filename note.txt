@@ -1,0 +1,4 @@
+Category model, table added
+Product model, table added
+Supplier model, table added
+Stock model, table added
