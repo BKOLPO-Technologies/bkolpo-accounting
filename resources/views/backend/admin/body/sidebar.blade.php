@@ -471,6 +471,26 @@
           </li>
           <!-- ---------------- -->
 
+          <!-- ---Inventory--- -->
+          <li class="nav-item {{ Route::is('admin.category*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('admin.category*') ? 'active' : '' }}">
+                <i class="fa-solid fa-money-check"></i>
+                <p>
+                    Category
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{ route('admin.category.index') }}" class="nav-link {{ Route::is('admin.category.index') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Manage Category</p>
+                    </a>
+                </li>
+            </ul>
+          </li>
+          <!-- ---------------- -->
+
           <!-- ---Transaction--- -->
           <!-- <li class="nav-item {{ Route::is('admin.transaction*') ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ Route::is('admin.transaction*') ? 'active' : '' }}">

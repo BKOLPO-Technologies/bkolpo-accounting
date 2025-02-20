@@ -7,18 +7,19 @@ use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\BranchController;
+use App\Http\Controllers\Backend\LedgerController;
 use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\Backend\CompanyController;
 use App\Http\Controllers\Backend\InvoiceController;
+use App\Http\Controllers\Backend\JournalController;
 use App\Http\Controllers\Backend\ProjectController;
 use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\EmployeeController;
 use App\Http\Controllers\Backend\SupplierController;
+use App\Http\Controllers\Backend\LedgerGroupController;
 use App\Http\Controllers\Backend\PaymentMethodController;
 use App\Http\Controllers\Backend\CompanyInformationController;
-use App\Http\Controllers\Backend\LedgerController;
-use App\Http\Controllers\Backend\LedgerGroupController;
-use App\Http\Controllers\Backend\JournalController;
+use App\Http\Controllers\Backend\Inventory\CategoryController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
@@ -225,6 +226,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     ]);
     Route::get('users/delete/{id}', [UserController::class, 'destroy'])->name('users.delete');
 
+    /* ==================== supplier =================== */
+    Route::prefix('category')->group(function () {
+        Route::get('/', [CategoryController::class, 'AdminCategoryIndex'])->name('admin.category.index');
+        // Route::get('/create', [SupplierController::class, 'AdminSupplierCreate'])->name('admin.supplier.create');
+        // Route::post('/storeSupplier', [SupplierController::class, 'AdminSupplierStore'])->name('admin.supplier.store');
+        // Route::get('/view/{id}', [SupplierController::class, 'AdminSupplierView'])->name('admin.supplier.view');
+        // Route::get('/edit/{id}', [SupplierController::class, 'AdminSupplierEdit'])->name('admin.supplier.edit');
+        // Route::put('/update/{id}', [SupplierController::class, 'AdminSupplierUpdate'])->name('admin.supplier.update');
+        // Route::delete('/delete/{id}', [SupplierController::class, 'AdminSupplierDestroy'])->name('admin.supplier.destroy');
+    });
 
 });
 
