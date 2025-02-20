@@ -13,7 +13,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: black;">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('admin.supplier.index') }}" style="text-decoration: none; color: black;">Category</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.product.index') }}" style="text-decoration: none; color: black;">Product</a></li>
                         <li class="breadcrumb-item active">Create</li>
                     </ol>
                 </div>
@@ -38,7 +38,7 @@
               
               <!-- /.card-header -->
               <!-- form start -->
-              <form role="form" action="{{ route('admin.product.store') }}" method="POST">
+              <form role="form" action="{{ route('admin.product.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="card-body">
@@ -72,6 +72,17 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Image</label>
+                                <input type="file" class="form-control" name="image">
+                            </div>
+                        </div>
+                    </div>
+
+                    
 
                 </div>
                 <!-- /.card-body -->

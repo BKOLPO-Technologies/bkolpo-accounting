@@ -14,7 +14,7 @@
                         <li class="breadcrumb-item">
                             <a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: black;">Home</a>
                         </li>
-                        <li class="breadcrumb-item active">Supplier</li>
+                        <li class="breadcrumb-item active">Category</li>
                     </ol>
                 </div>
             </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Inventory;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -31,7 +32,14 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'quantity' => 'required|integer|min:1',
             'active' => 'nullable|boolean',  // Assuming you can pass active as true or false
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('inventory/products', 'public'); // Save in storage/app/public/products
+        }
 
         // Store the product with the validated data
         Product::create([
@@ -40,6 +48,7 @@ class ProductController extends Controller
             'description' => $request->description ?? null, // Store null if not provided
             'quantity' => $request->quantity,
             'active' => $request->active ?? true, // Default to active if not provided
+            'image' => $imagePath,
         ]);
 
         // Redirect to a product list page or any other route you prefer with a success message
@@ -63,10 +72,32 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'quantity' => 'required|integer|min:1',
             'active' => 'nullable|boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
         ]);
 
         // Find the product by ID
         $product = Product::findOrFail($id);
+
+        // Check if a new image is uploaded
+        if ($request->hasFile('image')) {
+            // // Store new image
+            // $imagePath = $request->file('image')->store('inventory/products', 'public');
+
+            // // Optionally delete the old image if exists
+            // if ($product->image) {
+            //     Storage::delete('public/' . $product->image);
+            // }
+
+            // $product->image = $imagePath;
+            // Delete old image if exists
+            if ($product->image && Storage::disk('public')->exists($product->image)) {
+                Storage::disk('public')->delete($product->image);
+            }
+
+            // Store new image
+            $imagePath = $request->file('image')->store('inventory/products', 'public');
+            $product->image = $imagePath;
+        }
 
         // Update the product data
         $product->update([
@@ -75,6 +106,7 @@ class ProductController extends Controller
             'description' => $request->input('description', $product->description), // Keep existing description
             'quantity' => $request->input('quantity', $product->quantity), // Keep existing quantity
             'active' => $request->has('active') ? $request->input('active') : $product->active, // Keep existing status
+            'image' => $product->image,
         ]);
 
         // Redirect back to the product index with a success message
@@ -86,6 +118,11 @@ class ProductController extends Controller
     {
         // Find the supplier by ID
         $product = Product::findOrFail($id);
+
+        // Delete the product image if it exists
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
+        }
 
         // Delete the supplier record
         $product->delete();

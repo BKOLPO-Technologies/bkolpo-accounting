@@ -519,7 +519,7 @@
                   </a>
                   <ul class="nav nav-treeview">
                       <li class="nav-item">
-                          <a href="{{ route('admin.category.index') }}" class="nav-link {{ Route::is('admin.category.index') || Route::is('admin.category.edit') ? 'active' : '' }}">
+                          <a href="{{ route('admin.category.index') }}" class="nav-link {{ Route::is('admin.category.index') || Route::is('admin.category.create') || Route::is('admin.category.edit') ? 'active' : '' }}">
                               <i class="far fa-circle nav-icon"></i>
                               <p>Manage Category</p>
                           </a>
@@ -539,7 +539,7 @@
                       </a>
                       <ul class="nav nav-treeview">
                           <li class="nav-item">
-                              <a href="{{ route('admin.product.index') }}" class="nav-link {{ Route::is('admin.product.index') || Route::is('admin.product.edit') ? 'active' : '' }}">
+                              <a href="{{ route('admin.product.index') }}" class="nav-link {{ Route::is('admin.product.index') || Route::is('admin.product.create') || Route::is('admin.product.edit') ? 'active' : '' }}">
                                   <i class="far fa-circle nav-icon"></i>
                                   <p>Manage Product</p>
                               </a>

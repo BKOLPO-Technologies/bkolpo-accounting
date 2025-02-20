@@ -14,7 +14,7 @@
                         <li class="breadcrumb-item">
                             <a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: black;">Home</a>
                         </li>
-                        <li class="breadcrumb-item active">Supplier</li>
+                        <li class="breadcrumb-item active">Product</li>
                     </ol>
                 </div>
             </div>
@@ -39,6 +39,7 @@
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     <th>Description</th>
+                                    <th>Image</th>
                                     <th>Settings</th>
                                 </tr>
                             </thead>
@@ -49,6 +50,14 @@
                                     <td>{{ $product->price }}</td>
                                     <td>{{ $product->quantity }}</td>
                                     <td>{{ $product->description }}</td>
+                                    <td>
+                                        @if($product->image)
+                                            <img src="{{ asset('storage/' . $product->image) }}" width="50">
+                                        @else
+                                            No Image
+                                        @endif
+                                    </td>
+
                                     <td>
                                         <a href="{{ route('admin.product.edit', $product->id) }}" class="btn btn-primary">
                                             Edit <i class="fa-solid fa-pen ml-3"></i>

@@ -13,7 +13,7 @@
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: black;">Home</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('admin.product.index') }}" style="text-decoration: none; color: black;">Product</a></li>
-                        <li class="breadcrumb-item active">Create</li>
+                        <li class="breadcrumb-item active">Edit</li>
                     </ol>
                 </div>
             </div>
@@ -30,7 +30,7 @@
             <!-- general form elements -->
             <div class="card card-secondary">
               <div class="card-header">
-                <h3 class="card-title">Add New supplier Details</h3>
+                <h3 class="card-title">Add New Product</h3>
                 <!-- <br>
                 <span style="font-size: 12px;">Put Branch Manage Information</span> -->
               </div>
@@ -38,7 +38,7 @@
               <!-- /.card-header -->
               <!-- form start -->
               <!-- <form role="form"> -->
-              <form action="{{ route('admin.product.update', $product->id) }}" method="POST">
+              <form action="{{ route('admin.product.update', $product->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -70,6 +70,15 @@
                             <div class="form-group">
                                 <label>Quantity</label>
                                 <input type="number" class="form-control" placeholder="" name="quantity" value="{{ $product->quantity }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Image</label>
+                                <input type="file" class="form-control" name="image">
                             </div>
                         </div>
                     </div>

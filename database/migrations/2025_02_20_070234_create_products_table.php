@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('quantity');
             $table->boolean('active');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }
