@@ -18,6 +18,7 @@ use App\Http\Controllers\Backend\EmployeeController;
 use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\LedgerGroupController;
 use App\Http\Controllers\Backend\PaymentMethodController;
+use App\Http\Controllers\Backend\Inventory\ProductController;
 use App\Http\Controllers\Backend\CompanyInformationController;
 use App\Http\Controllers\Backend\Inventory\CategoryController;
 
@@ -234,6 +235,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/edit/{id}', [CategoryController::class, 'AdminCategoryEdit'])->name('admin.category.edit');
         Route::put('/update/{id}', [CategoryController::class, 'AdminCategoryUpdate'])->name('admin.category.update');
         Route::delete('/delete/{id}', [CategoryController::class, 'AdminCategoryDestroy'])->name('admin.category.destroy');
+    });
+
+    /* ==================== Product =================== */
+    Route::prefix('product')->group(function () {
+        Route::get('/', [ProductController::class, 'AdminProductIndex'])->name('admin.product.index');
+        Route::get('/create', [ProductController::class, 'AdminProductCreate'])->name('admin.product.create');
+        Route::post('/storeProduct', [ProductController::class, 'AdminProductStore'])->name('admin.product.store');
+        Route::get('/edit/{id}', [ProductController::class, 'AdminProductEdit'])->name('admin.product.edit');
+        Route::put('/update/{id}', [ProductController::class, 'AdminProductUpdate'])->name('admin.product.update');
+        Route::delete('/delete/{id}', [ProductController::class, 'AdminProductDestroy'])->name('admin.product.destroy');
     });
 
 });
