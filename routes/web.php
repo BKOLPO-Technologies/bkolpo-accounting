@@ -226,15 +226,14 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     ]);
     Route::get('users/delete/{id}', [UserController::class, 'destroy'])->name('users.delete');
 
-    /* ==================== supplier =================== */
+    /* ==================== Category =================== */
     Route::prefix('category')->group(function () {
         Route::get('/', [CategoryController::class, 'AdminCategoryIndex'])->name('admin.category.index');
-        // Route::get('/create', [SupplierController::class, 'AdminSupplierCreate'])->name('admin.supplier.create');
-        // Route::post('/storeSupplier', [SupplierController::class, 'AdminSupplierStore'])->name('admin.supplier.store');
-        // Route::get('/view/{id}', [SupplierController::class, 'AdminSupplierView'])->name('admin.supplier.view');
-        // Route::get('/edit/{id}', [SupplierController::class, 'AdminSupplierEdit'])->name('admin.supplier.edit');
-        // Route::put('/update/{id}', [SupplierController::class, 'AdminSupplierUpdate'])->name('admin.supplier.update');
-        // Route::delete('/delete/{id}', [SupplierController::class, 'AdminSupplierDestroy'])->name('admin.supplier.destroy');
+        Route::get('/create', [CategoryController::class, 'AdminCategoryCreate'])->name('admin.category.create');
+        Route::post('/storeCategory', [CategoryController::class, 'AdminCategoryStore'])->name('admin.category.store');
+        Route::get('/edit/{id}', [CategoryController::class, 'AdminCategoryEdit'])->name('admin.category.edit');
+        Route::put('/update/{id}', [CategoryController::class, 'AdminCategoryUpdate'])->name('admin.category.update');
+        Route::delete('/delete/{id}', [CategoryController::class, 'AdminCategoryDestroy'])->name('admin.category.destroy');
     });
 
 });

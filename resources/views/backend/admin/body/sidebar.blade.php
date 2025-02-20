@@ -472,7 +472,7 @@
           <!-- ---------------- -->
 
           <!-- ---Inventory--- -->
-          <li class="nav-item {{ Route::is('admin.category*') ? 'menu-open' : '' }}">
+          <!-- <li class="nav-item {{ Route::is('admin.category*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('admin.category*') ? 'active' : '' }}">
                 <i class="fa-solid fa-money-check"></i>
                 <p>
@@ -488,8 +488,57 @@
                     </a>
                 </li>
             </ul>
-          </li>
+          </li> -->
           <!-- ---------------- -->
+
+          <li class="nav-item {{ Route::is('admin.category*') ? 'menu-open' : '' }}">
+              <a href="#" class="nav-link {{ Route::is('admin.category*') ? 'active' : '' }}">
+                  <i class="nav-icon fas fa-receipt"></i>
+                  <p>
+                    Inventory
+                      <i class="fas fa-angle-left right"></i>
+                  </p>
+              </a>
+              <ul class="nav nav-treeview">
+                  <li class="nav-item {{ Route::is('admin.category*') ? 'menu-open' : '' }}">
+                      <a href="#" class="nav-link {{ Route::is('admin.category*') ? 'active' : '' }}">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>
+                              Category
+                              <i class="fas fa-angle-left right"></i>
+                          </p>
+                      </a>
+                      <ul class="nav nav-treeview">
+                          <li class="nav-item">
+                              <a href="{{ route('admin.category.index') }}" class="nav-link {{ Route::is('admin.category.index') || Route::is('admin.category.edit') ? 'active' : '' }}">
+                                  <i class="far fa-circle nav-icon"></i>
+                                  <p>Manage Category</p>
+                              </a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
+              <!-- --- -->
+              <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                      <a href="#" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>
+                              Product
+                              <i class="fas fa-angle-left right"></i>
+                          </p>
+                      </a>
+                      <ul class="nav nav-treeview">
+                          <li class="nav-item">
+                              <a href="#" class="nav-link">
+                                  <i class="far fa-circle nav-icon"></i>
+                                  <p>Manage Product</p>
+                              </a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
+          </li>
 
           <!-- ---Transaction--- -->
           <!-- <li class="nav-item {{ Route::is('admin.transaction*') ? 'menu-open' : '' }}">

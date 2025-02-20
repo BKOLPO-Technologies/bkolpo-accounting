@@ -27,8 +27,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">All Suppliers</h3>
-                        <a href="{{ route('admin.supplier.create') }}" class="btn btn-success float-right">Add Supplier</a>
+                        <h3 class="card-title">All Categories</h3>
+                        <a href="{{ route('admin.category.create') }}" class="btn btn-success float-right">Add Category</a>
                     </div>
 
                     <div class="card-body">
@@ -36,9 +36,6 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>Address</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
                                     <th>Settings</th>
                                 </tr>
                             </thead>
@@ -47,9 +44,6 @@
                                 <tr>
                                     <td>{{ $category->name }}</td>
                                     <td>
-                                        <a href="{{ route('admin.category.view', $category->id) }}" class="btn btn-info">
-                                            View <i class="fa-regular fa-eye ml-3"></i>
-                                        </a>
                                         <a href="{{ route('admin.category.edit', $category->id) }}" class="btn btn-primary">
                                             Edit <i class="fa-solid fa-pen ml-3"></i>
                                         </a>
@@ -57,7 +51,7 @@
                                         <form action="{{ route('admin.category.destroy', $category->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this supplier?');">
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this category?');">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </form>
