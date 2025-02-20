@@ -37,19 +37,23 @@
               
               <!-- /.card-header -->
               <!-- form start -->
-              <form role="form">
+              <!-- <form role="form"> -->
+              <form action="{{ route('admin.supplier.update', $supplier->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Name</label>
-                                <input type="text" class="form-control" placeholder="Name" name="name" value="Gph ispat">
+                                <input type="text" class="form-control" placeholder="Name" name="name" value="{{ $supplier->name }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Company</label>
-                                <input type="text" class="form-control" placeholder="Company Name" name="company" value="Private Company">
+                                <input type="text" class="form-control" placeholder="Company Name" name="company" value="{{ $supplier->company }}">
                             </div>
                         </div>
                     </div>
@@ -58,13 +62,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Phone</label>
-                                <input type="number" class="form-control" placeholder="Phone" name="phone" value="013111111111">
+                                <input type="number" class="form-control" placeholder="Phone" name="phone" value="{{ $supplier->phone }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="email" class="form-control" placeholder="Email Address" name="email" value="a@a.com">
+                                <input type="email" class="form-control" placeholder="Email Address" name="email" value="{{ $supplier->email }}">
                             </div>
                         </div>
                     </div>
@@ -73,13 +77,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Address</label>
-                                <input type="text" class="form-control" placeholder="Address" name="address" value="address">
+                                <input type="text" class="form-control" placeholder="Address" name="address" value="{{ $supplier->address }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>City</label>
-                                <input type="text" class="form-control" placeholder="City" name="city" value="city">
+                                <input type="text" class="form-control" placeholder="City" name="city" value="{{ $supplier->city }}">
                             </div>
                         </div>
                     </div>
@@ -88,13 +92,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Region</label>
-                                <input type="text" class="form-control" placeholder="Region" name="region" value="region">
+                                <input type="text" class="form-control" placeholder="Region" name="region" value="{{ $supplier->region }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Country</label>
-                                <input type="text" class="form-control" placeholder="Country" name="country" value="country">
+                                <input type="text" class="form-control" placeholder="Country" name="country" value="{{ $supplier->country }}">
                             </div>
                         </div>
                     </div>
@@ -103,13 +107,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>PostBox</label>
-                                <input type="text" class="form-control" placeholder="Post Box" name="postbox" value="postbox">
+                                <input type="text" class="form-control" placeholder="Post Box" name="postbox" value="{{ $supplier->postbox }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>TAX ID</label>
-                                <input type="number" class="form-control" placeholder="Tax Id" name="taxid" value="123">
+                                <input type="number" class="form-control" placeholder="Tax Id" name="taxid" value="{{ $supplier->taxid }}">
                             </div>
                         </div>
                     </div>

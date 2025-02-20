@@ -57,7 +57,7 @@
 
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <a href="{{ route('admin.supplier.edit', ['id' => 1]) }}" class="btn btn-warning btn-md">
+                                                    <a href="{{ route('admin.supplier.edit', ['id' => $supplier->id ]) }}" class="btn btn-warning btn-md">
                                                         <i class="icon-pencil"></i> Edit Profile
                                                     </a>
                                                 </div>
@@ -99,8 +99,8 @@
                                                 <strong>Name</strong>
                                             </div>
                                             <div class="col-md-10">
-                                                GPH Ispat Ltd. </div>
-
+                                                {{ $supplier->name }}
+                                            </div>
                                         </div>
                                         <hr>
                                         <div class="row m-t-lg">
@@ -108,7 +108,8 @@
                                                 <strong>Company</strong>
                                             </div>
                                             <div class="col-md-10">
-                                                Private Company </div>
+                                                {{ $supplier->company }}
+                                            </div>
 
                                         </div>
                                         <hr>
@@ -117,7 +118,8 @@
                                                 <strong> Address</strong>
                                             </div>
                                             <div class="col-md-10">
-                                                test </div>
+                                                {{ $supplier->address }}
+                                            </div>
 
                                         </div>
                                         <hr>
@@ -126,7 +128,8 @@
                                                 <strong>City</strong>
                                             </div>
                                             <div class="col-md-10">
-                                                test </div>
+                                                {{ $supplier->city }}
+                                            </div>
 
                                         </div>
                                         <hr>
@@ -135,7 +138,8 @@
                                                 <strong>Region</strong>
                                             </div>
                                             <div class="col-md-10">
-                                                test </div>
+                                                {{ $supplier->region }}
+                                            </div>
 
                                         </div>
                                         <hr>
@@ -144,16 +148,18 @@
                                                 <strong>Country</strong>
                                             </div>
                                             <div class="col-md-10">
-                                                test </div>
+                                                {{ $supplier->country }}
+                                            </div>
 
                                         </div>
                                         <hr>
                                         <div class="row m-t-lg">
                                             <div class="col-md-2">
-                                                <strong></strong>
+                                                <strong>postcode</strong>
                                             </div>
                                             <div class="col-md-10">
-                                                1711 </div>
+                                                {{ $supplier->postbox }}
+                                            </div>
 
                                         </div>
                                         <hr>
@@ -162,7 +168,8 @@
                                                 <strong>Email</strong>
                                             </div>
                                             <div class="col-md-10">
-                                                stews@gmail.com </div>
+                                                {{ $supplier->email }}
+                                            </div>
 
                                         </div>
                                         <hr>
@@ -171,7 +178,8 @@
                                                 <strong> Phone</strong>
                                             </div>
                                             <div class="col-md-10">
-                                                Test </div>
+                                                {{ $supplier->phone }}
+                                            </div>
 
                                         </div>
                                         <hr>

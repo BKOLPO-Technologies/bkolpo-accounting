@@ -160,8 +160,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::prefix('supplier')->group(function () {
         Route::get('/', [SupplierController::class, 'AdminSupplierIndex'])->name('admin.supplier.index');
         Route::get('/create', [SupplierController::class, 'AdminSupplierCreate'])->name('admin.supplier.create');
+        Route::post('/storeSupplier', [SupplierController::class, 'AdminSupplierStore'])->name('admin.supplier.store');
         Route::get('/view/{id}', [SupplierController::class, 'AdminSupplierView'])->name('admin.supplier.view');
         Route::get('/edit/{id}', [SupplierController::class, 'AdminSupplierEdit'])->name('admin.supplier.edit');
+        Route::put('/update/{id}', [SupplierController::class, 'AdminSupplierUpdate'])->name('admin.supplier.update');
+        Route::delete('/delete/{id}', [SupplierController::class, 'AdminSupplierDestroy'])->name('admin.supplier.destroy');
+
     });
 
     /* ==================== customers =================== */
@@ -220,6 +224,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         'can:user-view',   
     ]);
     Route::get('users/delete/{id}', [UserController::class, 'destroy'])->name('users.delete');
+
+
 });
 
 /* =============== End Admin Route  ============= */

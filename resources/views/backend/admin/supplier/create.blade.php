@@ -38,13 +38,15 @@
               
               <!-- /.card-header -->
               <!-- form start -->
-              <form role="form">
+              <form role="form" action="{{ route('admin.supplier.store') }}" method="POST">
+                @csrf
+
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Name</label>
-                                <input type="text" class="form-control" placeholder="Name" name="name">
+                                <input type="text" class="form-control" placeholder="Name" name="name" required>
                             </div>
                         </div>
                         <div class="col-md-6">
