@@ -42,7 +42,16 @@
                                         <select name="supplier" id="supplier" class="form-control select2 @error('supplier') is-invalid @enderror">
                                             <option value="">Select Supplier</option>
                                             @foreach($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}" {{ old('supplier') == $supplier->id ? 'selected' : '' }}>{{ $supplier->name }}</option>
+                                                <!-- <option value="{{ $supplier->id }}" {{ old('supplier') == $supplier->id ? 'selected' : '' }}>{{ $supplier->name }}</option> -->
+
+                                                <option value="{{ $supplier->id }}" 
+                                                    data-name="{{ $supplier->name }}" 
+                                                    data-company="{{ $supplier->company }}" 
+                                                    data-phone="{{ $supplier->phone }}" 
+                                                    data-email="{{ $supplier->email }}"
+                                                    {{ old('supplier') == $supplier->id ? 'selected' : '' }}>
+                                                    {{ $supplier->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                         <div class="input-group-append">
@@ -57,6 +66,8 @@
                                     </div>
                                     @enderror
                                 </div>
+
+                                
 
                                 <!-- Product Select with Search Feature -->
                                 <div class="col-lg-3 col-md-6 mb-3">
@@ -101,6 +112,23 @@
                                 </div>
                             </div>
 
+                            <!-- Supplier Details Table -->
+                            <div class="row mt-3">
+                                    <div class="col-12">
+                                        <table class="table table-bordered" id="supplier-details-table" style="display: none;">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Company</th>
+                                                    <th>Phone</th>
+                                                    <th>Email</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="supplier-details-body"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
                             <!-- Product Table -->
                             <div class="row">
                                 <div class="col-12">
@@ -306,6 +334,35 @@
     // Initialize Select2 if necessary
     $(document).ready(function() {
         $('.select2').select2();
+
+        // Supplier selection event
+        $('#supplier').on('change', function () {
+            const selectedOption = $(this).find(':selected');
+            const supplierId = selectedOption.val();
+            const supplierName = selectedOption.data('name') || 'N/A';
+            const supplierCompany = selectedOption.data('company') || 'N/A';
+            const supplierPhone = selectedOption.data('phone') || 'N/A';
+            const supplierEmail = selectedOption.data('email') || 'N/A';
+
+            if (supplierId) {
+                $('#supplier-details-table').show();
+                $('#supplier-details-body').empty(); // Clear previous selection
+
+                const supplierRow = `
+                    <tr id="supplier-row">
+                        <td>${supplierName}</td>
+                        <td>${supplierCompany}</td>
+                        <td>${supplierPhone}</td>
+                        <td>${supplierEmail}</td>
+                    </tr>
+                `;
+
+                $('#supplier-details-body').append(supplierRow);
+            } else {
+                $('#supplier-details-table').hide();
+            }
+        });
+        
     });
 </script>
 
