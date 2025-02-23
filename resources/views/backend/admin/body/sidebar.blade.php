@@ -472,8 +472,8 @@
           <!-- ---------------- -->
 
 
-          <li class="nav-item {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') ? 'active' : '' }}">
+          <li class="nav-item {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') || Route::is('admin.client*') ? 'menu-open' : '' }}">
+              <a href="#" class="nav-link {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') || Route::is('admin.client*') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-receipt"></i>
                   <p>
                     Inventory
@@ -481,10 +481,10 @@
                   </p>
               </a>
 
+              <!-- Supplier -->
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="#" class="nav-link {{ Route::is('admin.supplier*') ? 'active' : '' }}">
-                      <!-- <i class="fa-solid fa-money-check"></i> -->
                       <i class="far fa-circle nav-icon"></i>
                       <p>
                           Suppliers
@@ -508,6 +508,28 @@
                 </li>
               </ul>
 
+              <!-- Client -->
+              <ul class="nav nav-treeview">
+                <li class="nav-item {{ Route::is('admin.client*') ? 'menu-open' : '' }}">
+                  <a href="#" class="nav-link {{ Route::is('admin.client*') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>
+                          Client
+                          <i class="fas fa-angle-left right"></i>
+                      </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                          <a href="{{ route('admin.client.index') }}" class="nav-link {{ Route::is('admin.client.index') || Route::is('admin.client.create') || Route::is('admin.client.view') || Route::is('admin.client.edit') ? 'active' : '' }}">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Manage Clients</p>
+                          </a>
+                      </li>
+                  </ul>
+                </li>
+              </ul>
+
+              <!-- Category -->
               <ul class="nav nav-treeview">
                 <li class="nav-item {{ Route::is('admin.category*') ? 'menu-open' : '' }}">
                   <a href="#" class="nav-link {{ Route::is('admin.category*') ? 'active' : '' }}">
@@ -527,7 +549,8 @@
                   </ul>
                 </li>
               </ul>
-              <!-- --- -->
+
+              <!-- Product -->
               <ul class="nav nav-treeview">
                   <li class="nav-item {{ Route::is('admin.product*') ? 'menu-open' : '' }}">
                       <a href="#" class="nav-link {{ Route::is('admin.product*') ? 'active' : '' }}">
@@ -579,6 +602,7 @@
                   </a>
                 </li>
               </ul>
+
           </li>
 
           <!-- ---Transaction--- -->
