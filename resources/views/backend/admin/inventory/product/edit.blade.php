@@ -20,14 +20,13 @@
         </div>
     </section>
 
-    <!-- Main content -->
     <section class="content">
         
       <div class="container-fluid">
         <div class="row">
-          <!-- left column -->
+          
           <div class="col-md-12">
-            <!-- general form elements -->
+            
             <div class="card card-primary card-outline shadow-lg">
               <div class="card-header">
               <div class="d-flex justify-content-between align-items-center">
@@ -36,31 +35,82 @@
                         <i class="fa-solid fa-arrow-left"></i> Back To List
                     </a>
                 </div>
-                <!-- <br>
-                <span style="font-size: 12px;">Put Branch Manage Information</span> -->
               </div>
               
-              <!-- /.card-header -->
-              <!-- form start -->
-              <!-- <form role="form"> -->
               <form action="{{ route('admin.product.update', $product->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
                 <div class="card-body">
                     <div class="row">
+                        
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Name</label>
-                                <input type="text" class="form-control" placeholder="" name="name" value="{{ $product->name }}">
+                                <label>Name
+                                    @error('name')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-box"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" value="{{ $product->name }}" name="name">
+                                </div>
                             </div>
                         </div>
+
+                        <div class="col-md-6 mb-2">
+                            <label for="category_id" class="form-label">Category Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa fa-network-wired"></i></span>
+                                <select name="category_id" id="category_id" class="form-control select2">
+                                    <option value="">Select Category</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" 
+                                            {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @error('category_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Price</label>
-                                <input type="number" class="form-control" placeholder="" name="price" value="{{ $product->price }}">
+                                <label>Price
+                                    @error('price')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                    </div>
+                                    <input type="number" class="form-control" value="{{ $product->price }}" name="price">
+                                </div>
                             </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Quantity
+                                    @error('quantity')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-cogs"></i></span>
+                                    </div>
+                                    <input type="number" class="form-control" value="{{ $product->quantity }}" name="quantity">
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="row">
                         <div class="col-md-12">
@@ -70,30 +120,49 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Quantity</label>
-                                <input type="number" class="form-control" placeholder="" name="quantity" value="{{ $product->quantity }}">
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-5">
                             <div class="form-group">
                                 <label>Image</label>
-                                <input type="file" class="form-control" name="image">
+                                <input type="file" class="form-control" name="image" id="imageInput">
                             </div>
                         </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <!-- Display existing image if it exists -->
+                                @if($product->image)
+                                    <img id="imagePreview" src="{{ asset('upload/inventory/products/' . $product->image) }}" alt="Image Preview" style="display:block; margin-top: 10px; height:80px; width: 80px;">
+                                @else
+                                    <img id="imagePreview" src="" alt="Image Preview" style="display:none; margin-top: 10px; height:80px; width: 80px;">
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-2">
+                            <label for="status" class="form-label">Status
+                                @error('status')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa fa-check-circle"></i></span>
+                                <select class="form-control" id="status" name="status">
+                                    <option value="1" {{ old('status', $product->status) == 1 ? 'selected' : '' }}>Active</option>
+                                    <option value="0" {{ old('status', $product->status) == 0 ? 'selected' : '' }}>Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>
-                <!-- /.card-body -->
 
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                <div class="card-footer d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success">Submit</button>
                 </div>
+
+
               </form>
             </div>
           </div>
@@ -105,3 +174,19 @@
 
 </div>
 @endsection
+
+
+@push('js')
+<script>
+    // Preview Image on file input change
+    document.getElementById('imageInput').addEventListener('change', function(event) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var output = document.getElementById('imagePreview');
+            output.src = reader.result;
+            output.style.display = 'block';
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    });
+</script>
+@endpush

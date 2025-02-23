@@ -21,6 +21,7 @@ class ProductController extends Controller
     {
         $pageTitle = 'Admin Product Create';
         $categories = Category::where('status',1)->latest()->get();
+        //dd($categories);
         return view('backend/admin/inventory/product/create',compact('pageTitle','categories'));
     }
 
@@ -47,7 +48,7 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            @unlink(public_path('upload/inventory/products' . $company->image)); // Delete old logo
+            @unlink(public_path('upload/inventory/products' . $product->image)); // Delete old logo
             $file = $request->file('image');
             $filename = date('YmdHi') . $file->getClientOriginalName();
             $file->move(public_path('upload/inventory/products'), $filename);
@@ -66,8 +67,50 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $pageTitle = 'Admin Product Edit';
         $categories = Category::where('status',1)->latest()->get();
+        //dd($categories);
         return view('backend/admin/inventory/product//edit',compact('pageTitle', 'product','categories'));
     }
+
+    // public function AdminProductUpdate(Request $request, $id)
+    // {
+    //     // Validate the incoming data
+    //     $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'price' => 'nullable|numeric|min:0',
+    //         'description' => 'nullable|string',
+    //         'quantity' => 'required|integer|min:1',
+    //         'status' => 'nullable|boolean',
+    //         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
+    //     ]);
+
+    //     // Find the product by ID
+    //     $product = Product::findOrFail($id);
+
+    //     // Check if a new image is uploaded
+    //     if ($request->hasFile('image')) {
+
+    //         if ($product->image && Storage::disk('public')->exists($product->image)) {
+    //             Storage::disk('public')->delete($product->image);
+    //         }
+
+    //         // Store new image
+    //         $imagePath = $request->file('image')->store('inventory/products', 'public');
+    //         $product->image = $imagePath;
+    //     }
+
+    //     // Update the product data
+    //     $product->update([
+    //         'name' => $request->input('name'),
+    //         'price' => $request->input('price', $product->price), // Keep existing price if not provided
+    //         'description' => $request->input('description', $product->description), // Keep existing description
+    //         'quantity' => $request->input('quantity', $product->quantity), // Keep existing quantity
+    //         'status' => $request->has('status') ? $request->input('status') : $product->status, // Keep existing status
+    //         'image' => $product->image,
+    //     ]);
+
+    //     // Redirect back to the product index with a success message
+    //     return redirect()->route('admin.product.index')->with('success', 'Product updated successfully!');
+    // }
 
     public function AdminProductUpdate(Request $request, $id)
     {
@@ -77,8 +120,9 @@ class ProductController extends Controller
             'price' => 'nullable|numeric|min:0',
             'description' => 'nullable|string',
             'quantity' => 'required|integer|min:1',
-            'active' => 'nullable|boolean',
+            'status' => 'nullable|boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
+            'category_id' => 'required',
         ]);
 
         // Find the product by ID
@@ -86,23 +130,18 @@ class ProductController extends Controller
 
         // Check if a new image is uploaded
         if ($request->hasFile('image')) {
-            // // Store new image
-            // $imagePath = $request->file('image')->store('inventory/products', 'public');
-
-            // // Optionally delete the old image if exists
-            // if ($product->image) {
-            //     Storage::delete('public/' . $product->image);
-            // }
-
-            // $product->image = $imagePath;
-            // Delete old image if exists
-            if ($product->image && Storage::disk('public')->exists($product->image)) {
-                Storage::disk('public')->delete($product->image);
+            // Delete old image if it exists
+            if ($product->image && file_exists(public_path('upload/inventory/products/' . $product->image))) {
+                @unlink(public_path('upload/inventory/products/' . $product->image)); // Delete the old image
             }
 
             // Store new image
-            $imagePath = $request->file('image')->store('inventory/products', 'public');
-            $product->image = $imagePath;
+            $file = $request->file('image');
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $file->move(public_path('upload/inventory/products'), $filename);
+
+            // Update the product image with the new filename
+            $product->image = $filename;
         }
 
         // Update the product data
@@ -111,13 +150,14 @@ class ProductController extends Controller
             'price' => $request->input('price', $product->price), // Keep existing price if not provided
             'description' => $request->input('description', $product->description), // Keep existing description
             'quantity' => $request->input('quantity', $product->quantity), // Keep existing quantity
-            'active' => $request->has('active') ? $request->input('active') : $product->active, // Keep existing status
-            'image' => $product->image,
+            'status' => $request->has('status') ? $request->input('status') : $product->status, // Keep existing status
+            'category_id' => $request->input('category_id'),
         ]);
 
         // Redirect back to the product index with a success message
         return redirect()->route('admin.product.index')->with('success', 'Product updated successfully!');
     }
+
 
 
     public function AdminProductDestroy($id)
