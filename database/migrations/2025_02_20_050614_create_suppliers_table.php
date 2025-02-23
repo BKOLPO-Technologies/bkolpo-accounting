@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('postbox')->nullable();
             $table->string('taxid')->nullable();
             $table->string('password')->nullable();
-            $table->boolean('active')->default(true);
+            $table->tinyInteger('status')->default(1)->comment('1=>Active, 0=>Inactive');
             $table->timestamps();
         });
     }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('price', 8, 2)->nullable();
             $table->text('description')->nullable();
             $table->integer('quantity');
-            $table->boolean('active');
+            $table->tinyInteger('status')->default(1)->comment('1=>Active, 0=>Inactive');
             $table->string('image')->nullable();
             $table->timestamps();
         });
