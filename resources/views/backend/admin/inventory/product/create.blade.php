@@ -1,9 +1,7 @@
 @extends('layouts.admin')
 @section('admin')
 
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -18,17 +16,16 @@
                     </ol>
                 </div>
             </div>
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
 
-    <!-- Main content -->
     <section class="content">
         
       <div class="container-fluid">
         <div class="row">
-          <!-- left column -->
+          
           <div class="col-md-12">
-            <!-- general form elements -->
+            
             <div class="card card-primary card-outline shadow-lg">
               <div class="card-header">
               <div class="d-flex justify-content-between align-items-center">
@@ -41,6 +38,7 @@
             
               <form role="form" action="{{ route('admin.product.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -159,15 +157,12 @@
 
     </section>
 
-
 </div>
-
 
 @endsection
 
 @push('js')
 <script>
-    // Preview Image on file input change
     document.getElementById('imageInput').addEventListener('change', function(event) {
         var reader = new FileReader();
         reader.onload = function() {
