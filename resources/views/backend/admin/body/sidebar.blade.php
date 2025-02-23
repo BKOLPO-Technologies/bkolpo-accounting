@@ -584,7 +584,7 @@
                       <li class="nav-item">
                           <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index') ? 'active' : '' }}">
                               <i class="far fa-circle nav-icon"></i>
-                              <p>Manage Purchase</p>
+                              <p>Purchase Now</p>
                           </a>
                       </li>
                   </ul>
