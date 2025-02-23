@@ -472,8 +472,8 @@
           <!-- ---------------- -->
 
 
-          <li class="nav-item {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') || Route::is('admin.client*') ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') || Route::is('admin.client*') ? 'active' : '' }}">
+          <li class="nav-item {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') || Route::is('admin.client*') || Route::is('admin.purchase*') ? 'menu-open' : '' }}">
+              <a href="#" class="nav-link {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') || Route::is('admin.client*') || Route::is('admin.purchase*') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-receipt"></i>
                   <p>
                     Inventory
@@ -571,8 +571,8 @@
                   </li>
               </ul>
               <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
+                <li class="nav-item {{ Route::is('admin.purchase*') ? 'menu-open' : '' }}">
+                  <a href="#" class="nav-link {{ Route::is('admin.purchase*') ? 'active' : '' }}">
                       <!-- <i class="fa-solid fa-money-check"></i> -->
                       <i class="far fa-circle nav-icon"></i>
                       <p>
@@ -580,6 +580,14 @@
                           <i class="fas fa-angle-left right"></i>
                       </p>
                   </a>
+                  <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                          <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index') ? 'active' : '' }}">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Manage Purchase</p>
+                          </a>
+                      </li>
+                  </ul>
                 </li>
                 <li class="nav-item">
                   <a href="#" class="nav-link">
