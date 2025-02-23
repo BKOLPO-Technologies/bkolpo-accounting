@@ -11,7 +11,8 @@ class PurchaseController extends Controller
 {
     public function AdminPurchaseIndex()
     {
-        $suppliers = Supplier::all();
+        $suppliers = Supplier::orderBy('id', 'desc')->get();
+
         $products = Product::where('status',1)->latest()->get();
         $pageTitle = 'Purchase';
 

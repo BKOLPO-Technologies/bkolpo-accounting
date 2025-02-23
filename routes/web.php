@@ -162,6 +162,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::prefix('supplier')->group(function () {
         Route::get('/', [SupplierController::class, 'AdminSupplierIndex'])->name('admin.supplier.index');
         Route::get('/create', [SupplierController::class, 'AdminSupplierCreate'])->name('admin.supplier.create');
+        Route::post('/storeSupplier2', [SupplierController::class, 'AdminSupplierStore2'])->name('admin.supplier2.store');
         Route::post('/storeSupplier', [SupplierController::class, 'AdminSupplierStore'])->name('admin.supplier.store');
         Route::get('/view/{id}', [SupplierController::class, 'AdminSupplierView'])->name('admin.supplier.view');
         Route::get('/edit/{id}', [SupplierController::class, 'AdminSupplierEdit'])->name('admin.supplier.edit');
