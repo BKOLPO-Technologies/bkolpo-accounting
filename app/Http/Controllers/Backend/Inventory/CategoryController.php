@@ -44,7 +44,7 @@ class CategoryController extends Controller
             'name' => $request->name,
             'slug' => $slug,
             'image' => $request->image ?? null, // Add logic for image if needed
-            'active' => $request->active ?? true, // Default to active if not provided
+            'status' => $request->status ?? 1, // Default to active if not provided
         ]);
 
         return redirect()->route('admin.category.index')->with('success', 'Category created successfully!');

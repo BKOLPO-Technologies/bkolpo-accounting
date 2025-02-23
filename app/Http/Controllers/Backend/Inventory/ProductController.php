@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\Inventory;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,7 +20,8 @@ class ProductController extends Controller
     public function AdminProductCreate() 
     {
         $pageTitle = 'Admin Product Create';
-        return view('backend/admin/inventory/product/create',compact('pageTitle'));
+        $categories = Category::where('status',1)->latest()->get();
+        return view('backend/admin/inventory/product/create',compact('pageTitle','categories'));
     }
 
     public function AdminProductStore(Request $request)
@@ -28,28 +30,31 @@ class ProductController extends Controller
         // Validate the incoming request
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'price' => 'nullable|numeric|min:0',
             'description' => 'nullable|string',
+            'category_id' => 'required',
             'quantity' => 'required|integer|min:1',
-            'active' => 'nullable|boolean',  // Assuming you can pass active as true or false
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $imagePath = null;
-
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('inventory/products', 'public'); // Save in storage/app/public/products
-        }
-
         // Store the product with the validated data
-        Product::create([
+        $product =  Product::create([
             'name' => $request->name,
-            'price' => $request->price ?? null, // Store null if not provided
+            'price' => $request->price ?? 0, // Store null if not provided
             'description' => $request->description ?? null, // Store null if not provided
             'quantity' => $request->quantity,
-            'active' => $request->active ?? true, // Default to active if not provided
-            'image' => $imagePath,
+            'status' => $request->status ?? 1, // Default to active if not provided
+            'category_id' => $request->category_id,
         ]);
+
+        if ($request->hasFile('image')) {
+            @unlink(public_path('upload/inventory/products' . $company->image)); // Delete old logo
+            $file = $request->file('image');
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $file->move(public_path('upload/inventory/products'), $filename);
+            $product->image = $filename;
+        }
+        
+        $product->save();
 
         // Redirect to a product list page or any other route you prefer with a success message
         return redirect()->route('admin.product.index')->with('success', 'Product created successfully!');

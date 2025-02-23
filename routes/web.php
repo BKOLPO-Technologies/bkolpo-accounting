@@ -234,7 +234,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::post('/storeCategory', [CategoryController::class, 'AdminCategoryStore'])->name('admin.category.store');
         Route::get('/edit/{id}', [CategoryController::class, 'AdminCategoryEdit'])->name('admin.category.edit');
         Route::put('/update/{id}', [CategoryController::class, 'AdminCategoryUpdate'])->name('admin.category.update');
-        Route::delete('/delete/{id}', [CategoryController::class, 'AdminCategoryDestroy'])->name('admin.category.destroy');
+        Route::get('/delete/{id}', [CategoryController::class, 'AdminCategoryDestroy'])->name('admin.category.destroy');
     });
 
     /* ==================== Product =================== */

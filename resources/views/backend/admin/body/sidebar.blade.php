@@ -482,7 +482,7 @@
               </a>
 
               <ul class="nav nav-treeview">
-                <li class="nav-item {{ Route::is('admin.supplier*') ? 'menu-open' : '' }}">
+                <li class="nav-item">
                   <a href="#" class="nav-link {{ Route::is('admin.supplier*') ? 'active' : '' }}">
                       <!-- <i class="fa-solid fa-money-check"></i> -->
                       <i class="far fa-circle nav-icon"></i>
@@ -546,6 +546,38 @@
                           </li>
                       </ul>
                   </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                      <!-- <i class="fa-solid fa-money-check"></i> -->
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>
+                          Purchase
+                          <i class="fas fa-angle-left right"></i>
+                      </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                      <!-- <i class="fa-solid fa-money-check"></i> -->
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>
+                        Sales
+                        <i class="fas fa-angle-left right"></i>
+                      </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                      <!-- <i class="fa-solid fa-money-check"></i> -->
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>
+                        Stock Management
+                        <i class="fas fa-angle-left right"></i>
+                      </p>
+                  </a>
+                </li>
               </ul>
           </li>
 
