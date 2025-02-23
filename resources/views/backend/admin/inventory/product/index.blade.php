@@ -37,6 +37,7 @@
                         <table id="example1" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>Sl</th>
                                     <th>Name</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
@@ -45,12 +46,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($products as $product)
+                                @foreach ($products as $key=> $product)
                                 <tr>
+                                    <td>{{ $key+1 }}</td>
                                     <td>{{ $product->name }}</td>
                                     <td>{{ $product->price }}</td>
                                     <td>{{ $product->quantity }}</td>
-                                    <td>{{ $product->description }}</td>
                                     <td>
                                         @if($product->image)
                                             <img src="{{ (!empty($product->image)) ? url('upload/inventory/products/'.$product->image):url('https://via.placeholder.com/70x60') }}" width="50">
@@ -60,17 +61,15 @@
                                     </td>
 
                                     <td>
-                                        <a href="{{ route('admin.product.edit', $product->id) }}" class="btn btn-primary">
-                                            Edit <i class="fa-solid fa-pen ml-3"></i>
+                                        <a href="#" class="btn btn-success btn-sm">
+                                            <i class="fas fa-eye"></i>
                                         </a>
-
-                                        <form action="{{ route('admin.product.destroy', $product->id) }}" method="POST" style="display:inline-block;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                        </form>
+                                        <a href="{{ route('admin.product.edit', $product->id) }}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{{ route('admin.product.destroy', $product->id) }}" id="delete" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
                                     </td>
                                 </tr>
                                 @endforeach

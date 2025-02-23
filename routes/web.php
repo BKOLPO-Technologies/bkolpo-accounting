@@ -244,7 +244,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::post('/storeProduct', [ProductController::class, 'AdminProductStore'])->name('admin.product.store');
         Route::get('/edit/{id}', [ProductController::class, 'AdminProductEdit'])->name('admin.product.edit');
         Route::put('/update/{id}', [ProductController::class, 'AdminProductUpdate'])->name('admin.product.update');
-        Route::delete('/delete/{id}', [ProductController::class, 'AdminProductDestroy'])->name('admin.product.destroy');
+        Route::get('/delete/{id}', [ProductController::class, 'AdminProductDestroy'])->name('admin.product.destroy');
     });
 
 });

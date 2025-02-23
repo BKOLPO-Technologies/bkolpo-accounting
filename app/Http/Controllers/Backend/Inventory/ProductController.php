@@ -65,7 +65,8 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $pageTitle = 'Admin Product Edit';
-        return view('backend/admin/inventory/product//edit',compact('pageTitle', 'product'));
+        $categories = Category::where('status',1)->latest()->get();
+        return view('backend/admin/inventory/product//edit',compact('pageTitle', 'product','categories'));
     }
 
     public function AdminProductUpdate(Request $request, $id)

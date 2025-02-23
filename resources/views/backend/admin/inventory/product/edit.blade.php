@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <!-- <h1>DataTables</h1> -->
+                <h1>Product Edit</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -28,9 +28,14 @@
           <!-- left column -->
           <div class="col-md-12">
             <!-- general form elements -->
-            <div class="card card-secondary">
+            <div class="card card-primary card-outline shadow-lg">
               <div class="card-header">
-                <h3 class="card-title">Add New Product</h3>
+              <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Edit Product</h4>
+                    <a href="{{ route('admin.product.index')}}" class="btn btn-sm btn-danger rounded-0">
+                        <i class="fa-solid fa-arrow-left"></i> Back To List
+                    </a>
+                </div>
                 <!-- <br>
                 <span style="font-size: 12px;">Put Branch Manage Information</span> -->
               </div>
