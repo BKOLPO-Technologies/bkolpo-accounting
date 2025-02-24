@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\Inventory\ClientController;
 use App\Http\Controllers\Backend\Inventory\PurchaseController;
+use App\Http\Controllers\Backend\Inventory\SalesController;
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
@@ -26,6 +27,17 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/edit/{id}', [PurchaseController::class, 'AdminPurchaseEdit'])->name('admin.purchase.edit');
         Route::put('/update/{id}', [PurchaseController::class, 'AdminPurchaseUpdate'])->name('admin.purchase.update');
         Route::delete('/delete/{id}', [PurchaseController::class, 'AdminPurchaseDestroy'])->name('admin.purchase.destroy');
+    });
+
+    /* ==================== sales =================== */
+    Route::prefix('sales')->group(function () {
+        Route::get('/', [SalesController::class, 'index'])->name('admin.sale.index');
+        Route::get('/create', [SalesController::class, 'create'])->name('admin.sale.create');
+        Route::post('/store', [SalesController::class, 'store'])->name('admin.sale.store');
+        Route::get('/view/{id}', [SalesController::class, 'view'])->name('admin.sale.show');
+        Route::get('/edit/{id}', [SalesController::class, 'edit'])->name('admin.sale.edit');
+        Route::put('/update/{id}', [SalesController::class, 'update'])->name('admin.sale.update');
+        Route::delete('/delete/{id}', [SalesController::class, 'destroy'])->name('admin.sale.destroy');
     });
 
 });

@@ -15,4 +15,11 @@ class Product extends Model
                     ->withPivot('quantity', 'price') // Access pivot data (quantity and price)
                     ->withTimestamps(); // Keep track of created_at and updated_at
     }
+    
+    public function sales()
+    {
+        return $this->belongsToMany(Sale::class, 'sale_product') // Define pivot table name
+                    ->withPivot('quantity', 'price') // Access pivot data (quantity, price)
+                    ->withTimestamps(); // Automatically manage created_at and updated_at timestamps
+    }
 }

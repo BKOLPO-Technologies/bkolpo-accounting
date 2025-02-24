@@ -581,6 +581,7 @@
                       </p>
                   </a>
                   <ul class="nav nav-treeview">
+
                       <li class="nav-item">
                           <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index','admin.purchase.create') ? 'active' : '' }}">
                               <i class="far fa-circle nav-icon"></i>
@@ -589,15 +590,24 @@
                       </li>
                   </ul>
                 </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
+                <li class="nav-item {{ Route::is('admin.sales*') ? 'menu-open' : '' }}">
+                  <a href="#" class="nav-link {{ Route::is('admin.sales*') ? 'active' : '' }}">
                       <!-- <i class="fa-solid fa-money-check"></i> -->
                       <i class="far fa-circle nav-icon"></i>
                       <p>
-                        Sales
-                        <i class="fas fa-angle-left right"></i>
+                          Sales
+                          <i class="fas fa-angle-left right"></i>
                       </p>
                   </a>
+                  <ul class="nav nav-treeview">
+
+                      <li class="nav-item">
+                          <a href="{{ route('admin.sale.index') }}" class="nav-link {{ Route::is('admin.sale.index','admin.sale.create') ? 'active' : '' }}">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Sales List</p>
+                          </a>
+                      </li>
+                  </ul>
                 </li>
                 <li class="nav-item">
                   <a href="#" class="nav-link">
