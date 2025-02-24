@@ -348,8 +348,8 @@
             const supplierEmail = selectedOption.data('email') || 'N/A';
 
             if (supplierId) {
-                $('#supplier-details-table1').show();
-                $('#supplier-details-body1').empty(); // Clear previous selection
+                $('#supplier-details-table').show();
+                $('#supplier-details-body').empty(); // Clear previous selection
 
                 const supplierRow = `
                     <tr id="supplier-row">
@@ -360,9 +360,9 @@
                     </tr>
                 `;
 
-                $('#supplier-details-body1').append(supplierRow);
+                $('#supplier-details-body').append(supplierRow);
             } else {
-                $('#supplier-details-table1').hide();
+                $('#supplier-details-table').hide();
             }
         });
         
@@ -424,12 +424,6 @@ $('#createSupplierForm').on('submit', function(e) {
         const productPrice = parseFloat(selectedOption.data('price'));
         const productStock = parseInt(selectedOption.data('stock'));
         const productId = selectedOption.val();
-
-        // console.log("selectedOption = ", selectedOption);
-        // console.log("productName = ", productName);
-        // console.log("productPrice = ", productPrice);
-        // console.log("productStock = ", productStock);
-        // console.log("productId = ", productId);
 
         const productRow = `
             <tr data-product-id="${productId}">
@@ -526,9 +520,9 @@ $('#createSupplierForm').on('submit', function(e) {
         $('#prices').val(prices.join(','));
 
         // Debugging console logs
-        console.log("After Removal - product_ids:", $('#product_ids').val());
-        console.log("After Removal - quantities:", $('#quantities').val());
-        console.log("After Removal - prices:", $('#prices').val());
+        // console.log("After Removal - product_ids:", $('#product_ids').val());
+        // console.log("After Removal - quantities:", $('#quantities').val());
+        // console.log("After Removal - prices:", $('#prices').val());
     }
 
     
