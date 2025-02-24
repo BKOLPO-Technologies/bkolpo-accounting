@@ -483,7 +483,7 @@
 
               <!-- Supplier -->
               <ul class="nav nav-treeview">
-                <li class="nav-item">
+                <li class="nav-item {{ Route::is('admin.supplier*') ? 'menu-open' : '' }}">
                   <a href="#" class="nav-link {{ Route::is('admin.supplier*') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
                       <p>
@@ -492,14 +492,14 @@
                       </p>
                   </a>
                   <ul class="nav nav-treeview">
-                      <li class="nav-item">
+                      <!-- <li class="nav-item">
                           <a href="{{ route('admin.supplier.create') }}" class="nav-link {{ Route::is('admin.supplier.create') ? 'active' : '' }}">
                               <i class="far fa-circle nav-icon"></i>
                               <p>New Supplier</p>
                           </a>
-                      </li>
+                      </li> -->
                       <li class="nav-item">
-                          <a href="{{ route('admin.supplier.index') }}" class="nav-link {{ Route::is('admin.supplier.index') || Route::is('admin.supplier.view') || Route::is('admin.supplier.edit') ? 'active' : '' }}">
+                          <a href="{{ route('admin.supplier.index') }}" class="nav-link {{ Route::is('admin.supplier.index') || Route::is('admin.supplier.view') || Route::is('admin.supplier.edit') || Route::is('admin.supplier.create') ? 'active' : '' }}">
                               <i class="far fa-circle nav-icon"></i>
                               <p>Manage Suppliers</p>
                           </a>

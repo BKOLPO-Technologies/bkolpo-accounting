@@ -14,7 +14,6 @@ class SupplierController extends Controller
         $suppliers = Supplier::all();
         $pageTitle = 'Admin Supplier';
         return view('backend/admin/supplier/index',compact('pageTitle', 'suppliers'));
-
     }
 
     public function AdminSupplierCreate() {
