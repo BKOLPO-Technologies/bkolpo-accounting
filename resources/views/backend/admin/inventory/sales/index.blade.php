@@ -39,25 +39,18 @@
                                             <th>Invoice No</th>
                                             <th>Invoice Date</th>
                                             <th>Client Name</th>
-                                            <th>Product Name</th>
-                                            <th>Price</th>
-                                            <th>Quantity</th>
                                             <th>Total Price</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($sales as $sale)
-                                            @foreach($sales->products as $product) 
                                                 <tr>
-                                                    <td>{{ $loop->parent->iteration }}</td>
+                                                    <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $sale->invoice_no }}</td>
                                                     <td>{{ \Carbon\Carbon::parse($sale->invoice_date)->format('d F Y') }}</td>
-                                                    <td>{{ $sale->supplier->name ?? 'N/A' }}</td> 
-                                                    <td>{{ $product->name }}</td>
-                                                    <td>৳{{ number_format($product->pivot->price, 2) }}</td> 
-                                                    <td class="col-1">{{ $product->pivot->quantity }}</td>
-                                                    <td>৳{{ number_format($product->pivot->quantity * $product->pivot->price, 2) }}</td>
+                                                    <td>{{ $sale->client->name ?? 'N/A' }}</td> 
+                                                    <td>৳{{ number_format($sale->total, 2) }}</td> 
                                                     <td class="col-2">
                                                         <!-- View Button -->
                                                         <a href="{{ route('admin.sale.show', $sale->id) }}" class="btn btn-success btn-sm">
@@ -74,7 +67,6 @@
                                                     </td>
                                                 </tr>
                                             @endforeach
-                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

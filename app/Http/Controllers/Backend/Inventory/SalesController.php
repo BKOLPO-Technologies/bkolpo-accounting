@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Models\Client;
 use App\Models\SaleProduct;
+use Illuminate\Support\Facades\Log; 
 
 class SalesController extends Controller
 {
@@ -20,7 +21,7 @@ class SalesController extends Controller
     {
         $pageTitle = 'Sales List';
 
-        $sales = Sale::with('products')->get(); 
+        $sales = Sale::with('products')->OrderBy('id','desc')->get(); 
         return view('backend.admin.inventory.sales.index',compact('pageTitle','sales'));
     }
 
@@ -47,9 +48,86 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        // dd($request->all());
 
+        // Validate the request data
+        $validated = $request->validate([
+            'client' => 'required|exists:clients,id',
+            'invoice_no' => 'required|unique:sales,invoice_no',
+            'invoice_date' => 'required|date',
+            'subtotal' => 'required|numeric',
+            'discount' => 'required|numeric',
+            'total' => 'required|numeric',
+            'product_ids' => 'required|not_in:',  // Ensure at least one product is selected
+        ]);
+
+
+        // dd($validated);
+
+        // Access product data from the request
+        $productIds = explode(',', $request->input('product_ids'));  // Array of product IDs
+        $quantities = explode(',', $request->input('quantities'));  // Array of quantities
+        $prices = explode(',', $request->input('prices'));  // Array of prices
+
+        // Check if at least one product is selected
+        if (empty($productIds) || count($productIds) === 0 || $productIds[0] == '') {
+            // If no product is selected, return an error message
+            return back()->with('error', 'At least one product must be selected.');
+        }
+
+      
+
+        try {
+            // Start the transaction
+            \DB::beginTransaction();
+
+            // Create a new sale record
+            $sale = new Sale();
+            $sale->client_id = $validated['client'];
+            $sale->invoice_no = $validated['invoice_no'];
+            $sale->invoice_date = $validated['invoice_date'];
+            $sale->subtotal = $validated['subtotal'];
+            $sale->discount = $validated['discount'];
+            $sale->total = $validated['total'];
+            $sale->save();
+
+            // Loop through the product data and save it to the database
+            foreach ($productIds as $index => $productId) {
+                $product = Product::find($productId);
+                $quantity = $quantities[$index];
+                $price = $prices[$index];
+
+                // Insert into SaleProduct table
+                $saleProduct = new SaleProduct();
+                $saleProduct->sale_id = $sale->id; // Link to the sale
+                $saleProduct->product_id = $productId; // Product ID
+                $saleProduct->quantity = $quantity; // Quantity
+                $saleProduct->price = $price; // Price
+                $saleProduct->save(); // Save the record
+            }
+
+            // Commit the transaction
+            \DB::commit();
+
+            // Redirect back with a success message
+            return redirect()->route('admin.sale.index')->with('success', 'Sale created successfully!');
+        } catch (\Exception $e) {
+            // Rollback transaction if anything fails
+            \DB::rollback();
+
+            // Log the error message
+            Log::error('Sale creation failed: ', [
+                'error' => $e->getMessage(),
+                'exception' => $e,
+                'user_id' => auth()->id(),  // Optional: Log user ID if you're tracking who made the request
+                'data' => $validated,  // Optional: Log the validated data for debugging purposes
+            ]);
+
+            // Return with the actual error message to be displayed on the front end
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
+
+    }
     /**
      * Display the specified resource.
      */

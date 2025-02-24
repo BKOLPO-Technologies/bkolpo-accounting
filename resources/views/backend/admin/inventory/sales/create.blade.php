@@ -113,10 +113,10 @@
                                 </div>
                             </div>
 
-                            <!-- Supplier Details Table -->
+                            <!-- Customer Details Table -->
                             <div class="row mt-3">
                                     <div class="col-12">
-                                        <table class="table table-bordered" id="supplier-details-table" style="display: none;">
+                                        <table class="table table-bordered" id="client-details-table" style="display: none;">
                                             <thead class="thead-light">
                                                 <tr>
                                                     <th>Name</th>
@@ -125,7 +125,7 @@
                                                     <th>Email</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="supplier-details-body"></tbody>
+                                            <tbody id="client-details-body"></tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -188,13 +188,13 @@
     </section>
 </div>
 
-<!-- Modal for creating a new supplier -->
+<!-- Modal for creating a new client -->
 <div class="modal fade" id="createSupplierModal" tabindex="-1" role="dialog" aria-labelledby="createSupplierModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="createSupplierModalLabel">
-                    <i class="fas fa-user-plus"></i> Add New Supplier
+                    <i class="fas fa-user-plus"></i> Add New Client
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -324,12 +324,7 @@
         </div>
     </div>
 </div>
-
-
-
-
 @endsection
-
 @push('js')
 <script>
     // Initialize Select2 if necessary
@@ -337,17 +332,17 @@
         $('.select2').select2();
 
         // Supplier selection event
-        $('#supplier').on('change', function () {
+        $('#client').on('change', function () {
             const selectedOption = $(this).find(':selected');
-            const supplierId = selectedOption.val();
+            const clientId = selectedOption.val();
             const supplierName = selectedOption.data('name') || 'N/A';
             const supplierCompany = selectedOption.data('company') || 'N/A';
             const supplierPhone = selectedOption.data('phone') || 'N/A';
             const supplierEmail = selectedOption.data('email') || 'N/A';
 
-            if (supplierId) {
-                $('#supplier-details-table').show();
-                $('#supplier-details-body').empty(); // Clear previous selection
+            if (clientId) {
+                $('#client-details-table').show();
+                $('#client-details-body').empty(); // Clear previous selection
 
                 const supplierRow = `
                     <tr id="supplier-row">
@@ -358,9 +353,9 @@
                     </tr>
                 `;
 
-                $('#supplier-details-body').append(supplierRow);
+                $('#client-details-body').append(supplierRow);
             } else {
-                $('#supplier-details-table').hide();
+                $('#client-details-table').hide();
             }
         });
         
@@ -374,7 +369,7 @@ $('#createSupplierForm').on('submit', function(e) {
     let formData = $(this).serialize(); // Get form data
 
     $.ajax({
-        url: '{{ route('admin.supplier2.store') }}',
+        url: '{{ route('admin.client.store') }}',
         type: 'POST',
         data: formData,
         success: function(response) {
@@ -387,13 +382,13 @@ $('#createSupplierForm').on('submit', function(e) {
                 $('#createSupplierForm')[0].reset();
 
                 // Append new supplier to the supplier select dropdown
-                $('#supplier').append(new Option(response.supplier.name, response.supplier.id));
+                $('#supplier').append(new Option(response.client.name, response.client.id));
 
                 // Re-initialize the select2 to refresh the dropdown
                 $('#supplier').trigger('change');
 
                 // Show success message
-                toastr.success('Supplier added successfully!');
+                toastr.success('Client added successfully!');
             } else {
                 toastr.error('Something went wrong. Please try again.');
             }
