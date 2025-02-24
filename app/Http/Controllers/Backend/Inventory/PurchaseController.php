@@ -122,20 +122,28 @@ class PurchaseController extends Controller
     {
         $pageTitle = 'Purchase Edit';
 
-        $purchase = Purchase::where('id', $id)->with('products')->first();
+        // $purchase = Purchase::where('id', $id)->with('products')->first();
+        // Fetch purchase details with supplier and products
+        $purchase = Purchase::where('id', $id)
+            ->with(['products', 'supplier']) // Include supplier details
+            ->first();
         
         if ($purchase->invoice_date) {
             $purchase->invoice_date = Carbon::parse($purchase->invoice_date);
         }
 
+        $subtotal = $purchase->products->sum(function ($product) {
+            return $product->pivot->price * $product->pivot->quantity;
+        });
+
         $suppliers = Supplier::orderBy('id', 'desc')->get();
         $products = Product::where('status',1)->latest()->get();
 
-        return view('backend.admin.inventory.purchase.edit',compact('pageTitle', 'purchase', 'suppliers', 'products'));
+        return view('backend.admin.inventory.purchase.edit',compact('pageTitle', 'purchase', 'suppliers', 'products', 'subtotal'));
     }
 
-    public function AdminPurchaseUpdate()
+    public function AdminPurchaseUpdate(Request $request, $id)
     {
-        
+        dd($request->all());
     }
 }

@@ -32,8 +32,9 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('admin.purchase.store') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('admin.purchase.update', $purchase->id) }}" enctype="multipart/form-data">
                             @csrf
+                            @method('PUT')
 
                             <input type="hidden" name="product_ids" id="product_ids">
                             <input type="hidden" name="quantities" id="quantities">
@@ -44,19 +45,6 @@
                                 <div class="col-lg-4 col-md-6 mb-3">
                                     <label for="supplier">Supplier</label>
                                     <div class="input-group">
-                                        <!-- <select name="supplier" id="supplier" class="form-control select2 @error('supplier') is-invalid @enderror">
-                                            <option value="">Select Supplier</option>
-                                            @foreach($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}" 
-                                                    data-name="{{ $supplier->name }}" 
-                                                    data-company="{{ $supplier->company }}" 
-                                                    data-phone="{{ $supplier->phone }}" 
-                                                    data-email="{{ $supplier->email }}"
-                                                    {{ old('supplier') == $supplier->id ? 'selected' : '' }}>
-                                                    {{ $supplier->name }}
-                                                </option>
-                                            @endforeach
-                                        </select> -->
                                         <!-- --- -->
                                         <select name="supplier" id="supplier" class="form-control select2 @error('supplier') is-invalid @enderror">
                                             <option value="">Select Supplier</option>
@@ -134,20 +122,26 @@
 
                             <!-- Supplier Details Table -->
                             <div class="row mt-3">
-                                    <div class="col-12">
-                                        <table class="table table-bordered" id="supplier-details-table" style="display: none;">
-                                            <thead class="thead-light">
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Company</th>
-                                                    <th>Phone</th>
-                                                    <th>Email</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="supplier-details-body"></tbody>
-                                        </table>
-                                    </div>
+                                <div class="col-12">
+                                    <!-- <table class="table table-bordered" id="supplier-details-table" style="display: none;"> -->
+                                    <table class="table table-bordered" id="supplier-details-table">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Company</th>
+                                                <th>Phone</th>
+                                                <th>Email</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="supplier-details-body">
+                                            <td>{{ $purchase->supplier->name }}</td>
+                                            <td>{{ $purchase->supplier->company }}</td>
+                                            <td>{{ $purchase->supplier->phone }}</td>
+                                            <td>{{ $purchase->supplier->email }}</td>
+                                        </tbody>
+                                    </table>
                                 </div>
+                            </div>
                                 
                             <!-- Product Table -->
                             <div class="row">
@@ -165,9 +159,31 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                            @if ($purchase->products->isEmpty())
                                                 <tr id="no-products-row">
                                                     <td colspan="6" class="text-center">No product found</td>
                                                 </tr>
+                                            @else
+                                            @foreach ($purchase->products as $product)
+                                                <tr data-product-id="{{ $product->id }}">
+                                                    <td class="col-3">{{ $product->name }}</td>
+                                                    <td class="col-2">{{ number_format($product->price, 2) }}</td>
+                                                    <td class="col-1">
+                                                        <input type="number" class="quantity form-control" value="{{ $product->pivot->quantity }}" min="1"
+                                                            data-price="{{ $product->price }}" data-stock="{{ $product->stock }}" oninput="updateRow(this)" />
+                                                    </td>
+                                                    <td class="current-stock col-2">
+                                                        <span class="badge bg-info">{{ $product->quantity }}</span>
+                                                    </td>
+                                                    <td class="subtotal">{{ number_format($product->pivot->quantity * $product->price, 2) }}</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-danger btn-sm remove-product">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            @endif
                                                 <!-- Dynamic rows will be inserted here -->
                                             </tbody>
                                         </table>
@@ -179,24 +195,27 @@
                                 <!-- Subtotal -->
                                 <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="subtotal">Subtotal</label>
-                                    <input type="text" id="subtotal" name="subtotal" class="form-control" value="0" readonly />
+                                    <input type="text" id="subtotal" name="subtotal" class="form-control" value="{{ old('subtotal', $subtotal) }}" readonly />
                                 </div>
 
                                 <!-- Discount -->
                                 <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="discount">Discount</label>
-                                    <input type="text" id="discount" name="discount" class="form-control" value="0" oninput="updateTotal()" />
+                                    <input type="text" id="discount" name="discount" class="form-control" value="{{ old('discount', $purchase->discount ?? 0) }}" oninput="updateTotal()" />
                                 </div>
 
                                 <!-- Total -->
                                 <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="total">Total</label>
-                                    <input type="text" id="total" name="total" class="form-control" value="0" readonly />
+                                    <input type="text" id="total" name="total" class="form-control" value="{{ old('total', $subtotal - ($purchase->discount ?? 0)) }}" readonly />
                                 </div>
-                            </div><hr>
+                            </div>
+                            
+                            <hr>
+
                             <div class="row text-right">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> Submit</button>
+                                    <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i>Update Purchase</button>
                                 </div>
                             </div>
                         </form>
@@ -343,9 +362,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 @endsection
 
