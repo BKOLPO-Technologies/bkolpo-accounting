@@ -55,7 +55,6 @@ class SupplierController extends Controller
             'postbox'  => 'nullable|string|max:20',
             'taxid'    => 'nullable|string|max:50',
             'password' => 'nullable|string|min:6',
-            'active'   => 'boolean',
         ]);
 
         $supplier = Supplier::create([
@@ -70,7 +69,7 @@ class SupplierController extends Controller
             'postbox'  => $request->postbox,
             'taxid'    => $request->taxid,
             'password' => $request->password ? Hash::make($request->password) : null,
-            'active'   => $request->active ?? true,
+            'status'   => $request->status ?? 1,
         ]);
 
         return redirect()->route('admin.supplier.index')->with('success', 'Supplier added successfully.');
@@ -90,7 +89,6 @@ class SupplierController extends Controller
             'postbox'  => 'nullable|string|max:20',
             'taxid'    => 'nullable|string|max:50',
             'password' => 'nullable|string|min:6',
-            'active'   => 'boolean',
         ]);
 
         $supplier = Supplier::create([
@@ -105,7 +103,7 @@ class SupplierController extends Controller
             'postbox'  => $request->postbox,
             'taxid'    => $request->taxid,
             'password' => $request->password ? Hash::make($request->password) : null,
-            'active'   => $request->active ?? true,
+            'status'   => $request->status ?? 1,
         ]);
 
         //return redirect()->route('admin.supplier.index')->with('success', 'Supplier added successfully.');

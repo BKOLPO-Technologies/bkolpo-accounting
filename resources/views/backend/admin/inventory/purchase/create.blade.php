@@ -34,6 +34,11 @@
                     <div class="card-body">
                         <form method="POST" action="{{ route('admin.purchase.store') }}" enctype="multipart/form-data">
                             @csrf
+
+                            <input type="hidden" name="product_ids" id="product_ids">
+                            <input type="hidden" name="quantities" id="quantities">
+                            <input type="hidden" name="prices" id="prices">
+
                             <div class="row">
                                 <!-- Supplier Select -->
                                 <div class="col-lg-3 col-md-6 mb-3">
@@ -73,7 +78,7 @@
                                 <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="product">Product</label>
                                     <div class="input-group">
-                                        <select name="product" id="product" class="form-control select2 @error('product') is-invalid @enderror" style="width: 100%;">
+                                        <select name="products" id="product" class="form-control select2 @error('product') is-invalid @enderror" style="width: 100%;">
                                             <option value="">Select Product</option>
                                             @foreach($products as $product)
                                                 <option value="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-stock="{{ $product->quantity }}">
@@ -114,20 +119,20 @@
 
                             <!-- Supplier Details Table -->
                             <div class="row mt-3">
-                                    <div class="col-12">
-                                        <table class="table table-bordered" id="supplier-details-table" style="display: none;">
-                                            <thead class="thead-light">
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Company</th>
-                                                    <th>Phone</th>
-                                                    <th>Email</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="supplier-details-body"></tbody>
-                                        </table>
-                                    </div>
+                                <div class="col-12">
+                                    <table class="table table-bordered" id="supplier-details-table" style="display: none;">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Company</th>
+                                                <th>Phone</th>
+                                                <th>Email</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="supplier-details-body"></tbody>
+                                    </table>
                                 </div>
+                            </div>
                                 
                             <!-- Product Table -->
                             <div class="row">
@@ -323,10 +328,6 @@
         </div>
     </div>
 </div>
-
-
-
-
 @endsection
 
 @push('js')
@@ -420,6 +421,7 @@ $('#createSupplierForm').on('submit', function(e) {
         const productName = selectedOption.data('name');
         const productPrice = parseFloat(selectedOption.data('price'));
         const productStock = parseInt(selectedOption.data('stock'));
+        const productId = selectedOption.val();
 
         const productRow = `
             <tr>
@@ -442,14 +444,73 @@ $('#createSupplierForm').on('submit', function(e) {
 
         // Reset product select
         $(this).val('');
+
+        // Add the product to the hidden fields
+        addToHiddenFields(productId, 1, productPrice);
     });
 
+    // Function to add selected product to hidden fields
+    function addToHiddenFields(productId, quantity, price) {
+        let productIds = $('#product_ids').val() ? $('#product_ids').val().split(',') : [];
+        let quantities = $('#quantities').val() ? $('#quantities').val().split(',') : [];
+        alert(quantities);
+        let prices = $('#prices').val() ? $('#prices').val().split(',') : [];
 
-    // Remove product from the table
+        // Add product details to arrays
+        productIds.push(productId);
+        quantities.push(quantity);
+        prices.push(price);
+
+        // Update hidden fields with the new values
+        $('#product_ids').val(productIds.join(','));
+        $('#quantities').val(quantities.join(','));
+        $('#prices').val(prices.join(','));
+    }
+
+
+
+    // Remove product from table and hidden fields
     $('#product-table').on('click', '.remove-product', function() {
-        $(this).closest('tr').remove();
+        const row = $(this).closest('tr');
+        const productId = row.find('input[type="number"]').data('product-id');
+        const quantity = row.find('input[type="number"]').val();
+        const price = row.find('.subtotal').text();
+
+        // Remove product details from hidden fields
+        removeFromHiddenFields(productId, quantity, price);
+
+        // Remove the row from the table
+        row.remove();
+
+        // Show "No Product Found" row if table is empty
+        if ($('#product-table tbody tr').length === 0) {
+            $('#no-products-row').show();
+        }
+
         updateTotal();
     });
+
+    // Function to remove product from hidden fields
+    function removeFromHiddenFields(productId, quantity, price) {
+        let productIds = $('#product_ids').val().split(',');
+        let quantities = $('#quantities').val().split(',');
+        let prices = $('#prices').val().split(',');
+
+        // Find the index of the product to remove
+        const index = productIds.indexOf(productId);
+
+        if (index !== -1) {
+            productIds.splice(index, 1);
+            quantities.splice(index, 1);
+            prices.splice(index, 1);
+        }
+
+        // Update hidden fields with the new values
+        $('#product_ids').val(productIds.join(','));
+        $('#quantities').val(quantities.join(','));
+        $('#prices').val(prices.join(','));
+    }
+
 
     // Update row subtotal when quantity changes
     function updateRow(input) {
