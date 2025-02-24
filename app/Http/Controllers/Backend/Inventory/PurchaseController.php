@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Backend\Inventory;
 
-use App\Models\Purchase;
-use App\Models\PurchaseProduct;
-use App\Models\Supplier;
-use App\Models\Product;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use DB;
+use Carbon\Carbon;
+use App\Models\Product;
+use App\Models\Purchase;
+use App\Models\Supplier;
+use Illuminate\Http\Request;
+use App\Models\PurchaseProduct;
+use App\Http\Controllers\Controller;
 
 class PurchaseController extends Controller
 {
@@ -117,9 +118,20 @@ class PurchaseController extends Controller
         
     }
 
-    public function AdminPurchaseEdit()
+    public function AdminPurchaseEdit($id)
     {
+        $pageTitle = 'Purchase Edit';
+
+        $purchase = Purchase::where('id', $id)->with('products')->first();
         
+        if ($purchase->invoice_date) {
+            $purchase->invoice_date = Carbon::parse($purchase->invoice_date);
+        }
+
+        $suppliers = Supplier::orderBy('id', 'desc')->get();
+        $products = Product::where('status',1)->latest()->get();
+
+        return view('backend.admin.inventory.purchase.edit',compact('pageTitle', 'purchase', 'suppliers', 'products'));
     }
 
     public function AdminPurchaseUpdate()
