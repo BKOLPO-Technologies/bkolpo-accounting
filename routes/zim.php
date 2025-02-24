@@ -19,10 +19,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
     /* ==================== purchase =================== */
     Route::prefix('purchase')->group(function () {
-        Route::get('/', [PurchaseController::class, 'AdminPurchaseIndex'])->name('admin.purchase.index');
+        Route::get('/', [PurchaseController::class, 'index'])->name('admin.purchase.index');
         Route::get('/create', [PurchaseController::class, 'AdminPurchaseCreate'])->name('admin.purchase.create');
         Route::post('/storeClient', [PurchaseController::class, 'AdminPurchaseStore'])->name('admin.purchase.store');
-        Route::get('/view/{id}', [PurchaseController::class, 'AdminPurchaseView'])->name('admin.purchase.view');
+        Route::get('/view/{id}', [PurchaseController::class, 'AdminPurchaseView'])->name('admin.purchase.show');
         Route::get('/edit/{id}', [PurchaseController::class, 'AdminPurchaseEdit'])->name('admin.purchase.edit');
         Route::put('/update/{id}', [PurchaseController::class, 'AdminPurchaseUpdate'])->name('admin.purchase.update');
         Route::delete('/delete/{id}', [PurchaseController::class, 'AdminPurchaseDestroy'])->name('admin.purchase.destroy');

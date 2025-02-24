@@ -12,7 +12,17 @@ use DB;
 
 class PurchaseController extends Controller
 {
-    public function AdminPurchaseIndex()
+    public function index(Request $request)
+    {
+        $pageTitle = 'Purchase List';
+
+        $purchases = Purchase::with('products')->get(); 
+        return view('backend.admin.inventory.purchase.index',compact('pageTitle','purchases'));
+
+        
+    }
+
+    public function AdminPurchaseCreate()
     {
         $suppliers = Supplier::orderBy('id', 'desc')->get();
 
@@ -24,12 +34,7 @@ class PurchaseController extends Controller
 
         $invoice_no = 'BKOLPO-'. $randomNumber;
 
-        return view('backend/admin/inventory/purchase/create',compact('pageTitle', 'suppliers', 'products','invoice_no'));
-    }
-
-    public function AdminPurchaseCreate()
-    {
-        
+        return view('backend/admin/inventory/purchase/create',compact('pageTitle', 'suppliers', 'products','invoice_no')); 
     }
 
     // purchase store

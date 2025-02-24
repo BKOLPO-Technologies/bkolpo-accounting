@@ -12,7 +12,7 @@ class Product extends Model
     public function purchases()
     {
         return $this->belongsToMany(Purchase::class)
-                    ->withPivot('quantity', 'price') // Access quantity and price from the pivot table
+                    ->withPivot('quantity', 'price') // Access pivot data (quantity and price)
                     ->withTimestamps(); // Keep track of created_at and updated_at
     }
 }

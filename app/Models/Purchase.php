@@ -11,9 +11,14 @@ class Purchase extends Model
     // Define the relationship with the Product model
     public function products()
     {
-        return $this->belongsToMany(Product::class)
-                    ->withPivot('quantity', 'price') // Access quantity and price from the pivot table
-                    ->withTimestamps(); // Keep track of created_at and updated_at
+        return $this->belongsToMany(Product::class, 'purchase_product') // Pivot table name
+                    ->withPivot('quantity', 'price') // Access pivot data (quantity, price)
+                    ->withTimestamps(); // Automatically handle created_at and updated_at
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
     }
 
 }

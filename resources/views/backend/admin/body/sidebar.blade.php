@@ -582,9 +582,15 @@
                   </a>
                   <ul class="nav nav-treeview">
                       <li class="nav-item">
-                          <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index') ? 'active' : '' }}">
+                          <a href="{{ route('admin.purchase.create') }}" class="nav-link {{ Route::is('admin.purchase.create') ? 'active' : '' }}">
                               <i class="far fa-circle nav-icon"></i>
                               <p>Purchase Now</p>
+                          </a>
+                      </li>
+                      <li class="nav-item">
+                          <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index') ? 'active' : '' }}">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Purchase List</p>
                           </a>
                       </li>
                   </ul>
