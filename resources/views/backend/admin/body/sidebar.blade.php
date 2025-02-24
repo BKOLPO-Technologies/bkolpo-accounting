@@ -483,7 +483,7 @@
 
               <!-- Supplier -->
               <ul class="nav nav-treeview">
-                <li class="nav-item">
+                <li class="nav-item {{ Route::is('admin.supplier*') ? 'menu-open' : '' }}">
                   <a href="#" class="nav-link {{ Route::is('admin.supplier*') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
                       <p>
