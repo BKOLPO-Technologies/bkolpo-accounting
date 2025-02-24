@@ -58,6 +58,7 @@
                                             @endforeach
                                         </select>
                                         <div class="input-group-append">
+                                           <!-- Button to trigger modal for adding a new client -->
                                             <button class="btn btn-danger" type="button" id="addClientBtn" data-toggle="modal" data-target="#createClientModal">
                                                 <i class="fas fa-plus"></i>
                                             </button>
@@ -189,70 +190,71 @@
 </div>
 
 <!-- Modal for creating a new client -->
-<div class="modal fade" id="createSupplierModal" tabindex="-1" role="dialog" aria-labelledby="createSupplierModalLabel" aria-hidden="true">
+<!-- Modal for creating a new client -->
+<div class="modal fade" id="createClientModal" tabindex="-1" role="dialog" aria-labelledby="createClientModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createSupplierModalLabel">
+                <h5 class="modal-title" id="createClientModalLabel">
                     <i class="fas fa-user-plus"></i> Add New Client
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="createSupplierForm">
+            <form id="createClientForm">
                 <div class="modal-body">
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
                             <!-- Name -->
                             <div class="form-group">
-                                <label for="new_supplier_name">Name</label>
+                                <label for="new_client_name">Name</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_supplier_name" name="name" required>
+                                    <input type="text" class="form-control" id="new_client_name" name="name" required>
                                 </div>
                             </div>
                             <!-- Company -->
                             <div class="form-group">
-                                <label for="new_supplier_company">Company</label>
+                                <label for="new_client_company">Company</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-building"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_supplier_company" name="company">
+                                    <input type="text" class="form-control" id="new_client_company" name="company">
                                 </div>
                             </div>
                             <!-- Phone -->
                             <div class="form-group">
-                                <label for="new_supplier_phone">Phone</label>
+                                <label for="new_client_phone">Phone</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_supplier_phone" name="phone">
+                                    <input type="text" class="form-control" id="new_client_phone" name="phone">
                                 </div>
                             </div>
                             <!-- Email -->
                             <div class="form-group">
-                                <label for="new_supplier_email">Email</label>
+                                <label for="new_client_email">Email</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                     </div>
-                                    <input type="email" class="form-control" id="new_supplier_email" name="email">
+                                    <input type="email" class="form-control" id="new_client_email" name="email">
                                 </div>
                             </div>
                             <!-- Address -->
                             <div class="form-group">
-                                <label for="new_supplier_address">Address</label>
+                                <label for="new_client_address">Address</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_supplier_address" name="address">
+                                    <input type="text" class="form-control" id="new_client_address" name="address">
                                 </div>
                             </div>
                         </div>
@@ -260,52 +262,52 @@
                         <div class="col-md-6">
                             <!-- City -->
                             <div class="form-group">
-                                <label for="new_supplier_city">City</label>
+                                <label for="new_client_city">City</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-city"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_supplier_city" name="city">
+                                    <input type="text" class="form-control" id="new_client_city" name="city">
                                 </div>
                             </div>
                             <!-- Region -->
                             <div class="form-group">
-                                <label for="new_supplier_region">Region</label>
+                                <label for="new_client_region">Region</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-globe"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_supplier_region" name="region">
+                                    <input type="text" class="form-control" id="new_client_region" name="region">
                                 </div>
                             </div>
                             <!-- Country -->
                             <div class="form-group">
-                                <label for="new_supplier_country">Country</label>
+                                <label for="new_client_country">Country</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-flag"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_supplier_country" name="country">
+                                    <input type="text" class="form-control" id="new_client_country" name="country">
                                 </div>
                             </div>
                             <!-- Post Box -->
                             <div class="form-group">
-                                <label for="new_supplier_postbox">Post Box</label>
+                                <label for="new_client_postbox">Post Box</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-inbox"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_supplier_postbox" name="postbox">
+                                    <input type="text" class="form-control" id="new_client_postbox" name="postbox">
                                 </div>
                             </div>
                             <!-- TAX ID -->
                             <div class="form-group">
-                                <label for="new_supplier_taxid">TAX ID</label>
+                                <label for="new_client_taxid">TAX ID</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-receipt"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_supplier_taxid" name="taxid">
+                                    <input type="text" class="form-control" id="new_client_taxid" name="taxid">
                                 </div>
                             </div>
                         </div>
