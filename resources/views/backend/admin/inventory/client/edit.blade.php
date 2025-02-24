@@ -1,4 +1,5 @@
-@extends('layouts.admin')
+@extends('layouts.admin', ['pageTitle' => 'Client Edit'])
+
 @section('admin')
 
 <div class="content-wrapper">
@@ -7,13 +8,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <!-- <h1>DataTables</h1> -->
+                    <h1 class="m-0">{{ $pageTitle ?? 'N/A'}}</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: black;">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('admin.supplier.index') }}" style="text-decoration: none; color: black;">Supplier</a></li>
-                        <li class="breadcrumb-item active">Create</li>
+                        <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A'}}</li>
                     </ol>
                 </div>
             </div>
@@ -28,7 +28,7 @@
           <!-- left column -->
           <div class="col-md-12">
             <!-- general form elements -->
-            <div class="card card-secondary">
+            <div class="card card-primary card-outline shadow-lg">
               <div class="card-header">
                 <!-- <h3 class="card-title">Edit client Details</h3> -->
                 <div class="d-flex justify-content-between align-items-center">
@@ -121,13 +121,13 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="row mt-3">
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;"><i class="fas fa-paper-plane"></i> Update Client</button>
+                        </div>
+                    </div> 
                 </div>
                 <!-- /.card-body -->
-
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
               </form>
             </div>
           </div>

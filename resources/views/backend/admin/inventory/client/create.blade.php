@@ -1,4 +1,5 @@
-@extends('layouts.admin')
+@extends('layouts.admin', ['pageTitle' => 'Client Create'])
+
 @section('admin')
 
 <div class="content-wrapper">
@@ -6,13 +7,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Admin</h1>
+                    <h1 class="m-0">{{ $pageTitle ?? 'N/A'}}</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: black;">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('admin.client.index') }}" style="text-decoration: none; color: black;">Client</a></li>
-                        <li class="breadcrumb-item active">Create</li>
+                        <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A'}}</li>
                     </ol>
                 </div>
             </div>
@@ -24,7 +24,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-12">
-            <div class="card card-secondary">
+          <div class="card card-primary card-outline shadow-lg">
                 <div class="card-header py-2">
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
@@ -112,13 +112,13 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-12">
+                                <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;"><i class="fas fa-plus"></i> Add Client</button>
+                            </div>
+                        </div> 
 
                     </div>
-
-                    <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-
                 </form>
                 
             </div>

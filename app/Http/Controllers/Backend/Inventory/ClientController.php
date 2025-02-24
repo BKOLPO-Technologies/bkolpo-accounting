@@ -12,7 +12,8 @@ class ClientController extends Controller
     public function AdminClientIndex()
     {
         $clients = Client::all();
-        $pageTitle = 'Admin Client';
+
+        $pageTitle = 'Client List';
         return view('backend/admin/inventory/client/index',compact('pageTitle', 'clients'));
     }
 
@@ -25,7 +26,7 @@ class ClientController extends Controller
     public function AdminClientView($id)
     {
         $client = Client::findOrFail($id);
-        $pageTitle = 'Admin Client View';
+        $pageTitle = 'Client View';
         return view('backend/admin/inventory/client/view',compact('pageTitle', 'client'));
 
     }
@@ -33,7 +34,7 @@ class ClientController extends Controller
     public function AdminClientEdit($id)
     {
         $client = Client::findOrFail($id);
-        $pageTitle = 'Admin Client Edit';
+        $pageTitle = 'Client Edit';
         return view('backend/admin/inventory/client/edit',compact('pageTitle', 'client'));
     }
 

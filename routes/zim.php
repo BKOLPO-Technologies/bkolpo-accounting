@@ -14,7 +14,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/view/{id}', [ClientController::class, 'AdminClientView'])->name('admin.client.view');
         Route::get('/edit/{id}', [ClientController::class, 'AdminClientEdit'])->name('admin.client.edit');
         Route::put('/update/{id}', [ClientController::class, 'AdminClientUpdate'])->name('admin.client.update');
-        Route::delete('/delete/{id}', [ClientController::class, 'AdminClientDestroy'])->name('admin.client.destroy');
+        Route::get('/delete/{id}', [ClientController::class, 'AdminClientDestroy'])->name('admin.client.destroy');
     });
 
     /* ==================== purchase =================== */
