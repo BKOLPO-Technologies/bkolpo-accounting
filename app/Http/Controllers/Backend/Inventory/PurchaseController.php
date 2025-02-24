@@ -126,6 +126,17 @@ class PurchaseController extends Controller
         return view('backend.admin.inventory.purchase.view',compact('pageTitle', 'purchase'));
     }
 
+    public function Print()
+    {
+        $pageTitle = 'Purchase View';
+
+        // $purchase = Purchase::where('id', $id)
+        //     ->with(['products', 'supplier']) // Include supplier details
+        //     ->first();
+
+        return view('backend.admin.inventory.purchase.print',compact('pageTitle'));
+    }
+
     public function AdminPurchaseEdit($id)
     {
         $pageTitle = 'Purchase Edit';
