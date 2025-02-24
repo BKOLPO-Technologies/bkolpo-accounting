@@ -79,7 +79,7 @@
                                         <select name="products" id="product" class="form-control select2 @error('product') is-invalid @enderror" style="width: 100%;">
                                             <option value="">Select Product</option>
                                             @foreach($products as $product)
-                                                <option value="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-stock="{{ $product->quantity }}">
+                                                <option value="{{ $product->id }}" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-stock="{{ $product->quantity }}">
                                                     {{ $product->name }}
                                                 </option>
                                             @endforeach
@@ -425,8 +425,14 @@ $('#createSupplierForm').on('submit', function(e) {
         const productStock = parseInt(selectedOption.data('stock'));
         const productId = selectedOption.val();
 
+        // console.log("selectedOption = ", selectedOption);
+        // console.log("productName = ", productName);
+        // console.log("productPrice = ", productPrice);
+        // console.log("productStock = ", productStock);
+        // console.log("productId = ", productId);
+
         const productRow = `
-            <tr>
+            <tr data-product-id="${productId}">
                 <td class="col-3">${productName}</td>
                 <td class="col-2">${productPrice.toFixed(2)}</td>
                 <td  class="col-1"><input type="number" class="quantity form-control" value="1" min="1" data-price="${productPrice}" data-stock="${productStock}" oninput="updateRow(this)" /></td>
@@ -455,11 +461,13 @@ $('#createSupplierForm').on('submit', function(e) {
     function addToHiddenFields(productId, quantity, price) {
         let productIds = $('#product_ids').val() ? $('#product_ids').val().split(',') : [];
         let quantities = $('#quantities').val() ? $('#quantities').val().split(',') : [];
-        alert(quantities);
+        //alert(quantities);
         let prices = $('#prices').val() ? $('#prices').val().split(',') : [];
 
         // Add product details to arrays
+        //console.log("productId = ", productId);
         productIds.push(productId);
+        console.log("quantity = ", quantity);
         quantities.push(quantity);
         prices.push(price);
 
@@ -467,6 +475,11 @@ $('#createSupplierForm').on('submit', function(e) {
         $('#product_ids').val(productIds.join(','));
         $('#quantities').val(quantities.join(','));
         $('#prices').val(prices.join(','));
+
+        // Debugging console logs
+        console.log("Updated product_ids:", $('#product_ids').val());
+        console.log("Updated quantities:", $('#quantities').val());
+        console.log("Updated prices:", $('#prices').val());
     }
 
 
@@ -511,7 +524,14 @@ $('#createSupplierForm').on('submit', function(e) {
         $('#product_ids').val(productIds.join(','));
         $('#quantities').val(quantities.join(','));
         $('#prices').val(prices.join(','));
+
+        // Debugging console logs
+        console.log("After Removal - product_ids:", $('#product_ids').val());
+        console.log("After Removal - quantities:", $('#quantities').val());
+        console.log("After Removal - prices:", $('#prices').val());
     }
+
+    
 
 
     // Update row subtotal when quantity changes
@@ -534,8 +554,60 @@ $('#createSupplierForm').on('submit', function(e) {
 
         const subtotal = price * quantity;
         row.find('.subtotal').text(subtotal.toFixed(2));
+
+        // Update the hidden fields
+        updateHiddenFields();
+         
         updateTotal();
     }
+
+    // Function to update hidden fields when quantity changes
+    function updateHiddenFields() {
+        let productIds = [];
+        let quantities = [];
+        let prices = [];
+
+        $('#product-table tbody tr').each(function() {
+            //const productId = $(this).find('.quantity').data('product-id');
+            //const productId = $(this).find('.quantity').closest('tr').find('td:first').data('product-id'); // Ensure correct product ID retrieval
+            // const quantity = $(this).find('.quantity').val();
+            // const price = $(this).find('.quantity').data('price');
+
+            
+            const row = $(this);
+            // const productId = row.find('.quantity').closest('tr').find('option:selected').val(); // Fetch product ID
+            // const quantity = row.find('.quantity').val();
+            // const price = row.find('.quantity').data('price');
+            const productId = row.data('product-id');  // Get product ID from <tr>
+            const quantity = row.find('.quantity').val();
+            const price = row.find('.quantity').data('price');
+
+            // Debugging logs
+            console.log("Row Data:", row.html());  // Log entire row structure
+            console.log("Extracted productId:", productId);
+            console.log("Extracted quantity:", quantity);
+            console.log("Extracted price:", price);
+
+            // if (productId) {
+            if (productId !== undefined) { // Ensure productId is valid
+                productIds.push(productId);
+                quantities.push(quantity);
+                prices.push(price);
+            }
+        });
+
+        // Update the hidden fields
+        $('#product_ids').val(productIds.join(','));
+        $('#quantities').val(quantities.join(','));
+        $('#prices').val(prices.join(','));
+
+        // Debugging logs
+        console.log("Updated product_ids:", $('#product_ids').val());
+        console.log("Updated quantities:", $('#quantities').val());
+        console.log("Updated prices:", $('#prices').val());
+    }
+
+
 
     // Calculate the subtotal, discount, and total
     function updateTotal() {
