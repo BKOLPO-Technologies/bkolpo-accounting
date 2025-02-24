@@ -41,7 +41,7 @@
 
                             <div class="row">
                                 <!-- Supplier Select -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="supplier">Supplier</label>
                                     <div class="input-group">
                                         <select name="supplier" id="supplier" class="form-control select2 @error('supplier') is-invalid @enderror">
@@ -72,6 +72,8 @@
                                     @enderror
                                 </div>
 
+                                
+
                                 <!-- Product Select with Search Feature -->
                                 <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="product">Product</label>
@@ -93,7 +95,7 @@
                                 </div>
 
                                 <!-- Invoice No -->
-                                <div class="col-lg-2 col-md-6 mb-3">
+                                <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="invoice_no">Invoice No</label>
                                     <input type="text" id="invoice_no" name="invoice_no" class="form-control @error('invoice_no') is-invalid @enderror" value="{{ old('invoice_no', $invoice_no) }}" readonly />
                                     @error('invoice_no')
@@ -117,20 +119,20 @@
 
                             <!-- Supplier Details Table -->
                             <div class="row mt-3">
-                                    <div class="col-12">
-                                        <table class="table table-bordered" id="supplier-details-table" style="display: none;">
-                                            <thead class="thead-light">
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Company</th>
-                                                    <th>Phone</th>
-                                                    <th>Email</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="supplier-details-body"></tbody>
-                                        </table>
-                                    </div>
+                                <div class="col-12">
+                                    <table class="table table-bordered" id="supplier-details-table" style="display: none;">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Company</th>
+                                                <th>Phone</th>
+                                                <th>Email</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="supplier-details-body"></tbody>
+                                    </table>
                                 </div>
+                            </div>
                                 
                             <!-- Product Table -->
                             <div class="row">
@@ -326,10 +328,6 @@
         </div>
     </div>
 </div>
-
-
-
-
 @endsection
 
 @push('js')
@@ -348,8 +346,8 @@
             const supplierEmail = selectedOption.data('email') || 'N/A';
 
             if (supplierId) {
-                $('#supplier-details-table1').show();
-                $('#supplier-details-body1').empty(); // Clear previous selection
+                $('#supplier-details-table').show();
+                $('#supplier-details-body').empty(); // Clear previous selection
 
                 const supplierRow = `
                     <tr id="supplier-row">
@@ -360,9 +358,9 @@
                     </tr>
                 `;
 
-                $('#supplier-details-body1').append(supplierRow);
+                $('#supplier-details-body').append(supplierRow);
             } else {
-                $('#supplier-details-table1').hide();
+                $('#supplier-details-table').hide();
             }
         });
         
@@ -455,7 +453,6 @@ $('#createSupplierForm').on('submit', function(e) {
     function addToHiddenFields(productId, quantity, price) {
         let productIds = $('#product_ids').val() ? $('#product_ids').val().split(',') : [];
         let quantities = $('#quantities').val() ? $('#quantities').val().split(',') : [];
-        alert(quantities);
         let prices = $('#prices').val() ? $('#prices').val().split(',') : [];
 
         // Add product details to arrays
