@@ -39,34 +39,41 @@
                                             <th>Invoice No</th>
                                             <th>Invoice Date</th>
                                             <th>Supplier Name</th>
+                                            <th>Product Name</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
                                             <th>Total Price</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($purchases as $purchase)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $purchase->invoice_no }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($purchase->invoice_date)->format('d F Y') }}</td>
-                                                <td>{{ $purchase->supplier->name ?? 'N/A' }}</td> 
-                                                <td>৳{{ number_format($purchase->total, 2) }}</td>
-                                                
-                                                <td class="col-2">
-                                                    <!-- View Button -->
-                                                    <a href="{{ route('admin.purchase.show', $purchase->id) }}" class="btn btn-success btn-sm">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <!-- Edit Button -->
-                                                    <a href="{{ route('admin.purchase.edit', $purchase->id) }}" class="btn btn-primary btn-sm">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <!-- Delete Button -->
-                                                    <a href="{{ route('admin.purchase.destroy', $purchase->id) }}" id="delete" class="btn btn-danger btn-sm">
-                                                        <i class="fas fa-trash"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                            <!-- @foreach($purchase->products as $product)  -->
+                                                <tr>
+                                                    <td>{{ $loop->parent->iteration }}</td>
+                                                    <td>{{ $purchase->invoice_no }}</td>
+                                                    <td>{{ \Carbon\Carbon::parse($purchase->invoice_date)->format('d F Y') }}</td>
+                                                    <td>{{ $purchase->supplier->name ?? 'N/A' }}</td> 
+                                                    <td>{{ $product->name }}</td>
+                                                    <td>৳{{ number_format($product->pivot->price, 2) }}</td> 
+                                                    <td class="col-1">{{ $product->pivot->quantity }}</td>
+                                                    <td>৳{{ number_format($product->pivot->quantity * $product->pivot->price, 2) }}</td>
+                                                    <td class="col-2">
+                                                        <!-- View Button -->
+                                                        <a href="{{ route('admin.purchase.show', $purchase->id) }}" class="btn btn-success btn-sm">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <!-- Edit Button -->
+                                                        <a href="{{ route('admin.purchase.edit', $purchase->id) }}" class="btn btn-primary btn-sm">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <!-- Delete Button -->
+                                                        <a href="{{ route('admin.purchase.destroy', $purchase->id) }}" id="delete" class="btn btn-danger btn-sm">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <!-- @endforeach -->
                                         @endforeach
                                     </tbody>
                                 </table>

@@ -18,6 +18,7 @@ class PurchaseController extends Controller
         $pageTitle = 'Purchase List';
 
         $purchases = Purchase::with('products')->get(); 
+        //dd($purchases);
         return view('backend.admin.inventory.purchase.index',compact('pageTitle','purchases'));
 
         
@@ -39,7 +40,8 @@ class PurchaseController extends Controller
     }
 
     // purchase store
-    public function AdminPurchaseStore(Request $request){
+    public function AdminPurchaseStore(Request $request)
+    {
 
         // dd($request->all());
 
@@ -113,9 +115,26 @@ class PurchaseController extends Controller
     }
 
 
-    public function AdminPurchaseView()
+    public function AdminPurchaseView($id)
     {
-        
+        $pageTitle = 'Purchase View';
+
+        $purchase = Purchase::where('id', $id)
+            ->with(['products', 'supplier']) // Include supplier details
+            ->first();
+
+        return view('backend.admin.inventory.purchase.view',compact('pageTitle', 'purchase'));
+    }
+
+    public function Print()
+    {
+        $pageTitle = 'Purchase View';
+
+        // $purchase = Purchase::where('id', $id)
+        //     ->with(['products', 'supplier']) // Include supplier details
+        //     ->first();
+
+        return view('backend.admin.inventory.purchase.print',compact('pageTitle'));
     }
 
     public function AdminPurchaseEdit($id)
@@ -144,6 +163,59 @@ class PurchaseController extends Controller
 
     public function AdminPurchaseUpdate(Request $request, $id)
     {
-        dd($request->all());
+        // Validate the request data
+        $validated = $request->validate([
+            'supplier' => 'required|exists:suppliers,id',
+            'invoice_no' => 'required|unique:purchases,invoice_no,' . $id, // Allow current invoice_no
+            'invoice_date' => 'required|date',
+            'subtotal' => 'required|numeric',
+            'discount' => 'required|numeric',
+            'total' => 'required|numeric',
+            'product_ids' => 'required|not_in:',  // Ensure at least one product is selected
+        ]);
+
+        // Extract product data from request
+        $productIds = explode(',', $request->input('product_ids'));  
+        $quantities = explode(',', $request->input('quantities'));  
+        $prices = explode(',', $request->input('prices'));  
+
+        if (empty($productIds) || count($productIds) === 0 || $productIds[0] == '') {
+            return back()->with('error', 'At least one product must be selected.');
+        }
+
+        try {
+            \DB::beginTransaction();
+
+            // Find the existing purchase record
+            $purchase = Purchase::findOrFail($id);
+            $purchase->supplier_id = $validated['supplier'];
+            $purchase->invoice_no = $validated['invoice_no'];
+            $purchase->invoice_date = $validated['invoice_date'];
+            $purchase->subtotal = $validated['subtotal'];
+            $purchase->discount = $validated['discount'];
+            $purchase->total = $validated['total'];
+            $purchase->save();
+
+            // Remove existing purchase product records and update with new ones
+            PurchaseProduct::where('purchase_id', $id)->delete();
+
+            // Insert updated product data
+            foreach ($productIds as $index => $productId) {
+                $purchaseProduct = new PurchaseProduct();
+                $purchaseProduct->purchase_id = $purchase->id;
+                $purchaseProduct->product_id = $productId;
+                $purchaseProduct->quantity = $quantities[$index];
+                $purchaseProduct->price = $prices[$index];
+                $purchaseProduct->save();
+            }
+
+            \DB::commit();
+
+            return redirect()->route('admin.purchase.index')->with('success', 'Purchase updated successfully!');
+        } catch (\Exception $e) {
+            \DB::rollback();
+            return back()->withErrors(['error' => 'Something went wrong! Please try again.']);
+        }
     }
+
 }

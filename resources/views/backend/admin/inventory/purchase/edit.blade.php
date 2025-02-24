@@ -170,7 +170,7 @@
                                                     <td class="col-2">{{ number_format($product->price, 2) }}</td>
                                                     <td class="col-1">
                                                         <input type="number" class="quantity form-control" value="{{ $product->pivot->quantity }}" min="1"
-                                                            data-price="{{ $product->price }}" data-stock="{{ $product->stock }}" oninput="updateRow(this)" />
+                                                            data-price="{{ $product->price }}" data-stock="{{ $product->quantity ?? 0 }}" oninput="updateRow(this)" />
                                                     </td>
                                                     <td class="current-stock col-2">
                                                         <span class="badge bg-info">{{ $product->quantity }}</span>
@@ -567,6 +567,9 @@ $('#createSupplierForm').on('submit', function(e) {
         const price = parseFloat($(input).data('price'));
         const quantity = parseInt($(input).val());
         const stock = parseInt($(input).data('stock'));
+
+        console.log("Updating row for product:", row.data('product-id'));
+        console.log("Price:", price, "Quantity:", quantity, "Stock:", stock);
 
         if (quantity > stock) {
             // Display toastr alert

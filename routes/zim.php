@@ -28,6 +28,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/edit/{id}', [PurchaseController::class, 'AdminPurchaseEdit'])->name('admin.purchase.edit');
         Route::put('/update/{id}', [PurchaseController::class, 'AdminPurchaseUpdate'])->name('admin.purchase.update');
         Route::delete('/delete/{id}', [PurchaseController::class, 'AdminPurchaseDestroy'])->name('admin.purchase.destroy');
+
+        Route::get('/print', [PurchaseController::class, 'Print'])->name('admin.purchase.print');
     });
 
     /* ==================== sales =================== */
