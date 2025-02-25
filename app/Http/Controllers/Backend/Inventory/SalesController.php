@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Backend\Inventory;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use DB;
 use Carbon\Carbon;
-use App\Models\Product;
 use App\Models\Sale;
 use App\Models\Client;
+use App\Models\Product;
 use App\Models\SaleProduct;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log; 
 
 class SalesController extends Controller
@@ -131,26 +131,119 @@ class SalesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function view($id)
     {
-        //
+        $pageTitle = 'Sales View';
+
+        $sale = Sale::where('id', $id)
+            ->with(['products', 'client']) // Include supplier details
+            ->first();
+
+        return view('backend.admin.inventory.sales.view',compact('pageTitle', 'sale'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $pageTitle = 'Sale Edit';
+
+        // $purchase = Purchase::where('id', $id)->with('products')->first();
+        // Fetch purchase details with supplier and products
+        $sale = Sale::where('id', $id)
+            ->with(['products', 'client']) // Include supplier details
+            ->first();
+        
+        if ($sale->invoice_date) {
+            $sale->invoice_date = Carbon::parse($sale->invoice_date);
+        }
+
+        $subtotal = $sale->products->sum(function ($product) {
+            return $product->pivot->price * $product->pivot->quantity;
+        });
+
+        $clients = Client::orderBy('id', 'desc')->get();
+        $products = Product::where('status',1)->latest()->get();
+
+        return view('backend.admin.inventory.sales.edit',compact('pageTitle', 'sale', 'clients', 'products', 'subtotal')); 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        // Debug Request Data
+        Log::info('Request Data:', $request->all());
+
+        // Validate Request
+        $validated = $request->validate([
+            'client' => 'required|exists:clients,id',
+            'invoice_no' => 'required|unique:purchases,invoice_no,' . $id,
+            'invoice_date' => 'required|date',
+            'subtotal' => 'required|numeric',
+            'discount' => 'required|numeric',
+            'total' => 'required|numeric',
+            'product_ids' => 'required'
+        ]);
+
+        // Check Sale Record
+        $sale = Sale::find($id);
+        if (!$sale) {
+            return back()->withErrors(['error' => 'Sale not found!']);
+        }
+
+        // Extract Product Data
+        $productIds = explode(',', $request->input('product_ids'));  
+        $quantities = explode(',', $request->input('quantities'));  
+        $prices = explode(',', $request->input('prices'));  
+
+        // Debug Product Data
+        Log::info('Product Data:', [
+            'product_ids' => $productIds,
+            'quantities' => $quantities,
+            'prices' => $prices
+        ]);
+
+        if (empty($productIds) || count($productIds) === 0 || $productIds[0] == '') {
+            return back()->with('error', 'At least one product must be selected.');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Update Sale
+            $sale->client_id = $validated['client'];  // Ensure this field exists in DB
+            $sale->invoice_no = $validated['invoice_no'];
+            $sale->invoice_date = $validated['invoice_date'];
+            $sale->subtotal = $validated['subtotal'];
+            $sale->discount = $validated['discount'];
+            $sale->total = $validated['total'];
+            $sale->save();
+
+            // Delete Old Products
+            SaleProduct::where('sale_id', $id)->delete();
+
+            // Insert New Products
+            foreach ($productIds as $index => $productId) {
+                SaleProduct::create([
+                    'sale_id' => $sale->id,
+                    'product_id' => $productId,
+                    'quantity' => $quantities[$index],
+                    'price' => $prices[$index],
+                ]);
+            }
+
+            DB::commit();
+            return redirect()->route('admin.sale.index')->with('success', 'Sale updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Update Sale Error: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Error: ' . $e->getMessage()]);
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
