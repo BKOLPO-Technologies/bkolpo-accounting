@@ -1,10 +1,52 @@
 @extends('layouts.admin', ['pageTitle' => 'Purchase List'])
 <style>
-    @media print {
+    /* @media print {
         #filter-form {
             display: none !important;
         }
+    } */
+
+    @media print {
+        /* Set A4 Page Size */
+        @page {
+            size: A4 portrait; /* or "A4 landscape" */
+            margin: 20mm; /* Adjust margins */
+        }
+
+        /* Ensure Proper Page Breaks */
+        .content-wrapper {
+            page-break-before: always;
+            page-break-after: avoid;
+        }
+
+        /* Avoid Cutting Important Sections */
+        .invoice {
+            page-break-inside: auto;
+        }
+
+        /* Ensure Table Stays Within Page */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        /* Add Page Breaks Where Necessary */
+        .row-4, .row-7, .row-8, .row-9 {
+            page-break-before: always;
+        }
+
+        /* Hide Unnecessary Elements */
+        .no-print {
+            display: none !important;
+        }
+
+        /* Improve Readability in Print */
+        body {
+            font-size: 12px;
+            color: black;
+        }
     }
+
 </style>
 @section('admin')
 
