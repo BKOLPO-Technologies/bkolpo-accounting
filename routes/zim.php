@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\Inventory\ClientController;
 use App\Http\Controllers\Backend\Inventory\PurchaseController;
 use App\Http\Controllers\Backend\Inventory\SalesController;
+use App\Http\Controllers\Backend\Inventory\QuotationController;
+use App\Http\Controllers\Backend\Inventory\WorkOrderController;
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
@@ -42,6 +44,14 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::put('/update/{id}', [SalesController::class, 'update'])->name('admin.sale.update');
         Route::delete('/delete/{id}', [SalesController::class, 'destroy'])->name('admin.sale.destroy');
     });
+
+    // Quotation Routes
+    Route::resource('quotations', QuotationController::class);
+    Route::get('/delete/{id}', [QuotationController::class, 'destroy'])->name('quotations.destroy');
+    // Work Order Routes
+    Route::resource('workorders', WorkOrderController::class);
+    Route::get('/delete/{id}', [WorkOrderController::class, 'destroy'])->name('workorders.destroy');
+    Route::get('/workorders/invoice/{id}', [WorkOrderController::class, 'invoice'])->name('workorders.invoice');
 
 });
 

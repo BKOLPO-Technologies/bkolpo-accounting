@@ -472,8 +472,15 @@
           <!-- ---------------- -->
 
 
-          <li class="nav-item {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') || Route::is('admin.client*') || Route::is('admin.purchase*') || Route::is('admin.sale*') ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') || Route::is('admin.client*') || Route::is('admin.purchase*') || Route::is('admin.sale*') ? 'active' : '' }}">
+          <li class="nav-item 
+          {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') || 
+       Route::is('admin.client*') || Route::is('admin.purchase*') || Route::is('admin.sale*') || 
+       Route::is('quotations*') || Route::is('workorders*') ? 'menu-open' : '' }}
+          ">
+              <a href="#" class="nav-link 
+              {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') || 
+              Route::is('admin.client*') || Route::is('admin.purchase*') || Route::is('admin.sale*') || 
+              Route::is('quotations*') || Route::is('workorders*') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-receipt"></i>
                   <p>
                     Inventory
@@ -616,6 +623,52 @@
                   </ul>
                 </li>
               </ul>
+
+
+            <!-- Quotation -->
+            <ul class="nav nav-treeview">
+                <li class="nav-item {{ Route::is('quotations.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Route::is('quotations.*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>
+                            Quotation
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('quotations.index') }}" 
+                              class="nav-link {{ Route::is('quotations.index', 'quotations.create', 'quotations.show', 'quotations.edit') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Quotation List</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- Work Order -->
+            <ul class="nav nav-treeview">
+                <li class="nav-item {{ Route::is('workorders.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Route::is('workorders.*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>
+                            Work Order
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('workorders.index') }}" 
+                              class="nav-link {{ Route::is('workorders.index', 'workorders.create', 'workorders.show', 'workorders.edit') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Work Order List</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
 
               <!-- Stock Management -->
               <ul class="nav nav-treeview">
