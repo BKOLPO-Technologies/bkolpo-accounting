@@ -365,29 +365,29 @@
 </script>
 
 <script> 
-$('#createSupplierForm').on('submit', function(e) {
+$('#createClientForm').on('submit', function(e) {
     e.preventDefault(); // Prevent default form submission
 
     let formData = $(this).serialize(); // Get form data
 
     $.ajax({
-        url: '{{ route('admin.client.store') }}',
+        url: '{{ route('admin.client2.store') }}',
         type: 'POST',
         data: formData,
         success: function(response) {
             // Check if the supplier was created successfully
             if (response.success) {
                 // Close the modal
-                $('#createSupplierModal').modal('hide');
+                $('#createClientModal').modal('hide');
                 
                 // Clear form inputs
-                $('#createSupplierForm')[0].reset();
+                $('#createClientForm')[0].reset();
 
                 // Append new supplier to the supplier select dropdown
-                $('#supplier').append(new Option(response.client.name, response.client.id));
+                $('#client').append(new Option(response.client.name, response.client.id));
 
                 // Re-initialize the select2 to refresh the dropdown
-                $('#supplier').trigger('change');
+                $('#client').trigger('change');
 
                 // Show success message
                 toastr.success('Client added successfully!');
@@ -399,8 +399,8 @@ $('#createSupplierForm').on('submit', function(e) {
             // Handle error (validation errors, etc.)
             let errors = response.responseJSON.errors;
             for (let field in errors) {
-                $(`#new_supplier_${field}`).addClass('is-invalid');
-                $(`#new_supplier_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
+                $(`#new_client_${field}`).addClass('is-invalid');
+                $(`#new_client_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
             }
         }
     });
