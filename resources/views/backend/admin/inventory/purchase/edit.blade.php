@@ -503,10 +503,10 @@ $('#createSupplierForm').on('submit', function(e) {
         $('#quantities').val(quantities.join(','));
         $('#prices').val(prices.join(','));
 
-        // Debugging console logs
-        console.log("Updated product_ids:", $('#product_ids').val());
-        console.log("Updated quantities:", $('#quantities').val());
-        console.log("Updated prices:", $('#prices').val());
+        // // Debugging console logs
+        // console.log("Updated product_ids:", $('#product_ids').val());
+        // console.log("Updated quantities:", $('#quantities').val());
+        // console.log("Updated prices:", $('#prices').val());
     }
 
 
@@ -568,8 +568,8 @@ $('#createSupplierForm').on('submit', function(e) {
         const quantity = parseInt($(input).val());
         const stock = parseInt($(input).data('stock'));
 
-        console.log("Updating row for product:", row.data('product-id'));
-        console.log("Price:", price, "Quantity:", quantity, "Stock:", stock);
+        // console.log("Updating row for product:", row.data('product-id'));
+        // console.log("Price:", price, "Quantity:", quantity, "Stock:", stock);
 
         if (quantity > stock) {
             // Display toastr alert
@@ -612,11 +612,11 @@ $('#createSupplierForm').on('submit', function(e) {
             const quantity = row.find('.quantity').val();
             const price = row.find('.quantity').data('price');
 
-            // Debugging logs
-            console.log("Row Data:", row.html());  // Log entire row structure
-            console.log("Extracted productId:", productId);
-            console.log("Extracted quantity:", quantity);
-            console.log("Extracted price:", price);
+            // // Debugging logs
+            // console.log("Row Data:", row.html());  // Log entire row structure
+            // console.log("Extracted productId:", productId);
+            // console.log("Extracted quantity:", quantity);
+            // console.log("Extracted price:", price);
 
             // if (productId) {
             if (productId !== undefined) { // Ensure productId is valid
@@ -631,10 +631,10 @@ $('#createSupplierForm').on('submit', function(e) {
         $('#quantities').val(quantities.join(','));
         $('#prices').val(prices.join(','));
 
-        // Debugging logs
-        console.log("Updated product_ids:", $('#product_ids').val());
-        console.log("Updated quantities:", $('#quantities').val());
-        console.log("Updated prices:", $('#prices').val());
+        // // Debugging logs
+        // console.log("Updated product_ids:", $('#product_ids').val());
+        // console.log("Updated quantities:", $('#quantities').val());
+        // console.log("Updated prices:", $('#prices').val());
     }
 
 
