@@ -472,8 +472,8 @@
           <!-- ---------------- -->
 
 
-          <li class="nav-item {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') || Route::is('admin.client*') || Route::is('admin.purchase*') ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') || Route::is('admin.client*') || Route::is('admin.purchase*') ? 'active' : '' }}">
+          <li class="nav-item {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') || Route::is('admin.client*') || Route::is('admin.purchase*') || Route::is('admin.sale*') ? 'menu-open' : '' }}">
+              <a href="#" class="nav-link {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('admin.supplier*') || Route::is('admin.client*') || Route::is('admin.purchase*') || Route::is('admin.sale*') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-receipt"></i>
                   <p>
                     Inventory
@@ -570,6 +570,8 @@
                       </ul>
                   </li>
               </ul>
+
+              <!-- Purchase -->
               <ul class="nav nav-treeview">
                 <li class="nav-item {{ Route::is('admin.purchase*') ? 'menu-open' : '' }}">
                   <a href="#" class="nav-link {{ Route::is('admin.purchase*') ? 'active' : '' }}">
@@ -590,8 +592,12 @@
                       </li>
                   </ul>
                 </li>
-                <li class="nav-item {{ Route::is('admin.sales*') ? 'menu-open' : '' }}">
-                  <a href="#" class="nav-link {{ Route::is('admin.sales*') ? 'active' : '' }}">
+              </ul>
+
+              <!-- Sales -->
+              <ul class="nav nav-treeview">
+                <li class="nav-item {{ Route::is('admin.sale*') ? 'menu-open' : '' }}">
+                  <a href="#" class="nav-link {{ Route::is('admin.sale*') ? 'active' : '' }}">
                       <!-- <i class="fa-solid fa-money-check"></i> -->
                       <i class="far fa-circle nav-icon"></i>
                       <p>
@@ -609,6 +615,10 @@
                       </li>
                   </ul>
                 </li>
+              </ul>
+
+              <!-- Stock Management -->
+              <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                       <!-- <i class="fa-solid fa-money-check"></i> -->
