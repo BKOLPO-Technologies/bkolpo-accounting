@@ -608,7 +608,7 @@
                   <ul class="nav nav-treeview">
 
                       <li class="nav-item">
-                          <a href="{{ route('admin.sale.index') }}" class="nav-link {{ Route::is('admin.sale.index','admin.sale.create') ? 'active' : '' }}">
+                          <a href="{{ route('admin.sale.index') }}" class="nav-link {{ Route::is('admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit') ? 'active' : '' }}">
                               <i class="far fa-circle nav-icon"></i>
                               <p>Sales List</p>
                           </a>
