@@ -173,9 +173,10 @@ class SalesController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
-        // Debug Request Data
-        Log::info('Request Data:', $request->all());
+    {   
+        dd($request->all());
+        // // Debug Request Data
+        // Log::info('Request Data:', $request->all());
 
         // Validate Request
         $validated = $request->validate([
@@ -199,12 +200,12 @@ class SalesController extends Controller
         $quantities = explode(',', $request->input('quantities'));  
         $prices = explode(',', $request->input('prices'));  
 
-        // Debug Product Data
-        Log::info('Product Data:', [
-            'product_ids' => $productIds,
-            'quantities' => $quantities,
-            'prices' => $prices
-        ]);
+        // // Debug Product Data
+        // Log::info('Product Data:', [
+        //     'product_ids' => $productIds,
+        //     'quantities' => $quantities,
+        //     'prices' => $prices
+        // ]);
 
         if (empty($productIds) || count($productIds) === 0 || $productIds[0] == '') {
             return back()->with('error', 'At least one product must be selected.');

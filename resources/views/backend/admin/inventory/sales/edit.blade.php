@@ -165,6 +165,7 @@
                                                 </tr>
                                             @else
                                             @foreach ($sale->products as $product)
+                                                <input type="hidden" name="product_multiple_id[]" value="{{ $product->id }}">
                                                 <tr data-product-id="{{ $product->id }}">
                                                     <td class="col-3">{{ $product->name }}</td>
                                                     <td class="col-2">{{ number_format($product->price, 2) }}</td>
