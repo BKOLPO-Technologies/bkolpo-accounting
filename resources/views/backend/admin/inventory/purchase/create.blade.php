@@ -327,9 +327,6 @@
     </div>
 </div>
 
-
-
-
 @endsection
 
 @push('js')
@@ -370,47 +367,46 @@
 </script>
 
 <script> 
-$('#createSupplierForm').on('submit', function(e) {
-    e.preventDefault(); // Prevent default form submission
+    $('#createSupplierForm').on('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
 
-    let formData = $(this).serialize(); // Get form data
+        let formData = $(this).serialize(); // Get form data
 
-    $.ajax({
-        url: '{{ route('admin.supplier2.store') }}',
-        type: 'POST',
-        data: formData,
-        success: function(response) {
-            // Check if the supplier was created successfully
-            if (response.success) {
-                // Close the modal
-                $('#createSupplierModal').modal('hide');
-                
-                // Clear form inputs
-                $('#createSupplierForm')[0].reset();
+        $.ajax({
+            url: '{{ route('admin.supplier2.store') }}',
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                // Check if the supplier was created successfully
+                if (response.success) {
+                    // Close the modal
+                    $('#createSupplierModal').modal('hide');
+                    
+                    // Clear form inputs
+                    $('#createSupplierForm')[0].reset();
 
-                // Append new supplier to the supplier select dropdown
-                $('#supplier').append(new Option(response.supplier.name, response.supplier.id));
+                    // Append new supplier to the supplier select dropdown
+                    $('#supplier').append(new Option(response.supplier.name, response.supplier.id));
 
-                // Re-initialize the select2 to refresh the dropdown
-                $('#supplier').trigger('change');
+                    // Re-initialize the select2 to refresh the dropdown
+                    $('#supplier').trigger('change');
 
-                // Show success message
-                toastr.success('Supplier added successfully!');
-            } else {
-                toastr.error('Something went wrong. Please try again.');
+                    // Show success message
+                    toastr.success('Supplier added successfully!');
+                } else {
+                    toastr.error('Something went wrong. Please try again.');
+                }
+            },
+            error: function(response) {
+                // Handle error (validation errors, etc.)
+                let errors = response.responseJSON.errors;
+                for (let field in errors) {
+                    $(`#new_supplier_${field}`).addClass('is-invalid');
+                    $(`#new_supplier_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
+                }
             }
-        },
-        error: function(response) {
-            // Handle error (validation errors, etc.)
-            let errors = response.responseJSON.errors;
-            for (let field in errors) {
-                $(`#new_supplier_${field}`).addClass('is-invalid');
-                $(`#new_supplier_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
-            }
-        }
+        });
     });
-});
-
 </script>
 
 <script>
@@ -428,8 +424,12 @@ $('#createSupplierForm').on('submit', function(e) {
         const productRow = `
             <tr data-product-id="${productId}">
                 <td class="col-3">${productName}</td>
-                <td class="col-2">${productPrice.toFixed(2)}</td>
-                <td  class="col-1"><input type="number" class="quantity form-control" value="1" min="1" data-price="${productPrice}" data-stock="${productStock}" oninput="updateRow(this)" /></td>
+                <td class="col-2">
+                    <input type="number" class="price-input form-control" value="${productPrice.toFixed(2)}" step="1" data-product-id="${productId}" oninput="updateRow(this)">
+                </td>
+                <td class="col-1">
+                    <input type="number" class="quantity form-control" value="1" min="1" data-price="${productPrice}" data-stock="${productStock}" oninput="updateRow(this)" />
+                </td>
                 <td class="current-stock col-2">
                     <span class="badge bg-info">${productStock}</span>
                 </td>
@@ -530,10 +530,29 @@ $('#createSupplierForm').on('submit', function(e) {
 
     // Update row subtotal when quantity changes
     function updateRow(input) {
+        // const row = $(input).closest('tr');
+        // const price = parseFloat($(input).data('price'));
+        // const quantity = parseInt($(input).val());
+        // const stock = parseInt($(input).data('stock'));
+
         const row = $(input).closest('tr');
-        const price = parseFloat($(input).data('price'));
-        const quantity = parseInt($(input).val());
-        const stock = parseInt($(input).data('stock'));
+        const priceInput = row.find('.price-input');
+        const quantityInput = row.find('.quantity');
+
+        const price = parseFloat(priceInput.val());
+        let quantity = parseInt(quantityInput.val());
+        const stock = parseInt(quantityInput.data('stock'));
+
+        if (isNaN(price) || price < 0) {
+            toastr.error('Invalid price entered.', 'Error', {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 5000
+            });
+
+            priceInput.val(0); // Reset to 0 if invalid input
+            return;
+        }
 
         if (quantity > stock) {
             // Display toastr alert
@@ -574,7 +593,8 @@ $('#createSupplierForm').on('submit', function(e) {
             // const price = row.find('.quantity').data('price');
             const productId = row.data('product-id');  // Get product ID from <tr>
             const quantity = row.find('.quantity').val();
-            const price = row.find('.quantity').data('price');
+            //const price = row.find('.quantity').data('price');
+            const price = row.find('.price-input').val();
 
             // Debugging logs
             console.log("Row Data:", row.html());  // Log entire row structure

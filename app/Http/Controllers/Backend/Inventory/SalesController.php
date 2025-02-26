@@ -48,7 +48,7 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+        //dd($request->all());
 
         // Validate the request data
         $validated = $request->validate([
@@ -154,6 +154,10 @@ class SalesController extends Controller
         $sale = Sale::where('id', $id)
             ->with(['products', 'client']) // Include supplier details
             ->first();
+
+        // $sale = Sale::where('id', $id)
+        //     ->with(['saleProducts', 'client']) // Include supplier details
+        //     ->first();
         
         if ($sale->invoice_date) {
             $sale->invoice_date = Carbon::parse($sale->invoice_date);

@@ -20,4 +20,9 @@ class Sale extends Model
     {
         return $this->belongsTo(Client::class);
     }
+
+    public function saleProducts()
+    {
+        return $this->belongsToMany(SaleProduct::class);
+    }
 }
