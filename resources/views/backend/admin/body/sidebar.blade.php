@@ -345,13 +345,13 @@
                           <p>Purchase List</p>
                       </a>
                   </li>
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                       <a href="{{ route('workorders.index') }}" 
                         class="nav-link {{ Route::is('workorders.index', 'workorders.create', 'workorders.show', 'workorders.edit') ? 'active' : '' }}">
                           <i class="far fa-circle nav-icon"></i>
                           <p>Work Order List</p>
                       </a>
-                  </li>
+                  </li> -->
               </ul>
           </li>
 
