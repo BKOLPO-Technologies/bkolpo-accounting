@@ -202,12 +202,12 @@
 <div class="modal fade" id="createClientModal" tabindex="-1" role="dialog" aria-labelledby="createClientModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-success">
                 <h5 class="modal-title" id="createClientModalLabel">
                     <i class="fas fa-user-plus"></i> Add New Client
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true" style="color:white;">&times;</span>
                 </button>
             </div>
             <form id="createClientForm">
@@ -222,7 +222,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_client_name" name="name" required>
+                                    <input type="text" class="form-control" id="new_client_name" name="name" placeholder="Enter Client Name" required>
                                 </div>
                             </div>
                             <!-- Company -->
@@ -232,7 +232,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-building"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_client_company" name="company">
+                                    <input type="text" class="form-control" id="new_client_company" placeholder="Enter Company Name" name="company">
                                 </div>
                             </div>
                             <!-- Phone -->
@@ -242,7 +242,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_client_phone" name="phone">
+                                    <input type="text" class="form-control" id="new_client_phone" placeholder="Enter Phone No" name="phone">
                                 </div>
                             </div>
                             <!-- Email -->
@@ -252,7 +252,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                     </div>
-                                    <input type="email" class="form-control" id="new_client_email" name="email">
+                                    <input type="email" class="form-control" id="new_client_email" placeholder="Enter Client Email"  name="email">
                                 </div>
                             </div>
                             <!-- Address -->
@@ -262,7 +262,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_client_address" name="address">
+                                    <input type="text" class="form-control" id="new_client_address" placeholder="Enter Address" name="address">
                                 </div>
                             </div>
                         </div>
@@ -275,7 +275,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-city"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_client_city" name="city">
+                                    <input type="text" class="form-control" id="new_client_city" placeholder="Enter City" name="city">
                                 </div>
                             </div>
                             <!-- Region -->
@@ -285,7 +285,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-globe"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_client_region" name="region">
+                                    <input type="text" class="form-control" id="new_client_region" placeholder="Enter Region" name="region">
                                 </div>
                             </div>
                             <!-- Country -->
@@ -295,7 +295,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-flag"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_client_country" name="country">
+                                    <input type="text" class="form-control" id="new_client_country" placeholder="Enter Country" name="country">
                                 </div>
                             </div>
                             <!-- Post Box -->
@@ -305,7 +305,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-inbox"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_client_postbox" name="postbox">
+                                    <input type="text" class="form-control" id="new_client_postbox" placeholder="Enter Post Box" name="postbox">
                                 </div>
                             </div>
                             <!-- TAX ID -->
@@ -315,7 +315,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-receipt"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_client_taxid" name="taxid">
+                                    <input type="text" class="form-control" id="new_client_taxid" placeholder="Enter Transaction ID" name="taxid">
                                 </div>
                             </div>
                         </div>
