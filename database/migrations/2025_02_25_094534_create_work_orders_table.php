@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('work_orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('quotation_id')->constrained('quotations');
-            $table->date('start_date');
-            $table->date('end_date')->nullable();
-            $table->enum('status', ['In Progress', 'Completed', 'Cancelled'])->default('In Progress');
-            $table->text('remarks')->nullable();
+            $table->foreignId('client_id')->constrained()->onDelete('cascade'); 
+            $table->string('invoice_no')->unique(); 
+            $table->date('invoice_date'); 
+            $table->decimal('subtotal', 10, 2); 
+            $table->decimal('discount', 10, 2); 
+            $table->decimal('total', 10, 2); 
             $table->timestamps();
         });
     }

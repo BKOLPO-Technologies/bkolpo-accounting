@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('quotations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('client_id');
-            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
-            $table->string('quotation_number')->unique();
-            $table->date('quotation_date');
-            $table->decimal('total_amount', 10, 2);
-            $table->text('description')->nullable();
-            $table->enum('status', ['Pending', 'Approved', 'Rejected'])->default('Pending');
+            $table->foreignId('client_id')->constrained()->onDelete('cascade'); 
+            $table->string('invoice_no')->unique(); 
+            $table->date('invoice_date'); 
+            $table->decimal('subtotal', 10, 2); 
+            $table->decimal('discount', 10, 2); 
+            $table->decimal('total', 10, 2); 
             $table->timestamps();
         });
     }

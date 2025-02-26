@@ -212,57 +212,57 @@
           @endphp
 
           @can('report-menu')  
-          <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
-                  <i class="nav-icon fas fa-receipt"></i>
-                  <p>
-                      Report
-                      <i class="fas fa-angle-left right"></i>
-                  </p>
-              </a>
-              <ul class="nav nav-treeview">
-                  <!-- Accounts Submenu -->
-                  @can('report-menu')  
-                  <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
-                      <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
-                          <i class="far fa-circle nav-icon"></i>
-                          <p>
-                              Accounts
-                              <i class="fas fa-angle-left right"></i>
-                          </p>
-                      </a>
-                      <ul class="nav nav-treeview">
-                          @can('report-list')  
-                          <li class="nav-item">
-                              <a href="{{ route('report.index') }}" class="nav-link {{ Route::is('report.index') ? 'active' : '' }}">
-                                  <i class="far fa-circle nav-icon"></i>
-                                  <p>Report</p>
-                              </a>
-                          </li>
-                          @endcan
+            <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-receipt"></i>
+                    <p>
+                        Report
+                        <i class="fas fa-angle-left right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <!-- Accounts Submenu -->
+                    @can('report-menu')  
+                    <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>
+                                Accounts
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @can('report-list')  
+                            <li class="nav-item">
+                                <a href="{{ route('report.index') }}" class="nav-link {{ Route::is('report.index') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Report</p>
+                                </a>
+                            </li>
+                            @endcan
 
-                          @can('trial-balnce-report')  
-                          <li class="nav-item">
-                              <a href="{{ route('report.trial.balance') }}" class="nav-link {{ Route::is('report.trial.balance') ? 'active' : '' }}">
-                                  <i class="far fa-circle nav-icon"></i>
-                                  <p>Trial Balance</p>
-                              </a>
-                          </li>
-                          @endcan
+                            @can('trial-balnce-report')  
+                            <li class="nav-item">
+                                <a href="{{ route('report.trial.balance') }}" class="nav-link {{ Route::is('report.trial.balance') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Trial Balance</p>
+                                </a>
+                            </li>
+                            @endcan
 
-                          @can('balance-shit-report')  
-                          <li class="nav-item">
-                              <a href="{{ route('report.balance.sheet') }}" class="nav-link {{ Route::is('report.balance.sheet') ? 'active' : '' }}">
-                                  <i class="far fa-circle nav-icon"></i>
-                                  <p>Balance Sheet</p>
-                              </a>
-                          </li>
-                          @endcan
-                      </ul>
-                  </li>
-                  @endcan
-              </ul>
-          </li>
+                            @can('balance-shit-report')  
+                            <li class="nav-item">
+                                <a href="{{ route('report.balance.sheet') }}" class="nav-link {{ Route::is('report.balance.sheet') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Balance Sheet</p>
+                                </a>
+                            </li>
+                            @endcan
+                        </ul>
+                    </li>
+                    @endcan
+                </ul>
+            </li>
           @endcan
 
           <li class="nav-item {{ $isSupplierActive ? 'menu-open' : '' }}">
