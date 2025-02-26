@@ -295,7 +295,11 @@
     
         // Check if product is already in the table
         if ($('#product-table tbody tr[data-product-id="' + productId + '"]').length > 0) {
-            alert('This product is already added!');
+            toastr.error('This product is already added!.', {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 5000
+            });
             return;
         }
 
