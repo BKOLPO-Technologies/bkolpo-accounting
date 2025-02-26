@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Backend\Inventory;
 
 use Carbon\Carbon;
 use App\Models\Sale;
+use App\Models\SaleProduct;
 use App\Models\Client;
 use App\Models\Product;
-use App\Models\SaleProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -264,6 +264,19 @@ class SalesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $sale = Sale::find($id);
+    
+        if ($sale) {
+            // Detach the related SaleProduct records (pivot table entries)
+            $sale->products()->detach();
+    
+            // Delete the sale itself
+            $sale->delete();
+    
+            return redirect()->back()->with('success', 'Sale and related products deleted successfully.');
+        }
+    
+        return redirect()->back()->with('error', 'Sale and related products deleted successfully..');
     }
+    
 }

@@ -259,17 +259,17 @@ class QuotationController extends Controller
         // Find the quotation by its ID
         $quotation = Quotation::find($id);
 
-        // Check if the quotation exists
         if ($quotation) {
-            // Manually delete the related QuotationProduct records (pivot table entries)
-            \DB::table('quotation_product')->where('quotation_id', $quotation->id)->delete();
-
-            // Delete the quotation
+            // Detach the related QuotationProduct records (pivot table entries)
+            $quotation->products()->detach();
+    
+            // Delete the sale itself
             $quotation->delete();
-
-            // Return a response indicating success
+    
             return redirect()->back()->with('success', 'Quotation and related products deleted successfully.');
         }
+    
+        return redirect()->back()->with('error', 'Quotation and related products deleted successfully..');
     }
 
 }

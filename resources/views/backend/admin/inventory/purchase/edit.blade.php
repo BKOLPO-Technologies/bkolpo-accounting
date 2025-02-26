@@ -48,7 +48,7 @@
                                     <div class="input-group">
                                         <!-- --- -->
                                         <select name="supplier" id="supplier" class="form-control select2 @error('supplier') is-invalid @enderror">
-                                            <option value="">Select Supplier</option>
+                                            <option value="" disabled>Select Supplier</option>
                                             @foreach($suppliers as $supplier)
                                                 <option value="{{ $supplier->id }}" 
                                                     data-name="{{ $supplier->name }}" 

@@ -29,7 +29,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/view/{id}', [PurchaseController::class, 'AdminPurchaseView'])->name('admin.purchase.show');
         Route::get('/edit/{id}', [PurchaseController::class, 'AdminPurchaseEdit'])->name('admin.purchase.edit');
         Route::put('/update/{id}', [PurchaseController::class, 'AdminPurchaseUpdate'])->name('admin.purchase.update');
-        Route::delete('/delete/{id}', [PurchaseController::class, 'AdminPurchaseDestroy'])->name('admin.purchase.destroy');
+        Route::get('/delete/{id}', [PurchaseController::class, 'destroy'])->name('admin.purchase.destroy');
 
         Route::get('/print', [PurchaseController::class, 'Print'])->name('admin.purchase.print');
     });
@@ -42,7 +42,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/view/{id}', [SalesController::class, 'view'])->name('admin.sale.show');
         Route::get('/edit/{id}', [SalesController::class, 'edit'])->name('admin.sale.edit');
         Route::put('/update/{id}', [SalesController::class, 'update'])->name('admin.sale.update');
-        Route::delete('/delete/{id}', [SalesController::class, 'destroy'])->name('admin.sale.destroy');
+        Route::get('/delete/{id}', [SalesController::class, 'destroy'])->name('admin.sale.destroy');
     });
 
     // Quotation Routes

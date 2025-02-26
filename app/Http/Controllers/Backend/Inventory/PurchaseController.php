@@ -6,9 +6,9 @@ use DB;
 use Carbon\Carbon;
 use App\Models\Product;
 use App\Models\Purchase;
+use App\Models\PurchaseProduct;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
-use App\Models\PurchaseProduct;
 use App\Http\Controllers\Controller;
 
 class PurchaseController extends Controller
@@ -17,7 +17,7 @@ class PurchaseController extends Controller
     {
         $pageTitle = 'Purchase List';
 
-        $purchases = Purchase::with('products')->get(); 
+        $purchases = Purchase::with('products')->OrderBy('id','desc')->get(); 
         //dd($purchases);
         return view('backend.admin.inventory.purchase.index',compact('pageTitle','purchases'));
 
@@ -225,6 +225,27 @@ class PurchaseController extends Controller
             \DB::rollback();
             return back()->withErrors(['error' => 'Something went wrong! Please try again.']);
         }
+    }
+
+
+    public function destroy(string $id)
+    {
+        // Find the purchase by its ID
+        $purchase = Purchase::find($id);
+        
+
+        if ($purchase) {
+            // Detach the related PurchaseProduct records (pivot table entries)
+            $purchase->products()->detach();
+    
+            // Delete the sale itself
+            $purchase->delete();
+    
+            return redirect()->back()->with('success', 'Purchase and related products deleted successfully.');
+        }
+    
+        return redirect()->back()->with('error', 'Purchase and related products deleted successfully..');
+        
     }
 
 }
