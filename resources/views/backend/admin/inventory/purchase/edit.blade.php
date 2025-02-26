@@ -459,10 +459,19 @@
     // Add product to the table
     $('#product').on('change', function() {
         const selectedOption = $(this).find(':selected');
+
+        const productId = selectedOption.val();
+    
+        // Check if product is already in the table
+        if ($('#product-table tbody tr[data-product-id="' + productId + '"]').length > 0) {
+            alert('This product is already added!');
+            return;
+        }
+
         const productName = selectedOption.data('name');
         const productPrice = parseFloat(selectedOption.data('price'));
         const productStock = parseInt(selectedOption.data('stock'));
-        const productId = selectedOption.val();
+        //const productId = selectedOption.val();
 
         const productRow = `
             <tr data-product-id="${productId}">
@@ -507,7 +516,7 @@
         // Add product details to arrays
         //console.log("productId = ", productId);
         productIds.push(productId);
-        console.log("quantity = ", quantity);
+        //console.log("quantity = ", quantity);
         quantities.push(quantity);
         prices.push(price);
 
