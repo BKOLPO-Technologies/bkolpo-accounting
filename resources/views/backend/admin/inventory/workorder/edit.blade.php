@@ -168,11 +168,20 @@
                                                 <input type="hidden" name="product_multiple_id[]" value="{{ $product->id }}">
                                                 <tr data-product-id="{{ $product->id }}">
                                                     <td class="col-3">{{ $product->name }}</td>
-                                                    <td class="col-2">{{ number_format($product->price, 2) }}</td>
+                                                    
+                                                    <!-- <td class="col-2">{{ number_format($product->price, 2) }}</td> -->
+
+                                                    <td class="col-2">
+
+                                                        <input type="number" class="price-input form-control" value="{{ number_format($product->pivot->price, 2) }}" step="1" data-product-id="{{ $product->id }}" oninput="updateRow(this)">
+
+                                                    </td>
+
                                                     <td class="col-1">
                                                         <input type="number" class="quantity form-control" value="{{ $product->pivot->quantity }}" min="1"
                                                             data-price="{{ $product->price }}" data-stock="{{ $product->quantity ?? 0 }}" oninput="updateRow(this)" />
                                                     </td>
+
                                                     <td class="current-stock col-2">
                                                         <span class="badge bg-info">{{ $product->quantity }}</span>
                                                     </td>
@@ -404,46 +413,46 @@
 </script>
 
 <script> 
-$('#createClientForm').on('submit', function(e) {
-    e.preventDefault(); // Prevent default form submission
+    $('#createClientForm').on('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
 
-    let formData = $(this).serialize(); // Get form data
+        let formData = $(this).serialize(); // Get form data
 
-    $.ajax({
-        url: '{{ route('admin.client2.store') }}',
-        type: 'POST',
-        data: formData,
-        success: function(response) {
-            // Check if the client was created successfully
-            if (response.success) {
-                // Close the modal
-                $('#createClientModal').modal('hide');
-                
-                // Clear form inputs
-                $('#createClientForm')[0].reset();
+        $.ajax({
+            url: '{{ route('admin.client2.store') }}',
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                // Check if the client was created successfully
+                if (response.success) {
+                    // Close the modal
+                    $('#createClientModal').modal('hide');
+                    
+                    // Clear form inputs
+                    $('#createClientForm')[0].reset();
 
-                // Append new client to the client select dropdown
-                $('#client').append(new Option(response.client.name, response.client.id));
+                    // Append new client to the client select dropdown
+                    $('#client').append(new Option(response.client.name, response.client.id));
 
-                // Re-initialize the select2 to refresh the dropdown
-                $('#client').trigger('change');
+                    // Re-initialize the select2 to refresh the dropdown
+                    $('#client').trigger('change');
 
-                // Show success message
-                toastr.success('Client added successfully!');
-            } else {
-                toastr.error('Something went wrong. Please try again.');
+                    // Show success message
+                    toastr.success('Client added successfully!');
+                } else {
+                    toastr.error('Something went wrong. Please try again.');
+                }
+            },
+            error: function(response) {
+                // Handle error (validation errors, etc.)
+                let errors = response.responseJSON.errors;
+                for (let field in errors) {
+                    $(`#new_client_${field}`).addClass('is-invalid');
+                    $(`#new_client_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
+                }
             }
-        },
-        error: function(response) {
-            // Handle error (validation errors, etc.)
-            let errors = response.responseJSON.errors;
-            for (let field in errors) {
-                $(`#new_client_${field}`).addClass('is-invalid');
-                $(`#new_client_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
-            }
-        }
+        });
     });
-});
 
 </script>
 
@@ -454,16 +463,32 @@ $('#createClientForm').on('submit', function(e) {
     // Add product to the table
     $('#product').on('change', function() {
         const selectedOption = $(this).find(':selected');
+
+        const productId = selectedOption.val();
+    
+        // Check if product is already in the table
+        if ($('#product-table tbody tr[data-product-id="' + productId + '"]').length > 0) {
+            alert('This product is already added!');
+            return;
+        }
+
         const productName = selectedOption.data('name');
         const productPrice = parseFloat(selectedOption.data('price'));
         const productStock = parseInt(selectedOption.data('stock'));
-        const productId = selectedOption.val();
+        //const productId = selectedOption.val();
 
         const productRow = `
             <tr data-product-id="${productId}">
                 <td class="col-3">${productName}</td>
-                <td class="col-2">${productPrice.toFixed(2)}</td>
-                <td  class="col-1"><input type="number" class="quantity form-control" value="1" min="1" data-price="${productPrice}" data-stock="${productStock}" oninput="updateRow(this)" /></td>
+
+                <td class="col-2">
+                    <input type="number" class="price-input form-control" value="${productPrice.toFixed(2)}" step="1" data-product-id="${productId}" oninput="updateRow(this)">
+                </td>
+
+                <td  class="col-1">
+                    <input type="number" class="quantity form-control" value="1" min="1" data-price="${productPrice}" data-stock="${productStock}" oninput="updateRow(this)" />
+                </td>
+
                 <td class="current-stock col-2">
                     <span class="badge bg-info">${productStock}</span>
                 </td>
@@ -495,7 +520,7 @@ $('#createClientForm').on('submit', function(e) {
         // Add product details to arrays
         //console.log("productId = ", productId);
         productIds.push(productId);
-        console.log("quantity = ", quantity);
+        //console.log("quantity = ", quantity);
         quantities.push(quantity);
         prices.push(price);
 
@@ -564,10 +589,29 @@ $('#createClientForm').on('submit', function(e) {
 
     // Update row subtotal when quantity changes
     function updateRow(input) {
+        // const row = $(input).closest('tr');
+        // const price = parseFloat($(input).data('price'));
+        // const quantity = parseInt($(input).val());
+        // const stock = parseInt($(input).data('stock'));
+
         const row = $(input).closest('tr');
-        const price = parseFloat($(input).data('price'));
-        const quantity = parseInt($(input).val());
-        const stock = parseInt($(input).data('stock'));
+        const priceInput = row.find('.price-input');
+        const quantityInput = row.find('.quantity');
+
+        const price = parseFloat(priceInput.val());
+        let quantity = parseInt(quantityInput.val());
+        const stock = parseInt(quantityInput.data('stock'));
+
+        if (isNaN(price) || price < 0) {
+            toastr.error('Invalid price entered.', 'Error', {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 5000
+            });
+
+            priceInput.val(0); // Reset to 0 if invalid input
+            return;
+        }
 
         // console.log("Updating row for product:", row.data('product-id'));
         // console.log("Price:", price, "Quantity:", quantity, "Stock:", stock);
@@ -611,7 +655,8 @@ $('#createClientForm').on('submit', function(e) {
             // const price = row.find('.quantity').data('price');
             const productId = row.data('product-id');  // Get product ID from <tr>
             const quantity = row.find('.quantity').val();
-            const price = row.find('.quantity').data('price');
+            //const price = row.find('.quantity').data('price');
+            const price = row.find('.price-input').val();
 
             // // Debugging logs
             // console.log("Row Data:", row.html());  // Log entire row structure
