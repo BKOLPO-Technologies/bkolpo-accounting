@@ -150,13 +150,15 @@ class PurchaseController extends Controller
         $purchase = Purchase::where('id', $id)
             ->with(['products', 'supplier']) // Include supplier details
             ->first();
+
+        //dd($purchase);
         
         if ($purchase->invoice_date) {
             $purchase->invoice_date = Carbon::parse($purchase->invoice_date);
         }
 
         $subtotal = $purchase->products->sum(function ($product) {
-            return $product->pivot->price * $product->pivot->quantity;
+            return $product->pivot->price * $product->pivot->quantity - $product->pivot->discount;
         });
 
         $suppliers = Supplier::orderBy('id', 'desc')->get();

@@ -38,6 +38,7 @@
                             <input type="hidden" name="product_ids" id="product_ids">
                             <input type="hidden" name="quantities" id="quantities">
                             <input type="hidden" name="prices" id="prices">
+                            <input type="hidden" name="discounts" id="discounts">
 
                             <div class="row">
                                 <!-- Supplier Select -->
@@ -450,9 +451,11 @@
                     <span class="badge bg-info">${productStock}</span>
                 </td>
                 <td class="subtotal">${productPrice.toFixed(2)}</td>
+                
                 <td class="discount-col">
-                    <input type="number" class="discount-input form-control" value="0" min="0" max="100" oninput="updateRow(this)" placeholder="Enter discount">
+                    <input type="number" class="product-discount form-control" value="0" min="0" max="100" oninput="updateRow(this)" placeholder="Enter discount">
                 </td>
+
                 <td class="total">${productPrice.toFixed(2)}</td>
                 <td><button type="button" class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button></td>
             </tr>
@@ -558,10 +561,12 @@
         const row = $(input).closest('tr');
         const priceInput = row.find('.price-input');
         const quantityInput = row.find('.quantity');
+        const discountInput = row.find('.product-discount');
 
         const price = parseFloat(priceInput.val());
         let quantity = parseInt(quantityInput.val());
         const stock = parseInt(quantityInput.data('stock'));
+        const discount = parseFloat(discountInput.val());
 
         if (isNaN(price) || price < 0) {
             toastr.error('Invalid price entered.', 'Error', {
@@ -586,7 +591,12 @@
         }
 
         const subtotal = price * quantity;
+
+        // Apply the product-specific discount
+        const discountedTotal = subtotal - discount;
+
         row.find('.subtotal').text(subtotal.toFixed(2));
+        row.find('.total').text(discountedTotal.toFixed(2));
 
         // Update the hidden fields
         updateHiddenFields();
@@ -599,22 +609,15 @@
         let productIds = [];
         let quantities = [];
         let prices = [];
+        let discounts = [];
 
         $('#product-table tbody tr').each(function() {
-            //const productId = $(this).find('.quantity').data('product-id');
-            //const productId = $(this).find('.quantity').closest('tr').find('td:first').data('product-id'); // Ensure correct product ID retrieval
-            // const quantity = $(this).find('.quantity').val();
-            // const price = $(this).find('.quantity').data('price');
 
-            
             const row = $(this);
-            // const productId = row.find('.quantity').closest('tr').find('option:selected').val(); // Fetch product ID
-            // const quantity = row.find('.quantity').val();
-            // const price = row.find('.quantity').data('price');
             const productId = row.data('product-id');  // Get product ID from <tr>
             const quantity = row.find('.quantity').val();
-            //const price = row.find('.quantity').data('price');
             const price = row.find('.price-input').val();
+            const discount = row.find('.product-discount').val();
 
             // // Debugging logs
             // console.log("Row Data:", row.html());  // Log entire row structure
@@ -627,6 +630,7 @@
                 productIds.push(productId);
                 quantities.push(quantity);
                 prices.push(price);
+                discounts.push(discount);
             }
         });
 
@@ -634,6 +638,7 @@
         $('#product_ids').val(productIds.join(','));
         $('#quantities').val(quantities.join(','));
         $('#prices').val(prices.join(','));
+        $('#discounts').val(discounts.join(','));
 
         // // Debugging logs
         // console.log("Updated product_ids:", $('#product_ids').val());
@@ -648,7 +653,7 @@
         let subtotal = 0;
 
         $('#product-table tbody tr').each(function() {
-            const rowSubtotal = parseFloat($(this).find('.subtotal').text());
+            const rowSubtotal = parseFloat($(this).find('.total').text());
             if (!isNaN(rowSubtotal)) {
                 subtotal += rowSubtotal;
             }
