@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['pageTitle' => 'Purchase'])
+@extends('layouts.admin', ['pageTitle' => 'Sales'])
 @section('admin')
 <div class="content-wrapper">
     <section class="content-header">
@@ -172,7 +172,7 @@
                                                         <tr data-product-id="{{ $product->id }}">
                                                             <td class="col-3">{{ $product->name }}</td>
                                                             <td class="col-2">
-                                                                <input type="number" class="price-input form-control" value="{{ number_format($product->pivot->price, 2) }}" step="1" data-product-id="{{ $product->id }}" oninput="updateRow(this)">
+                                                                <input type="number" class="price-input form-control" value="{{ $product->pivot->price }}" step="1" data-product-id="{{ $product->id }}" oninput="updateRow(this)">
                                                             </td>
                                                             <td class="col-1">
                                                                 <input type="number" class="quantity form-control" value="{{ $product->pivot->quantity }}" min="1" data-price="{{ $product->price }}" data-stock="{{ $product->quantity ?? 0 }}" oninput="updateRow(this)" />
@@ -180,11 +180,12 @@
                                                             <td class="current-stock col-2">
                                                                 <span class="badge bg-info">{{ $product->quantity }}</span>
                                                             </td>
-                                                            <td class="subtotal">{{ number_format($product->pivot->quantity * $product->price, 2) }}</td>
+                                                            <td class="subtotal">{{ number_format($product->pivot->quantity * $product->pivot->price, 2) }}</td>
                                                             <td>
                                                                 <input type="number" class="product-discount form-control" value="{{ number_format($product->pivot->discount, 2) }}" step="0.01" oninput="updateRow(this)" />
                                                             </td>
-                                                            <td class="total">{{ number_format($product->pivot->quantity * $product->price, 2) }}</td>
+                                                            <td class="total">{{ number_format(($product->pivot->quantity * $product->pivot->price) - $product->pivot->discount, 2) }}
+                                                            </td>
                                                             <td><button type="button" class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button></td>
                                                         </tr>
                                                     @endforeach

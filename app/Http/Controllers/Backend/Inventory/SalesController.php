@@ -168,8 +168,10 @@ class SalesController extends Controller
         }
 
         $subtotal = $sale->products->sum(function ($product) {
-            return $product->pivot->price * $product->pivot->quantity;
+            return $product->pivot->price * $product->pivot->quantity-$product->pivot->discount;
         });
+
+        // dd($subtotal);
 
         $clients = Client::orderBy('id', 'desc')->get();
         $products = Product::where('status',1)->latest()->get();
