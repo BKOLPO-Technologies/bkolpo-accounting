@@ -38,6 +38,7 @@
                             <input type="hidden" name="product_ids" id="product_ids">
                             <input type="hidden" name="quantities" id="quantities">
                             <input type="hidden" name="prices" id="prices">
+                            <input type="hidden" name="discounts" id="discounts">
 
                             <div class="row">
                                 <!-- Supplier Select -->
@@ -143,12 +144,14 @@
                                                     <th>Quantity</th>
                                                     <th>Current Stock</th>
                                                     <th>Subtotal</th>
+                                                    <th>Discount</th>
+                                                    <th>Total</th>
                                                     <th>Remove</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr id="no-products-row">
-                                                    <td colspan="6" class="text-center">No product found</td>
+                                                    <td colspan="8" class="text-center">No product found</td>
                                                 </tr>
                                                 <!-- Dynamic rows will be inserted here -->
                                             </tbody>
@@ -176,6 +179,11 @@
                                     <input type="text" id="total" name="total" class="form-control" value="0" readonly />
                                 </div>
                             </div><hr>
+                            <!-- Description -->
+                            <div class="col-lg-12 col-md-12 mb-3">
+                                <label for="description">Description</label>
+                                <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter the description"></textarea>
+                            </div>
                             <div class="row text-right">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> Submit</button>
@@ -414,19 +422,21 @@
     // Add product to the table
     $('#product').on('change', function() {
         const selectedOption = $(this).find(':selected');
-
         const productId = selectedOption.val();
-    
+        
         // Check if product is already in the table
         if ($('#product-table tbody tr[data-product-id="' + productId + '"]').length > 0) {
-            alert('This product is already added!');
+            toastr.error('This product is already added!.', {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 5000
+            });
             return;
         }
 
         const productName = selectedOption.data('name');
         const productPrice = parseFloat(selectedOption.data('price'));
         const productStock = parseInt(selectedOption.data('stock'));
-        //const productId = selectedOption.val();
 
         const productRow = `
             <tr data-product-id="${productId}">
@@ -441,6 +451,10 @@
                     <span class="badge bg-info">${productStock}</span>
                 </td>
                 <td class="subtotal">${productPrice.toFixed(2)}</td>
+                <td class="discount-col">
+                    <input type="number" class="product-discount form-control" value="0" oninput="updateRow(this)" />
+                </td>
+                <td class="total">${productPrice.toFixed(2)}</td>
                 <td><button type="button" class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button></td>
             </tr>
         `;
@@ -462,35 +476,126 @@
     function addToHiddenFields(productId, quantity, price) {
         let productIds = $('#product_ids').val() ? $('#product_ids').val().split(',') : [];
         let quantities = $('#quantities').val() ? $('#quantities').val().split(',') : [];
-        //alert(quantities);
         let prices = $('#prices').val() ? $('#prices').val().split(',') : [];
 
         // Add product details to arrays
-        //console.log("productId = ", productId);
         productIds.push(productId);
-        //console.log("quantity = ", quantity);
         quantities.push(quantity);
         prices.push(price);
-        //console.log("price = ", price);
 
         // Update hidden fields with the new values
         $('#product_ids').val(productIds.join(','));
         $('#quantities').val(quantities.join(','));
         $('#prices').val(prices.join(','));
-
-        // // Debugging console logs
-        // console.log("Updated product_ids:", $('#product_ids').val());
-        // console.log("Updated quantities:", $('#quantities').val());
-        // console.log("Updated prices:", $('#prices').val());
     }
 
+    // Update row subtotal, discount, and total when quantity, price, or discount changes
+    function updateRow(input) {
+        const row = $(input).closest('tr');
+        const priceInput = row.find('.price-input');
+        const quantityInput = row.find('.quantity');
+        const discountInput = row.find('.product-discount');
 
+        const price = parseFloat(priceInput.val());
+        let quantity = parseInt(quantityInput.val());
+        const stock = parseInt(quantityInput.data('stock'));
+        const discount = parseFloat(discountInput.val());
+
+        if (isNaN(price) || price < 0) {
+            toastr.error('Invalid price entered.', 'Error', {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 5000
+            });
+
+            priceInput.val(0); // Reset to 0 if invalid input
+            return;
+        }
+
+        if (quantity > stock) {
+            // Display toastr alert
+            toastr.error('Quantity cannot exceed available stock.', 'Stock Limit Exceeded', {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 5000
+            });
+
+            $(input).val(stock);  // Reset to stock value
+        }
+
+        // Calculate subtotal (before discount) for this product
+        const subtotal = price * quantity;
+
+        // Apply the product-specific discount
+        const discountedTotal = subtotal - discount;
+
+        // Update row subtotal and discounted total
+        row.find('.subtotal').text(subtotal.toFixed(2));
+        row.find('.total').text(discountedTotal.toFixed(2));
+
+        // Update hidden fields
+        updateHiddenFields();
+        updateTotal();  // Update total after any change
+    }
+
+    // Function to update hidden fields when quantity changes
+    function updateHiddenFields() {
+        let productIds = [];
+        let quantities = [];
+        let prices = [];
+        let discounts = [];
+
+        $('#product-table tbody tr').each(function() {
+            const row = $(this);
+            const productId = row.data('product-id');
+            const quantity = row.find('.quantity').val();
+            const price = row.find('.price-input').val();
+            const discount = row.find('.product-discount').val();
+            // console.log(discounts)
+
+            if (productId !== undefined) {
+                productIds.push(productId);
+                quantities.push(quantity);
+                prices.push(price);
+                discounts.push(discount);
+            }
+        });
+
+        // Update the hidden fields
+        $('#product_ids').val(productIds.join(','));
+        $('#quantities').val(quantities.join(','));
+        $('#prices').val(prices.join(','));
+        $('#discounts').val(discounts.join(','));
+    }
+
+    // Calculate the subtotal for all products, apply flat discount to the subtotal, and calculate final total
+    function updateTotal() {
+        let subtotal = 0;
+
+        $('#product-table tbody tr').each(function() {
+            const rowSubtotal = parseFloat($(this).find('.total').text()); // Use the total (after product discount)
+            if (!isNaN(rowSubtotal)) {
+                subtotal += rowSubtotal;
+            }
+        });
+
+        // Get the flat discount amount (order-wide discount)
+        const discount = parseFloat($('#discount').val());
+        const validDiscount = isNaN(discount) ? 0 : discount;
+
+        // Calculate the final total with the flat discount applied
+        const total = subtotal - validDiscount;
+
+        // Update subtotal and total fields
+        $('#subtotal').val(subtotal.toFixed(2));
+        $('#total').val(total.toFixed(2));
+    }
 
     // Remove product from table and hidden fields
     $('#product-table').on('click', '.remove-product', function() {
         const row = $(this).closest('tr');
-        const productId = row.find('input[type="number"]').data('product-id');
-        const quantity = row.find('input[type="number"]').val();
+        const productId = row.data('product-id');
+        const quantity = row.find('.quantity').val();
         const price = row.find('.subtotal').text();
 
         // Remove product details from hidden fields
@@ -526,125 +631,6 @@
         $('#product_ids').val(productIds.join(','));
         $('#quantities').val(quantities.join(','));
         $('#prices').val(prices.join(','));
-
-        // // Debugging console logs
-        // console.log("After Removal - product_ids:", $('#product_ids').val());
-        // console.log("After Removal - quantities:", $('#quantities').val());
-        // console.log("After Removal - prices:", $('#prices').val());
-    }
-
-    // Update row subtotal when quantity changes
-    function updateRow(input) {
-        // const row = $(input).closest('tr');
-        // const price = parseFloat($(input).data('price'));
-        // const quantity = parseInt($(input).val());
-        // const stock = parseInt($(input).data('stock'));
-
-        const row = $(input).closest('tr');
-        const priceInput = row.find('.price-input');
-        const quantityInput = row.find('.quantity');
-
-        const price = parseFloat(priceInput.val());
-        let quantity = parseInt(quantityInput.val());
-        const stock = parseInt(quantityInput.data('stock'));
-
-        if (isNaN(price) || price < 0) {
-            toastr.error('Invalid price entered.', 'Error', {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 5000
-            });
-
-            priceInput.val(0); // Reset to 0 if invalid input
-            return;
-        }
-
-        if (quantity > stock) {
-            // Display toastr alert
-            toastr.error('Quantity cannot exceed available stock.', 'Stock Limit Exceeded', {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 5000
-            });
-
-            $(input).val(stock);  // Reset to stock value
-        }
-
-        const subtotal = price * quantity;
-        row.find('.subtotal').text(subtotal.toFixed(2));
-
-        // Update the hidden fields
-        updateHiddenFields();
-         
-        updateTotal();
-    }
-
-    // Function to update hidden fields when quantity changes
-    function updateHiddenFields() {
-        let productIds = [];
-        let quantities = [];
-        let prices = [];
-
-        $('#product-table tbody tr').each(function() {
-            //const productId = $(this).find('.quantity').data('product-id');
-            //const productId = $(this).find('.quantity').closest('tr').find('td:first').data('product-id'); // Ensure correct product ID retrieval
-            // const quantity = $(this).find('.quantity').val();
-            // const price = $(this).find('.quantity').data('price');
-
-            
-            const row = $(this);
-            // const productId = row.find('.quantity').closest('tr').find('option:selected').val(); // Fetch product ID
-            // const quantity = row.find('.quantity').val();
-            // const price = row.find('.quantity').data('price');
-            const productId = row.data('product-id');  // Get product ID from <tr>
-            const quantity = row.find('.quantity').val();
-            //const price = row.find('.quantity').data('price');
-            const price = row.find('.price-input').val();
-
-            // // Debugging logs
-            // console.log("Row Data:", row.html());  // Log entire row structure
-            // console.log("Extracted productId:", productId);
-            // console.log("Extracted quantity:", quantity);
-            // console.log("Extracted price:", price);
-
-            // if (productId) {
-            if (productId !== undefined) { // Ensure productId is valid
-                productIds.push(productId);
-                quantities.push(quantity);
-                prices.push(price);
-            }
-        });
-
-        // Update the hidden fields
-        $('#product_ids').val(productIds.join(','));
-        $('#quantities').val(quantities.join(','));
-        $('#prices').val(prices.join(','));
-
-        // // Debugging logs
-        // console.log("Updated product_ids:", $('#product_ids').val());
-        // console.log("Updated quantities:", $('#quantities').val());
-        // console.log("Updated prices:", $('#prices').val());
-    }
-
-    // Calculate the subtotal, discount, and total
-    function updateTotal() {
-        let subtotal = 0;
-
-        $('#product-table tbody tr').each(function() {
-            const rowSubtotal = parseFloat($(this).find('.subtotal').text());
-            if (!isNaN(rowSubtotal)) {
-                subtotal += rowSubtotal;
-            }
-        });
-
-        // Get discount and handle invalid input
-        const discount = parseFloat($('#discount').val());
-        const validDiscount = isNaN(discount) ? 0 : discount;
-
-        const total = subtotal - validDiscount;
-
-        $('#subtotal').val(subtotal.toFixed(2));
-        $('#total').val(total.toFixed(2));
     }
 </script>
 @endpush

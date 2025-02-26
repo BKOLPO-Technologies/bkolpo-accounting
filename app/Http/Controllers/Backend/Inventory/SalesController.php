@@ -48,7 +48,7 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
+        // dd($request->all());
 
         // Validate the request data
         $validated = $request->validate([
