@@ -47,7 +47,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
     // Quotation Routes
     Route::resource('quotations', QuotationController::class);
-    Route::get('/delete/{id}', [QuotationController::class, 'destroy'])->name('quotations.destroy');
+    Route::get('/quotations/delete/{id}', [QuotationController::class, 'destroy'])->name('quotations.destroy');
     // Work Order Routes
     Route::resource('workorders', WorkOrderController::class);
     Route::get('/delete/{id}', [WorkOrderController::class, 'destroy'])->name('workorders.destroy');
