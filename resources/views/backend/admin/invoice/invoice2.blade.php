@@ -24,6 +24,12 @@
       </div>
     </div>
   </section>
+  
+  <div class="card-footer d-flex justify-content-start">
+      <button class="btn btn-secondary" onclick="printBalanceSheet()">
+          <i class="fas fa-print"></i> Print Invoice
+      </button>
+  </div>
 
   <section class="content">
     <div class="container-fluid">
@@ -33,7 +39,7 @@
           <div id="printable-area">
             <div class="invoice p-3 mb-3">
 
-              <div class="banner mb-3" style="text-align: right; background-color:rgb(134, 134, 136);">
+              <div class="banner mb-3" style="text-align: right; background-color:rgb(255, 255, 255);">
                   <img src="{{ asset('bkolpo-logo.png') }}" alt="BKOLPO Logo" style="height: 40px; margin-top: 0;">
               </div>
 
@@ -219,7 +225,7 @@
     </div>
   </section>
 
-  <div class="row no-print">
+  <!-- <div class="row no-print">
       <div class="col-12">
 
           <button class="btn btn-primary" onclick="printBalanceSheet()">
@@ -227,7 +233,7 @@
           </button>
 
       </div>
-  </div>
+  </div> -->
 
 </div>
 
