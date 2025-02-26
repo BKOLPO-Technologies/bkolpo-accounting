@@ -19,6 +19,9 @@ return new class extends Migration
             $table->decimal('subtotal', 10, 2); 
             $table->decimal('discount', 10, 2); 
             $table->decimal('total', 10, 2); 
+            $table->text('description')->nullable();
+            $table->date('form_date')->nullable(); 
+            $table->date('to_date')->nullable();  
             $table->timestamps();
         });
     }

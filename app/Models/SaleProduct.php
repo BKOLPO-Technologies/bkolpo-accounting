@@ -13,5 +13,6 @@ class SaleProduct extends Model
         'product_id',
         'quantity',
         'price',
+        'discount',
     ];
 }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('subtotal', 10, 2); 
             $table->decimal('discount', 10, 2); 
             $table->decimal('total', 10, 2); 
+            $table->text('description')->nullable();
             $table->timestamps();    
         });
     }

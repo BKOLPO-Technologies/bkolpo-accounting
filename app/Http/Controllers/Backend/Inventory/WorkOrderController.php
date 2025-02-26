@@ -69,6 +69,7 @@ class WorkOrderController extends Controller
         $productIds = explode(',', $request->input('product_ids'));  // Array of product IDs
         $quantities = explode(',', $request->input('quantities'));  // Array of quantities
         $prices = explode(',', $request->input('prices'));  // Array of prices
+        $discounts = explode(',', $request->input('discounts'));  // Array of discounts
 
         // Check if at least one product is selected
         if (empty($productIds) || count($productIds) === 0 || $productIds[0] == '') {
@@ -90,6 +91,9 @@ class WorkOrderController extends Controller
             $WorkOrder->subtotal = $validated['subtotal'];
             $WorkOrder->discount = $validated['discount'];
             $WorkOrder->total = $validated['total'];
+            $WorkOrder->description = $request->description;
+            $WorkOrder->form_date = Carbon::now();
+            $WorkOrder->to_date = $request->to_date;
             $WorkOrder->save();
 
             // Loop through the product data and save it to the database
@@ -97,6 +101,7 @@ class WorkOrderController extends Controller
                 $product = Product::find($productId);
                 $quantity = $quantities[$index];
                 $price = $prices[$index];
+                $discount = $discounts[$index];
 
                 // Insert into WorkOrderProduct table
                 $WorkOrderProduct = new WorkOrderProduct();
@@ -104,6 +109,7 @@ class WorkOrderController extends Controller
                 $WorkOrderProduct->product_id = $productId; // Product ID
                 $WorkOrderProduct->quantity = $quantity; // Quantity
                 $WorkOrderProduct->price = $price; // Price
+                $WorkOrderProduct->discount = $discount; // Discount
                 $WorkOrderProduct->save(); // Save the record
             }
 
@@ -198,6 +204,7 @@ class WorkOrderController extends Controller
         $productIds = explode(',', $request->input('product_ids'));  
         $quantities = explode(',', $request->input('quantities'));  
         $prices = explode(',', $request->input('prices'));  
+        $discounts = explode(',', $request->input('discounts'));  
 
         // // Debug Product Data
         // Log::info('Product Data:', [
@@ -220,6 +227,9 @@ class WorkOrderController extends Controller
             $WorkOrder->subtotal = $validated['subtotal'];
             $WorkOrder->discount = $validated['discount'];
             $WorkOrder->total = $validated['total'];
+            $WorkOrder->description = $request->description;
+            $WorkOrder->form_date = Carbon::now();
+            $WorkOrder->to_date = $request->to_date;
             $WorkOrder->save();
 
     
@@ -233,6 +243,7 @@ class WorkOrderController extends Controller
                     'product_id' => $productId,
                     'quantity' => $quantities[$index],
                     'price' => $prices[$index],
+                    'discount' => $discounts[$index],
                 ]);
             }
 

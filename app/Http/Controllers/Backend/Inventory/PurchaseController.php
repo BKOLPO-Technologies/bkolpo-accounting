@@ -63,6 +63,7 @@ class PurchaseController extends Controller
         $productIds = explode(',', $request->input('product_ids'));  // Array of product IDs
         $quantities = explode(',', $request->input('quantities'));  // Array of quantities
         $prices = explode(',', $request->input('prices'));  // Array of prices
+        $discounts = explode(',', $request->input('discounts'));  // Array of discounts
 
         // Check if at least one product is selected
         if (empty($productIds) || count($productIds) === 0 || $productIds[0] == '') {
@@ -82,6 +83,7 @@ class PurchaseController extends Controller
             $purchase->subtotal = $validated['subtotal'];
             $purchase->discount = $validated['discount'];
             $purchase->total = $validated['total'];
+            $purchase->description = $request->description;
             $purchase->save();
         
             // Loop through the product data and save it to the database
@@ -89,6 +91,7 @@ class PurchaseController extends Controller
                 $product = Product::find($productId);
                 $quantity = $quantities[$index];
                 $price = $prices[$index];
+                $discount = $discounts[$index];
         
                 // Insert into purchase_product table
                 $purchaseProduct = new PurchaseProduct();
@@ -96,6 +99,7 @@ class PurchaseController extends Controller
                 $purchaseProduct->product_id = $productId; // Product ID
                 $purchaseProduct->quantity = $quantity; // Quantity
                 $purchaseProduct->price = $price; // Price
+                $purchaseProduct->discount = $discount; // Discount
                 $purchaseProduct->save(); // Save the record
             }
         
@@ -178,6 +182,7 @@ class PurchaseController extends Controller
         $productIds = explode(',', $request->input('product_ids'));  
         $quantities = explode(',', $request->input('quantities'));  
         $prices = explode(',', $request->input('prices'));  
+        $discounts = explode(',', $request->input('discounts'));  
 
         if (empty($productIds) || count($productIds) === 0 || $productIds[0] == '') {
             return back()->with('error', 'At least one product must be selected.');
@@ -194,6 +199,7 @@ class PurchaseController extends Controller
             $purchase->subtotal = $validated['subtotal'];
             $purchase->discount = $validated['discount'];
             $purchase->total = $validated['total'];
+            $purchase->description = $request->description;
             $purchase->save();
 
             // Remove existing purchase product records and update with new ones
@@ -206,6 +212,7 @@ class PurchaseController extends Controller
                 $purchaseProduct->product_id = $productId;
                 $purchaseProduct->quantity = $quantities[$index];
                 $purchaseProduct->price = $prices[$index];
+                $purchaseProduct->discount = $discounts[$index];
                 $purchaseProduct->save();
             }
 

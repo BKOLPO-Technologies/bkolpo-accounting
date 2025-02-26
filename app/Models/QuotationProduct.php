@@ -13,5 +13,6 @@ class QuotationProduct extends Model
         'product_id',
         'quantity',
         'price',
+        'discount',
     ];
 }

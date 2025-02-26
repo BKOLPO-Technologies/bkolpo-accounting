@@ -13,5 +13,6 @@ class WorkOrderProduct extends Model
         'product_id',
         'quantity',
         'price',
+        'discount',
     ];
 }

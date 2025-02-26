@@ -68,6 +68,7 @@ class QuotationController extends Controller
         $productIds = explode(',', $request->input('product_ids'));  // Array of product IDs
         $quantities = explode(',', $request->input('quantities'));  // Array of quantities
         $prices = explode(',', $request->input('prices'));  // Array of prices
+        $discounts = explode(',', $request->input('discounts'));  // Array of discounts
 
         // Check if at least one product is selected
         if (empty($productIds) || count($productIds) === 0 || $productIds[0] == '') {
@@ -89,6 +90,9 @@ class QuotationController extends Controller
             $quotation->subtotal = $validated['subtotal'];
             $quotation->discount = $validated['discount'];
             $quotation->total = $validated['total'];
+            $quotation->description = $request->description;
+            $quotation->form_date = Carbon::now();
+            $quotation->to_date = $request->to_date;
             $quotation->save();
 
             // Loop through the product data and save it to the database
@@ -96,6 +100,7 @@ class QuotationController extends Controller
                 $product = Product::find($productId);
                 $quantity = $quantities[$index];
                 $price = $prices[$index];
+                $discount = $discounts[$index];
 
                 // Insert into QuotationProduct table
                 $quotationProduct = new QuotationProduct();
@@ -103,6 +108,7 @@ class QuotationController extends Controller
                 $quotationProduct->product_id = $productId; // Product ID
                 $quotationProduct->quantity = $quantity; // Quantity
                 $quotationProduct->price = $price; // Price
+                $quotationProduct->discount = $discount; // Discount
                 $quotationProduct->save(); // Save the record
             }
 
@@ -194,6 +200,7 @@ class QuotationController extends Controller
         $productIds = explode(',', $request->input('product_ids'));  
         $quantities = explode(',', $request->input('quantities'));  
         $prices = explode(',', $request->input('prices'));  
+        $discounts = explode(',', $request->input('discounts'));  
 
         // // Debug Product Data
         // Log::info('Product Data:', [
@@ -216,6 +223,9 @@ class QuotationController extends Controller
             $quotation->subtotal = $validated['subtotal'];
             $quotation->discount = $validated['discount'];
             $quotation->total = $validated['total'];
+            $quotation->description = $request->description;
+            $quotation->form_date = Carbon::now();
+            $quotation->to_date = $request->to_date;
             $quotation->save();
 
             // Delete Old Products
@@ -228,6 +238,7 @@ class QuotationController extends Controller
                     'product_id' => $productId,
                     'quantity' => $quantities[$index],
                     'price' => $prices[$index],
+                    'discount' => $discounts[$index],
                 ]);
             }
 

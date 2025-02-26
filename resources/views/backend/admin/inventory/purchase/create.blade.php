@@ -144,12 +144,14 @@
                                                     <th>Quantity</th>
                                                     <th>Current Stock</th>
                                                     <th>Subtotal</th>
+                                                    <th>Discount</th>
+                                                    <th>Total</th>
                                                     <th>Remove</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr id="no-products-row">
-                                                    <td colspan="6" class="text-center">No product found</td>
+                                                    <td colspan="8" class="text-center">No product found</td>
                                                 </tr>
                                                 <!-- Dynamic rows will be inserted here -->
                                             </tbody>
@@ -177,6 +179,11 @@
                                     <input type="text" id="total" name="total" class="form-control" value="0" readonly />
                                 </div>
                             </div><hr>
+                            <!-- Description -->
+                            <div class="col-lg-12 col-md-12 mb-3">
+                                <label for="description">Description</label>
+                                <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter the description"></textarea>
+                            </div>
                             <div class="row text-right">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> Submit</button>
@@ -434,6 +441,10 @@
                     <span class="badge bg-info">${productStock}</span>
                 </td>
                 <td class="subtotal">${productPrice.toFixed(2)}</td>
+                <td class="discount-col">
+                    <input type="number" class="discount-input form-control" value="0" min="0" max="100" oninput="updateRow(this)" placeholder="Enter discount">
+                </td>
+                <td class="total">${productPrice.toFixed(2)}</td>
                 <td><button type="button" class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button></td>
             </tr>
         `;

@@ -68,6 +68,7 @@ class SalesController extends Controller
         $productIds = explode(',', $request->input('product_ids'));  // Array of product IDs
         $quantities = explode(',', $request->input('quantities'));  // Array of quantities
         $prices = explode(',', $request->input('prices'));  // Array of prices
+        $discounts = explode(',', $request->input('discounts'));  // Array of discounts
 
         // Check if at least one product is selected
         if (empty($productIds) || count($productIds) === 0 || $productIds[0] == '') {
@@ -89,6 +90,7 @@ class SalesController extends Controller
             $sale->subtotal = $validated['subtotal'];
             $sale->discount = $validated['discount'];
             $sale->total = $validated['total'];
+            $sale->description = $request->description;
             $sale->save();
 
             // Loop through the product data and save it to the database
@@ -96,6 +98,7 @@ class SalesController extends Controller
                 $product = Product::find($productId);
                 $quantity = $quantities[$index];
                 $price = $prices[$index];
+                $discount = $discounts[$index];
 
                 // Insert into SaleProduct table
                 $saleProduct = new SaleProduct();
@@ -103,6 +106,7 @@ class SalesController extends Controller
                 $saleProduct->product_id = $productId; // Product ID
                 $saleProduct->quantity = $quantity; // Quantity
                 $saleProduct->price = $price; // Price
+                $saleProduct->discount = $discount; // Discount
                 $saleProduct->save(); // Save the record
             }
 
@@ -203,6 +207,7 @@ class SalesController extends Controller
         $productIds = explode(',', $request->input('product_ids'));  
         $quantities = explode(',', $request->input('quantities'));  
         $prices = explode(',', $request->input('prices'));  
+        $discounts = explode(',', $request->input('discounts'));  
 
         // // Debug Product Data
         // Log::info('Product Data:', [
@@ -225,6 +230,7 @@ class SalesController extends Controller
             $sale->subtotal = $validated['subtotal'];
             $sale->discount = $validated['discount'];
             $sale->total = $validated['total'];
+            $sale->description = $request->description;
             $sale->save();
 
             // Delete Old Products
@@ -237,6 +243,7 @@ class SalesController extends Controller
                     'product_id' => $productId,
                     'quantity' => $quantities[$index],
                     'price' => $prices[$index],
+                    'discount' => $discounts[$index],
                 ]);
             }
 
