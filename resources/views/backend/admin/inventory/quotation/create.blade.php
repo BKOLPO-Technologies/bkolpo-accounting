@@ -38,10 +38,11 @@
                             <input type="hidden" name="product_ids" id="product_ids">
                             <input type="hidden" name="quantities" id="quantities">
                             <input type="hidden" name="prices" id="prices">
+                            <input type="hidden" name="discounts" id="discounts">
 
-                            <div class="row">
+                            <div class="row mt-5">
                                 <!-- Supplier Select -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="col-lg-3 col-md-6 mb-3 col-sm-12">
                                     <label for="supplier">Customer</label>
                                     <div class="input-group">
                                         <select name="client" id="client" class="form-control select2 @error('client') is-invalid @enderror">
@@ -103,10 +104,21 @@
                                 </div>
 
                                 <!-- Invoice Date -->
-                                <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="col-lg-2 col-md-6 mb-3">
                                     <label for="invoice_date">Invoice Date</label>
                                     <input type="date" id="invoice_date" name="invoice_date" class="form-control @error('invoice_date') is-invalid @enderror" value="{{ old('invoice_date', now()->format('Y-m-d')) }}" readonly />
                                     @error('invoice_date')
+                                    <div class="invalid-feedback">
+                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Invoice Date -->
+                                <div class="col-lg-2 col-md-6 mb-3">
+                                    <label for="to_date">To Date</label>
+                                    <input type="text" id="date" name="to_date" class="form-control @error('to_date') is-invalid @enderror" value="{{ old('to_date', now()->format('Y-m-d')) }}" required/>
+                                    @error('to_date')
                                     <div class="invalid-feedback">
                                         <i class="fas fa-exclamation-circle"></i> {{ $message }}
                                     </div>
@@ -143,12 +155,14 @@
                                                     <th>Quantity</th>
                                                     <th>Current Stock</th>
                                                     <th>Subtotal</th>
+                                                    <th>Discount</th>
+                                                    <th>Total</th>
                                                     <th>Remove</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr id="no-products-row">
-                                                    <td colspan="6" class="text-center">No product found</td>
+                                                    <td colspan="8" class="text-center">No product found</td>
                                                 </tr>
                                                 <!-- Dynamic rows will be inserted here -->
                                             </tbody>
@@ -175,7 +189,12 @@
                                     <label for="total">Total</label>
                                     <input type="text" id="total" name="total" class="form-control" value="0" readonly />
                                 </div>
-                            </div><hr>
+                            </div>
+                            <!-- Description -->
+                            <div class="col-lg-12 col-md-12 mb-3">
+                                <label for="description">Description</label>
+                                <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter the description"></textarea>
+                            </div>
                             <div class="row text-right">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> Submit</button>
@@ -419,7 +438,11 @@
     
         // Check if product is already in the table
         if ($('#product-table tbody tr[data-product-id="' + productId + '"]').length > 0) {
-            alert('This product is already added!');
+            toastr.error('This product is already added!.', {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 5000
+            });
             return;
         }
 
@@ -444,6 +467,10 @@
                     <span class="badge bg-info">${productStock}</span>
                 </td>
                 <td class="subtotal">${productPrice.toFixed(2)}</td>
+                <td class="discount-col">
+                    <input type="number" class="product-discount form-control" value="0" oninput="updateRow(this)" />
+                </td>
+                <td class="total">${productPrice.toFixed(2)}</td>
                 <td><button type="button" class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button></td>
             </tr>
         `;
@@ -540,18 +567,16 @@
 
     // Update row subtotal when quantity changes
     function updateRow(input) {
-        // const row = $(input).closest('tr');
-        // const price = parseFloat($(input).data('price'));
-        // const quantity = parseInt($(input).val());
-        // const stock = parseInt($(input).data('stock'));
 
         const row = $(input).closest('tr');
         const priceInput = row.find('.price-input');
         const quantityInput = row.find('.quantity');
+        const discountInput = row.find('.product-discount');
 
         const price = parseFloat(priceInput.val());
         let quantity = parseInt(quantityInput.val());
         const stock = parseInt(quantityInput.data('stock'));
+        const discount = parseFloat(discountInput.val());
 
         if (isNaN(price) || price < 0) {
             toastr.error('Invalid price entered.', 'Error', {
@@ -576,7 +601,12 @@
         }
 
         const subtotal = price * quantity;
+        // Apply the product-specific discount
+        const discountedTotal = subtotal - discount;
+
+        // Update row subtotal and discounted total
         row.find('.subtotal').text(subtotal.toFixed(2));
+        row.find('.total').text(discountedTotal.toFixed(2));
 
         // Update the hidden fields
         updateHiddenFields();
@@ -589,34 +619,29 @@
         let productIds = [];
         let quantities = [];
         let prices = [];
+        let discounts = [];
 
         $('#product-table tbody tr').each(function() {
-            //const productId = $(this).find('.quantity').data('product-id');
-            //const productId = $(this).find('.quantity').closest('tr').find('td:first').data('product-id'); // Ensure correct product ID retrieval
-            // const quantity = $(this).find('.quantity').val();
-            // const price = $(this).find('.quantity').data('price');
-
             
             const row = $(this);
-            // const productId = row.find('.quantity').closest('tr').find('option:selected').val(); // Fetch product ID
-            // const quantity = row.find('.quantity').val();
-            // const price = row.find('.quantity').data('price');
             const productId = row.data('product-id');  // Get product ID from <tr>
             const quantity = row.find('.quantity').val();
-            //const price = row.find('.quantity').data('price');
             const price = row.find('.price-input').val();
+            const discount = row.find('.product-discount').val();
 
-            // // Debugging logs
+            // // // Debugging logs
             // console.log("Row Data:", row.html());  // Log entire row structure
             // console.log("Extracted productId:", productId);
             // console.log("Extracted quantity:", quantity);
             // console.log("Extracted price:", price);
+            // console.log("Extracted discount:", discount);
 
             // if (productId) {
             if (productId !== undefined) { // Ensure productId is valid
                 productIds.push(productId);
                 quantities.push(quantity);
                 prices.push(price);
+                discounts.push(discount);
             }
         });
 
@@ -624,6 +649,7 @@
         $('#product_ids').val(productIds.join(','));
         $('#quantities').val(quantities.join(','));
         $('#prices').val(prices.join(','));
+        $('#discounts').val(discounts.join(','));
 
         // // Debugging logs
         // console.log("Updated product_ids:", $('#product_ids').val());
@@ -638,7 +664,7 @@
         let subtotal = 0;
 
         $('#product-table tbody tr').each(function() {
-            const rowSubtotal = parseFloat($(this).find('.subtotal').text());
+            const rowSubtotal = parseFloat($(this).find('.total').text());
             if (!isNaN(rowSubtotal)) {
                 subtotal += rowSubtotal;
             }
