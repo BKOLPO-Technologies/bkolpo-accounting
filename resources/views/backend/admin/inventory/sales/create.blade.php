@@ -459,20 +459,20 @@
         // Add product details to arrays
         //console.log("productId = ", productId);
         productIds.push(productId);
-        console.log("quantity = ", quantity);
+        //console.log("quantity = ", quantity);
         quantities.push(quantity);
         prices.push(price);
-        console.log("price = ", price);
+        //console.log("price = ", price);
 
         // Update hidden fields with the new values
         $('#product_ids').val(productIds.join(','));
         $('#quantities').val(quantities.join(','));
         $('#prices').val(prices.join(','));
 
-        // Debugging console logs
-        console.log("Updated product_ids:", $('#product_ids').val());
-        console.log("Updated quantities:", $('#quantities').val());
-        console.log("Updated prices:", $('#prices').val());
+        // // Debugging console logs
+        // console.log("Updated product_ids:", $('#product_ids').val());
+        // console.log("Updated quantities:", $('#quantities').val());
+        // console.log("Updated prices:", $('#prices').val());
     }
 
 
@@ -518,10 +518,10 @@
         $('#quantities').val(quantities.join(','));
         $('#prices').val(prices.join(','));
 
-        // Debugging console logs
-        console.log("After Removal - product_ids:", $('#product_ids').val());
-        console.log("After Removal - quantities:", $('#quantities').val());
-        console.log("After Removal - prices:", $('#prices').val());
+        // // Debugging console logs
+        // console.log("After Removal - product_ids:", $('#product_ids').val());
+        // console.log("After Removal - quantities:", $('#quantities').val());
+        // console.log("After Removal - prices:", $('#prices').val());
     }
 
     // Update row subtotal when quantity changes
@@ -592,11 +592,11 @@
             //const price = row.find('.quantity').data('price');
             const price = row.find('.price-input').val();
 
-            // Debugging logs
-            console.log("Row Data:", row.html());  // Log entire row structure
-            console.log("Extracted productId:", productId);
-            console.log("Extracted quantity:", quantity);
-            console.log("Extracted price:", price);
+            // // Debugging logs
+            // console.log("Row Data:", row.html());  // Log entire row structure
+            // console.log("Extracted productId:", productId);
+            // console.log("Extracted quantity:", quantity);
+            // console.log("Extracted price:", price);
 
             // if (productId) {
             if (productId !== undefined) { // Ensure productId is valid
@@ -611,10 +611,10 @@
         $('#quantities').val(quantities.join(','));
         $('#prices').val(prices.join(','));
 
-        // Debugging logs
-        console.log("Updated product_ids:", $('#product_ids').val());
-        console.log("Updated quantities:", $('#quantities').val());
-        console.log("Updated prices:", $('#prices').val());
+        // // Debugging logs
+        // console.log("Updated product_ids:", $('#product_ids').val());
+        // console.log("Updated quantities:", $('#quantities').val());
+        // console.log("Updated prices:", $('#prices').val());
     }
 
     // Calculate the subtotal, discount, and total

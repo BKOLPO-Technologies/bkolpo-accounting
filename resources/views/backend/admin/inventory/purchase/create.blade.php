@@ -470,10 +470,10 @@
         $('#quantities').val(quantities.join(','));
         $('#prices').val(prices.join(','));
 
-        // Debugging console logs
-        console.log("Updated product_ids:", $('#product_ids').val());
-        console.log("Updated quantities:", $('#quantities').val());
-        console.log("Updated prices:", $('#prices').val());
+        // // Debugging console logs
+        // console.log("Updated product_ids:", $('#product_ids').val());
+        // console.log("Updated quantities:", $('#quantities').val());
+        // console.log("Updated prices:", $('#prices').val());
     }
 
 
@@ -596,11 +596,11 @@
             //const price = row.find('.quantity').data('price');
             const price = row.find('.price-input').val();
 
-            // Debugging logs
-            console.log("Row Data:", row.html());  // Log entire row structure
-            console.log("Extracted productId:", productId);
-            console.log("Extracted quantity:", quantity);
-            console.log("Extracted price:", price);
+            // // Debugging logs
+            // console.log("Row Data:", row.html());  // Log entire row structure
+            // console.log("Extracted productId:", productId);
+            // console.log("Extracted quantity:", quantity);
+            // console.log("Extracted price:", price);
 
             // if (productId) {
             if (productId !== undefined) { // Ensure productId is valid
@@ -615,10 +615,10 @@
         $('#quantities').val(quantities.join(','));
         $('#prices').val(prices.join(','));
 
-        // Debugging logs
-        console.log("Updated product_ids:", $('#product_ids').val());
-        console.log("Updated quantities:", $('#quantities').val());
-        console.log("Updated prices:", $('#prices').val());
+        // // Debugging logs
+        // console.log("Updated product_ids:", $('#product_ids').val());
+        // console.log("Updated quantities:", $('#quantities').val());
+        // console.log("Updated prices:", $('#prices').val());
     }
 
 
