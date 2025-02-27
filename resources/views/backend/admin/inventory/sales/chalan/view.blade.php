@@ -1,4 +1,11 @@
 @extends('layouts.admin', ['pageTitle' => 'Edit Sales'])
+<style>
+    @media print {
+        #filter-form {
+            display: none !important;
+        }
+    }
+</style>
 @section('admin')
 <div class="content-wrapper">
     <section class="content-header">
@@ -34,91 +41,87 @@
                             </a>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div id="printable-area">
+                        <div class="card-body">
+                            <div class="invoice p-3 mb-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                    <h4>
+                                        <i class="fas fa-globe"></i> Bkolpo, Technology.
+                                        <!-- <small class="float-right">Date: 2/10/2014</small> -->
+                                        <small class="float-right" id="current-date"></small>
+                                    </h4>
+                                    </div>
+                                </div>
+    
+                                <hr>
 
-                        <div class="row mt-5">
-                            <!-- Select Invoice NO -->
-                            <div class="col-lg-6 col-md-6 mb-3">
-                                <label for="sale_id">Invoice No</label>
-                                <input type="text" class="form-control" value="{{ $incomingChalan->sale->invoice_no ?? 'N/A' }}" readonly>
-                                <input type="hidden" name="sale_id" value="{{ $incomingChalan->sale_id }}">
-                                
-                            </div>
+                                <div class="row invoice-info">
+                                    <div class="col-sm-4 invoice-col">
+                                    Owener
+                                    <address>
+                                        <strong>Bkolpo, Technology.</strong><br>
+                                        Tokyo tower<br>
+                                        Tongi, Gazipur, Dhaka<br>
+                                        Phone: (804) 123-5432<br>
+                                        Email: info@almasaeedstudio.com
+                                    </address>
+                                    </div>
+                                    <div class="col-sm-4 invoice-col">
+                                    Client
+                                    <address>
+                                        <strong>{{ $incomingChalan->sale->client->name }}</strong><br>
+                                        {{ $incomingChalan->sale->client->address }}, {{ $incomingChalan->sale->client->city }}<br>
+                                        {{ $incomingChalan->sale->client->region }}, {{ $incomingChalan->sale->client->country }}<br>
+                                        Phone: {{ $incomingChalan->sale->client->phone }}<br>
+                                        Email: {{ $incomingChalan->sale->client->email }}
+                                    </address>
+                                    </div>
+                                    <div class="col-sm-4 invoice-col">
+                                    <b>Invoice :- {{ $incomingChalan->sale->invoice_no }}</b><br>
+                                    <br>
+                                    </div>
+                                </div>
 
-                            <!-- Invoice Date -->
-                            <div class="col-lg-6 col-md-6 mb-3">
-                                <label for="invoice_date">Chalan Date</label>
-                                <input type="text" id="date" name="invoice_date" class="form-control @error('invoice_date') is-invalid @enderror" value="{{ old('invoice_date', $incomingChalan->invoice_date) }}" readonly />
-                                
+                                <br>
+                                <br>
+
+                                <div class="row">
+                                    <div class="col-12 table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Qty</th>
+                                                    <th>Receive Qty</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach ($incomingChalan->products as $product)
+                                                <tr data-product-id="{{ $product->id }}">
+                                                    <td>{{ $product->product->name }}</td>
+                                                    <td>{{ $product->product->quantity }}</td>
+                                                    <td>{{ $product->receive_quantity }}</td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
                             </div>
                             
-                        </div>
+                            <div class="row no-print">
+                                <div class="col-12">
 
-                        <!-- Customer Details Table -->
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <div class="table-responsive-sm">
-                                    <table class="table table-bordered" id="client-details-table">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Company</th>
-                                                <th>Phone</th>
-                                                <th>Email</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="client-details-body">
-                                            <tr>
-                                                <td>{{ $incomingChalan->sale->client->name }}</td>
-                                                <td>{{ $incomingChalan->sale->client->company }}</td>
-                                                <td>{{ $incomingChalan->sale->client->phone }}</td>
-                                                <td>{{ $incomingChalan->sale->client->email }}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <button class="btn btn-primary" onclick="printBalanceSheet()">
+                                        <i class="fa fa-print"></i> Print
+                                    </button>
+
                                 </div>
                             </div>
+
                         </div>
-
-                        <!-- Product Table -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="table-responsive-sm">
-                                    <table id="product-table" class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Product</th>
-                                                <th>Quantity</th>
-                                                <th>Receive Quantity</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($incomingChalan->products as $product)
-                                            <tr>
-                                                <td>{{ $product->product->name }}</td>
-                                                <td>
-                                                    <input type="number" name="quantity[]" class="form-control quantity" value="{{ $product->quantity }}" min="1" readonly>
-                                                </td>
-                                                <td>
-                                                    <input type="number" name="receive_quantity[]" class="form-control receive-quantity" value="{{ $product->receive_quantity }}" min="1" data-available="{{ $product->quantity }}" readonly>
-                                                </td>
-                                                <input type="hidden" name="product_id[]" value="{{ $product->product_id }}">
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Note -->
-                        <div class="col-lg-12 col-md-12 mb-3">
-                            <label for="description">Note</label>
-                            <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter Note" readonly>{{ old('description', $incomingChalan->description) }}</textarea>
-                        </div>
-
-                        
-
                     </div>
                 </div>
             </div>
@@ -130,26 +133,25 @@
 
 @push('js')
 <script>
-    $('.select2').select2();
-    $(document).ready(function () {
-        $('.select2').select2();
+  const options = { 
+    day: '2-digit', 
+    month: 'long', 
+    year: 'numeric' 
+  };
+  const currentDate = new Date().toLocaleDateString('en-US', options);
+  document.getElementById('current-date').textContent = 'Date: ' + currentDate;
 
-        // Alert when receive_quantity exceeds available quantity
-        $(document).on('input', '.receive-quantity', function () {
-            var receiveQty = parseInt($(this).val()) || 0;
-            var availableQty = parseInt($(this).data('available')) || 0;
+</script>
 
-            if (receiveQty > availableQty) {
-                toastr.error('Received quantity cannot be greater than available quantity!.', {
-                    closeButton: true,
-                    progressBar: true,
-                    timeOut: 5000
-                });
-                // alert("Received quantity cannot be greater than available quantity!");
-                $(this).val(availableQty); // Reset to max available quantity
-            }
-        });
-        
-    });
+
+<script>
+    function printBalanceSheet() {
+        var printContent = document.getElementById("printable-area").innerHTML;
+        var originalContent = document.body.innerHTML;
+
+        document.body.innerHTML = printContent;
+        window.print();
+        document.body.innerHTML = originalContent;
+    }
 </script>
 @endpush
