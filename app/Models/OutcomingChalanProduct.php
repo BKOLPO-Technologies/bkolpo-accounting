@@ -17,4 +17,9 @@ class OutcomingChalanProduct extends Model
     {
         return $this->belongsTo(OutcomingChalan::class);
     }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
 }

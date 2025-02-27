@@ -80,9 +80,14 @@ class IncomingChalanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function view(string $id)
     {
-        //
+        $pageTitle = 'In Coming Chalan';
+
+        $incomingChalan = IncomingChalan::with('sale', 'products')->findOrFail($id);
+        $sales = Sale::latest()->get();
+
+        return view('backend.admin.inventory.sales.chalan.view',compact('pageTitle','incomingChalan', 'sales')); 
     }
 
     /**

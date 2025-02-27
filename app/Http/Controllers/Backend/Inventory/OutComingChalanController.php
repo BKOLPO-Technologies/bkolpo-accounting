@@ -79,9 +79,15 @@ class OutComingChalanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function view(string $id)
     {
-        //
+        $pageTitle = 'Out Coming Chalan';
+
+        $chalan = OutcomingChalan::with('purchase', 'products')->findOrFail($id);
+
+        $purchases = Purchase::latest()->get();
+
+        return view('backend.admin.inventory.purchase.chalan.view',compact('pageTitle','purchases', 'chalan')); 
     }
 
     /**
@@ -89,7 +95,13 @@ class OutComingChalanController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $pageTitle = 'Out Coming Chalan';
+
+        $chalan = OutcomingChalan::with('purchase', 'products')->findOrFail($id);
+
+        $purchases = Purchase::latest()->get();
+
+        return view('backend.admin.inventory.purchase.chalan.edit',compact('pageTitle','purchases', 'chalan')); 
     }
 
     /**
@@ -97,7 +109,30 @@ class OutComingChalanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        //dd($request->all());
+
+        $request->validate([
+            'description' => 'nullable|string|max:1000',
+            'receive_quantity' => 'required|array',
+            'receive_quantity.*' => 'integer|min:0', // Validate each quantity as an integer
+        ]);
+
+        // Find the IncomingChalan record
+        $outcomingChalan = OutcomingChalan::findOrFail($id);
+
+        // Update only the description
+        $outcomingChalan->update([
+            'description' => $request->description,
+        ]);
+
+        // Update receive_quantity for each product
+        foreach ($request->receive_quantity as $index => $qty) {
+            $outcomingChalan->products[$index]->update([
+                'receive_quantity' => $qty,
+            ]);
+        }
+
+        return redirect()->route('outcoming.chalan.index')->with('success', 'Updated successfully!');
     }
 
     /**
