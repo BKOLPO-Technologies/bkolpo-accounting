@@ -32,7 +32,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/edit/{id}', [PurchaseController::class, 'AdminPurchaseEdit'])->name('admin.purchase.edit');
         Route::put('/update/{id}', [PurchaseController::class, 'AdminPurchaseUpdate'])->name('admin.purchase.update');
         Route::get('/delete/{id}', [PurchaseController::class, 'destroy'])->name('admin.purchase.destroy');
-
+        Route::get('/get-invoice-details/{id}', [PurchaseController::class, 'getInvoiceDetails']);
         Route::get('/print', [PurchaseController::class, 'Print'])->name('admin.purchase.print');
     });
 

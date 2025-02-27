@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['pageTitle' => 'Sales'])
+@extends('layouts.admin', ['pageTitle' => 'Out Coming Chalan'])
 @section('admin')
 <div class="content-wrapper">
     <section class="content-header">
@@ -26,35 +26,35 @@
                     <div class="card-header py-2">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
-                            <a href="{{ route('incoming.chalan.index')}}" class="btn btn-sm btn-danger rounded-0">
+                            <a href="{{ route('outcoming.chalan.index')}}" class="btn btn-sm btn-danger rounded-0">
                                 <i class="fa-solid fa-arrow-left"></i> Back To List
                             </a>
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('incoming.chalan.store') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('outcoming.chalan.store') }}" enctype="multipart/form-data">
                             @csrf
 
                             <div class="row mt-5">
                                 <!-- Select Invoice NO -->
                                 <div class="col-lg-6 col-md-6 mb-3">
-                                    <label for="sale_id">Invoice No</label>
+                                    <label for="purchase_id">Invoice No</label>
                                     <div class="input-group">
-                                        <select name="sale_id" id="sale_id" class="form-control select2 @error('sale_id') is-invalid @enderror">
+                                        <select name="purchase_id" id="purchase_id" class="form-control select2 @error('purchase_id') is-invalid @enderror">
                                             <option value="">Select Invoice No</option>
-                                            @foreach($sales as $sale)
-                                                <option value="{{ $sale->id }}" 
-                                                    data-name="{{ $sale->name }}" 
-                                                    data-company="{{ $sale->company }}" 
-                                                    data-phone="{{ $sale->phone }}" 
-                                                    data-email="{{ $sale->email }}"
-                                                    {{ old('sale_id') == $sale->id ? 'selected' : '' }}>
-                                                    {{ $sale->invoice_no }}
+                                            @foreach($purchases as $purchase)
+                                                <option value="{{ $purchase->id }}" 
+                                                    data-name="{{ $purchase->name }}" 
+                                                    data-company="{{ $purchase->company }}" 
+                                                    data-phone="{{ $purchase->phone }}" 
+                                                    data-email="{{ $purchase->email }}"
+                                                    {{ old('purchase_id') == $purchase->id ? 'selected' : '' }}>
+                                                    {{ $purchase->invoice_no }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    @error('sale_id')
+                                    @error('purchase_id')
                                     <div class="invalid-feedback">
                                         <i class="fas fa-exclamation-circle"></i> {{ $message }}
                                     </div>
@@ -80,7 +80,7 @@
                                             <table class="table table-bordered" id="client-details-table" style="display: none;">
                                                 <thead class="thead-light">
                                                     <tr>
-                                                        <th>Client Name</th>
+                                                        <th>Supplier Name</th>
                                                         <th>Company</th>
                                                         <th>Phone</th>
                                                         <th>Email</th>
@@ -143,22 +143,22 @@
     $(document).ready(function () {
         $('.select2').select2();
 
-        $('#sale_id').change(function () {
+        $('#purchase_id').change(function () {
             var invoiceId = $(this).val();
 
             if (invoiceId) {
                 $.ajax({
-                    url: '/admin/sales/get-invoice-details/' + invoiceId,
+                    url: '/admin/purchase/get-invoice-details/' + invoiceId,
                     type: 'GET',
                     success: function (response) {
                         // Show client details
-                        if (response.client) {
+                        if (response.supplier) {
                             $('#client-details-body').html(`
                                 <tr>
-                                    <td>${response.client.name}</td>
-                                    <td>${response.client.company}</td>
-                                    <td>${response.client.phone}</td>
-                                    <td>${response.client.email}</td>
+                                    <td>${response.supplier.name}</td>
+                                    <td>${response.supplier.company}</td>
+                                    <td>${response.supplier.phone}</td>
+                                    <td>${response.supplier.email}</td>
                                 </tr>
                             `);
                             $('#client-details-table').show();
