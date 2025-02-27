@@ -69,8 +69,8 @@
                                                     <tr>
                                                         <th style="width: 5%;">Sl</th>
                                                         <th style="width: 40%;">Ledger Name</th>
-                                                        <th class="text-end" style="width: 5%;">Debit (৳)</th>
-                                                        <th class="text-end" style="width: 5%;">Credit (৳)</th>
+                                                        <th class="text-end" style="width: 5%;">Debit ({{ bdt() }})</th>
+                                                        <th class="text-end" style="width: 5%;">Credit ({{ bdt() }})</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -78,16 +78,16 @@
                                                         <tr>
                                                             <td class="col-1">{{ $key+1 }}</td>
                                                             <td>{{ $ledger['ledger_name'] }}</td>
-                                                            <td class="text-end col-2">৳{{ number_format($ledger['debit'], 2) }}</td>
-                                                            <td class="text-end col-2">৳{{ number_format($ledger['credit'], 2) }}</td>
+                                                            <td class="text-end col-2">{{ bdt() }} {{ number_format($ledger['debit'], 2) }}</td>
+                                                            <td class="text-end col-2">{{ bdt() }} {{ number_format($ledger['credit'], 2) }}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
                                                 <tfoot>
                                                     <tr class="fw-bold">
                                                         <td colspan="2" class="font-weight-bolder text-right"></td>
-                                                        <td class="text-end font-weight-bolder">৳{{ number_format($trialBalances->sum('debit'), 2) }}</td>
-                                                        <td class="text-end font-weight-bolder">৳{{ number_format($trialBalances->sum('credit'), 2) }}</td>
+                                                        <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($trialBalances->sum('debit'), 2) }}</td>
+                                                        <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($trialBalances->sum('credit'), 2) }}</td>
                                                     </tr>
                                                 </tfoot>
                                             </table>

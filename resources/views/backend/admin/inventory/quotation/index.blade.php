@@ -50,7 +50,7 @@
                                                     <td>{{ $quotation->invoice_no }}</td>
                                                     <td>{{ \Carbon\Carbon::parse($quotation->invoice_date)->format('d F Y') }}</td>
                                                     <td>{{ $quotation->client->name ?? 'N/A' }}</td> 
-                                                    <td>৳{{ number_format($quotation->total, 2) }}</td> 
+                                                    <td>{{ bdt() }} {{ number_format($quotation->total, 2) }}</td> 
                                                     <td class="col-2">
                                                         <!-- View Button -->
                                                         <a href="{{ route('quotations.show', $quotation->id) }}" class="btn btn-success btn-sm">

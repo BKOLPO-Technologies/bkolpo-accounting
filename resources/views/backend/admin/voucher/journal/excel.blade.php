@@ -41,8 +41,8 @@
                                             <th>Voucher No</th>
                                             <th>Company/Branch Name</th>
                                             <th>Ledger Name</th>
-                                            <th>DR (৳)</th>
-                                            <th>CR (৳)</th>
+                                            <th>DR ({{ bdt() }})</th>
+                                            <th>CR ({{ bdt() }})</th>
                                             <th>Date</th>
                                             <th>Actions</th>
                                         </tr>
@@ -56,8 +56,8 @@
                                                 <td>
                                                     <strong>{{ $voucher->details->pluck('ledger.name')->filter()->implode(', ') }}</strong>
                                                 </td>
-                                                <td class="text-end">৳{{ number_format($voucher->details->sum('debit'), 2) }}</td>
-                                                <td class="text-end">৳{{ number_format($voucher->details->sum('credit'), 2) }}</td>
+                                                <td class="text-end">{{ bdt() }} {{ number_format($voucher->details->sum('debit'), 2) }}</td>
+                                                <td class="text-end">{{ bdt() }} {{ number_format($voucher->details->sum('credit'), 2) }}</td>
                                                 <td>{{ date('d M, Y', strtotime($voucher->transaction_date)) }}</td>
                                                 <td class="col-2">
                                                     <!-- Status Update Button -->
@@ -115,8 +115,8 @@
                                     <tfoot>
                                         <tr>
                                             <th colspan="4" class="text-right">Total:</th>
-                                            <th class="text-end">৳{{ number_format($totalDebit, 2) }}</th>
-                                            <th class="text-end">৳{{ number_format($totalCredit, 2) }}</th>
+                                            <th class="text-end">{{ bdt() }} {{ number_format($totalDebit, 2) }}</th>
+                                            <th class="text-end">{{ bdt() }} {{ number_format($totalCredit, 2) }}</th>
                                             <th colspan="2"></th>
                                         </tr>
                                     </tfoot>
@@ -167,8 +167,8 @@
                                                                 <th>Ledger Name</th>
                                                                 <th>Reference No</th>
                                                                 <th>Description</th>
-                                                                <th class="text-end">Debit (৳)</th>
-                                                                <th class="text-end">Credit (৳)</th>
+                                                                <th class="text-end">Debit ({{ bdt() }})</th>
+                                                                <th class="text-end">Credit ({{ bdt() }})</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -178,16 +178,16 @@
                                                                     <td>{{ $detail->ledger->name ?? 'N/A' }}</td>
                                                                     <td>{{ $detail->reference_no ?? 'N/A' }}</td>
                                                                     <td>{{ $detail->description ?? 'N/A' }}</td>
-                                                                    <td class="text-end">৳{{ number_format($detail->debit, 2) }}</td>
-                                                                    <td class="text-end">৳{{ number_format($detail->credit, 2) }}</td>
+                                                                    <td class="text-end">{{ bdt() }} {{ number_format($detail->debit, 2) }}</td>
+                                                                    <td class="text-end">{{ bdt() }} {{ number_format($detail->credit, 2) }}</td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
                                                         <tfoot>
                                                             <tr>
                                                                 <th colspan="4" class="text-right">Total:</th>
-                                                                <th class="text-end">৳{{ number_format($voucher->details->sum('debit'), 2) }}</th>
-                                                                <th class="text-end">৳{{ number_format($voucher->details->sum('credit'), 2) }}</th>
+                                                                <th class="text-end">{{ bdt() }} {{ number_format($voucher->details->sum('debit'), 2) }}</th>
+                                                                <th class="text-end">{{ bdt() }} {{ number_format($voucher->details->sum('credit'), 2) }}</th>
                                                             </tr>
                                                         </tfoot>
                                                     </table>
@@ -230,8 +230,8 @@
                                 <th>Ledger Name</th>
                                 <th>Reference No</th>
                                 <th>Description</th>
-                                <th>Debit (৳)</th>
-                                <th>Credit (৳)</th>
+                                <th>Debit ({{ bdt() }})</th>
+                                <th>Credit ({{ bdt() }})</th>
                             </tr>
                         </thead>
                         <tbody id="voucherDetails">

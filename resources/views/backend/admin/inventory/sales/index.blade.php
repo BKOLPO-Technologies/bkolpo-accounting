@@ -50,7 +50,7 @@
                                                     <td>{{ $sale->invoice_no }}</td>
                                                     <td>{{ \Carbon\Carbon::parse($sale->invoice_date)->format('d F Y') }}</td>
                                                     <td>{{ $sale->client->name ?? 'N/A' }}</td> 
-                                                    <td>৳{{ number_format($sale->total, 2) }}</td> 
+                                                    <td>{{ bdt() }} {{ number_format($sale->total, 2) }}</td> 
                                                     <td class="col-2">
                                                         <!-- View Button -->
                                                         <a href="{{ route('admin.sale.show', $sale->id) }}" class="btn btn-success btn-sm">

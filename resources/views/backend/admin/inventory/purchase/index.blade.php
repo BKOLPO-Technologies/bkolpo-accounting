@@ -50,7 +50,7 @@
                                                 <td>{{ $purchase->invoice_no }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($purchase->invoice_date)->format('d F Y') }}</td>
                                                 <td>{{ $purchase->supplier->name ?? 'N/A' }}</td> 
-                                                <td>৳{{ number_format($purchase->total, 2) }}</td>
+                                                <td>{{ bdt() }} {{ number_format($purchase->total, 2) }}</td>
                                                 
                                                 <td class="col-2">
                                                     <!-- View Button -->

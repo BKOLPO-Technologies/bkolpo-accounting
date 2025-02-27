@@ -86,7 +86,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th style="width: 85%;"></th>
-                                                                <th style="width: 15%;">Amount (৳)</th>
+                                                                <th style="width: 15%;">Amount ({{ bdt() }})</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -112,14 +112,14 @@
                                                                 @endphp
                                                                 <tr>
                                                                     <td>{{ $ledger->name }}</td>
-                                                                    <td>৳{{ number_format($balance, 2) }}</td>
+                                                                    <td>{{ bdt() }} {{ number_format($balance, 2) }}</td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
                                                         <tfoot>
                                                             <tr>
                                                                 <th>Total</th>
-                                                                <th>৳{{ number_format($totalBalance, 2) }}</th>
+                                                                <th>{{ bdt() }} {{ number_format($totalBalance, 2) }}</th>
                                                             </tr>
                                                         </tfoot>
                                                     </table>

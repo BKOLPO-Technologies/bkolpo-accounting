@@ -168,15 +168,15 @@
                                     <table class="table">
                                     <tr>
                                         <th style="width:50%">Subtotal:</th>
-                                        <td>৳{{ number_format($subtotal, 2) }}</td>
+                                        <td>{{ bdt() }} {{ number_format($subtotal, 2) }}</td>
                                     </tr>
                                     <tr>
                                         <th>Discount</th>
-                                        <td>৳{{ number_format($purchase->discount, 2) }}</td>
+                                        <td>{{ bdt() }} {{ number_format($purchase->discount, 2) }}</td>
                                     </tr>
                                     <tr>
                                         <th>Total:</th>
-                                        <td>৳{{ number_format($subtotal - $purchase->discount, 2) }}</td>
+                                        <td>{{ bdt() }} {{ number_format($subtotal - $purchase->discount, 2) }}</td>
                                     </tr>
                                     </table>
                                 </div>

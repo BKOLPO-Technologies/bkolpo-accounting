@@ -41,10 +41,10 @@
                                             <th>Date</th>
                                             <th>Name</th>
                                             <th>Group Name</th> 
-                                            <th>Opening DR (৳)</th>
-                                            <th>DR (৳)</th>
-                                            <th>CR (৳)</th>
-                                            <th>Current DR (৳)</th>
+                                            <th>Opening DR ({{ bdt() }})</th>
+                                            <th>DR ({{ bdt() }})</th>
+                                            <th>CR ({{ bdt() }})</th>
+                                            <th>Current DR ({{ bdt() }})</th>
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
@@ -68,12 +68,12 @@
                                                         <span class="badge badge-info">{{ $group->group_name }}</span>
                                                     @endforeach
                                                 </td>
-                                                <td>৳{{ number_format($ledger->debit, 2) }}</td>
-                                                <td>৳{{ number_format($ledger->ledgerSums['debit'], 2) }}</td>  
-                                                <td>৳{{ number_format($ledger->ledgerSums['credit'], 2) }}</td>
-                                                <!-- <td>৳{{ number_format($ledger->debit + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit'], 2) }}</td> -->
-                                                <td>
-                                                    ৳{{ number_format(
+                                                <td class="font-weight-bolder">{{ bdt() }} {{ number_format($ledger->debit, 2) }}</td>
+                                                <td class="font-weight-bolder">{{ bdt() }} {{ number_format($ledger->ledgerSums['debit'], 2) }}</td>  
+                                                <td class="font-weight-bolder">{{ bdt() }} {{ number_format($ledger->ledgerSums['credit'], 2) }}</td>
+                                                <!-- <td>{{ bdt() }} {{ number_format($ledger->debit + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit'], 2) }}</td> -->
+                                                <td class="font-weight-bolder">
+                                                    {{ bdt() }} {{ number_format(
                                                         ($ledger->debit > 0)
                                                             ? ($ledger->debit + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit']) // If opening balance is Debit
                                                             : ($ledger->ledgerSums['debit']), // If opening balance is Credit
@@ -124,9 +124,9 @@
                                     <tfoot>
                                         <tr>
                                             <th colspan="5" class="text-right">Total:</th>
-                                            <th>৳{{ number_format($totals['totalDebit'], 2) }}</th> 
-                                            <th>৳{{ number_format($totals['totalCredit'], 2) }}</th> 
-                                            <!-- <th>৳{{ number_format($totalCurrentDr, 2) }}</th> -->
+                                            <th>{{ bdt() }} {{ number_format($totals['totalDebit'], 2) }}</th> 
+                                            <th>{{ bdt() }} {{ number_format($totals['totalCredit'], 2) }}</th> 
+                                            <!-- <th>{{ bdt() }} {{ number_format($totalCurrentDr, 2) }}</th> -->
                                             <th colspan="2"></th>
                                         </tr>
                                     </tfoot>
@@ -152,8 +152,8 @@
                                                                 <th>Reference No</th>
                                                                 <th>Description</th>
                                                                 <th>Date</th>
-                                                                <th class="text-end">Debit (৳)</th>
-                                                                <th class="text-end">Credit (৳)</th>
+                                                                <th class="text-end">Debit ({{ bdt() }})</th>
+                                                                <th class="text-end">Credit ({{ bdt() }})</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -173,28 +173,28 @@
                                                                     <td>{{ $voucherDetail->reference_no }}</td>
                                                                     <td>{{ $voucherDetail->description }}</td>
                                                                     <td> {{ date('d M, Y', strtotime($voucherDetail->journalVoucher->transaction_date)) }}</td>
-                                                                    <td>৳{{ number_format($voucherDetail->debit, 2) }}</td>
-                                                                    <td>৳{{ number_format($voucherDetail->credit, 2) }}</td>
+                                                                    <td>{{ bdt() }} {{ number_format($voucherDetail->debit, 2) }}</td>
+                                                                    <td>{{ bdt() }} {{ number_format($voucherDetail->credit, 2) }}</td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
                                                         <tfoot>
                                                             <tr>
                                                                 <th colspan="4" class="text-right">Total:</th>
-                                                                <th>৳{{ number_format($totalDebit, 2) }}</th>
-                                                                <th>৳{{ number_format($totalCredit, 2) }}</th>
+                                                                <th>{{ bdt() }} {{ number_format($totalDebit, 2) }}</th>
+                                                                <th>{{ bdt() }} {{ number_format($totalCredit, 2) }}</th>
                                                             </tr>
                                                             <!-- Opening Balance -->
                                                             <tr>
                                                                 <th colspan="5" class="text-right">Opening Balance:</th>
-                                                                <th colspan="2">৳{{ number_format($ledger->debit, 2) }}</th>
+                                                                <th colspan="2">{{ bdt() }} {{ number_format($ledger->debit, 2) }}</th>
                                                             </tr>
 
                                                             <!-- Current Balance -->
                                                             <tr>
                                                                 <th colspan="5" class="text-right">Current Balance:</th>
                                                                 <th colspan="2">
-                                                                    ৳{{ number_format($openingBalance + $totalDebit - $totalCredit, 2) }}
+                                                                    {{ bdt() }} {{ number_format($openingBalance + $totalDebit - $totalCredit, 2) }}
                                                                 </th>
                                                             </tr>
                                                         </tfoot>
