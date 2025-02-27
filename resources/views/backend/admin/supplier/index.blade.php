@@ -25,10 +25,10 @@
 
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
+                <div class="card card-secondary">
+                    <div class="card-header d-flex align-items-center">
                         <h3 class="card-title">All Suppliers</h3>
-                        <a href="{{ route('admin.supplier.create') }}" class="btn btn-success float-right">Add Supplier</a>
+                        <a href="{{ route('admin.supplier.create') }}" class="btn btn-success ml-auto">Add Supplier</a>
                     </div>
 
                     <div class="card-body">

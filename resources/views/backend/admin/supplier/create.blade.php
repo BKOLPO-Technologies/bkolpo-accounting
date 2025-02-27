@@ -26,9 +26,11 @@
           
           <div class="col-md-12">
             
-            <div class="card card-primary card-outline shadow-lg">
-              <div class="card-header">
+            <div class="card card-secondary">
+
+              <div class="card-header d-flex align-items-center">
                 <h3 class="card-title">Add New supplier Details</h3>
+                <a href="{{ route('admin.supplier.index') }}" class="btn btn-success ml-auto">Back</a>
               </div>
               
               <form role="form" action="{{ route('admin.supplier.store') }}" method="POST">

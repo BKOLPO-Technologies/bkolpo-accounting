@@ -29,7 +29,8 @@ class SupplierController extends Controller
         $supplier = Supplier::findOrFail($id);
         //dd($supplier);
         $pageTitle = 'Admin Supplier View';
-        return view('backend/admin/supplier/view',compact('pageTitle', 'supplier'));
+        //return view('backend/admin/supplier/view',compact('pageTitle', 'supplier'));
+        return view('backend.admin.supplier.view',compact('pageTitle', 'supplier'));
 
     }
 
