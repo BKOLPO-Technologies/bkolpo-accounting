@@ -37,7 +37,7 @@
                                         <tr>
                                             <th>SL</th>
                                             <th>Invoice No</th>
-                                            <th>Chalan Date</th>
+                                            <th>Date</th>
                                             <th>Description</th>
                                             <th>Actions</th>
                                         </tr>
