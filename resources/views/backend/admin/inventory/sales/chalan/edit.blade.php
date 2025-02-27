@@ -64,7 +64,7 @@
                                         <table class="table table-bordered" id="client-details-table">
                                             <thead class="thead-light">
                                                 <tr>
-                                                    <th>Name</th>
+                                                    <th>Client Name</th>
                                                     <th>Company</th>
                                                     <th>Phone</th>
                                                     <th>Email</th>
