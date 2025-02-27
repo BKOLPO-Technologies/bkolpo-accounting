@@ -248,4 +248,35 @@ class PurchaseController extends Controller
         
     }
 
+    public function getInvoiceDetails($id)
+    {
+        $purchase = Purchase::with(['supplier', 'purchaseProducts.product'])->find($id);
+    
+        if (!$purchase) {
+            return response()->json(['error' => 'Invoice not found'], 404);
+        }
+    
+        // Map Purchase Products to extract necessary product details
+        $products = $purchase->purchaseProducts->map(function ($purchaseProduct) {
+            return [
+                'id' => $purchaseProduct->product->id,
+                'name' => $purchaseProduct->product->name,
+                'price' => $purchaseProduct->price,
+                'quantity' => $purchaseProduct->quantity,
+                'discount' => $purchaseProduct->discount,
+                'stockqty' => $purchaseProduct->product->quantity,
+            ];
+        });
+    
+        return response()->json([
+            'supplier' => [
+                'name' => $purchase->supplier->name,
+                'company' => $purchase->supplier->company,
+                'phone' => $purchase->supplier->phone,
+                'email' => $purchase->supplier->email,
+            ],
+            'products' => $products, // Properly passing the products array
+        ]);
+    }
+
 }

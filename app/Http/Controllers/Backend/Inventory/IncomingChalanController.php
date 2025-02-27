@@ -138,6 +138,15 @@ class IncomingChalanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $chalan = IncomingChalan::findOrFail($id);
+
+        // Optional: Delete related IncomingChalanProduct records if they exist
+        $chalan->products()->delete();
+
+        // Delete the chalan record
+        $chalan->delete();
+
+        return redirect()->back()->with('success', 'Incoming Chalan deleted successfully!');
     }
+
 }

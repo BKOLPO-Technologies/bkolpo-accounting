@@ -208,7 +208,7 @@
               $isSupplierActive = Route::is('admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit');
               $isClientActive = Route::is('admin.client.index','admin.client.create','admin.client.view','admin.client.edit');
               $isSalesActive = Route::is('admin.sale.index','admin.sale.create','admin.sale.view','admin.sale.edit','quotations.index','quotations.create','quotations.edit','quotations.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.view','incoming.chalan.edit');
-              $isPurchaseActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.view','admin.purchase.edit','workorders.index','workorders.create','workorders.edit','workorders.show');
+              $isPurchaseActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.view','admin.purchase.edit','workorders.index','workorders.create','workorders.edit','workorders.show','outcoming.chalan.index','outcoming.chalan.create','outcoming.chalan.view','outcoming.chalan.edit');
           @endphp
 
           @can('report-menu')  
@@ -353,7 +353,7 @@
                       </a>
                   </li>
                   <li class="nav-item">
-                    <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index','admin.purchase.create', 'admin.purchase.show', 'admin.purchase.edit') ? 'active' : '' }}">
+                    <a href="{{ route('outcoming.chalan.index') }}" class="nav-link {{ Route::is('outcoming.chalan.index','outcoming.chalan.create', 'outcoming.chalan.show', 'outcoming.chalan.edit') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Outcoming Chalan List</p>
                     </a>

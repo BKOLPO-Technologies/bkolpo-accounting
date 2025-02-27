@@ -15,4 +15,16 @@ class PurchaseProduct extends Model
         'price',
         'discount',
     ];
+
+    // Relationship with Purchase
+    public function purchase()
+    {
+        return $this->belongsTo(Purchase::class, 'purchase_id');
+    }
+
+    // Relationship with Product
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
 }

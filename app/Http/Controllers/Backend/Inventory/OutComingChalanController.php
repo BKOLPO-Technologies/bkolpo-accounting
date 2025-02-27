@@ -5,6 +5,15 @@ namespace App\Http\Controllers\Backend\Inventory;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Carbon\Carbon;
+use App\Models\Purchase;
+use App\Models\OutcomingChalan;
+use App\Models\OutcomingChalanProduct;
+use App\Models\Supplier;
+use App\Models\Product;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log; 
+
 class OutComingChalanController extends Controller
 {
     /**
@@ -12,15 +21,24 @@ class OutComingChalanController extends Controller
      */
     public function index()
     {
-        //
+        $pageTitle = 'Out Coming Chalan List';
+    
+        // Fetch all outcoming chalans with related sale details
+        $outcomingchalans = OutcomingChalan::with('purchase')->latest()->get();
+    
+        return view('backend.admin.inventory.purchase.chalan.index', compact('pageTitle', 'outcomingchalans'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        //
+    { 
+        $pageTitle = 'Out Coming Chalan';
+
+        $purchases = Purchase::latest()->get();
+
+        return view('backend.admin.inventory.purchase.chalan.create',compact('pageTitle','purchases')); 
     }
 
     /**
@@ -28,7 +46,34 @@ class OutComingChalanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate request data
+        $request->validate([
+            'purchase_id' => 'required|exists:purchases,id',
+            'invoice_date' => 'required|date',
+            'description' => 'nullable|string',
+            'product_id' => 'required|array',
+            'quantity' => 'required|array',
+            'receive_quantity' => 'required|array',
+        ]);
+
+        // Create OutcomingChalan record
+        $outcomingChalan = OutcomingChalan::create([
+            'purchase_id' => $request->purchase_id,
+            'invoice_date' => $request->invoice_date,
+            'description' => $request->description,
+        ]);
+
+        // Insert product details into Out Coming Chalan Product table
+        foreach ($request->product_id as $index => $productId) {
+            OutcomingChalanProduct::create([
+                'outcoming_chalan_id' => $outcomingChalan->id,
+                'product_id' => $productId,
+                'quantity' => $request->quantity[$index],
+                'receive_quantity' => $request->receive_quantity[$index],
+            ]);
+        }
+
+        return redirect()->route('outcoming.chalan.index')->with('success', 'Out Coming Chalan created successfully!');
     }
 
     /**
@@ -60,6 +105,15 @@ class OutComingChalanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $chalan = OutcomingChalan::findOrFail($id);
+
+        // Optional: Delete related OutcomingChalanProduct records if they exist
+        $chalan->products()->delete();
+
+        // Delete the chalan record
+        $chalan->delete();
+
+        return redirect()->back()->with('success', 'Out Coming Chalan deleted successfully!');
     }
+
 }
