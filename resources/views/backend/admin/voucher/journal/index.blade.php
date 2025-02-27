@@ -41,8 +41,8 @@
                                             <th>Voucher No</th>
                                             <th>Company/Branch Name</th>
                                             <th>Ledger Name</th>
-                                            <th>DR (৳)</th>
-                                            <th>CR (৳)</th>
+                                            <th>DR ({{ bdt() }})</th>
+                                            <th>CR ({{ bdt() }})</th>
                                             <th>Date</th>
                                             <th>Actions</th>
                                         </tr>
@@ -59,8 +59,8 @@
                                                 <td>
                                                     <strong>{{ $voucher->details->pluck('ledger.name')->filter()->implode(', ') }}</strong>
                                                 </td>
-                                                <td class="text-end">৳{{ number_format($voucher->details->sum('debit'), 2) }}</td>
-                                                <td class="text-end">৳{{ number_format($voucher->details->sum('credit'), 2) }}</td>
+                                                <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($voucher->details->sum('debit'), 2) }}</td>
+                                                <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($voucher->details->sum('credit'), 2) }}</td>
                                                 <td>{{ date('d M, Y', strtotime($voucher->transaction_date)) }}</td>
                                                 <td class="col-2">
                                                     @can('journal-view')
@@ -86,8 +86,8 @@
                                     <tfoot>
                                         <tr>
                                             <th colspan="4" class="text-right">Total:</th>
-                                            <th class="text-end">৳{{ number_format($totalDebit, 2) }}</th>
-                                            <th class="text-end">৳{{ number_format($totalCredit, 2) }}</th>
+                                            <th class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($totalDebit, 2) }}</th>
+                                            <th class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($totalCredit, 2) }}</th>
                                             <th colspan="2"></th>
                                         </tr>
                                     </tfoot>

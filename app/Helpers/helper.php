@@ -50,3 +50,12 @@ function en2bn($number)
         return $numto->bnCommaLakh($number);
     }
 }
+
+
+if (!function_exists('bdt')) {
+    function bdt()
+    {
+        return 'BDT'; // Taka symbol
+    }
+}
+
