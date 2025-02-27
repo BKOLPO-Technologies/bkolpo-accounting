@@ -29,11 +29,10 @@
                 <div class="col-md-12">
                     <!-- general form elements -->
                     <div class="card card-secondary">
-                        <div class="card-header">
-                            <h3 class="card-title">Add New supplier Details</h3>
-                            <!-- <br>
-                                <span style="font-size: 12px;">Put Branch Manage Information</span> 
-                                -->
+
+                        <div class="card-header d-flex align-items-center">
+                            <h3 class="card-title">Supplier Details</h3>
+                            <a href="{{ route('admin.supplier.index') }}" class="btn btn-success ml-auto">Back</a>
                         </div>
 
                         <!-- ------ -->
@@ -51,15 +50,17 @@
                                             <div class="row mt-3">
                                                 <div class="col-md-6">
 
-                                                    <a href="#sendMail" data-toggle="modal" data-remote="false" class="btn btn-primary btn-md " data-type="reminder">
-                                                        <i class="icon-envelope"></i> Send Message
+                                                    <a href="{{ route('admin.supplier.edit', ['id' => $supplier->id ]) }}" class="btn btn-warning btn-md">
+                                                        <i class="icon-pencil"></i> Edit Profile
                                                     </a>
 
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <a href="{{ route('admin.supplier.edit', ['id' => $supplier->id ]) }}" class="btn btn-warning btn-md">
-                                                        <i class="icon-pencil"></i> Edit Profile
-                                                    </a>
+                                                    
+                                                    {{-- <a href="#sendMail" data-toggle="modal" data-remote="false" class="btn btn-primary btn-md " data-type="reminder">
+                                                        <i class="icon-envelope"></i> Send Message
+                                                    </a> --}}
+
                                                 </div>
                                             </div>
                                         </div>
@@ -74,12 +75,12 @@
                                                     <!-- Income Row -->
                                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                                         <span class="ml-2">Income</span>
-                                                        <span class="tag tag-default tag-pill bg-primary">৳ 0.00</span>
+                                                        <span class="tag tag-default tag-pill bg-primary p-1">৳ 0.00</span>
                                                     </li>
                                                     <!-- Expenses Row -->
                                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                                         <span class="ml-2">Expenses</span>
-                                                        <span class="tag tag-default tag-pill bg-danger">৳ 1,350,000.00</span>
+                                                        <span class="tag tag-default tag-pill bg-danger p-1">৳ 1,350,000.00</span>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -184,19 +185,18 @@
                                         </div>
                                         <hr>
                                         <div class="row mt-3">
-                                            <div class="col-md-6">
 
+                                            {{-- <div class="col-md-6">
                                                 <a href="#" class="btn btn-primary btn-lg">
                                                     <i class="icon-file-text2"></i> View Purchase Orders
                                                 </a>
+                                            </div> --}}
 
-                                            </div>
-
-                                            <div class="col-md-6">
+                                            {{-- <div class="col-md-6">
                                                 <a href="#" class="btn btn-success btn-lg">
                                                     <i class="icon-money3"></i> View Transactions
                                                 </a>
-                                            </div>
+                                            </div> --}}
 
                                         </div>
 

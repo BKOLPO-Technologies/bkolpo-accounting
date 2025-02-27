@@ -25,14 +25,12 @@
         
       <div class="container-fluid">
         <div class="row">
-          <!-- left column -->
           <div class="col-md-12">
-            <!-- general form elements -->
             <div class="card card-secondary">
-              <div class="card-header">
-                <h3 class="card-title">Add New supplier Details</h3>
-                <!-- <br>
-                <span style="font-size: 12px;">Put Branch Manage Information</span> -->
+                
+              <div class="card-header d-flex align-items-center">
+                <h3 class="card-title">Edit supplier Details</h3>
+                <a href="{{ route('admin.supplier.index') }}" class="btn btn-success ml-auto">Back</a>
               </div>
               
               <!-- /.card-header -->
