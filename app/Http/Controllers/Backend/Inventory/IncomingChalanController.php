@@ -87,19 +87,51 @@ class IncomingChalanController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+     */ 
+
+     public function edit($id)
+     {
+        $pageTitle = 'Edit Incoming Chalan';
+        // Find the IncomingChalan by ID
+        $incomingChalan = IncomingChalan::with('sale', 'products')->findOrFail($id);
+        $sales = Sale::latest()->get();
+
+        // Pass the IncomingChalan and its products to the view
+        return view('backend.admin.inventory.sales.chalan.edit', compact('pageTitle', 'incomingChalan', 'sales'));
+     }
+
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'description' => 'nullable|string|max:1000',
+            'receive_quantity' => 'required|array',
+            'receive_quantity.*' => 'integer|min:0', // Validate each quantity as an integer
+        ]);
+
+        // Find the IncomingChalan record
+        $incomingChalan = IncomingChalan::findOrFail($id);
+
+        // Update only the description
+        $incomingChalan->update([
+            'description' => $request->description,
+        ]);
+
+        // Update receive_quantity for each product
+        foreach ($request->receive_quantity as $index => $qty) {
+            $incomingChalan->products[$index]->update([
+                'receive_quantity' => $qty,
+            ]);
+        }
+
+        return redirect()->route('incoming.chalan.index')->with('success', 'Updated successfully!');
     }
+
+
 
     /**
      * Remove the specified resource from storage.
