@@ -138,8 +138,8 @@
                                                                 <th>Ledger Name</th>
                                                                 <th>Reference No</th>
                                                                 <th>Description</th>
-                                                                <th class="text-end">Debit (৳)</th>
-                                                                <th class="text-end">Credit (৳)</th>
+                                                                <th class="text-end">Debit ({{ bdt() }})</th>
+                                                                <th class="text-end">Credit ({{ bdt() }})</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -149,16 +149,16 @@
                                                                     <td>{{ $detail->ledger->name ?? 'N/A' }}</td>
                                                                     <td>{{ $detail->reference_no ?? 'N/A' }}</td>
                                                                     <td>{{ $detail->description ?? 'N/A' }}</td>
-                                                                    <td class="text-end">৳{{ number_format($detail->debit, 2) }}</td>
-                                                                    <td class="text-end">৳{{ number_format($detail->credit, 2) }}</td>
+                                                                    <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($detail->debit, 2) }}</td>
+                                                                    <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($detail->credit, 2) }}</td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
                                                         <tfoot>
                                                             <tr>
                                                                 <th colspan="4" class="text-right">Total:</th>
-                                                                <th class="text-end">৳{{ number_format($voucher->details->sum('debit'), 2) }}</th>
-                                                                <th class="text-end">৳{{ number_format($voucher->details->sum('credit'), 2) }}</th>
+                                                                <th class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($voucher->details->sum('debit'), 2) }}</th>
+                                                                <th class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($voucher->details->sum('credit'), 2) }}</th>
                                                             </tr>
                                                         </tfoot>
                                                     </table>
