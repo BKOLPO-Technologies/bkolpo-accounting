@@ -6,6 +6,8 @@ use App\Http\Controllers\Backend\Inventory\PurchaseController;
 use App\Http\Controllers\Backend\Inventory\SalesController;
 use App\Http\Controllers\Backend\Inventory\QuotationController;
 use App\Http\Controllers\Backend\Inventory\WorkOrderController;
+use App\Http\Controllers\Backend\Inventory\IncomingChalanController;
+use App\Http\Controllers\Backend\Inventory\OutComingChalanController;
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
@@ -43,7 +45,32 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/edit/{id}', [SalesController::class, 'edit'])->name('admin.sale.edit');
         Route::put('/update/{id}', [SalesController::class, 'update'])->name('admin.sale.update');
         Route::get('/delete/{id}', [SalesController::class, 'destroy'])->name('admin.sale.destroy');
+        Route::get('/get-invoice-details/{id}', [SalesController::class, 'getInvoiceDetails']);
+
     });
+
+    /* ==================== Incoming Chalan =================== */
+    Route::prefix('chalan/incoming')->group(function () {
+        Route::get('/', [IncomingChalanController::class, 'index'])->name('incoming.chalan.index');
+        Route::get('/create', [IncomingChalanController::class, 'create'])->name('incoming.chalan.create');
+        Route::post('/store', [IncomingChalanController::class, 'store'])->name('incoming.chalan.store');
+        Route::get('/view/{id}', [IncomingChalanController::class, 'view'])->name('incoming.chalan.show');
+        Route::get('/edit/{id}', [IncomingChalanController::class, 'edit'])->name('incoming.chalan.edit');
+        Route::put('/update/{id}', [IncomingChalanController::class, 'update'])->name('incoming.chalan.update');
+        Route::get('/delete/{id}', [IncomingChalanController::class, 'destroy'])->name('incoming.chalan.destroy');
+    });
+
+    /* ==================== Outcoming Chalan =================== */
+    Route::prefix('chalan/outcoming')->group(function () {
+        Route::get('/', [OutComingChalanController::class, 'index'])->name('outcoming.chalan.index');
+        Route::get('/create', [OutComingChalanController::class, 'create'])->name('outcoming.chalan.create');
+        Route::post('/store', [OutComingChalanController::class, 'store'])->name('outcoming.chalan.store');
+        Route::get('/view/{id}', [OutComingChalanController::class, 'view'])->name('outcoming.chalan.show');
+        Route::get('/edit/{id}', [OutComingChalanController::class, 'edit'])->name('outcoming.chalan.edit');
+        Route::put('/update/{id}', [OutComingChalanController::class, 'update'])->name('outcoming.chalan.update');
+        Route::get('/delete/{id}', [OutComingChalanController::class, 'destroy'])->name('outcoming.chalan.destroy');
+    });
+
 
     // Quotation Routes
     Route::resource('quotations', QuotationController::class);

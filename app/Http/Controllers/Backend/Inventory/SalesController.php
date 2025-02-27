@@ -278,5 +278,38 @@ class SalesController extends Controller
     
         return redirect()->back()->with('error', 'Sale and related products deleted successfully..');
     }
+
+    public function getInvoiceDetails($id)
+    {
+        $sale = Sale::with(['client', 'saleProducts.product'])->find($id);
+    
+        if (!$sale) {
+            return response()->json(['error' => 'Invoice not found'], 404);
+        }
+    
+        // Map saleProducts to extract necessary product details
+        $products = $sale->saleProducts->map(function ($saleProduct) {
+            return [
+                'id' => $saleProduct->product->id,
+                'name' => $saleProduct->product->name,
+                'price' => $saleProduct->price,
+                'quantity' => $saleProduct->quantity,
+                'discount' => $saleProduct->discount,
+                'stockqty' => $saleProduct->product->quantity,
+            ];
+        });
+    
+        return response()->json([
+            'client' => [
+                'name' => $sale->client->name,
+                'company' => $sale->client->company,
+                'phone' => $sale->client->phone,
+                'email' => $sale->client->email,
+            ],
+            'products' => $products, // Properly passing the products array
+        ]);
+    }
+    
+
     
 }

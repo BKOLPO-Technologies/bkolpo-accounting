@@ -69,11 +69,11 @@
     <!-- /.content-header -->
 
     <!-- Main content -->
-    <div class="content">
+    <!-- <div class="content">
         <div class="welcome-message">
             <h2>Welcome to the Admin Dashboard</h2>
         </div>
-    </div>
+    </div> -->
     <!-- /.content -->
 </div>
 

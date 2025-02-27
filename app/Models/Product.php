@@ -22,4 +22,10 @@ class Product extends Model
                     ->withPivot('quantity', 'price') // Access pivot data (quantity, price)
                     ->withTimestamps(); // Automatically manage created_at and updated_at timestamps
     }
+
+    // Relationship with SaleProduct
+    public function saleProducts()
+    {
+        return $this->hasMany(SaleProduct::class, 'product_id');
+    }
 }

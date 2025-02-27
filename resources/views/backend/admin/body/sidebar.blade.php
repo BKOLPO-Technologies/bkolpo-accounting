@@ -207,7 +207,7 @@
               $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet','report.ledger.report','report.ledger.single.report','report.ledger.group.report','report.ledger.group.single.report','report.ledger.profit.loss');
               $isSupplierActive = Route::is('admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit');
               $isClientActive = Route::is('admin.client.index','admin.client.create','admin.client.view','admin.client.edit');
-              $isSalesActive = Route::is('admin.sale.index','admin.sale.create','admin.sale.view','admin.sale.edit','quotations.index','quotations.create','quotations.edit','quotations.show');
+              $isSalesActive = Route::is('admin.sale.index','admin.sale.create','admin.sale.view','admin.sale.edit','quotations.index','quotations.create','quotations.edit','quotations.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.view','incoming.chalan.edit');
               $isPurchaseActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.view','admin.purchase.edit','workorders.index','workorders.create','workorders.edit','workorders.show');
           @endphp
 
@@ -320,6 +320,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                  <a href="{{ route('incoming.chalan.index') }}" 
+                    class="nav-link {{ Route::is('incoming.chalan.index', 'incoming.chalan.create', 'incoming.chalan.show', 'incoming.chalan.edit') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Incoming Chalan List</p>
+                  </a>
+              </li>
+                <li class="nav-item">
                     <a href="{{ route('quotations.index') }}" 
                       class="nav-link {{ Route::is('quotations.index', 'quotations.create', 'quotations.show', 'quotations.edit') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
@@ -339,12 +346,18 @@
               </a>
               <!-- Sales -->
               <ul class="nav nav-treeview">
-                <li class="nav-item">
+                  <li class="nav-item">
                       <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index','admin.purchase.create', 'admin.purchase.show', 'admin.purchase.edit') ? 'active' : '' }}">
                           <i class="far fa-circle nav-icon"></i>
                           <p>Purchase List</p>
                       </a>
                   </li>
+                  <li class="nav-item">
+                    <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index','admin.purchase.create', 'admin.purchase.show', 'admin.purchase.edit') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Outcoming Chalan List</p>
+                    </a>
+                </li>
                   <!-- <li class="nav-item">
                       <a href="{{ route('workorders.index') }}" 
                         class="nav-link {{ Route::is('workorders.index', 'workorders.create', 'workorders.show', 'workorders.edit') ? 'active' : '' }}">
