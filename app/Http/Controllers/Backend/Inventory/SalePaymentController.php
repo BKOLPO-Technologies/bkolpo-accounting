@@ -25,7 +25,7 @@ class SalePaymentController extends Controller
      */
     public function index()
     {
-        $pageTitle = 'Payment List';
+        $pageTitle = 'Receive Payment List';
     
         $payments = Payment::with(['ledger', 'client', 'supplier', 'incomingChalan', 'outcomingChalan'])
         ->orderBy('payment_date', 'desc')
@@ -40,7 +40,7 @@ class SalePaymentController extends Controller
      */
     public function create()
     {
-        $pageTitle = 'Payment';
+        $pageTitle = 'Receive Payment';
 
         $incomingChalans = IncomingChalan::latest()->get();
         $clients = Client::latest()->get();

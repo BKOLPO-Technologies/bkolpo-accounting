@@ -330,7 +330,7 @@
                 <a href="{{ route('sale.payment.index') }}" 
                   class="nav-link {{ Route::is('sale.payment.index', 'sale.payment.create') ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Payment List</p>
+                    <p>Receive Payment List</p>
                 </a>
               </li>
                 <li class="nav-item">

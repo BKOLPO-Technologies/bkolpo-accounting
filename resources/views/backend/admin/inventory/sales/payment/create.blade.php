@@ -75,7 +75,7 @@
                                     <label for="amount" class="form-label">Pay Amount:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
-                                        <input type="number" class="form-control" id="pay_amount" name="pay_amount" step="0.01" required>
+                                        <input type="number" class="form-control" id="pay_amount" name="pay_amount"  step="0.01" required>
                                     </div>
                                 </div>
 
