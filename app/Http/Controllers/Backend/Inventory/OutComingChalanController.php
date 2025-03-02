@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Backend\Inventory;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
 use Carbon\Carbon;
-use App\Models\Purchase;
-use App\Models\OutcomingChalan;
-use App\Models\OutcomingChalanProduct;
-use App\Models\Supplier;
 use App\Models\Product;
+
+use App\Models\StockIn;
+use App\Models\Purchase;
+use App\Models\StockOut;
+use App\Models\Supplier;
+use Illuminate\Http\Request;
+use App\Models\OutcomingChalan;
+use App\Models\InChalanInventory;
+use App\Models\OutChalanInventory;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log; 
+use App\Models\OutcomingChalanProduct;
 
 class OutComingChalanController extends Controller
 {
@@ -65,12 +69,36 @@ class OutComingChalanController extends Controller
 
         // Insert product details into Out Coming Chalan Product table
         foreach ($request->product_id as $index => $productId) {
-            OutcomingChalanProduct::create([
+            $outcomingChalanProduct = OutcomingChalanProduct::create([
                 'outcoming_chalan_id' => $outcomingChalan->id,
                 'product_id' => $productId,
                 'quantity' => $request->quantity[$index],
                 'receive_quantity' => $request->receive_quantity[$index],
             ]);
+
+            // Fetch matching InChalanInventory record to get the reference_lot
+            $inChalanInventory = StockIn::where('product_id', $productId)->latest()->first();
+            
+            if (!$inChalanInventory) {
+                throw new \Exception("No matching InChalanInventory found for Product ID: {$productId}");
+            }
+
+            // Fetch product details
+            $product = Product::find($productId);
+            if (!$product) {
+                throw new \Exception("Product with ID {$productId} not found.");
+            }
+
+            // Insert into OutChalanInventory
+            StockOut::create([
+                'reference_lot' => $inChalanInventory->reference_lot, // Matching based on product
+                'product_id' => $productId,
+                'purchase_id' => $request->purchase_id,
+                'outcoming_chalan_product_id' => $outcomingChalanProduct->id, // Correctly referencing the created record
+                'quantity' => $request->receive_quantity[$index],
+                'price' => $product->price * $request->receive_quantity[$index], // Calculate price based on quantity received
+            ]);
+            
         }
 
         return redirect()->route('outcoming.chalan.index')->with('success', 'Out Coming Chalan created successfully!');

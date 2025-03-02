@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\Backend\Inventory;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
 use Carbon\Carbon;
 use App\Models\Sale;
-use App\Models\IncomingChalan;
-use App\Models\IncomingChalanProduct;
+
 use App\Models\Client;
 use App\Models\Product;
+use App\Models\StockIn;
+use Illuminate\Http\Request;
+use App\Models\IncomingChalan;
+use App\Models\InChalanInventory;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log; 
+use App\Models\IncomingChalanProduct;
 
 class IncomingChalanController extends Controller
 {
@@ -45,36 +47,61 @@ class IncomingChalanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request){
-        // Validate request data
-        $request->validate([
-            'sale_id' => 'required|exists:sales,id',
-            'invoice_date' => 'required|date',
-            'description' => 'nullable|string',
-            'product_id' => 'required|array',
-            'quantity' => 'required|array',
-            'receive_quantity' => 'required|array',
-        ]);
-
-        // Create IncomingChalan record
-        $incomingChalan = IncomingChalan::create([
-            'sale_id' => $request->sale_id,
-            'invoice_date' => $request->invoice_date,
-            'description' => $request->description,
-        ]);
-
-        // Insert product details into IncomingChalanProduct table
-        foreach ($request->product_id as $index => $productId) {
-            IncomingChalanProduct::create([
-                'incoming_chalan_id' => $incomingChalan->id,
-                'product_id' => $productId,
-                'quantity' => $request->quantity[$index],
-                'receive_quantity' => $request->receive_quantity[$index],
+    public function store(Request $request)
+    {
+        try {
+            // Validate request data
+            $request->validate([
+                'sale_id' => 'required|exists:sales,id',
+                'invoice_date' => 'required|date',
+                'description' => 'nullable|string',
+                'product_id' => 'required|array',
+                'quantity' => 'required|array',
+                'receive_quantity' => 'required|array',
             ]);
-        }
 
-        return redirect()->route('incoming.chalan.index')->with('success', 'Incoming Chalan created successfully!');
+            // Create IncomingChalan record
+            $incomingChalan = IncomingChalan::create([
+                'sale_id' => $request->sale_id,
+                'invoice_date' => $request->invoice_date,
+                'description' => $request->description,
+            ]);
+
+            // Insert product details into IncomingChalanProduct table
+            foreach ($request->product_id as $index => $productId) {
+                $incomingChalanProduct = IncomingChalanProduct::create([
+                    'incoming_chalan_id' => $incomingChalan->id,
+                    'product_id' => $productId,
+                    'quantity' => $request->quantity[$index],
+                    'receive_quantity' => $request->receive_quantity[$index],
+                ]);
+
+                // Fetch product details
+                $product = Product::find($productId);
+                if (!$product) {
+                    throw new \Exception("Product with ID {$productId} not found.");
+                }
+
+                // Store product details into InChalanInventory table
+                StockIn::create([
+                    'reference_lot' => 'Ref-' . $incomingChalan->id . '-' . $productId,
+                    'product_id' => $productId,
+                    'sale_id' => $request->sale_id,
+                    'incoming_chalan_product_id' => $incomingChalanProduct->id,
+                    'quantity' => $request->receive_quantity[$index],
+                    'price' => $product->price * $request->receive_quantity[$index], 
+                ]);
+            }
+
+            // Success message after processing everything correctly
+            return redirect()->route('incoming.chalan.index')->with('success', 'Incoming Chalan created successfully!');
+            
+        } catch (\Exception $e) {
+            // Handle any exception that occurs
+            return back()->with('error', 'An error occurred: ' . $e->getMessage());
+        }
     }
+
 
 
     /**

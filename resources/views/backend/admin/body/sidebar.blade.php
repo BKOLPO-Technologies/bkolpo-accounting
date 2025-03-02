@@ -383,10 +383,10 @@
           </li>
 
           <li class="nav-item 
-          {{ Route::is('admin.category*') || Route::is('admin.product*') ? 'menu-open' : '' }}
+          {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('stock*') ? 'menu-open' : '' }}
           ">
               <a href="#" class="nav-link 
-              {{ Route::is('admin.category*') || Route::is('admin.product*')  ? 'active' : '' }}">
+              {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('stock*')  ? 'active' : '' }}">
                   <i class="nav-icon fas fa-receipt"></i>
                   <p>
                     Inventory
@@ -436,15 +436,23 @@
               </ul>
               <!-- Stock Management -->
               <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
+                <li class="nav-item {{ Route::is('stock*') ? 'menu-open' : '' }}">
+                  <a href="#" class="nav-link {{ Route::is('stock*') ? 'active' : '' }}">
                       <!-- <i class="fa-solid fa-money-check"></i> -->
                       <i class="far fa-circle nav-icon"></i>
                       <p>
-                        Stock Management
+                        Stock
                         <i class="fas fa-angle-left right"></i>
                       </p>
                   </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('stock.index') }}" class="nav-link {{ Route::is('stock.index', 'stock.show') ? 'active' : '' }}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Manage Stock</p>
+                        </a>
+                    </li>
+                  </ul>
                 </li>
               </ul>
           </li>

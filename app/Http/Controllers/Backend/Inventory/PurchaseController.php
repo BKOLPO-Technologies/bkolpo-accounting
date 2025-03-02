@@ -36,7 +36,7 @@ class PurchaseController extends Controller
 
         $invoice_no = 'BKOLPO-'. $randomNumber;
 
-        return view('backend/admin/inventory/purchase/create',compact('pageTitle', 'suppliers', 'products','invoice_no')); 
+        return view('backend.admin.inventory.purchase.create',compact('pageTitle', 'suppliers', 'products','invoice_no')); 
     }
 
     // purchase store
