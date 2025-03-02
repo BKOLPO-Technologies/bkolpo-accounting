@@ -320,6 +320,20 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                  <a href="{{ route('quotations.index') }}" 
+                    class="nav-link {{ Route::is('quotations.index', 'quotations.create', 'quotations.show', 'quotations.edit') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Receive List</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('quotations.index') }}" 
+                    class="nav-link {{ Route::is('quotations.index', 'quotations.create', 'quotations.show', 'quotations.edit') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Payment List</p>
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a href="{{ route('incoming.chalan.index') }}" 
                     class="nav-link {{ Route::is('incoming.chalan.index', 'incoming.chalan.create', 'incoming.chalan.show', 'incoming.chalan.edit') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
