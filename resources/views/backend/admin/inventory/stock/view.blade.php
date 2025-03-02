@@ -56,32 +56,7 @@
                                     <p><strong>Description:</strong> {{ $product->description ?? 'No description available' }}</p>
                                 </div>
 
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead class="bg-light">
-                                            <tr>
-                                                <th>Reference Lot</th>
-                                                <th>Type</th>
-                                                <th>Quantity</th>
-                                                <th>Price</th>
-                                                <th>Transaction Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($allRecords as $record)
-                                            <tr class="{{ $record->type == 'in' ? 'table-success' : 'table-danger' }}">
-                                                <td>{{ $record->reference_lot }}</td>
-                                                <td class="fw-bold text-uppercase">{{ $record->type }}</td>
-                                                <td>{{ $record->quantity }}</td>
-                                                <td>{{ number_format($record->price, 2) }}</td>
-                                                <td>{{ $record->created_at->format('Y-m-d H:i:s') }}</td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div class="row mt-4">
+                                <div class="row mt-4 mb-4">
                                     <div class="col-md-6">
                                         <div class="p-3 border rounded bg-light">
                                             <h5 class="fw-bold text-success">Total Stock In</h5>
@@ -97,6 +72,34 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th>Reference Lot</th>
+                                                <th>Type</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Transaction Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($allRecords as $record)
+                                            {{-- <tr class="{{ $record->type == 'in' ? 'table-success' : 'table-danger' }}"> --}}
+                                            <tr>
+                                                <td>{{ $record->reference_lot }}</td>
+                                                <td class="fw-bold text-uppercase">{{ $record->type }}</td>
+                                                <td>{{ $record->quantity }}</td>
+                                                <td>{{ number_format($record->price, 2) }}</td>
+                                                <td>{{ $record->created_at->format('Y-m-d H:i:s') }}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                
                             </div>
 
                         </div>
