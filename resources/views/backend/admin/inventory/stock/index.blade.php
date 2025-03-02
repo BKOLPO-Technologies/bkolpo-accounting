@@ -26,31 +26,38 @@
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
-                                    <a href="#" class="btn btn-sm btn-success rounded-0">
-                                        <i class="fas fa-plus fa-sm"></i> Add New Chalan
-                                    </a>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>SL</th>
-                                            <th>Invoice No</th>
-                                            <th>Date</th>
+                                            <th>Sl</th>
+                                            <th>Name</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Image</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($purchases as $purchase)
+                                        @foreach ($products as $key=> $product)
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $purchase->invoice_no }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($purchase->invoice_date)->format('d F Y') }}</td>
+                                                <td>{{ $key+1 }}</td>
+                                                <td>{{ $product->name }}</td>
+                                                <td>{{ $product->price }}</td>
+                                                <td>{{ $product->quantity }}</td>
+                                                <td>
+                                                    @if($product->image)
+                                                        <img src="{{ (!empty($product->image)) ? url('upload/inventory/products/'.$product->image):url('https://via.placeholder.com/70x60') }}" width="50">
+                                                    @else
+                                                        No Image
+                                                    @endif
+                                                </td>
                                                 
                                                 <td class="col-2">
                                                     <!-- View Button -->
-                                                    <a href="{{ route('stock.show', $purchase->id) }}" class="btn btn-success btn-sm">
+                                                    <a href="{{ route('stock.show', $product->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                 </td>

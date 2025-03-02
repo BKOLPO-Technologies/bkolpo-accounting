@@ -77,11 +77,11 @@ class OutComingChalanController extends Controller
             ]);
 
             // Fetch matching InChalanInventory record to get the reference_lot
-            $inChalanInventory = StockIn::where('product_id', $productId)->latest()->first();
+            //$inChalanInventory = StockIn::where('product_id', $productId)->latest()->first();
             
-            if (!$inChalanInventory) {
-                throw new \Exception("No matching InChalanInventory found for Product ID: {$productId}");
-            }
+            // if (!$inChalanInventory) {
+            //     throw new \Exception("No matching InChalanInventory found for Product ID: {$productId}");
+            // }
 
             // Fetch product details
             $product = Product::find($productId);
@@ -91,7 +91,7 @@ class OutComingChalanController extends Controller
 
             // Insert into OutChalanInventory
             StockOut::create([
-                'reference_lot' => $inChalanInventory->reference_lot, // Matching based on product
+                'reference_lot' => 'Ref-' . $outcomingChalan->id . '-' . $productId, // Matching based on product
                 'product_id' => $productId,
                 'purchase_id' => $request->purchase_id,
                 'outcoming_chalan_product_id' => $outcomingChalanProduct->id, // Correctly referencing the created record

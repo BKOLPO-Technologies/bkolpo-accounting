@@ -16,8 +16,8 @@ return new class extends Migration
 
             $table->string('reference_lot');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->foreignId('sale_id')->constrained('sales')->onDelete('cascade');
-            $table->foreignId('incoming_chalan_product_id')->constrained('incoming_chalan_products')->onDelete('cascade');
+            $table->foreignId('purchase_id')->constrained('purchases')->onDelete('cascade');
+            $table->foreignId('outcoming_chalan_product_id')->constrained('outcoming_chalan_products')->onDelete('cascade');
             $table->integer('quantity');
             $table->decimal('price', 10, 2);
             
