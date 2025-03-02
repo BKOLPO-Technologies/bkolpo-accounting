@@ -66,7 +66,7 @@
                                     <label for="total_amount" class="form-label">Total Amount:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
-                                        <input type="text" name="total_amount" class="form-control" id="total_amount" readonly>
+                                        <input type="text" class="form-control" id="total_amount" readonly>
                                     </div>
                                 </div>
 
@@ -75,7 +75,7 @@
                                     <label for="amount" class="form-label">Pay Amount:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
-                                        <input type="number" class="form-control" id="pay_amount" name="pay_amount" step="0.01" required>
+                                        <input type="number" class="form-control" id="pay_amount" name="amount" step="0.01" required>
                                     </div>
                                 </div>
 
@@ -88,19 +88,30 @@
                                     </div>
                                 </div>
 
-                                <!-- Payment Method -->
+                                <!-- Ledger Group Selection -->
                                 <div class="col-md-6 mb-3">
                                     <label for="ledger_group_id" class="form-label">Select Payment Method:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-book"></i></span>
-                                        <select class="form-control" name="payment_method" id="payment_method" required>
+                                        <select class="form-control" name="ledger_group_id" id="ledger_group_id" required>
                                             <option value="">Choose Payment Method</option>
-                                            <option value="cash" {{ old('payment_method', $payment->payment_method ?? '') === 'cash' ? 'selected' : '' }}>Cash</option>
-                                            <option value="bank" {{ old('payment_method', $payment->payment_method ?? '') === 'bank' ? 'selected' : '' }}>Bank</option>
+                                            @foreach($ledgerGroups as $group)
+                                                <option value="{{ $group->id }}">{{ $group->group_name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
 
+                                <!-- Ledger Name Selection (Filtered Based on Selected Ledger Group) -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="ledger_id" class="form-label">Select Ledger:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
+                                        <select class="form-control" name="ledger_id" id="ledger_id" required>
+                                            <option value="">Choose Ledger</option>
+                                        </select>
+                                    </div>
+                                </div>
 
                                 <!-- Payment Date -->
                                 <div class="col-md-6 mb-3">
@@ -110,15 +121,6 @@
                                         <input type="text" id="date" class="form-control" name="payment_date" value="{{ date('Y-m-d') }}" required>
                                     </div>
                                 </div>
-
-                                {{-- <div class="col-lg-12 col-md-12 mb-3">
-                                    <label for="description">Description</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-comment"></i></span>
-                                        <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter the description"></textarea>
-                                    </div>
-                                </div> --}}
-                                
                             </div>
                             <!-- Submit Button (Right-Aligned) -->
                             <div class="d-flex justify-content-end mt-3">

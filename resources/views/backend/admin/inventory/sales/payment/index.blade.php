@@ -38,9 +38,10 @@
                                             <th>Sl No</th>
                                             <th>Invoice No</th>
                                             <th>Client</th>
-                                            <th>Ledger</th>  
-                                            <th>Amount</th>
-                                            <th>Payment Mode</th>
+                                            {{-- <th>Total Amount</th> --}}
+                                            <th>Pay Amount</th>
+                                            {{-- <th>Due Amount</th> --}}
+                                            <th>Payment Method</th>  
                                             <th>Payment Date</th>
                                         </tr>
                                     </thead>
@@ -48,11 +49,21 @@
                                         @foreach($payments as $key => $payment)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
-                                                <td>{{ $payment->incoming_chalan_id }}</td>
+                                                <td>{{ $payment->incomingChalan->sale->invoice_no ?? 'N/A' }}</td>
                                                 <td>{{ $payment->client->name ?? 'N/A' }}</td>
-                                                <td>{{ $payment->ledger->group_name ?? 'N/A' }}</td>
-                                                <td>{{ number_format($payment->amount, 2) }}</td>
-                                                <td>{{ ucfirst($payment->payment_mode) }}</td>
+                                                {{-- <td>{{ number_format($payment->total_amount, 2) }}</td> --}}
+                                                <td>{{ number_format($payment->pay_amount, 2) }}</td>
+                                                {{-- <td>{{ number_format($payment->total_amount-$payment->pay_amount, 2) }}</td> --}}
+                                                <!-- Payment Method -->
+                                                <td>
+                                                    @if($payment->payment_method == 'cash')
+                                                        Cash
+                                                    @elseif($payment->payment_method == 'bank')
+                                                        Bank
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                </td>
                                                 <td>{{ $payment->payment_date }}</td>
                                             </tr>
                                         @endforeach

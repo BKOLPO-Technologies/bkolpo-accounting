@@ -81,7 +81,7 @@ class SalePaymentController extends Controller
             return [
                 'id' => $chalan->id,
                 'invoice_no' => $chalan->sale->invoice_no ?? 'N/A',
-                'total_amount' => $chalan->sale->total ?? 0
+                'total_amount' => $chalan->sale->total-$chalan->sale->paid_amount ?? 0
             ];
         });
 
@@ -97,8 +97,85 @@ class SalePaymentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the incoming form data
+        $request->validate([
+            'client_id' => 'required|exists:clients,id',
+            'incoming_chalan_id' => 'nullable|exists:incoming_chalans,id',
+            'total_amount' => 'required|numeric|min:0',
+            'pay_amount' => 'required|numeric|min:0',
+            'due_amount' => 'required|numeric|min:0',
+            'payment_method' => 'required|in:cash,bank',
+            'payment_date' => 'required|date',
+        ]);
+    
+        // Begin a transaction to ensure atomicity
+        DB::beginTransaction();
+    
+        try {
+            // Check if the payment for this incoming chalan already exists
+            $payment = Payment::where('incoming_chalan_id', $request->input('incoming_chalan_id'))
+                              ->where('client_id', $request->input('client_id'))
+                              ->first();
+    
+            // If the payment exists, update it, otherwise create a new payment
+            if ($payment) {
+                // Update existing payment
+                $payment->total_amount += $request->input('total_amount');
+                $payment->pay_amount += $request->input('pay_amount');
+                $payment->due_amount = $request->input('due_amount');  // Ensure to set the remaining due amount
+                $payment->payment_date = $request->input('payment_date');
+                $payment->payment_method = $request->input('payment_method');
+                $payment->save();
+            } else {
+                // Create a new payment
+                $payment = Payment::create([
+                    'client_id' => $request->input('client_id'),
+                    'ledger_id' => '1',
+                    'incoming_chalan_id' => $request->input('incoming_chalan_id'),
+                    'total_amount' => $request->input('total_amount'),
+                    'pay_amount' => $request->input('pay_amount'),
+                    'due_amount' => $request->input('due_amount'),
+                    'payment_method' => $request->input('payment_method'),
+                    'payment_date' => $request->input('payment_date'),
+                ]);
+            }
+    
+            // Find the sale based on the client ID and incoming chalan (you can adjust this logic based on your relationships)
+            $sale = Sale::where('client_id', $request->input('client_id'))->first();
+    
+            // If sale exists
+            if ($sale) {
+                // Update the paid amount and remaining amount
+                $sale->paid_amount += $request->input('pay_amount');
+                $sale->remaining_amount -= $request->input('pay_amount');
+                $sale->remaining_amount -= $request->input('pay_amount');
+    
+                // Update sale status based on remaining amount
+                if ($sale->remaining_amount <= 0) {
+                    $sale->status = 'paid';
+                } else {
+                    $sale->status = 'partially_paid';
+                }
+    
+                $sale->save();
+            }
+    
+            // Commit the transaction
+            DB::commit();
+    
+            // Redirect after storing the payment
+            return redirect()->route('sale.payment.index')->with('success', 'Payment has been successfully recorded!');
+    
+        } catch (\Exception $e) {
+            // If an error occurs, roll back the transaction
+            DB::rollBack();
+    
+            // Log the error or return a custom error message
+            return redirect()->back()->with('error', 'Payment failed! ' . $e->getMessage());
+        }
     }
+    
+
 
     /**
      * Display the specified resource.
