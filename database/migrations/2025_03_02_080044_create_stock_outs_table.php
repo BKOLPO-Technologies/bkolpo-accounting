@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('out_chalan_inventories', function (Blueprint $table) {
+        Schema::create('stock_outs', function (Blueprint $table) {
             $table->id();
 
             $table->string('reference_lot');
@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('incoming_chalan_product_id')->constrained('incoming_chalan_products')->onDelete('cascade');
             $table->integer('quantity');
             $table->decimal('price', 10, 2);
-
+            
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('out_chalan_inventories');
+        Schema::dropIfExists('stock_outs');
     }
 };

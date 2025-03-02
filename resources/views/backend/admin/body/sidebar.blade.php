@@ -447,7 +447,7 @@
                   </a>
                   <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="{{ route('stock.index') }}" class="nav-link {{ Route::is('stock.index') ? 'active' : '' }}">
+                        <a href="{{ route('stock.index') }}" class="nav-link {{ Route::is('stock.index', 'stock.show') ? 'active' : '' }}">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Manage Stock</p>
                         </a>

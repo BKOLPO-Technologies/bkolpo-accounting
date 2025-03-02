@@ -38,12 +38,24 @@
                                             <th>SL</th>
                                             <th>Invoice No</th>
                                             <th>Date</th>
-                                            <th>Description</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+                                        @foreach($purchases as $purchase)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $purchase->invoice_no }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($purchase->invoice_date)->format('d F Y') }}</td>
+                                                
+                                                <td class="col-2">
+                                                    <!-- View Button -->
+                                                    <a href="{{ route('stock.show', $purchase->id) }}" class="btn btn-success btn-sm">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

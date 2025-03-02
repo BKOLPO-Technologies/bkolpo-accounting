@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Backend\Inventory;
 use Carbon\Carbon;
 use App\Models\Product;
 
+use App\Models\StockIn;
 use App\Models\Purchase;
+use App\Models\StockOut;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Models\OutcomingChalan;
@@ -75,7 +77,7 @@ class OutComingChalanController extends Controller
             ]);
 
             // Fetch matching InChalanInventory record to get the reference_lot
-            $inChalanInventory = InChalanInventory::where('product_id', $productId)->latest()->first();
+            $inChalanInventory = StockIn::where('product_id', $productId)->latest()->first();
             
             if (!$inChalanInventory) {
                 throw new \Exception("No matching InChalanInventory found for Product ID: {$productId}");
@@ -88,7 +90,7 @@ class OutComingChalanController extends Controller
             }
 
             // Insert into OutChalanInventory
-            OutChalanInventory::create([
+            StockOut::create([
                 'reference_lot' => $inChalanInventory->reference_lot, // Matching based on product
                 'product_id' => $productId,
                 'purchase_id' => $request->purchase_id,

@@ -7,6 +7,7 @@ use App\Models\Sale;
 
 use App\Models\Client;
 use App\Models\Product;
+use App\Models\StockIn;
 use Illuminate\Http\Request;
 use App\Models\IncomingChalan;
 use App\Models\InChalanInventory;
@@ -82,7 +83,7 @@ class IncomingChalanController extends Controller
                 }
 
                 // Store product details into InChalanInventory table
-                InChalanInventory::create([
+                StockIn::create([
                     'reference_lot' => 'Ref-' . $incomingChalan->id . '-' . $productId,
                     'product_id' => $productId,
                     'sale_id' => $request->sale_id,
