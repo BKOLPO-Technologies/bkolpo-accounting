@@ -36,6 +36,8 @@
                                             <th>Name</th>
                                             <th>Price</th>
                                             <th>Quantity</th>
+                                            <th>Stock In</th>
+                                            <th>Stock Out</th>
                                             <th>Image</th>
                                             <th>Actions</th>
                                         </tr>
@@ -47,6 +49,8 @@
                                                 <td>{{ $product->name }}</td>
                                                 <td>{{ $product->price }}</td>
                                                 <td>{{ $product->quantity }}</td>
+                                                <td>{{ $product->stockIns->sum('quantity') }}</td>  <!-- Total Stock In -->
+                                                <td>{{ $product->stockOuts->sum('quantity') }}</td> <!-- Total Stock Out -->
                                                 <td>
                                                     @if($product->image)
                                                         <img src="{{ (!empty($product->image)) ? url('upload/inventory/products/'.$product->image):url('https://via.placeholder.com/70x60') }}" width="50">

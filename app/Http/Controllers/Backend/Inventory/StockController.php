@@ -16,7 +16,10 @@ class StockController extends Controller
     {
         $pageTitle = 'Stock List';
 
-        $products = Product::all();
+        //$products = Product::all();
+
+        // Load products with stock-in and stock-out data
+        $products = Product::with('stockIns', 'stockOuts')->get();
 
         return view('backend.admin.inventory.stock.index', compact('pageTitle', 'products'));
     }
