@@ -31,6 +31,7 @@ class AdminSeeder extends Seeder
             ]
         );
 
+        
         // Define the roles
         $roles = [
             ['id' => 1, 'name' => 'Admin'],
