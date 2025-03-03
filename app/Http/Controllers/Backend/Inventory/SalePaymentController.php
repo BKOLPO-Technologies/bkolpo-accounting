@@ -145,18 +145,8 @@ class SalePaymentController extends Controller
     
             // If sale exists
             if ($sale) {
-                // Update the paid amount and remaining amount
+                // Update the paid amount
                 $sale->paid_amount += $request->input('pay_amount');
-                $sale->remaining_amount -= $request->input('pay_amount');
-                $sale->remaining_amount -= $request->input('pay_amount');
-    
-                // Update sale status based on remaining amount
-                if ($sale->remaining_amount <= 0) {
-                    $sale->status = 'paid';
-                } else {
-                    $sale->status = 'partially_paid';
-                }
-    
                 $sale->save();
             }
     

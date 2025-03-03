@@ -22,7 +22,6 @@ return new class extends Migration
 
             // $table->decimal('total_amount', 15, 2); // Total Purchases amount
             $table->decimal('paid_amount', 15, 2)->default(0); // Amount already paid
-            $table->decimal('remaining_amount', 15, 2)->nullable()->default(0); // Amount left to be paid
             $table->enum('status', ['pending', 'paid', 'partially_paid'])->default('pending'); // Purchases status
 
             $table->text('description')->nullable();

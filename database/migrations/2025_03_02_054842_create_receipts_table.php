@@ -25,6 +25,7 @@ return new class extends Migration
             $table->enum('payment_method', ['cash', 'bank']);
             $table->text('description')->nullable();
             $table->date('payment_date');
+            
         
             // Adding a status to distinguish incoming and outgoing receipts
             $table->enum('status', ['incoming', 'outcoming'])->default('incoming'); // Status to differentiate
