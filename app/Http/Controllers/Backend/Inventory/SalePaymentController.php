@@ -31,6 +31,8 @@ class SalePaymentController extends Controller
         ->orderBy('id', 'desc')
         ->whereNotNull('incoming_chalan_id')
         ->get();
+
+        //dd($payments->toArray());
     
         return view('backend.admin.inventory.sales.payment.index', compact('pageTitle', 'payments'));
     }
@@ -69,12 +71,14 @@ class SalePaymentController extends Controller
 
     public function getChalansBySupplier(Request $request)
     {
+        //dd($request->supplier_id);
         // Step 1: Find Purchase where supplier_id matches
-        $purchases = Purchase::where('supplier_id', $request->supplier_id)->pluck('id'); 
+        $purchase = Purchase::where('supplier_id', $request->supplier_id)->pluck('id'); 
+        //dd($purchase);
 
         // Step 2: Find Incoming Chalans based on purchase_id
-        $chalans = IncomingChalan::whereIn('purchase_id', $purchases)
-            ->whereHas('purchases', function($query) {
+        $chalans = IncomingChalan::whereIn('purchase_id', $purchase)
+            ->whereHas('purchase', function($query) {
                 $query->where('status', '!=', 'paid'); 
             })
             ->with('purchase') // Ensure related purchase invoice is fetched

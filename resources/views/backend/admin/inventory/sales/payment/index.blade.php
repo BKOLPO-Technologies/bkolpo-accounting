@@ -49,7 +49,7 @@
                                         @foreach($payments as $key => $payment)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
-                                                <td>{{ $payment->incomingChalan->sale->invoice_no ?? 'N/A' }}</td>
+                                                <td>{{ $payment->incomingChalan->purchase->invoice_no ?? 'N/A' }}</td>
                                                 <td>{{ $payment->supplier->name ?? 'N/A' }}</td>
                                                 {{-- <td>{{ number_format($payment->total_amount, 2) }}</td> --}}
                                                 <td>{{ number_format($payment->pay_amount, 2) }}</td>

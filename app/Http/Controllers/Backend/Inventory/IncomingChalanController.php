@@ -27,7 +27,7 @@ class IncomingChalanController extends Controller
         $pageTitle = 'Incoming Chalan List';
     
         // Fetch all incoming chalans with related sale details
-        $incomingchalans = IncomingChalan::with('sale')->latest()->get();
+        $incomingchalans = IncomingChalan::with('purchase')->latest()->get();
     
         return view('backend.admin.inventory.purchase.chalan.index', compact('pageTitle', 'incomingchalans'));
     }
@@ -50,9 +50,12 @@ class IncomingChalanController extends Controller
      */
     public function store(Request $request)
     {
+        Log::info('Incoming Chalan Store: Request received', ['request' => $request->all()]);
+
         DB::beginTransaction(); // Start Transaction
 
         try {
+            // Log::info('Incoming Chalan Store: Request received', ['request' => $request->all()]);
             // Validate request data
             $request->validate([
                 'purchase_id' => 'required|exists:purchases,id',
@@ -63,6 +66,8 @@ class IncomingChalanController extends Controller
                 'receive_quantity' => 'required|array',
             ]);
 
+            Log::info('Validation passed.');
+
             // Create IncomingChalan record
             $incomingChalan = IncomingChalan::create([
                 'purchase_id' => $request->purchase_id,
@@ -70,17 +75,21 @@ class IncomingChalanController extends Controller
                 'description' => $request->description,
             ]);
 
+            Log::info('IncomingChalan created', ['incomingChalan' => $incomingChalan]);
+
             // Generate current timestamp
             $timestamp = now()->format('YmdHis'); // Format: YYYYMMDDHHMMSS
 
             // Insert product details into IncomingChalanProduct table
             foreach ($request->product_id as $index => $productId) {
+                Log::info("Processing product: {$productId}");
                 $incomingChalanProduct = IncomingChalanProduct::create([
                     'incoming_chalan_id' => $incomingChalan->id,
                     'product_id' => $productId,
                     'quantity' => $request->quantity[$index],
                     'receive_quantity' => $request->receive_quantity[$index],
                 ]);
+                Log::info('IncomingChalanProduct created', ['incomingChalanProduct' => $incomingChalanProduct]);
 
                 // // Fetch product details
                 // $product = Product::find($productId);
@@ -112,12 +121,15 @@ class IncomingChalanController extends Controller
             }
 
             DB::commit(); // Commit Transaction
+            Log::info('Transaction committed successfully.');
 
             // Success message after processing everything correctly
             return redirect()->route('incoming.chalan.index')->with('success', 'Incoming Chalan created successfully!');
             
         } catch (\Exception $e) {
             // Handle any exception that occurs
+            DB::rollBack(); // Rollback transaction if an error occurs
+            Log::error('Error in Incoming Chalan Store: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
     }
@@ -131,10 +143,10 @@ class IncomingChalanController extends Controller
     {
         $pageTitle = 'In Coming Chalan';
 
-        $incomingChalan = IncomingChalan::with('sale', 'products')->findOrFail($id);
+        $chalan = IncomingChalan::with('purchase', 'products')->findOrFail($id);
         $sales = Sale::latest()->get();
 
-        return view('backend.admin.inventory.purchase.chalan.view',compact('pageTitle','incomingChalan', 'sales')); 
+        return view('backend.admin.inventory.purchase.chalan.view',compact('pageTitle','chalan', 'sales'));
     }
 
     /**

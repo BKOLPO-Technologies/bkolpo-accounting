@@ -21,4 +21,5 @@ class IncomingChalan extends Model
     {
         return $this->hasMany(IncomingChalanProduct::class);
     }
+
 }
