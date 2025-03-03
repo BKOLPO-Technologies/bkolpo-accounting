@@ -115,14 +115,30 @@ class SaleReceiptController extends Controller
     
             // Find the Purchase based on the Purchase ID and outcoming chalan (you can adjust this logic based on your relationships)
             $purchase = Purchase::where('supplier_id', $request->input('supplier_id'))->first();
-    
+
             // If purchase exists
             if ($purchase) {
-                // Update the paid amount and remaining amount
+                // Update the paid amount
                 $purchase->paid_amount += $request->input('pay_amount');
-              
+
+                // dd($purchase->total,$purchase->paid_amount);
+
+                // Check if the total paid amount is equal to or greater than the purchase amount
+                if ($purchase->paid_amount >= $purchase->total) {
+
+
+                    // If fully paid, update status to 'paid'
+                    $purchase->status = 'paid';
+                } else {
+                    // dd('not paid');
+                    // If partially paid, update status to 'partially_paid'
+                    $purchase->status = 'partially_paid';
+                }
+
+                // Save the updated sale
                 $purchase->save();
             }
+    
     
             // Commit the transaction
             DB::commit();
