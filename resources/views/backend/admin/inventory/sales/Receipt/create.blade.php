@@ -110,7 +110,6 @@
                                         <input type="text" id="date" class="form-control" name="payment_date" value="{{ date('Y-m-d') }}" required>
                                     </div>
                                 </div>
-
                                 {{-- <div class="col-lg-12 col-md-12 mb-3">
                                     <label for="description">Description</label>
                                     <div class="input-group">
@@ -118,7 +117,6 @@
                                         <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter the description"></textarea>
                                     </div>
                                 </div> --}}
-                                
                             </div>
                             <!-- Submit Button (Right-Aligned) -->
                             <div class="d-flex justify-content-end mt-3">
