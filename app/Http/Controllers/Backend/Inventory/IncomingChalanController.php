@@ -49,6 +49,8 @@ class IncomingChalanController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction(); // Start Transaction
+
         try {
             // Validate request data
             $request->validate([
@@ -91,7 +93,20 @@ class IncomingChalanController extends Controller
                     'quantity' => $request->receive_quantity[$index],
                     'price' => $product->price * $request->receive_quantity[$index], 
                 ]);
+
+                // // Decrease product stock
+                // if ($product->quantity >= $request->receive_quantity[$index]) {
+                //     $product->decrement('quantity', $request->receive_quantity[$index]);
+                // } else {
+                //     throw new \Exception("Insufficient stock for Product ID {$productId}.");
+                // }
+
+                // Increase product stock
+                $product->increment('quantity', $request->receive_quantity[$index]);
+
             }
+
+            DB::commit(); // Commit Transaction
 
             // Success message after processing everything correctly
             return redirect()->route('incoming.chalan.index')->with('success', 'Incoming Chalan created successfully!');
