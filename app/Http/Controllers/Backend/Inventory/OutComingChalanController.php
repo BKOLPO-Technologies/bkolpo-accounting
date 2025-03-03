@@ -40,7 +40,7 @@ class OutComingChalanController extends Controller
     { 
         $pageTitle = 'Out Coming Chalan';
 
-        $sales = Sales::latest()->get();
+        $sales = Sale::latest()->get();
 
         return view('backend.admin.inventory.purchase.chalan.create',compact('pageTitle','sales')); 
     }
