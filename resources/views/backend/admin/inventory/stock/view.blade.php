@@ -54,6 +54,7 @@
                                     <p><strong>Name:</strong> {{ $product->name }}</p>
                                     <p><strong>Category:</strong> {{ $product->category->name ?? 'Uncategorized' }}</p>
                                     <p><strong>Description:</strong> {{ $product->description ?? 'No description available' }}</p>
+                                    <p><strong>Quantity:</strong> {{ $product->quantity ?? 'No Quantity available' }}</p>
                                 </div>
 
                                 <div class="row mt-4 mb-4">
