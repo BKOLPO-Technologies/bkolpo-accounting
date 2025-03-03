@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['pageTitle' => 'Outgoing Chalan List'])
+@extends('layouts.admin', ['pageTitle' => 'Incoming Chalan List'])
 @section('admin')
     <link rel="stylesheet" href="{{ asset('backend/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
     <div class="content-wrapper">
@@ -26,7 +26,7 @@
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
-                                    <a href="{{ route('outcoming.chalan.create') }}" class="btn btn-sm btn-success rounded-0">
+                                    <a href="{{ route('incoming.chalan.create') }}" class="btn btn-sm btn-success rounded-0">
                                         <i class="fas fa-plus fa-sm"></i> Add New Chalan
                                     </a>
                                 </div>
@@ -43,7 +43,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($outcomingchalans as $chalan)
+                                        @foreach($incomingchalans as $chalan)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $chalan->sale->invoice_no ?? 'N/A' }}</td>
@@ -51,15 +51,15 @@
                                                 <td>{{ $chalan->description ?? 'No Description' }}</td>
                                                 <td class="col-2">
                                                     <!-- View Button -->
-                                                    <a href="{{ route('outcoming.chalan.show', $chalan->id) }}" class="btn btn-success btn-sm">
+                                                    <a href="{{ route('incoming.chalan.show', $chalan->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                     <!-- Edit Button -->
-                                                    <a href="{{ route('outcoming.chalan.edit', $chalan->id) }}" class="btn btn-primary btn-sm">
+                                                    <a href="{{ route('incoming.chalan.edit', $chalan->id) }}" class="btn btn-primary btn-sm">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     <!-- Delete Button -->
-                                                    <a href="{{ route('outcoming.chalan.destroy', $chalan->id) }}" id="delete" class="btn btn-danger btn-sm">
+                                                    <a href="{{ route('incoming.chalan.destroy', $chalan->id) }}" id="delete" class="btn btn-danger btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </td>

@@ -323,7 +323,7 @@
                   <a href="{{ route('outcoming.chalan.index') }}" 
                     class="nav-link {{ Route::is('outcoming.chalan.index', 'outcoming.chalan.create', 'outcoming.chalan.show', 'outcoming.chalan.edit') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Outcoming Chalan List</p>
+                      <p>Outgoing Chalan List</p>
                   </a>
               </li>
               <li class="nav-item">

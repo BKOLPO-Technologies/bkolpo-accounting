@@ -38,7 +38,7 @@
                                             <th>SL</th>
                                             <th>Invoice No</th>
                                             <th>Invoice Date</th>
-                                            <th>Client Name</th>
+                                            <th>Customer Name</th>
                                             <th>Total Amount</th>
                                             <th>Paid Amount</th>
                                             <th>Due Amount</th>

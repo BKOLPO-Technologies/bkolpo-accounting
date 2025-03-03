@@ -37,7 +37,7 @@
                                         <tr>
                                             <th>Sl No</th>
                                             <th>Invoice No</th>
-                                            <th>Customer</th>
+                                            <th>Customer Name</th>
                                             {{-- <th>Total Amount</th> --}}
                                             <th>Pay Amount</th>
                                             {{-- <th>Due Amount</th> --}}
@@ -49,7 +49,7 @@
                                         @foreach($receipts as $key => $receipt)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
-                                                <td>{{ $receipt->outcomingChalan->purchase->invoice_no ?? 'N/A' }}</td>
+                                                <td>{{ $receipt->outcomingChalan->sale->invoice_no ?? 'N/A' }}</td>
                                                 <td>{{ $receipt->client->name ?? 'N/A' }}</td>
                                                 {{-- <td>{{ number_format($payment->total_amount, 2) }}</td> --}}
                                                 <td>{{ number_format($receipt->pay_amount, 2) }}</td>

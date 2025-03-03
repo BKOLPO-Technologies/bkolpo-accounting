@@ -143,22 +143,22 @@
     $(document).ready(function () {
         $('.select2').select2();
 
-        $('#purchase_id').change(function () {
+        $('#sale_id').change(function () {
             var invoiceId = $(this).val();
 
             if (invoiceId) {
                 $.ajax({
-                    url: '/admin/purchase/get-invoice-details/' + invoiceId,
+                    url: '/admin/sales/get-invoice-details/' + invoiceId,
                     type: 'GET',
                     success: function (response) {
                         // Show client details
-                        if (response.supplier) {
+                        if (response.client) {
                             $('#client-details-body').html(`
                                 <tr>
-                                    <td>${response.supplier.name}</td>
-                                    <td>${response.supplier.company}</td>
-                                    <td>${response.supplier.phone}</td>
-                                    <td>${response.supplier.email}</td>
+                                    <td>${response.client.name}</td>
+                                    <td>${response.client.company}</td>
+                                    <td>${response.client.phone}</td>
+                                    <td>${response.client.email}</td>
                                 </tr>
                             `);
                             $('#client-details-table').show();

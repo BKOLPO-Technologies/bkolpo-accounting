@@ -13,7 +13,7 @@
                             <a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: black;">Home</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="{{ route('outcoming.chalan.index') }}" style="text-decoration: none; color: black;">Back to List</a>
+                            <a href="{{ route('incoming.chalan.index') }}" style="text-decoration: none; color: black;">Back to List</a>
                         </li>
                         <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A'}}</li>
                     </ol>
@@ -29,13 +29,13 @@
                     <div class="card-header py-2">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
-                            <a href="{{ route('outcoming.chalan.index') }}" class="btn btn-sm btn-danger rounded-0">
+                            <a href="{{ route('incoming.chalan.index') }}" class="btn btn-sm btn-danger rounded-0">
                                 <i class="fa-solid fa-arrow-left"></i> Back To List
                             </a>
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('outcoming.chalan.update', $outcomingChalan->id) }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('incoming.chalan.update', $incomingChalan->id) }}" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
@@ -43,15 +43,15 @@
                                 <!-- Select Invoice NO -->
                                 <div class="col-lg-6 col-md-6 mb-3">
                                     <label for="sale_id">Invoice No</label>
-                                    <input type="text" class="form-control" value="{{ $outcomingChalan->sale->invoice_no ?? 'N/A' }}" readonly>
-                                    <input type="hidden" name="sale_id" value="{{ $outcomingChalan->sale_id }}">
+                                    <input type="text" class="form-control" value="{{ $incomingChalan->sale->invoice_no ?? 'N/A' }}" readonly>
+                                    <input type="hidden" name="sale_id" value="{{ $incomingChalan->sale_id }}">
                                     
                                 </div>
 
                                 <!-- Invoice Date -->
                                 <div class="col-lg-6 col-md-6 mb-3">
                                     <label for="invoice_date">Chalan Date</label>
-                                    <input type="text" id="date" name="invoice_date" class="form-control @error('invoice_date') is-invalid @enderror" value="{{ old('invoice_date', $outcomingChalan->invoice_date) }}" readonly />
+                                    <input type="text" id="date" name="invoice_date" class="form-control @error('invoice_date') is-invalid @enderror" value="{{ old('invoice_date', $incomingChalan->invoice_date) }}" readonly />
                                     
                                 </div>
                                 
@@ -64,7 +64,7 @@
                                         <table class="table table-bordered" id="client-details-table">
                                             <thead class="thead-light">
                                                 <tr>
-                                                    <th>Customer Name</th>
+                                                    <th>Client Name</th>
                                                     <th>Company</th>
                                                     <th>Phone</th>
                                                     <th>Email</th>
@@ -72,10 +72,10 @@
                                             </thead>
                                             <tbody id="client-details-body">
                                                 <tr>
-                                                    <td>{{ $outcomingChalan->sale->client->name }}</td>
-                                                    <td>{{ $outcomingChalan->sale->client->company }}</td>
-                                                    <td>{{ $outcomingChalan->sale->client->phone }}</td>
-                                                    <td>{{ $outcomingChalan->sale->client->email }}</td>
+                                                    <td>{{ $incomingChalan->sale->client->name }}</td>
+                                                    <td>{{ $incomingChalan->sale->client->company }}</td>
+                                                    <td>{{ $incomingChalan->sale->client->phone }}</td>
+                                                    <td>{{ $incomingChalan->sale->client->email }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -96,7 +96,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($outcomingChalan->products as $product)
+                                                @foreach($incomingChalan->products as $product)
                                                 <tr>
                                                     <td>{{ $product->product->name }}</td>
                                                     <td>
@@ -117,7 +117,7 @@
                             <!-- Note -->
                             <div class="col-lg-12 col-md-12 mb-3">
                                 <label for="description">Note</label>
-                                <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter Note">{{ old('description', $outcomingChalan->description) }}</textarea>
+                                <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter Note">{{ old('description', $incomingChalan->description) }}</textarea>
                             </div>
 
                             <div class="row text-right">

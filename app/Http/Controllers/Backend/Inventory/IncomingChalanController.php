@@ -28,7 +28,7 @@ class IncomingChalanController extends Controller
         // Fetch all incoming chalans with related sale details
         $incomingchalans = IncomingChalan::with('sale')->latest()->get();
     
-        return view('backend.admin.inventory.sales.chalan.index', compact('pageTitle', 'incomingchalans'));
+        return view('backend.admin.inventory.purchase.chalan.index', compact('pageTitle', 'incomingchalans'));
     }
     
 
@@ -41,7 +41,7 @@ class IncomingChalanController extends Controller
 
         $sales = Sale::latest()->get();
 
-        return view('backend.admin.inventory.sales.chalan.create',compact('pageTitle','sales')); 
+        return view('backend.admin.inventory.purchase.chalan.create',compact('pageTitle','sales')); 
     }
 
     /**
@@ -133,7 +133,7 @@ class IncomingChalanController extends Controller
         $incomingChalan = IncomingChalan::with('sale', 'products')->findOrFail($id);
         $sales = Sale::latest()->get();
 
-        return view('backend.admin.inventory.sales.chalan.view',compact('pageTitle','incomingChalan', 'sales')); 
+        return view('backend.admin.inventory.purchase.chalan.view',compact('pageTitle','incomingChalan', 'sales')); 
     }
 
     /**
@@ -148,7 +148,7 @@ class IncomingChalanController extends Controller
         $sales = Sale::latest()->get();
 
         // Pass the IncomingChalan and its products to the view
-        return view('backend.admin.inventory.sales.chalan.edit', compact('pageTitle', 'incomingChalan', 'sales'));
+        return view('backend.admin.inventory.purchase.chalan.edit', compact('pageTitle', 'incomingChalan', 'sales'));
      }
 
 

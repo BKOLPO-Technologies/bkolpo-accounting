@@ -20,7 +20,7 @@
                             <a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: black;">Home</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="{{ route('outcoming.chalan.index') }}" style="text-decoration: none; color: black;">Back to List</a>
+                            <a href="{{ route('incoming.chalan.index') }}" style="text-decoration: none; color: black;">Back to List</a>
                         </li>
                         <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A'}}</li>
                     </ol>
@@ -36,7 +36,7 @@
                     <div class="card-header py-2">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
-                            <a href="{{ route('outcoming.chalan.index') }}" class="btn btn-sm btn-danger rounded-0">
+                            <a href="{{ route('incoming.chalan.index') }}" class="btn btn-sm btn-danger rounded-0">
                                 <i class="fa-solid fa-arrow-left"></i> Back To List
                             </a>
                         </div>
@@ -70,15 +70,15 @@
                                     <div class="col-sm-4 invoice-col">
                                     Client
                                     <address>
-                                        <strong>{{ $outcomingChalan->sale->client->name }}</strong><br>
-                                        {{ $outcomingChalan->sale->client->address }}, {{ $outcomingChalan->sale->client->city }}<br>
-                                        {{ $outcomingChalan->sale->client->region }}, {{ $outcomingChalan->sale->client->country }}<br>
-                                        Phone: {{ $outcomingChalan->sale->client->phone }}<br>
-                                        Email: {{ $outcomingChalan->sale->client->email }}
+                                        <strong>{{ $incomingChalan->sale->client->name }}</strong><br>
+                                        {{ $incomingChalan->sale->client->address }}, {{ $incomingChalan->sale->client->city }}<br>
+                                        {{ $incomingChalan->sale->client->region }}, {{ $incomingChalan->sale->client->country }}<br>
+                                        Phone: {{ $incomingChalan->sale->client->phone }}<br>
+                                        Email: {{ $incomingChalan->sale->client->email }}
                                     </address>
                                     </div>
                                     <div class="col-sm-4 invoice-col">
-                                    <b>Invoice :- {{ $outcomingChalan->sale->invoice_no }}</b><br>
+                                    <b>Invoice :- {{ $incomingChalan->sale->invoice_no }}</b><br>
                                     <br>
                                     </div>
                                 </div>
@@ -97,7 +97,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            @foreach ($outcomingChalan->products as $product)
+                                            @foreach ($incomingChalan->products as $product)
                                                 <tr data-product-id="{{ $product->id }}">
                                                     <td>{{ $product->product->name }}</td>
                                                     <td>{{ $product->product->quantity }}</td>

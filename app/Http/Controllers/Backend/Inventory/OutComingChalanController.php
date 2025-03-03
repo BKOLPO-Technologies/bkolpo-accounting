@@ -25,12 +25,12 @@ class OutComingChalanController extends Controller
      */
     public function index()
     {
-        $pageTitle = 'Out Coming Chalan List';
+        $pageTitle = 'Out Going Chalan List';
     
         // Fetch all outcoming chalans with related sale details
         $outcomingchalans = OutcomingChalan::with('sale')->latest()->get();
     
-        return view('backend.admin.inventory.purchase.chalan.index', compact('pageTitle', 'outcomingchalans'));
+        return view('backend.admin.inventory.sales.chalan.index', compact('pageTitle', 'outcomingchalans'));
     }
 
     /**
@@ -38,11 +38,11 @@ class OutComingChalanController extends Controller
      */
     public function create()
     { 
-        $pageTitle = 'Out Coming Chalan';
+        $pageTitle = 'Out Going Chalan';
 
         $sales = Sale::latest()->get();
 
-        return view('backend.admin.inventory.purchase.chalan.create',compact('pageTitle','sales')); 
+        return view('backend.admin.inventory.sales.chalan.create',compact('pageTitle','sales')); 
     }
 
     /**
@@ -50,6 +50,7 @@ class OutComingChalanController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         // Validate request data
         $request->validate([
             'sale_id' => 'required|exists:sales,id',
@@ -109,13 +110,13 @@ class OutComingChalanController extends Controller
      */
     public function view(string $id)
     {
-        $pageTitle = 'Out Coming Chalan';
+        $pageTitle = 'Out Going Chalan';
 
-        $chalan = OutcomingChalan::with('sale', 'products')->findOrFail($id);
+        $outcomingChalan = OutcomingChalan::with('sale', 'products')->findOrFail($id);
 
         $sales = Sale::latest()->get();
 
-        return view('backend.admin.inventory.purchase.chalan.view',compact('pageTitle','sales', 'chalan')); 
+        return view('backend.admin.inventory.sales.chalan.view',compact('pageTitle','sales', 'outcomingChalan')); 
     }
 
     /**
@@ -123,13 +124,13 @@ class OutComingChalanController extends Controller
      */
     public function edit(string $id)
     {
-        $pageTitle = 'Out Coming Chalan';
+        $pageTitle = 'Out Going Chalan';
 
-        $chalan = OutcomingChalan::with('sale', 'products')->findOrFail($id);
+        $outcomingChalan = OutcomingChalan::with('sale', 'products')->findOrFail($id);
 
         $sales = Sale::latest()->get();
 
-        return view('backend.admin.inventory.purchase.chalan.edit',compact('pageTitle','sales', 'chalan')); 
+        return view('backend.admin.inventory.sales.chalan.edit',compact('pageTitle','sales', 'outcomingChalan')); 
     }
 
     /**
