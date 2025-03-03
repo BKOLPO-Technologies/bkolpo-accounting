@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use App\Models\Product;
 
 use App\Models\StockIn;
-use App\Models\Purchase;
+use App\Models\Sale;
 use App\Models\StockOut;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
@@ -28,7 +28,7 @@ class OutComingChalanController extends Controller
         $pageTitle = 'Out Coming Chalan List';
     
         // Fetch all outcoming chalans with related sale details
-        $outcomingchalans = OutcomingChalan::with('purchase')->latest()->get();
+        $outcomingchalans = OutcomingChalan::with('sale')->latest()->get();
     
         return view('backend.admin.inventory.purchase.chalan.index', compact('pageTitle', 'outcomingchalans'));
     }
@@ -40,9 +40,9 @@ class OutComingChalanController extends Controller
     { 
         $pageTitle = 'Out Coming Chalan';
 
-        $purchases = Purchase::latest()->get();
+        $sales = Sales::latest()->get();
 
-        return view('backend.admin.inventory.purchase.chalan.create',compact('pageTitle','purchases')); 
+        return view('backend.admin.inventory.purchase.chalan.create',compact('pageTitle','sales')); 
     }
 
     /**
@@ -50,71 +50,58 @@ class OutComingChalanController extends Controller
      */
     public function store(Request $request)
     {
-        DB::beginTransaction(); // Start Transaction
+        // Validate request data
+        $request->validate([
+            'sale_id' => 'required|exists:sales,id',
+            'invoice_date' => 'required|date',
+            'description' => 'nullable|string',
+            'product_id' => 'required|array',
+            'quantity' => 'required|array',
+            'receive_quantity' => 'required|array',
+        ]);
 
-        try {
-            // Validate request data
-            $request->validate([
-                'purchase_id' => 'required|exists:purchases,id',
-                'invoice_date' => 'required|date',
-                'description' => 'nullable|string',
-                'product_id' => 'required|array',
-                'quantity' => 'required|array',
-                'receive_quantity' => 'required|array',
+        // Create OutcomingChalan record
+        $outcomingChalan = OutcomingChalan::create([
+            'sale_id' => $request->sale_id,
+            'invoice_date' => $request->invoice_date,
+            'description' => $request->description,
+        ]);
+
+        // Insert product details into Out Coming Chalan Product table
+        foreach ($request->product_id as $index => $productId) {
+            $outcomingChalanProduct = OutcomingChalanProduct::create([
+                'outcoming_chalan_id' => $outcomingChalan->id,
+                'product_id' => $productId,
+                'quantity' => $request->quantity[$index],
+                'receive_quantity' => $request->receive_quantity[$index],
             ]);
 
-            // Create OutcomingChalan record
-            $outcomingChalan = OutcomingChalan::create([
-                'purchase_id' => $request->purchase_id,
-                'invoice_date' => $request->invoice_date,
-                'description' => $request->description,
-            ]);
+            // Fetch matching InChalanInventory record to get the reference_lot
+            //$inChalanInventory = StockIn::where('product_id', $productId)->latest()->first();
+            
+            // if (!$inChalanInventory) {
+            //     throw new \Exception("No matching InChalanInventory found for Product ID: {$productId}");
+            // }
 
-            // Generate current timestamp
-            $timestamp = now()->format('YmdHis'); // Format: YYYYMMDDHHMMSS
-
-            // Insert product details into Out Coming Chalan Product table
-            foreach ($request->product_id as $index => $productId) {
-                $outcomingChalanProduct = OutcomingChalanProduct::create([
-                    'outcoming_chalan_id' => $outcomingChalan->id,
-                    'product_id' => $productId,
-                    'quantity' => $request->quantity[$index],
-                    'receive_quantity' => $request->receive_quantity[$index],
-                ]);
-
-                // Fetch product details
-                $product = Product::find($productId);
-                if (!$product) {
-                    throw new \Exception("Product with ID {$productId} not found.");
-                }
-
-                // Insert into OutChalanInventory (StockOut)
-                StockOut::create([
-                    'reference_lot' => 'Ref-' . $outcomingChalan->id . '-' . $productId . '-' . $timestamp, // Unique reference
-                    'product_id' => $productId,
-                    'purchase_id' => $request->purchase_id,
-                    'outcoming_chalan_product_id' => $outcomingChalanProduct->id, // Correctly referencing the created record
-                    'quantity' => $request->receive_quantity[$index],
-                    'price' => $product->price * $request->receive_quantity[$index], // Calculate price based on quantity received
-                ]);
-
-                // Decrease product stock
-                if ($product->quantity >= $request->receive_quantity[$index]) {
-                    $product->decrement('quantity', $request->receive_quantity[$index]); // Decrease quantity in Product table
-                } else {
-                    throw new \Exception("Insufficient stock for Product ID {$productId}.");
-                }
+            // Fetch product details
+            $product = Product::find($productId);
+            if (!$product) {
+                throw new \Exception("Product with ID {$productId} not found.");
             }
 
-            DB::commit(); // Commit the transaction
-
-            // Success message after processing everything correctly
-            return redirect()->route('outcoming.chalan.index')->with('success', 'Out Coming Chalan created successfully!');
+            // Insert into OutChalanInventory
+            // StockOut::create([
+            //     'reference_lot' => 'Ref-' . $outcomingChalan->id . '-' . $productId, // Matching based on product
+            //     'product_id' => $productId,
+            //     'purchase_id' => $request->purchase_id,
+            //     'outcoming_chalan_product_id' => $outcomingChalanProduct->id, // Correctly referencing the created record
+            //     'quantity' => $request->receive_quantity[$index],
+            //     'price' => $product->price * $request->receive_quantity[$index], // Calculate price based on quantity received
+            // ]);
             
-        } catch (\Exception $e) {
-            DB::rollBack(); // Rollback the transaction on failure
-            return back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
+
+        return redirect()->route('outcoming.chalan.index')->with('success', 'Out Coming Chalan created successfully!');
     }
 
     /**
@@ -124,11 +111,11 @@ class OutComingChalanController extends Controller
     {
         $pageTitle = 'Out Coming Chalan';
 
-        $chalan = OutcomingChalan::with('purchase', 'products')->findOrFail($id);
+        $chalan = OutcomingChalan::with('sale', 'products')->findOrFail($id);
 
-        $purchases = Purchase::latest()->get();
+        $sales = Sale::latest()->get();
 
-        return view('backend.admin.inventory.purchase.chalan.view',compact('pageTitle','purchases', 'chalan')); 
+        return view('backend.admin.inventory.purchase.chalan.view',compact('pageTitle','sales', 'chalan')); 
     }
 
     /**
@@ -138,11 +125,11 @@ class OutComingChalanController extends Controller
     {
         $pageTitle = 'Out Coming Chalan';
 
-        $chalan = OutcomingChalan::with('purchase', 'products')->findOrFail($id);
+        $chalan = OutcomingChalan::with('sale', 'products')->findOrFail($id);
 
-        $purchases = Purchase::latest()->get();
+        $sales = Sale::latest()->get();
 
-        return view('backend.admin.inventory.purchase.chalan.edit',compact('pageTitle','purchases', 'chalan')); 
+        return view('backend.admin.inventory.purchase.chalan.edit',compact('pageTitle','sales', 'chalan')); 
     }
 
     /**

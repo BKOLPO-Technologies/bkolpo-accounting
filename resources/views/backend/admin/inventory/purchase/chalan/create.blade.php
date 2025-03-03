@@ -38,23 +38,23 @@
                             <div class="row mt-5">
                                 <!-- Select Invoice NO -->
                                 <div class="col-lg-6 col-md-6 mb-3">
-                                    <label for="purchase_id">Invoice No</label>
+                                    <label for="sale_id">Invoice No</label>
                                     <div class="input-group">
-                                        <select name="purchase_id" id="purchase_id" class="form-control select2 @error('purchase_id') is-invalid @enderror">
+                                        <select name="sale_id" id="sale_id" class="form-control select2 @error('sale_id') is-invalid @enderror">
                                             <option value="">Select Invoice No</option>
-                                            @foreach($purchases as $purchase)
-                                                <option value="{{ $purchase->id }}" 
-                                                    data-name="{{ $purchase->name }}" 
-                                                    data-company="{{ $purchase->company }}" 
-                                                    data-phone="{{ $purchase->phone }}" 
-                                                    data-email="{{ $purchase->email }}"
-                                                    {{ old('purchase_id') == $purchase->id ? 'selected' : '' }}>
-                                                    {{ $purchase->invoice_no }}
+                                            @foreach($sales as $sale)
+                                                <option value="{{ $sale->id }}" 
+                                                    data-name="{{ $sale->name }}" 
+                                                    data-company="{{ $sale->company }}" 
+                                                    data-phone="{{ $sale->phone }}" 
+                                                    data-email="{{ $sale->email }}"
+                                                    {{ old('sale_id') == $sale->id ? 'selected' : '' }}>
+                                                    {{ $sale->invoice_no }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    @error('purchase_id')
+                                    @error('sale_id')
                                     <div class="invalid-feedback">
                                         <i class="fas fa-exclamation-circle"></i> {{ $message }}
                                     </div>
