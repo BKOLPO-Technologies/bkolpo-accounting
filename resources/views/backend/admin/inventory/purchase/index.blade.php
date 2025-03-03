@@ -39,7 +39,10 @@
                                             <th>Invoice No</th>
                                             <th>Invoice Date</th>
                                             <th>Supplier Name</th>
-                                            <th>Total Price</th>
+                                            <th>Total Amount</th>
+                                            <th>Paid Amount</th>
+                                            <th>Due Amount</th>
+                                            <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -51,6 +54,18 @@
                                                 <td>{{ \Carbon\Carbon::parse($purchase->invoice_date)->format('d F Y') }}</td>
                                                 <td>{{ $purchase->supplier->name ?? 'N/A' }}</td> 
                                                 <td>{{ bdt() }} {{ number_format($purchase->total, 2) }}</td>
+                                                <td>{{ bdt() }} {{ number_format($purchase->paid_amount ?? 'N/A', 2) }}</td> 
+                                                <td>{{ bdt() }} {{ number_format($purchase->total-$purchase->paid_amount, 2) }}</td> 
+                                                <!-- Status column with Badge -->
+                                                <td>
+                                                    @if($purchase->paid_amount >= $purchase->total)
+                                                        <span class="badge bg-success">Paid</span>
+                                                    @elseif($purchase->paid_amount > 0)
+                                                        <span class="badge bg-warning">Partially Paid</span>
+                                                    @else
+                                                        <span class="badge bg-danger">Pending</span>
+                                                    @endif
+                                                </td>
                                                 
                                                 <td class="col-2">
                                                     <!-- View Button -->

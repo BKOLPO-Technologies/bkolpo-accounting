@@ -39,7 +39,10 @@
                                             <th>Invoice No</th>
                                             <th>Invoice Date</th>
                                             <th>Client Name</th>
-                                            <th>Total Price</th>
+                                            <th>Total Amount</th>
+                                            <th>Paid Amount</th>
+                                            <th>Due Amount</th>
+                                            <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -51,6 +54,19 @@
                                                     <td>{{ \Carbon\Carbon::parse($sale->invoice_date)->format('d F Y') }}</td>
                                                     <td>{{ $sale->client->name ?? 'N/A' }}</td> 
                                                     <td>{{ bdt() }} {{ number_format($sale->total, 2) }}</td> 
+                                                    <td>{{ bdt() }} {{ number_format($sale->paid_amount ?? 'N/A', 2) }}</td> 
+                                                    <td>{{ bdt() }} {{ number_format($sale->total-$sale->paid_amount, 2) }}</td> 
+                                                    <!-- Status column with Badge -->
+                                                    <td>
+                                                        @if($sale->paid_amount >= $sale->total)
+                                                            <span class="badge bg-success">Paid</span>
+                                                        @elseif($sale->paid_amount > 0)
+                                                            <span class="badge bg-warning">Partially Paid</span>
+                                                        @else
+                                                            <span class="badge bg-danger">Pending</span>
+                                                        @endif
+                                                    </td>
+                                            
                                                     <td class="col-2">
                                                         <!-- View Button -->
                                                         <a href="{{ route('admin.sale.show', $sale->id) }}" class="btn btn-success btn-sm">
