@@ -52,13 +52,11 @@ class SaleReceiptController extends Controller
     {
         // Step 1: Find sales where suplier_id matches
         $purchases = Purchase::where('supplier_id', $request->supplier_id)->pluck('id'); 
-
-      
         // Step 2: Find Outcoming Chalans based on purchase_id
         $chalans = OutcomingChalan::whereIn('purchase_id ', $purchases)
             ->with('purchase') // Ensure related purchase invoice is fetched
             ->get();
-dd($chalans);
+// dd($chalans);
         // Step 3: Format the response
         $formattedChalans = $chalans->map(function ($chalan) {
             return [

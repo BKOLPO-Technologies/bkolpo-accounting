@@ -142,13 +142,32 @@ class SalePaymentController extends Controller
     
             // Find the sale based on the client ID and incoming chalan (you can adjust this logic based on your relationships)
             $sale = Sale::where('client_id', $request->input('client_id'))->first();
-    
+
+
             // If sale exists
             if ($sale) {
                 // Update the paid amount
                 $sale->paid_amount += $request->input('pay_amount');
+
+                // dd($sale->total,$sale->paid_amount);
+
+                // Check if the total paid amount is equal to or greater than the sale amount
+                if ($sale->paid_amount >= $sale->total) {
+
+
+                    // If fully paid, update status to 'paid'
+                    $sale->status = 'paid';
+                } else {
+                    // dd('not paid');
+                    // If partially paid, update status to 'partially_paid'
+                    $sale->status = 'partially_paid';
+                }
+
+                // Save the updated sale
                 $sale->save();
             }
+            
+
     
             // Commit the transaction
             DB::commit();
