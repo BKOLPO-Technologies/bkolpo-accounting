@@ -8,6 +8,7 @@ use App\Models\Sale;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\StockIn;
+use App\Models\Purchase;
 use Illuminate\Http\Request;
 use App\Models\IncomingChalan;
 use App\Models\InChalanInventory;
@@ -39,9 +40,9 @@ class IncomingChalanController extends Controller
     { 
         $pageTitle = 'Incoming Chalan';
 
-        $sales = Sale::latest()->get();
+        $purchases = Purchase::latest()->get();
 
-        return view('backend.admin.inventory.purchase.chalan.create',compact('pageTitle','sales')); 
+        return view('backend.admin.inventory.purchase.chalan.create',compact('pageTitle','purchases')); 
     }
 
     /**
@@ -54,7 +55,7 @@ class IncomingChalanController extends Controller
         try {
             // Validate request data
             $request->validate([
-                'sale_id' => 'required|exists:sales,id',
+                'purchase_id' => 'required|exists:purchases,id',
                 'invoice_date' => 'required|date',
                 'description' => 'nullable|string',
                 'product_id' => 'required|array',
@@ -64,7 +65,7 @@ class IncomingChalanController extends Controller
 
             // Create IncomingChalan record
             $incomingChalan = IncomingChalan::create([
-                'sale_id' => $request->sale_id,
+                'purchase_id' => $request->purchase_id,
                 'invoice_date' => $request->invoice_date,
                 'description' => $request->description,
             ]);
@@ -81,22 +82,22 @@ class IncomingChalanController extends Controller
                     'receive_quantity' => $request->receive_quantity[$index],
                 ]);
 
-                // Fetch product details
-                $product = Product::find($productId);
-                if (!$product) {
-                    throw new \Exception("Product with ID {$productId} not found.");
-                }
+                // // Fetch product details
+                // $product = Product::find($productId);
+                // if (!$product) {
+                //     throw new \Exception("Product with ID {$productId} not found.");
+                // }
 
-                // Store product details into InChalanInventory table
-                StockIn::create([
-                    // 'reference_lot' => 'Ref-' . $incomingChalan->id . '-' . $productId,
-                    'reference_lot' => 'Ref-' . $incomingChalan->id . '-' . $productId . '-' . $timestamp, // Unique reference
-                    'product_id' => $productId,
-                    'sale_id' => $request->sale_id,
-                    'incoming_chalan_product_id' => $incomingChalanProduct->id,
-                    'quantity' => $request->receive_quantity[$index],
-                    'price' => $product->price * $request->receive_quantity[$index], 
-                ]);
+                // // Store product details into InChalanInventory table
+                // StockIn::create([
+                //     // 'reference_lot' => 'Ref-' . $incomingChalan->id . '-' . $productId,
+                //     'reference_lot' => 'Ref-' . $incomingChalan->id . '-' . $productId . '-' . $timestamp, // Unique reference
+                //     'product_id' => $productId,
+                //     'purchase_id' => $request->purchase_id,
+                //     'incoming_chalan_product_id' => $incomingChalanProduct->id,
+                //     'quantity' => $request->receive_quantity[$index],
+                //     'price' => $product->price * $request->receive_quantity[$index], 
+                // ]);
 
                 // // Decrease product stock
                 // if ($product->quantity >= $request->receive_quantity[$index]) {
@@ -106,7 +107,7 @@ class IncomingChalanController extends Controller
                 // }
 
                 // Increase product stock
-                $product->increment('quantity', $request->receive_quantity[$index]);
+                //$product->increment('quantity', $request->receive_quantity[$index]);
 
             }
 

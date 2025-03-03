@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class IncomingChalan extends Model
 {
     protected $fillable = [
-        'sale_id',
+        'purchase_id',
         'invoice_date',
         'description',
     ];

@@ -38,23 +38,23 @@
                             <div class="row mt-5">
                                 <!-- Select Invoice NO -->
                                 <div class="col-lg-6 col-md-6 mb-3">
-                                    <label for="sale_id">Invoice No</label>
+                                    <label for="purchase_id">Invoice No</label>
                                     <div class="input-group">
-                                        <select name="sale_id" id="sale_id" class="form-control select2 @error('sale_id') is-invalid @enderror">
+                                        <select name="purchase_id" id="purchase_id" class="form-control select2 @error('purchase_id') is-invalid @enderror">
                                             <option value="">Select Invoice No</option>
-                                            @foreach($sales as $sale)
-                                                <option value="{{ $sale->id }}" 
-                                                    data-name="{{ $sale->name }}" 
-                                                    data-company="{{ $sale->company }}" 
-                                                    data-phone="{{ $sale->phone }}" 
-                                                    data-email="{{ $sale->email }}"
-                                                    {{ old('sale_id') == $sale->id ? 'selected' : '' }}>
-                                                    {{ $sale->invoice_no }}
+                                            @foreach($purchases as $purchase)
+                                                <option value="{{ $purchase->id }}" 
+                                                    data-name="{{ $purchase->name }}" 
+                                                    data-company="{{ $purchase->company }}" 
+                                                    data-phone="{{ $purchase->phone }}" 
+                                                    data-email="{{ $purchase->email }}"
+                                                    {{ old('purchase_id') == $purchase->id ? 'selected' : '' }}>
+                                                    {{ $purchase->invoice_no }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    @error('sale_id')
+                                    @error('purchase_id')
                                     <div class="invalid-feedback">
                                         <i class="fas fa-exclamation-circle"></i> {{ $message }}
                                     </div>
@@ -77,7 +77,7 @@
                             <div class="row mt-3">
                                     <div class="col-12">
                                         <div class="table-responsive-sm">
-                                            <table class="table table-bordered" id="client-details-table" style="display: none;">
+                                            <table class="table table-bordered" id="supplier-details-table" style="display: none;">
                                                 <thead class="thead-light">
                                                     <tr>
                                                         <th>Supplier Name</th>
@@ -86,7 +86,7 @@
                                                         <th>Email</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody id="client-details-body"></tbody>
+                                                <tbody id="supplier-details-body"></tbody>
                                             </table>
                                         </div>
                                     </div>
@@ -133,7 +133,7 @@
     </section>
 </div>
 
-<!-- Modal for creating a new client -->
+<!-- Modal for creating a new supplier -->
 @include('backend.admin.inventory.client.client_modal')
 
 @endsection
@@ -143,25 +143,25 @@
     $(document).ready(function () {
         $('.select2').select2();
 
-        $('#sale_id').change(function () {
+        $('#purchase_id').change(function () {
             var invoiceId = $(this).val();
 
             if (invoiceId) {
                 $.ajax({
-                    url: '/admin/sales/get-invoice-details/' + invoiceId,
+                    url: '/admin/purchase/get-invoice-details/' + invoiceId,
                     type: 'GET',
                     success: function (response) {
                         // Show client details
-                        if (response.client) {
-                            $('#client-details-body').html(`
+                        if (response.supplier) {
+                            $('#supplier-details-body').html(`
                                 <tr>
-                                    <td>${response.client.name}</td>
-                                    <td>${response.client.company}</td>
-                                    <td>${response.client.phone}</td>
-                                    <td>${response.client.email}</td>
+                                    <td>${response.supplier.name}</td>
+                                    <td>${response.supplier.company}</td>
+                                    <td>${response.supplier.phone}</td>
+                                    <td>${response.supplier.email}</td>
                                 </tr>
                             `);
-                            $('#client-details-table').show();
+                            $('#supplier-details-table').show();
                         }
 
                         // Clear previous product data
@@ -189,15 +189,15 @@
                     },
                     error: function () {
                         toastr.error("Failed to load invoice details. Please try again.");
-                        $('#client-details-body').html('');
-                        $('#client-details-table').hide();
+                        $('#supplier-details-body').html('');
+                        $('#supplier-details-table').hide();
                         $('#product-table tbody').html('<tr><td colspan="6" class="text-center">No products found</td></tr>');
                     }
                 });
             } else {
                 toastr.error("Failed to load invoice details. Please try again.");
-                $('#client-details-body').html('');
-                $('#client-details-table').hide();
+                $('#supplier-details-body').html('');
+                $('#supplier-details-table').hide();
                 $('#product-table tbody').html('<tr><td colspan="6" class="text-center">No products found</td></tr>');
             }
         });
