@@ -38,7 +38,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                     <h4>
-                                        <i class="fas fa-globe"></i> Bkolpo, Technology.
+                                        <i class="fas fa-globe"></i> Bkolpo, Constructions.
                                         <small class="float-right" id="current-date"></small>
                                     </h4>
                                     </div>
