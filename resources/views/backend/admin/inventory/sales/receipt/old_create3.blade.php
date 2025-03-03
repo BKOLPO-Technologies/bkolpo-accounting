@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['pageTitle' => 'Payment'])
+@extends('layouts.admin', ['pageTitle' => 'Receive Payment'])
 @section('admin')
 <div class="content-wrapper">
     <section class="content-header">
@@ -26,13 +26,13 @@
                     <div class="card-header py-2">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
-                            <a href="{{ route('sale.payment.index')}}" class="btn btn-sm btn-danger rounded-0">
+                            <a href="{{ route('receipt.payment.index')}}" class="btn btn-sm btn-danger rounded-0">
                                 <i class="fa-solid fa-arrow-left"></i> Back To List
                             </a>
                         </div>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('sale.payment.store') }}" method="POST">
+                        <form action="{{ route('receipt.payment.store') }}" method="POST">
                             @csrf
                             <div class="row">
                                
@@ -50,12 +50,12 @@
                                     </div>
                                 </div>
 
-                                <!-- Incoming Chalan -->
+                                <!-- Outcoming Chalan -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="incoming_chalan_id" class="form-label">Incoming Chalan:</label>
+                                    <label for="outcoming_chalan_id" class="form-label">Outcoming Chalan:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
-                                        <select class="form-control select2" name="incoming_chalan_id" id="incoming_chalan_id">
+                                        <select class="form-control select2" name="outcoming_chalan_id" id="outcoming_chalan_id">
                                             <option value="">Select Chalan</option>
                                         </select>
                                     </div>
@@ -110,15 +110,13 @@
                                         <input type="text" id="date" class="form-control" name="payment_date" value="{{ date('Y-m-d') }}" required>
                                     </div>
                                 </div>
-
-                                <div class="col-lg-12 col-md-12 mb-3">
-                                    <label for="description">Note</label>
+                                {{-- <div class="col-lg-12 col-md-12 mb-3">
+                                    <label for="description">Description</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-comment"></i></span>
-                                        <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter some note"></textarea>
+                                        <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter the description"></textarea>
                                     </div>
-                                </div>
-                                
+                                </div> --}}
                             </div>
                             <!-- Submit Button (Right-Aligned) -->
                             <div class="d-flex justify-content-end mt-3">
@@ -141,17 +139,16 @@
         // When customer changes, reset fields
         $('#supplier_id').on('change', function () {
             let supplierId = $(this).val();
-            // alert(supplierId);
             
-            // Clear Incoming Chalan and Total Amount
-            $('#incoming_chalan_id').html('<option value="">Select Chalan</option>');
+            // Clear Out Coming Chalan and Total Amount
+            $('#outcoming_chalan_id').html('<option value="">Select Chalan</option>');
             $('#total_amount').val(''); // Clear total amount field
             $('#pay_amount').val('');
             $('#due_amount').val('');
 
             // When chalan is selected, update total amount
             if (supplierId) {
-                $('#incoming_chalan_id').html('<option value="">Loading...</option>'); // Show loading state
+                $('#outcoming_chalan_id').html('<option value="">Loading...</option>'); // Show loading state
                 
                 let totalAmount = $(this).find(':selected').data('amount') || 0;
                 $('#total_amount').val(totalAmount);
@@ -159,7 +156,7 @@
                 $('#due_amount').val(totalAmount); // Default due = total at first
 
                 $.ajax({
-                    url: "{{ route('sale.payment.get.chalans.by.supplier') }}", // Make sure this route exists
+                    url: "{{ route('receipt.payment.get.chalans.by.supplier') }}", // Make sure this route exists
                     type: "GET",
                     data: { supplier_id: supplierId },
                     success: function (response) {
@@ -167,14 +164,14 @@
                         response.chalans.forEach(chalan => {
                             options += `<option value="${chalan.id}" data-amount="${chalan.total_amount}">${chalan.invoice_no}</option>`;
                         });
-                        $('#incoming_chalan_id').html(options);
+                        $('#outcoming_chalan_id').html(options);
                     }
                 });
             }
         });
 
         // Show Total Amount when Chalan is selected
-        $('#incoming_chalan_id').on('change', function () {
+        $('#outcoming_chalan_id').on('change', function () {
             let totalAmount = $(this).find(':selected').data('amount') || '';
             $('#total_amount').val(totalAmount);
         });

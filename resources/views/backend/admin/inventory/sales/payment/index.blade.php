@@ -37,7 +37,7 @@
                                         <tr>
                                             <th>Sl No</th>
                                             <th>Invoice No</th>
-                                            <th>Client</th>
+                                            <th>Supplier</th>
                                             {{-- <th>Total Amount</th> --}}
                                             <th>Pay Amount</th>
                                             {{-- <th>Due Amount</th> --}}
@@ -50,7 +50,7 @@
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>{{ $payment->incomingChalan->sale->invoice_no ?? 'N/A' }}</td>
-                                                <td>{{ $payment->client->name ?? 'N/A' }}</td>
+                                                <td>{{ $payment->supplier->name ?? 'N/A' }}</td>
                                                 {{-- <td>{{ number_format($payment->total_amount, 2) }}</td> --}}
                                                 <td>{{ number_format($payment->pay_amount, 2) }}</td>
                                                 {{-- <td>{{ number_format($payment->total_amount-$payment->pay_amount, 2) }}</td> --}}

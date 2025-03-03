@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('outcoming_chalans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('purchase_id')->constrained('purchases')->onDelete('cascade');
+            $table->foreignId('sale_id')->constrained('sales')->onDelete('cascade');
             $table->date('invoice_date');
             $table->text('description')->nullable();
             $table->timestamps();

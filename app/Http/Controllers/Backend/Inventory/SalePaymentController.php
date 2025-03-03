@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Carbon\Carbon;
-use App\Models\Sale;
+use App\Models\Purchase;
 use App\Models\Client;
 use App\Models\Ledger;
 use App\Models\Payment;
@@ -43,10 +43,11 @@ class SalePaymentController extends Controller
         $pageTitle = 'Payment';
 
         $incomingChalans = IncomingChalan::latest()->get();
-        $clients = Client::latest()->get();
+        // $clients = Client::latest()->get();
+        $suppliers = Supplier::latest()->get();
         $ledgerGroups = LedgerGroup::with('ledgers')->latest()->get();
 
-        return view('backend.admin.inventory.sales.payment.create',compact('pageTitle','incomingChalans','clients','ledgerGroups')); 
+        return view('backend.admin.inventory.sales.payment.create',compact('pageTitle','incomingChalans','suppliers','ledgerGroups')); 
     }
 
     public function getLedgersByGroup(Request $request)
@@ -66,25 +67,25 @@ class SalePaymentController extends Controller
         return response()->json(['ledgers' => $formattedLedgers]);
     }
 
-    public function getChalansByClient(Request $request)
+    public function getChalansBySupplier(Request $request)
     {
-        // Step 1: Find sales where client_id matches
-        $sales = Sale::where('client_id', $request->client_id)->pluck('id'); 
+        // Step 1: Find Purchase where supplier_id matches
+        $purchases = Purchase::where('supplier_id', $request->supplier_id)->pluck('id'); 
 
-        // Step 2: Find Incoming Chalans based on sale_id
-        $chalans = IncomingChalan::whereIn('sale_id', $sales)
-            ->whereHas('sale', function($query) {
+        // Step 2: Find Incoming Chalans based on purchase_id
+        $chalans = IncomingChalan::whereIn('purchase_id', $purchases)
+            ->whereHas('purchases', function($query) {
                 $query->where('status', '!=', 'paid'); 
             })
-            ->with('sale') // Ensure related sale invoice is fetched
+            ->with('purchase') // Ensure related purchase invoice is fetched
             ->get();
 
         // Step 3: Format the response
         $formattedChalans = $chalans->map(function ($chalan) {
             return [
                 'id' => $chalan->id,
-                'invoice_no' => $chalan->sale->invoice_no ?? 'N/A',
-                'total_amount' => $chalan->sale->total-$chalan->sale->paid_amount ?? 0
+                'invoice_no' => $chalan->purchase->invoice_no ?? 'N/A',
+                'total_amount' => $chalan->purchase->total-$chalan->purchase->paid_amount ?? 0
             ];
         });
 
@@ -102,7 +103,7 @@ class SalePaymentController extends Controller
     {
         // Validate the incoming form data
         $request->validate([
-            'client_id' => 'required|exists:clients,id',
+            'supplier_id' => 'required|exists:suppliers,id',
             'incoming_chalan_id' => 'nullable|exists:incoming_chalans,id',
             'total_amount' => 'required|numeric|min:0',
             'pay_amount' => 'required|numeric|min:0',
@@ -117,12 +118,12 @@ class SalePaymentController extends Controller
         try {
             // Check if the payment for this incoming chalan already exists
             $payment = Payment::where('incoming_chalan_id', $request->input('incoming_chalan_id'))
-                              ->where('client_id', $request->input('client_id'))
+                              ->where('supplier_id', $request->input('supplier_id'))
                               ->first();
     
             // Create a new payment
             $payment = Payment::create([
-                'client_id' => $request->input('client_id'),
+                'supplier_id' => $request->input('supplier_id'),
                 'ledger_id' => '1',
                 'incoming_chalan_id' => $request->input('incoming_chalan_id'),
                 'total_amount' => $request->input('total_amount'),
@@ -132,31 +133,31 @@ class SalePaymentController extends Controller
                 'payment_date' => $request->input('payment_date'),
             ]);
         
-            // Find the sale based on the client ID and incoming chalan (you can adjust this logic based on your relationships)
-            $sale = Sale::where('client_id', $request->input('client_id'))->first();
+            // Find the supplier_id based on the supplier_id ID and incoming chalan (you can adjust this logic based on your relationships)
+            $purchases = Purchase::where('supplier_id', $request->input('supplier_id'))->first();
 
 
-            // If sale exists
-            if ($sale) {
+            // If purchases exists
+            if ($purchases) {
                 // Update the paid amount
-                $sale->paid_amount += $request->input('pay_amount');
+                $purchases->paid_amount += $request->input('pay_amount');
 
-                // dd($sale->total,$sale->paid_amount);
+                // dd($purchases->total,$purchases->paid_amount);
 
-                // Check if the total paid amount is equal to or greater than the sale amount
-                if ($sale->paid_amount >= $sale->total) {
+                // Check if the total paid amount is equal to or greater than the purchases amount
+                if ($purchases->paid_amount >= $purchases->total) {
 
 
                     // If fully paid, update status to 'paid'
-                    $sale->status = 'paid';
+                    $purchases->status = 'paid';
                 } else {
                     // dd('not paid');
                     // If partially paid, update status to 'partially_paid'
-                    $sale->status = 'partially_paid';
+                    $purchases->status = 'partially_paid';
                 }
 
-                // Save the updated sale
-                $sale->save();
+                // Save the updated purchases
+                $purchases->save();
             }
             
 

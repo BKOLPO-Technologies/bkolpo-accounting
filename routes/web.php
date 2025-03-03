@@ -327,7 +327,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::put('/update/{id}', [SalePaymentController::class, 'update'])->name('sale.payment.update');
         Route::get('/delete/{id}', [SalePaymentController::class, 'destroy'])->name('sale.payment.destroy');
         Route::get('/get-ledgers-by-group', [SalePaymentController::class, 'getLedgersByGroup'])->name('sale.payment.get.ledgers.by.group');
-        Route::get('/payment/get-chalans-by-client', [SalePaymentController::class, 'getChalansByClient'])->name('sale.payment.get.chalans.by.client');
+        Route::get('/payment/get-chalans-by-supplier', [SalePaymentController::class, 'getChalansBySupplier'])->name('sale.payment.get.chalans.by.supplier');
 
     });
 
@@ -341,7 +341,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::put('/update/{id}', [SaleReceiptController::class, 'update'])->name('receipt.payment.update');
         Route::get('/delete/{id}', [SaleReceiptController::class, 'destroy'])->name('receipt.payment.destroy');
         Route::get('/get-ledgers-by-group', [SaleReceiptController::class, 'getLedgersByGroup'])->name('receipt.payment.get.ledgers.by.group');
-        Route::get('/payment/get-chalans-by-supplier', [SaleReceiptController::class, 'getChalansBySupplier'])->name('receipt.payment.get.chalans.by.supplier');
+        Route::get('/payment/get-chalans-by-client', [SaleReceiptController::class, 'getChalansByClient'])->name('receipt.payment.get.chalans.by.client');
     });
 
 

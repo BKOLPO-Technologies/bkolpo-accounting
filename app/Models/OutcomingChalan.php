@@ -12,9 +12,9 @@ class OutcomingChalan extends Model
         'description',
     ];
 
-    public function purchase()
+    public function sale()
     {
-        return $this->belongsTo(Purchase::class);
+        return $this->belongsTo(Sale::class);
     }
 
     public function products()

@@ -38,13 +38,13 @@
                                
                                 <!-- Client Selection -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="supplier_id" class="form-label">Supplier:</label>
+                                    <label for="client_id" class="form-label">Customer:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                        <select class="form-control select2" name="supplier_id" id="supplier_id">
-                                            <option value="">Select Supplier</option>
-                                            @foreach($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                        <select class="form-control select2" name="client_id" id="client_id">
+                                            <option value="">Select Customer</option>
+                                            @foreach($customers as $customer)
+                                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -110,13 +110,13 @@
                                         <input type="text" id="date" class="form-control" name="payment_date" value="{{ date('Y-m-d') }}" required>
                                     </div>
                                 </div>
-                                {{-- <div class="col-lg-12 col-md-12 mb-3">
-                                    <label for="description">Description</label>
+                                <div class="col-lg-12 col-md-12 mb-3">
+                                    <label for="description">Note</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-comment"></i></span>
-                                        <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter the description"></textarea>
+                                        <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter some note"></textarea>
                                     </div>
-                                </div> --}}
+                                </div>
                             </div>
                             <!-- Submit Button (Right-Aligned) -->
                             <div class="d-flex justify-content-end mt-3">
@@ -137,8 +137,8 @@
 <script>
    $(document).ready(function () {
         // When customer changes, reset fields
-        $('#supplier_id').on('change', function () {
-            let supplierId = $(this).val();
+        $('#client_id').on('change', function () {
+            let clientId = $(this).val();
             
             // Clear Out Coming Chalan and Total Amount
             $('#outcoming_chalan_id').html('<option value="">Select Chalan</option>');
@@ -147,7 +147,7 @@
             $('#due_amount').val('');
 
             // When chalan is selected, update total amount
-            if (supplierId) {
+            if (clientId) {
                 $('#outcoming_chalan_id').html('<option value="">Loading...</option>'); // Show loading state
                 
                 let totalAmount = $(this).find(':selected').data('amount') || 0;
@@ -156,9 +156,9 @@
                 $('#due_amount').val(totalAmount); // Default due = total at first
 
                 $.ajax({
-                    url: "{{ route('receipt.payment.get.chalans.by.supplier') }}", // Make sure this route exists
+                    url: "{{ route('receipt.payment.get.chalans.by.client') }}", // Make sure this route exists
                     type: "GET",
-                    data: { supplier_id: supplierId },
+                    data: { client_id: clientId },
                     success: function (response) {
                         let options = '<option value="">Select Chalan</option>';
                         response.chalans.forEach(chalan => {

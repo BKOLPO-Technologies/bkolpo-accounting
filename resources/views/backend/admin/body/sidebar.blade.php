@@ -207,8 +207,8 @@
               $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet','report.ledger.report','report.ledger.single.report','report.ledger.group.report','report.ledger.group.single.report','report.ledger.profit.loss');
               $isSupplierActive = Route::is('admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit');
               $isClientActive = Route::is('admin.client.index','admin.client.create','admin.client.view','admin.client.edit');
-              $isSalesActive = Route::is('admin.sale.index','admin.sale.create','admin.sale.view','admin.sale.edit','quotations.index','quotations.create','quotations.edit','quotations.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','receipt.payment.index','receipt.payment.create');
-              $isPurchaseActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.view','admin.purchase.edit','workorders.index','workorders.create','workorders.edit','workorders.show','outcoming.chalan.index','outcoming.chalan.create','outcoming.chalan.show','outcoming.chalan.edit','sale.payment.index','sale.payment.create');
+              $isSalesActive = Route::is('admin.sale.index','admin.sale.create','admin.sale.view','admin.sale.edit','quotations.index','quotations.create','quotations.edit','quotations.show','outcoming.chalan.index','outcoming.chalan.create','outcoming.chalan.show','outcoming.chalan.edit','receipt.payment.index','receipt.payment.create');
+              $isPurchaseActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.view','admin.purchase.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create');
           @endphp
 
           @can('report-menu')  
@@ -316,23 +316,30 @@
                 <li class="nav-item">
                     <a href="{{ route('admin.sale.index') }}" class="nav-link {{ Route::is('admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
-                        <p>Sales List</p>
+                        <p>Order Invoice List</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ route('incoming.chalan.index') }}" 
-                    class="nav-link {{ Route::is('incoming.chalan.index', 'incoming.chalan.create', 'incoming.chalan.show', 'incoming.chalan.edit') ? 'active' : '' }}">
+                  <a href="{{ route('outcoming.chalan.index') }}" 
+                    class="nav-link {{ Route::is('outcoming.chalan.index', 'outcoming.chalan.create', 'outcoming.chalan.show', 'outcoming.chalan.edit') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Incoming Chalan List</p>
+                      <p>Outcoming Chalan List</p>
                   </a>
               </li>
               <li class="nav-item">
                 <a href="{{ route('receipt.payment.index') }}" 
                   class="nav-link {{ Route::is('receipt.payment.index', 'receipt.payment.create') ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Receive Payment List</p>
+                    <p>Payment Receive List</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="#" 
+                  class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Stock Out List</p>
+                </a>
+            </li>
                 <li class="nav-item">
                     <a href="{{ route('quotations.index') }}" 
                       class="nav-link {{ Route::is('quotations.index', 'quotations.create', 'quotations.show', 'quotations.edit') ? 'active' : '' }}">
@@ -356,29 +363,29 @@
                   <li class="nav-item">
                       <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index','admin.purchase.create', 'admin.purchase.show', 'admin.purchase.edit') ? 'active' : '' }}">
                           <i class="far fa-circle nav-icon"></i>
-                          <p>Purchase List</p>
+                          <p>Work Order List</p>
                       </a>
                   </li>
                   <li class="nav-item">
-                    <a href="{{ route('outcoming.chalan.index') }}" class="nav-link {{ Route::is('outcoming.chalan.index','outcoming.chalan.create', 'outcoming.chalan.show', 'outcoming.chalan.edit') ? 'active' : '' }}">
+                    <a href="{{ route('incoming.chalan.index') }}" class="nav-link {{ Route::is('incoming.chalan.index','incoming.chalan.create', 'incoming.chalan.show', 'incoming.chalan.edit') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
-                        <p>Outcoming Chalan List</p>
+                        <p>Incoming Chalan List</p>
                     </a>
                 </li>
                 <li class="nav-item">
                   <a href="{{ route('sale.payment.index') }}" 
                     class="nav-link {{ Route::is('sale.payment.index', 'sale.payment.create') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Payment List</p>
+                      <p>Make Payment List</p>
                   </a>
                 </li>
-                  <!-- <li class="nav-item">
-                      <a href="{{ route('workorders.index') }}" 
-                        class="nav-link {{ Route::is('workorders.index', 'workorders.create', 'workorders.show', 'workorders.edit') ? 'active' : '' }}">
-                          <i class="far fa-circle nav-icon"></i>
-                          <p>Work Order List</p>
-                      </a>
-                  </li> -->
+                <li class="nav-item">
+                  <a href="#" 
+                    class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Stock In List</p>
+                  </a>
+              </li>
               </ul>
           </li>
 
