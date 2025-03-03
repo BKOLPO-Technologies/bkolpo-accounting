@@ -21,6 +21,10 @@ class DatabaseSeeder extends Seeder
             CompanyInformationSeeder::class,
             LedgerGroupSeeder::class,
             LedgerSeeder::class,
+            CategorySeeder::class,
+            ProductSeeder::class,
+            ClientSeeder::class,
+            SupplierSeeder::class,
             // Add other seeders here 
         ]);
 
