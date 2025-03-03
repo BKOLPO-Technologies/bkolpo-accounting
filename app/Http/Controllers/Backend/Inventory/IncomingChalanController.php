@@ -69,6 +69,9 @@ class IncomingChalanController extends Controller
                 'description' => $request->description,
             ]);
 
+            // Generate current timestamp
+            $timestamp = now()->format('YmdHis'); // Format: YYYYMMDDHHMMSS
+
             // Insert product details into IncomingChalanProduct table
             foreach ($request->product_id as $index => $productId) {
                 $incomingChalanProduct = IncomingChalanProduct::create([
@@ -86,7 +89,8 @@ class IncomingChalanController extends Controller
 
                 // Store product details into InChalanInventory table
                 StockIn::create([
-                    'reference_lot' => 'Ref-' . $incomingChalan->id . '-' . $productId,
+                    // 'reference_lot' => 'Ref-' . $incomingChalan->id . '-' . $productId,
+                    'reference_lot' => 'Ref-' . $incomingChalan->id . '-' . $productId . '-' . $timestamp, // Unique reference
                     'product_id' => $productId,
                     'sale_id' => $request->sale_id,
                     'incoming_chalan_product_id' => $incomingChalanProduct->id,
