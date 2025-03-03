@@ -340,6 +340,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/edit/{id}', [SaleReceiptController::class, 'edit'])->name('receipt.payment.edit');
         Route::put('/update/{id}', [SaleReceiptController::class, 'update'])->name('receipt.payment.update');
         Route::get('/delete/{id}', [SaleReceiptController::class, 'destroy'])->name('receipt.payment.destroy');
+        Route::get('/get-ledgers-by-group', [SaleReceiptController::class, 'getLedgersByGroup'])->name('receipt.payment.get.ledgers.by.group');
+        Route::get('/payment/get-chalans-by-supplier', [SaleReceiptController::class, 'getChalansBySupplier'])->name('receipt.payment.get.chalans.by.supplier');
     });
 
 
