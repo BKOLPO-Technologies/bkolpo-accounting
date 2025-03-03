@@ -23,11 +23,11 @@ class ProductSeeder extends Seeder
         $categories = Category::pluck('id', 'name');
 
         $products = [
-            ['name' => 'Smartphone', 'category' => 'Electronics', 'price' => 699.99, 'quantity' => 10, 'status' => 1, 'image' => null],
-            ['name' => 'T-shirt', 'category' => 'Fashion', 'price' => 19.99, 'quantity' => 50, 'status' => 1, 'image' => null],
-            ['name' => 'Microwave Oven', 'category' => 'Home Appliances', 'price' => 150.00, 'quantity' => 5, 'status' => 1, 'image' => null],
-            ['name' => 'Novel Book', 'category' => 'Books', 'price' => 12.99, 'quantity' => 30, 'status' => 1, 'image' => null],
-            ['name' => 'Toy Car', 'category' => 'Toys', 'price' => 25.50, 'quantity' => 20, 'status' => 1, 'image' => null],
+            ['name' => 'Smartphone', 'category' => 'Electronics', 'price' => 699, 'quantity' => 10, 'status' => 1, 'image' => null],
+            ['name' => 'T-shirt', 'category' => 'Fashion', 'price' => 19, 'quantity' => 50, 'status' => 1, 'image' => null],
+            ['name' => 'Microwave Oven', 'category' => 'Home Appliances', 'price' => 150, 'quantity' => 5, 'status' => 1, 'image' => null],
+            ['name' => 'Novel Book', 'category' => 'Books', 'price' => 12, 'quantity' => 30, 'status' => 1, 'image' => null],
+            ['name' => 'Toy Car', 'category' => 'Toys', 'price' => 25, 'quantity' => 20, 'status' => 1, 'image' => null],
         ];
 
         foreach ($products as $product) {
