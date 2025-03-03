@@ -28,7 +28,7 @@ class SalePaymentController extends Controller
         $pageTitle = 'Payment List';
     
         $payments = Payment::with(['ledger', 'client', 'supplier', 'incomingChalan', 'outcomingChalan'])
-        ->orderBy('payment_date', 'desc')
+        ->orderBy('id', 'desc')
         ->whereNotNull('incoming_chalan_id')
         ->get();
     
@@ -117,29 +117,18 @@ class SalePaymentController extends Controller
                               ->where('client_id', $request->input('client_id'))
                               ->first();
     
-            // If the payment exists, update it, otherwise create a new payment
-            if ($payment) {
-                // Update existing payment
-                $payment->total_amount += $request->input('total_amount');
-                $payment->pay_amount += $request->input('pay_amount');
-                $payment->due_amount = $request->input('due_amount');  // Ensure to set the remaining due amount
-                $payment->payment_date = $request->input('payment_date');
-                $payment->payment_method = $request->input('payment_method');
-                $payment->save();
-            } else {
-                // Create a new payment
-                $payment = Payment::create([
-                    'client_id' => $request->input('client_id'),
-                    'ledger_id' => '1',
-                    'incoming_chalan_id' => $request->input('incoming_chalan_id'),
-                    'total_amount' => $request->input('total_amount'),
-                    'pay_amount' => $request->input('pay_amount'),
-                    'due_amount' => $request->input('due_amount'),
-                    'payment_method' => $request->input('payment_method'),
-                    'payment_date' => $request->input('payment_date'),
-                ]);
-            }
-    
+            // Create a new payment
+            $payment = Payment::create([
+                'client_id' => $request->input('client_id'),
+                'ledger_id' => '1',
+                'incoming_chalan_id' => $request->input('incoming_chalan_id'),
+                'total_amount' => $request->input('total_amount'),
+                'pay_amount' => $request->input('pay_amount'),
+                'due_amount' => $request->input('due_amount'),
+                'payment_method' => $request->input('payment_method'),
+                'payment_date' => $request->input('payment_date'),
+            ]);
+        
             // Find the sale based on the client ID and incoming chalan (you can adjust this logic based on your relationships)
             $sale = Sale::where('client_id', $request->input('client_id'))->first();
 

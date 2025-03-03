@@ -94,29 +94,19 @@ class SaleReceiptController extends Controller
                               ->where('supplier_id', $request->input('supplier_id'))
                               ->first();
     
-            // If the payment exists, update it, otherwise create a new receipt
-            if ($receipt) {
-                // Update existing receipt
-                $receipt->total_amount += $request->input('total_amount');
-                $receipt->pay_amount += $request->input('pay_amount');
-                $receipt->due_amount = $request->input('due_amount');  // Ensure to set the remaining due amount
-                $receipt->payment_date = $request->input('payment_date');
-                $receipt->payment_method = $request->input('payment_method');
-                $receipt->save();
-            } else {
-                // Create a new receipt
-                $receipt = Receipt::create([
-                    'supplier_id' => $request->input('supplier_id'),
-                    'ledger_id' => '1',
-                    'outcoming_chalan_id' => $request->input('outcoming_chalan_id'),
-                    'total_amount' => $request->input('total_amount'),
-                    'pay_amount' => $request->input('pay_amount'),
-                    'due_amount' => $request->input('due_amount'),
-                    'payment_method' => $request->input('payment_method'),
-                    'payment_date' => $request->input('payment_date'),
-                    'status' => 'outcoming',
-                ]);
-            }
+
+            // Create a new receipt
+            $receipt = Receipt::create([
+                'supplier_id' => $request->input('supplier_id'),
+                'ledger_id' => '1',
+                'outcoming_chalan_id' => $request->input('outcoming_chalan_id'),
+                'total_amount' => $request->input('total_amount'),
+                'pay_amount' => $request->input('pay_amount'),
+                'due_amount' => $request->input('due_amount'),
+                'payment_method' => $request->input('payment_method'),
+                'payment_date' => $request->input('payment_date'),
+                'status' => 'outcoming',
+            ]);
     
             // Find the Purchase based on the Purchase ID and outcoming chalan (you can adjust this logic based on your relationships)
             $purchase = Purchase::where('supplier_id', $request->input('supplier_id'))->first();
