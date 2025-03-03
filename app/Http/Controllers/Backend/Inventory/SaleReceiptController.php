@@ -56,6 +56,9 @@ class SaleReceiptController extends Controller
         //dd($purchases);
         // Step 2: Find Outcoming Chalans based on purchase_id
         $chalans = OutcomingChalan::whereIn('purchase_id', $purchases)
+            ->whereHas('purchase', function($query) {
+                $query->where('status', '!=', 'paid'); 
+            })
             ->with('purchase') // Ensure related purchase invoice is fetched
             ->get();
         //dd($chalans);

@@ -73,6 +73,9 @@ class SalePaymentController extends Controller
 
         // Step 2: Find Incoming Chalans based on sale_id
         $chalans = IncomingChalan::whereIn('sale_id', $sales)
+            ->whereHas('sale', function($query) {
+                $query->where('status', '!=', 'paid'); 
+            })
             ->with('sale') // Ensure related sale invoice is fetched
             ->get();
 
