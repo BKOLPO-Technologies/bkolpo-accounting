@@ -148,29 +148,29 @@ class SaleReceiptController extends Controller
             
                 // Step 4: Check if this invoice already exists in JournalVoucher
                 $journalVoucher = JournalVoucher::where('transaction_code', $sale->invoice_no)->first();
-            
+                
                 if ($journalVoucher) {
                     // Step 5: Update existing journal voucher
                     $journalVoucher->update([
                         'transaction_date' => $request->input('payment_date'),
                         'description' => $request->input('description'),
                     ]);
-            
+                
                     // Step 6: Find the existing Sales ledger entry (debit) and subtract the payment amount
                     $salesLedgerDetail = JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)
                         ->where('ledger_id', $salesLedger->id)
                         ->first();
-            
+                
                     if ($salesLedgerDetail) {
                         // Existing Sales ledger debit amount (let's assume it's 2173)
                         $existingDebit = $salesLedgerDetail->debit;
-            
+                
                         // New debit amount after payment (decrease by payment amount)
                         $newDebitAmount = $existingDebit - $paymentAmount;
-            
+                
                         // Ensure debit does not go negative
                         $newDebitAmount = max(0, $newDebitAmount);
-            
+                
                         // Update the Sales ledger debit amount by reducing the payment amount
                         $salesLedgerDetail->update([
                             'debit' => $newDebitAmount,  // Update Sales ledger debit to the new value (after payment)
@@ -178,53 +178,21 @@ class SaleReceiptController extends Controller
                             'updated_at' => now(),
                         ]);
                     }
-            
-                    // Step 7: Update the Cash/Bank ledger (Payment Ledger) - credit the payment amount
-                    $paymentLedgerDetail = JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)
-                        ->where('ledger_id', $paymentLedger->id)
-                        ->first();
-            
-                    if ($paymentLedgerDetail) {
-                        // Update the Cash/Bank ledger (credit the payment amount)
-                        $paymentLedgerDetail->update([
-                            'debit' => 0, // No debit for Cash/Bank ledger entry
-                            'credit' => $paymentAmount, // Credit the payment amount to the Cash/Bank ledger
-                            'updated_at' => now(),
-                        ]);
-                    }
-                } else {
-                    // If journal voucher does not exist, create a new one
-                    $journalVoucher = JournalVoucher::create([
-                        'transaction_code'  => $sale->invoice_no,
-                        'transaction_date'  => $request->input('payment_date'),
-                        'description'       => $request->input('description'),
-                        'status'            => 1, // Pending status
-                    ]);
-            
-                    // Step 8: Create Journal Voucher Detail for Sales ledger (decrease by payment amount)
-                    JournalVoucherDetail::create([
-                        'journal_voucher_id' => $journalVoucher->id,
-                        'ledger_id'          => $salesLedger->id,  // Sales ledger
-                        'reference_no'       => $request->input('reference_no', ''),
-                        'description'        => $request->input('description', ''),
-                        'debit'              => $paymentAmount, // Debit the payment amount to the Sales ledger (decrease)
-                        'credit'             => 0, // No credit for Sales ledger
-                        'created_at'         => now(),
-                        'updated_at'         => now(),
-                    ]);
-            
+
                     // Step 9: Create Journal Voucher Detail for Payment (Cash or Bank ledger) - credit the payment amount
                     JournalVoucherDetail::create([
                         'journal_voucher_id' => $journalVoucher->id,
                         'ledger_id'          => $paymentLedger->id,  // Cash or Bank ledger
                         'reference_no'       => $request->input('reference_no', ''),
                         'description'        => $request->input('description', ''),
-                        'debit'              => 0, // No debit for the Cash/Bank ledger entry
-                        'credit'             => $paymentAmount, // Credit the payment amount to the Cash/Bank ledger
+                        'debit'              => $paymentAmount, 
+                        'credit'             => 0, 
                         'created_at'         => now(),
                         'updated_at'         => now(),
                     ]);
-                }
+
+                } 
+                
             }
             
 
