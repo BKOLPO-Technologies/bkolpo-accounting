@@ -76,11 +76,9 @@ class SalesController extends Controller
             return back()->with('error', 'At least one product must be selected.');
         }
 
-      
-
         try {
             // Start the transaction
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             // Create a new sale record
             $sale = new Sale();
@@ -111,13 +109,13 @@ class SalesController extends Controller
             }
 
             // Commit the transaction
-            \DB::commit();
+            DB::commit();
 
             // Redirect back with a success message
             return redirect()->route('admin.sale.index')->with('success', 'Sale created successfully!');
         } catch (\Exception $e) {
             // Rollback transaction if anything fails
-            \DB::rollback();
+            DB::rollback();
 
             // Log the error message
             Log::error('Sale creation failed: ', [
@@ -257,7 +255,6 @@ class SalesController extends Controller
             return back()->withErrors(['error' => 'Error: ' . $e->getMessage()]);
         }
     }
-
 
     /**
      * Remove the specified resource from storage.
