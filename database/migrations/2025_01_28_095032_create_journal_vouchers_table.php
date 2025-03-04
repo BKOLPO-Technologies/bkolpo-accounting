@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('journal_vouchers', function (Blueprint $table) {
             $table->id();
             $table->string('transaction_code')->unique();
-            $table->foreignId('company_id')->constrained()->onDelete('cascade');
-            $table->foreignId('branch_id')->constrained()->onDelete('cascade');
+            $table->foreignId('company_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('branch_id')->nullable()->constrained()->onDelete('cascade');
             $table->date('transaction_date'); 
             $table->text('description')->nullable();
             $table->tinyInteger('status')->default(1)->comment('0 => Draft, 1 => Pending, 2 => Approved');
