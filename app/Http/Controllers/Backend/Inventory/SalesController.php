@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Backend\Inventory;
 
 use Carbon\Carbon;
 use App\Models\Sale;
-use App\Models\SaleProduct;
 use App\Models\Client;
 use App\Models\Product;
+use App\Models\SaleProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log; 
+use App\Models\OutcomingChalanProduct;
 
 class SalesController extends Controller
 {
@@ -278,14 +279,99 @@ class SalesController extends Controller
 
     public function getInvoiceDetails($id)
     {
+        //Log::info("Fetching sale invoice details for ID: {$id}");
+
         $sale = Sale::with(['client', 'saleProducts.product'])->find($id);
-    
+
         if (!$sale) {
+            //Log::error("Invoice not found for ID: {$id}");
             return response()->json(['error' => 'Invoice not found'], 404);
         }
-    
-        // Map saleProducts to extract necessary product details
+
+        //Log::info("Sale record found:", ['sale_id' => $sale->id]);
+
+        // // Log client details
+        // Log::debug("Client Details:", [
+        //     'id' => $sale->client->id,
+        //     'name' => $sale->client->name,
+        //     'company' => $sale->client->company,
+        //     'phone' => $sale->client->phone,
+        //     'email' => $sale->client->email,
+        // ]);
+
+        // // Map saleProducts to extract necessary product details
+        // $products = $sale->saleProducts->map(function ($saleProduct) {
+        //     Log::debug("Processing product:", [
+        //         'id' => $saleProduct->product->id,
+        //         'name' => $saleProduct->product->name,
+        //         'price' => $saleProduct->price,
+        //         'quantity' => $saleProduct->quantity,
+        //         'discount' => $saleProduct->discount,
+        //         'stockqty' => $saleProduct->product->quantity,
+        //     ]);
+
+        //     return [
+        //         'id' => $saleProduct->product->id,
+        //         'name' => $saleProduct->product->name,
+        //         'price' => $saleProduct->price,
+        //         'quantity' => $saleProduct->quantity,
+        //         'discount' => $saleProduct->discount,
+        //         'stockqty' => $saleProduct->product->quantity,
+        //     ];
+        // });
+
+        // // Fetch product details with received quantity from OutcomingChalanProduct table
+        // $products = $sale->saleProducts->map(function ($saleProduct) {
+        //     $receivedQuantity = OutcomingChalanProduct::where('product_id', $saleProduct->product->id)
+        //         ->where('sale_id', $saleProduct->sale_id)
+        //         ->sum('receive_quantity'); // Get total received quantity for this product in the given sale
+
+        //     Log::debug("Processing product:", [
+        //         'id' => $saleProduct->product->id,
+        //         'name' => $saleProduct->product->name,
+        //         'price' => $saleProduct->price,
+        //         'quantity' => $saleProduct->quantity,
+        //         'discount' => $saleProduct->discount,
+        //         'stockqty' => $saleProduct->product->quantity,
+        //         'receive_quantity' => $receivedQuantity,
+        //     ]);
+
+        //     return [
+        //         'id' => $saleProduct->product->id,
+        //         'name' => $saleProduct->product->name,
+        //         'price' => $saleProduct->price,
+        //         'quantity' => $saleProduct->quantity,
+        //         'discount' => $saleProduct->discount,
+        //         'stockqty' => $saleProduct->product->quantity,
+        //         'receive_quantity' => $receivedQuantity, // Include received quantity
+        //     ];
+        // });
+
+        // Way-1
+        // // Fetch products along with receive_quantity from OutcomingChalanProduct
+        // $products = $sale->saleProducts->map(function ($saleProduct) use ($id) {
+        //     // Find the receive quantity from the outcoming_chalan_product table
+        //     $receiveQuantity = OutcomingChalanProduct::where('product_id', $saleProduct->product->id)
+        //         ->whereHas('outcomingChalan', function ($query) use ($id) {
+        //             $query->where('sale_id', $id);
+        //         })
+        //         ->sum('receive_quantity'); // Sum in case of multiple entries
+
+        // Way-2
+        // Fetch products and receive_quantity via relationship
         $products = $sale->saleProducts->map(function ($saleProduct) {
+            $receiveQuantity = $saleProduct->product->receivedQuantities->sum('receive_quantity');
+
+            // Log::debug("Processing product:", [
+            //     'id' => $saleProduct->product->id,
+            //     'name' => $saleProduct->product->name,
+            //     'price' => $saleProduct->price,
+            //     'quantity' => $saleProduct->quantity,
+            //     'discount' => $saleProduct->discount,
+            //     'stockqty' => $saleProduct->product->quantity,
+            //     'receive_quantity' => $receiveQuantity,
+            // ]);
+
             return [
                 'id' => $saleProduct->product->id,
                 'name' => $saleProduct->product->name,
@@ -293,9 +379,12 @@ class SalesController extends Controller
                 'quantity' => $saleProduct->quantity,
                 'discount' => $saleProduct->discount,
                 'stockqty' => $saleProduct->product->quantity,
+                'receive_quantity' => $receiveQuantity, // Now sending correct receive_quantity
             ];
         });
-    
+
+        //Log::info("Successfully retrieved invoice details for ID: {$id}");
+
         return response()->json([
             'client' => [
                 'name' => $sale->client->name,
@@ -303,9 +392,40 @@ class SalesController extends Controller
                 'phone' => $sale->client->phone,
                 'email' => $sale->client->email,
             ],
-            'products' => $products, // Properly passing the products array
+            'products' => $products,
         ]);
     }
+
+    // public function getInvoiceDetails($id)
+    // {
+    //     $sale = Sale::with(['client', 'saleProducts.product'])->find($id);
+    
+    //     if (!$sale) {
+    //         return response()->json(['error' => 'Invoice not found'], 404);
+    //     }
+    
+    //     // Map saleProducts to extract necessary product details
+    //     $products = $sale->saleProducts->map(function ($saleProduct) {
+    //         return [
+    //             'id' => $saleProduct->product->id,
+    //             'name' => $saleProduct->product->name,
+    //             'price' => $saleProduct->price,
+    //             'quantity' => $saleProduct->quantity,
+    //             'discount' => $saleProduct->discount,
+    //             'stockqty' => $saleProduct->product->quantity,
+    //         ];
+    //     });
+    
+    //     return response()->json([
+    //         'client' => [
+    //             'name' => $sale->client->name,
+    //             'company' => $sale->client->company,
+    //             'phone' => $sale->client->phone,
+    //             'email' => $sale->client->email,
+    //         ],
+    //         'products' => $products, // Properly passing the products array
+    //     ]);
+    // }
     
 
     

@@ -31,4 +31,9 @@ class Sale extends Model
     {
         return $this->hasMany(SaleProduct::class, 'sale_id');
     }
+
+    public function outcomingChalans()
+    {
+        return $this->hasMany(OutcomingChalan::class, 'sale_id');
+    }
 }

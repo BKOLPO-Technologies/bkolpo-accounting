@@ -178,7 +178,7 @@
                                             <input type="number" name="quantity[]" class="form-control quantity" value="${product.quantity}" min="1" readonly>
                                         </td>
                                         <td>
-                                            <input type="number" name="receive_quantity[]" class="form-control receive-quantity" value="0" min="1" data-available="${product.quantity}">
+                                            <input type="number" name="receive_quantity[]" class="form-control receive-quantity" value="${product.receive_quantity}" min="1" data-available="${product.quantity}">
                                         </td>
                                         <input type="hidden" name="product_id[]" value="${product.id}">
                                     </tr>

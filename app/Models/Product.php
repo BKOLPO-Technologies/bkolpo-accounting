@@ -47,4 +47,17 @@ class Product extends Model
     {
         return $this->hasMany(StockOut::class, 'product_id');
     }
+
+    public function receivedQuantities()
+    {
+        return $this->hasManyThrough(
+            OutcomingChalanProduct::class, // Final table
+            OutcomingChalan::class, // Intermediate table
+            'sale_id', // Foreign key in OutcomingChalan pointing to Sale
+            'outcoming_chalan_id', // Foreign key in OutcomingChalanProduct pointing to OutcomingChalan
+            'id', // Local key in Product
+            'id'  // Local key in OutcomingChalan
+        );
+    }
+    
 }

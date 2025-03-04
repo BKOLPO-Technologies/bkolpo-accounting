@@ -6,9 +6,10 @@ use DB;
 use Carbon\Carbon;
 use App\Models\Product;
 use App\Models\Purchase;
-use App\Models\PurchaseProduct;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use App\Models\PurchaseProduct;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 class PurchaseController extends Controller
@@ -250,14 +251,37 @@ class PurchaseController extends Controller
 
     public function getInvoiceDetails($id)
     {
+        Log::info("Fetching invoice details for ID: {$id}");
+
         $purchase = Purchase::with(['supplier', 'purchaseProducts.product'])->find($id);
-    
+
         if (!$purchase) {
+            Log::error("Invoice not found for ID: {$id}");
             return response()->json(['error' => 'Invoice not found'], 404);
         }
-    
+
+        Log::info("Purchase record found:", ['purchase_id' => $purchase->id]);
+
+        // Log supplier details
+        Log::debug("Supplier Details:", [
+            'id' => $purchase->supplier->id,
+            'name' => $purchase->supplier->name,
+            'company' => $purchase->supplier->company,
+            'phone' => $purchase->supplier->phone,
+            'email' => $purchase->supplier->email,
+        ]);
+
         // Map Purchase Products to extract necessary product details
         $products = $purchase->purchaseProducts->map(function ($purchaseProduct) {
+            Log::debug("Processing product:", [
+                'id' => $purchaseProduct->product->id,
+                'name' => $purchaseProduct->product->name,
+                'price' => $purchaseProduct->price,
+                'quantity' => $purchaseProduct->quantity,
+                'discount' => $purchaseProduct->discount,
+                'stockqty' => $purchaseProduct->product->quantity,
+            ]);
+
             return [
                 'id' => $purchaseProduct->product->id,
                 'name' => $purchaseProduct->product->name,
@@ -267,7 +291,9 @@ class PurchaseController extends Controller
                 'stockqty' => $purchaseProduct->product->quantity,
             ];
         });
-    
+
+        Log::info("Successfully retrieved invoice details for ID: {$id}");
+
         return response()->json([
             'supplier' => [
                 'name' => $purchase->supplier->name,
@@ -275,8 +301,9 @@ class PurchaseController extends Controller
                 'phone' => $purchase->supplier->phone,
                 'email' => $purchase->supplier->email,
             ],
-            'products' => $products, // Properly passing the products array
+            'products' => $products,
         ]);
     }
+
 
 }

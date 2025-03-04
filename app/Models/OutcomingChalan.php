@@ -21,4 +21,9 @@ class OutcomingChalan extends Model
     {
         return $this->hasMany(OutcomingChalanProduct::class);
     }
+
+    public function outcomingChalanProducts()
+    {
+        return $this->hasMany(OutcomingChalanProduct::class, 'outcoming_chalan_id');
+    }
 }
