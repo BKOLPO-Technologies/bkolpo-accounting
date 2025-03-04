@@ -378,16 +378,16 @@
             return;
         }
 
-        if (quantity > stock) {
-            // Display toastr alert
-            toastr.error('Quantity cannot exceed available stock.', 'Stock Limit Exceeded', {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 5000
-            });
+        // if (quantity > stock) {
+        //     // Display toastr alert
+        //     toastr.error('Quantity cannot exceed available stock.', 'Stock Limit Exceeded', {
+        //         closeButton: true,
+        //         progressBar: true,
+        //         timeOut: 5000
+        //     });
 
-            $(input).val(stock);  // Reset to stock value
-        }
+        //     $(input).val(stock);  // Reset to stock value
+        // }
 
         // Calculate subtotal (before discount) for this product
         const subtotal = price * quantity;

@@ -32,7 +32,6 @@ class IncomingChalanController extends Controller
         return view('backend.admin.inventory.purchase.chalan.index', compact('pageTitle', 'incomingchalans'));
     }
     
-
     /**
      * Show the form for creating a new resource.
      */
@@ -50,7 +49,7 @@ class IncomingChalanController extends Controller
      */
     public function store(Request $request)
     {
-        Log::info('Incoming Chalan Store: Request received', ['request' => $request->all()]);
+        //Log::info('Incoming Chalan Store: Request received', ['request' => $request->all()]);
 
         DB::beginTransaction(); // Start Transaction
 
@@ -66,7 +65,7 @@ class IncomingChalanController extends Controller
                 'receive_quantity' => 'required|array',
             ]);
 
-            Log::info('Validation passed.');
+            //Log::info('Validation passed.');
 
             // Create IncomingChalan record
             $incomingChalan = IncomingChalan::create([
@@ -75,21 +74,21 @@ class IncomingChalanController extends Controller
                 'description' => $request->description,
             ]);
 
-            Log::info('IncomingChalan created', ['incomingChalan' => $incomingChalan]);
+            //Log::info('IncomingChalan created', ['incomingChalan' => $incomingChalan]);
 
             // Generate current timestamp
             $timestamp = now()->format('YmdHis'); // Format: YYYYMMDDHHMMSS
 
             // Insert product details into IncomingChalanProduct table
             foreach ($request->product_id as $index => $productId) {
-                Log::info("Processing product: {$productId}");
+                //Log::info("Processing product: {$productId}");
                 $incomingChalanProduct = IncomingChalanProduct::create([
                     'incoming_chalan_id' => $incomingChalan->id,
                     'product_id' => $productId,
                     'quantity' => $request->quantity[$index],
                     'receive_quantity' => $request->receive_quantity[$index],
                 ]);
-                Log::info('IncomingChalanProduct created', ['incomingChalanProduct' => $incomingChalanProduct]);
+                //Log::info('IncomingChalanProduct created', ['incomingChalanProduct' => $incomingChalanProduct]);
 
                 // // Fetch product details
                 // $product = Product::find($productId);
@@ -121,7 +120,7 @@ class IncomingChalanController extends Controller
             }
 
             DB::commit(); // Commit Transaction
-            Log::info('Transaction committed successfully.');
+            //Log::info('Transaction committed successfully.');
 
             // Success message after processing everything correctly
             return redirect()->route('incoming.chalan.index')->with('success', 'Incoming Chalan created successfully!');
@@ -129,12 +128,10 @@ class IncomingChalanController extends Controller
         } catch (\Exception $e) {
             // Handle any exception that occurs
             DB::rollBack(); // Rollback transaction if an error occurs
-            Log::error('Error in Incoming Chalan Store: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            //Log::error('Error in Incoming Chalan Store: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
     }
-
-
 
     /**
      * Display the specified resource.
@@ -153,18 +150,17 @@ class IncomingChalanController extends Controller
      * Show the form for editing the specified resource.
      */ 
 
-     public function edit($id)
-     {
+    public function edit($id)
+    {
         $pageTitle = 'Edit Incoming Chalan';
         // Find the IncomingChalan by ID
-        $incomingChalan = IncomingChalan::with('sale', 'products')->findOrFail($id);
+        $chalan = IncomingChalan::with('purchase', 'products')->findOrFail($id);
+        //$incomingChalan = IncomingChalan::with('sale', 'products')->findOrFail($id);
         $sales = Sale::latest()->get();
 
         // Pass the IncomingChalan and its products to the view
-        return view('backend.admin.inventory.purchase.chalan.edit', compact('pageTitle', 'incomingChalan', 'sales'));
-     }
-
-
+        return view('backend.admin.inventory.purchase.chalan.edit', compact('pageTitle', 'chalan', 'sales'));
+    }
 
     /**
      * Update the specified resource in storage.
@@ -194,8 +190,6 @@ class IncomingChalanController extends Controller
 
         return redirect()->route('incoming.chalan.index')->with('success', 'Updated successfully!');
     }
-
-
 
     /**
      * Remove the specified resource from storage.
