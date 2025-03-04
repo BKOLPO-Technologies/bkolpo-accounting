@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend\Inventory;
 
 use Carbon\Carbon;
 use App\Models\Sale;
+use App\Models\Ledger;
 
 use App\Models\Client;
 use App\Models\Product;
@@ -12,6 +13,8 @@ use App\Models\Purchase;
 use Illuminate\Http\Request;
 use App\Models\IncomingChalan;
 use App\Models\InChalanInventory;
+use App\Models\JournalVoucher;
+use App\Models\JournalVoucherDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log; 
@@ -117,6 +120,60 @@ class IncomingChalanController extends Controller
                 // Increase product stock
                 //$product->increment('quantity', $request->receive_quantity[$index]);
 
+            }
+
+            // journal add amount
+            // Step 1: Fetch Purchase record
+            $purchase = Purchase::find($request->purchase_id);
+
+            // Step 2: Get purchase amount
+            $purchase_amount = $purchase->total ?? 0; // If purchase doesn't have amount, default to 0
+
+            // Step 3: Retrieve Purchase ledger
+            $ledger = Ledger::where('name', 'Purchase Accounts')->first();
+
+            // Step 4: If the ledger exists, proceed with journal creation/update
+            if ($ledger) {
+                // Step 5: Check if this invoice already exists in JournalVoucher
+                $journalVoucher = JournalVoucher::where('transaction_code', $purchase->invoice_no)->first();
+
+                // If journal voucher exists, update it; otherwise, create a new one
+                if ($journalVoucher) {
+                    // Update existing journal voucher
+                    $journalVoucher->update([
+                        'transaction_date' => $request->invoice_date,
+                        'description' => $request->description,
+                    ]);
+
+                    // Update the corresponding journal voucher details
+                    JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)
+                        ->where('ledger_id', $ledger->id)
+                        ->update([
+                            'debit' => $purchase_amount, // Update the debit amount
+                            'credit' => 0,           // Credit is zero for debit entry
+                            'updated_at' => now(),
+                        ]);
+                } else {
+                    // If journal voucher does not exist, create a new one
+                    $journalVoucher = JournalVoucher::create([
+                        'transaction_code'  => $purchase->invoice_no,
+                        'transaction_date'  => $request->invoice_date,
+                        'description'       => $request->description,
+                        'status'            => 1, // Pending status
+                    ]);
+
+                    // Create journal voucher details
+                    JournalVoucherDetail::create([
+                        'journal_voucher_id' => $journalVoucher->id,
+                        'ledger_id'          => $ledger->id,
+                        'reference_no'       => $request->reference_no ?? '',
+                        'description'        => $request->description ?? '',
+                        'debit'              => $purchase_amount,
+                        'credit'             => 0,
+                        'created_at'         => now(),
+                        'updated_at'         => now(),
+                    ]);
+                }
             }
 
             DB::commit(); // Commit Transaction

@@ -15,6 +15,8 @@ use App\Models\LedgerGroup;
 use App\Models\IncomingChalan;
 use App\Models\OutcomingChalan;
 use App\Models\LedgerGroupDetail;
+use App\Models\JournalVoucher;
+use App\Models\JournalVoucherDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log; 
 
@@ -139,7 +141,79 @@ class SalePaymentController extends Controller
         
             // Find the supplier_id based on the supplier_id ID and incoming chalan (you can adjust this logic based on your relationships)
             $purchases = Purchase::where('supplier_id', $request->input('supplier_id'))->first();
+            
+            $purchase_amount = $purchases->total ?? 0;
 
+            // Step 3: Get payment method from request (Cash, Bank, etc.)
+            $payment_method = $request->input('payment_method'); // Get payment method from request
+            $ledger = null;
+
+            // Step 4: Based on payment method, get the corresponding ledger
+            if ($payment_method == 'cash') {
+                $ledger = Ledger::where('name', 'Cash')->first(); // Find Cash ledger
+            } elseif ($payment_method == 'bank') {
+                $ledger = Ledger::where('name', 'Bank')->first(); // Find Bank ledger
+            }
+
+            // Step 1: Get the Purchase ledger
+            $purchasesLedger =  Ledger::where('name', 'Purchase Accounts')->first();
+
+            // Step 2: Ensure the ledger exists for the given payment method (Cash or Bank)
+            $paymentMethod = $request->input('payment_method'); // Get payment method (Cash/Bank)
+            $paymentLedger = Ledger::where('name', $paymentMethod)->first(); // Find the Cash or Bank ledger
+
+            if ($purchasesLedger && $paymentLedger) {
+                // Step 3: Determine the payment amount (can come from the request)
+                $paymentAmount = $request->input('pay_amount', 0); // Amount being paid (in your case, 73)
+            
+                // Step 4: Check if this invoice already exists in JournalVoucher
+                $journalVoucher = JournalVoucher::where('transaction_code', $purchases->invoice_no)->first();
+                
+                if ($journalVoucher) {
+                    // Step 5: Update existing journal voucher
+                    $journalVoucher->update([
+                        'transaction_date' => $request->input('payment_date'),
+                        'description' => $request->input('description'),
+                    ]);
+                
+                    // Step 6: Find the existing Purchases ledger entry (debit) and subtract the payment amount
+                    $purchasesLedgerDetail = JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)
+                        ->where('ledger_id', $purchasesLedger->id)
+                        ->first();
+                
+                    if ($purchasesLedgerDetail) {
+                        // Existing Sales ledger debit amount (let's assume it's 2173)
+                        $existingDebit = $purchasesLedgerDetail->debit;
+                
+                        // New debit amount after payment (decrease by payment amount)
+                        $newDebitAmount = $existingDebit - $paymentAmount;
+                
+                        // Ensure debit does not go negative
+                        $newDebitAmount = max(0, $newDebitAmount);
+                
+                        // Update the Sales ledger debit amount by reducing the payment amount
+                        $purchasesLedgerDetail->update([
+                            'debit' => $newDebitAmount,  // Update Sales ledger debit to the new value (after payment)
+                            'credit' => 0,  // No credit for Sales ledger
+                            'updated_at' => now(),
+                        ]);
+                    }
+
+                    // Step 9: Create Journal Voucher Detail for Payment (Cash or Bank ledger) - credit the payment amount
+                    JournalVoucherDetail::create([
+                        'journal_voucher_id' => $journalVoucher->id,
+                        'ledger_id'          => $paymentLedger->id,  // Cash or Bank ledger
+                        'reference_no'       => $request->input('reference_no', ''),
+                        'description'        => $request->input('description', ''),
+                        'debit'              => 0, 
+                        'credit'             => $paymentAmount, 
+                        'created_at'         => now(),
+                        'updated_at'         => now(),
+                    ]);
+
+                } 
+                
+            }
 
             // If purchases exists
             if ($purchases) {
