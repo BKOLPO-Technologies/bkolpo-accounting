@@ -267,7 +267,7 @@
 
           <li class="nav-item {{ $isSupplierActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isSupplierActive ? 'active' : '' }}">
-                  <i class="nav-icon fas fa-receipt"></i>
+                  <i class="nav-icon fas fa-truck"></i>
                   <p>
                     Suppliers
                       <i class="fas fa-angle-left right"></i>
@@ -286,7 +286,7 @@
 
           <li class="nav-item {{ $isClientActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isClientActive ? 'active' : '' }}">
-                  <i class="nav-icon fas fa-receipt"></i>
+                  <i class="nav-icon fas fa-user"></i>
                   <p>
                   Client
                       <i class="fas fa-angle-left right"></i>
@@ -305,7 +305,7 @@
 
           <li class="nav-item {{ $isSalesActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isSalesActive ? 'active' : '' }}">
-                  <i class="nav-icon fas fa-receipt"></i>
+                  <i class="nav-icon fas fa-shopping-cart"></i>
                   <p>
                   Sales
                       <i class="fas fa-angle-left right"></i>
@@ -352,7 +352,7 @@
 
           <li class="nav-item {{ $isPurchaseActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isPurchaseActive ? 'active' : '' }}">
-                  <i class="nav-icon fas fa-receipt"></i>
+                  <i class="nav-icon fas fa-shopping-bag"></i>
                   <p>
                   Purchase
                       <i class="fas fa-angle-left right"></i>
@@ -389,12 +389,9 @@
               </ul>
           </li>
 
-          <li class="nav-item 
-          {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('stock*') ? 'menu-open' : '' }}
-          ">
-              <a href="#" class="nav-link 
-              {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('stock*')  ? 'active' : '' }}">
-                  <i class="nav-icon fas fa-receipt"></i>
+          <li class="nav-item {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('stock*') ? 'menu-open' : '' }}">
+              <a href="#" class="nav-link {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('stock*')  ? 'active' : '' }}">
+                  <i class="nav-icon fas fa-boxes"></i>
                   <p>
                     Inventory
                       <i class="fas fa-angle-left right"></i>
@@ -463,6 +460,7 @@
                 </li>
               </ul>
           </li>
+
          @can('user-menu')  
          <li class="nav-item {{ Route::is('users.index','users.create','users.edit','users.show') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('users.index','users.create','users.edit','users.show') ? 'active' : '' }}">
