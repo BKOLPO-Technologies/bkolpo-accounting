@@ -15,7 +15,7 @@ class SupplierSeeder extends Seeder
     {
         $suppliers = [
             [
-                'bd_supplier_name' => 'Bangladesh Textile Industries',
+                'name' => 'Bangladesh Textile Industries',
                 'company' => 'Bangladesh Textile Industries',
                 'phone' => '880-123-4567',
                 'email' => 'supplier-bd@example.com',
@@ -28,7 +28,7 @@ class SupplierSeeder extends Seeder
                 'status' => 1,
             ],
             [
-                'bd_supplier_name' => 'Dhaka Electronics Ltd.',
+                'name' => 'Dhaka Electronics Ltd.',
                 'company' => 'Dhaka Electronics Ltd.',
                 'phone' => '880-234-5678',
                 'email' => 'supplier-dhaka@example.com',
@@ -41,7 +41,7 @@ class SupplierSeeder extends Seeder
                 'status' => 1,
             ],
             [
-                'bd_supplier_name' => 'Chittagong Shipbuilding Co.',
+                'name' => 'Chittagong Shipbuilding Co.',
                 'company' => 'Chittagong Shipbuilding Co.',
                 'phone' => '880-345-6789',
                 'email' => 'supplier-chittagong@example.com',
@@ -54,7 +54,7 @@ class SupplierSeeder extends Seeder
                 'status' => 1,
             ],
             [
-                'bd_supplier_name' => 'Sylhet Agro Industries',
+                'name' => 'Sylhet Agro Industries',
                 'company' => 'Sylhet Agro Industries',
                 'phone' => '880-456-7890',
                 'email' => 'supplier-sylhet@example.com',
@@ -67,7 +67,6 @@ class SupplierSeeder extends Seeder
                 'status' => 1,
             ],
         ];
-        
 
         foreach ($suppliers as $supplier) {
             Supplier::updateOrCreate(
