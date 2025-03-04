@@ -13,6 +13,13 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         // Route::get('/edit/{id}', [OutComingChalanController::class, 'edit'])->name('outcoming.chalan.edit');
         // Route::put('/update/{id}', [OutComingChalanController::class, 'update'])->name('outcoming.chalan.update');
         // Route::get('/delete/{id}', [OutComingChalanController::class, 'destroy'])->name('outcoming.chalan.destroy');
+
+
+
+        Route::get('/out', [StockController::class, 'Out'])->name('stock.out');
+        Route::get('/out/{id}', [StockController::class, 'OutView'])->name('stock.out.view');
+        Route::get('/in', [StockController::class, 'In'])->name('stock.in');
+        Route::get('/in/{id}', [StockController::class, 'InView'])->name('stock.in.view');
     });
 });
 

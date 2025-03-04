@@ -9,6 +9,17 @@ use App\Http\Controllers\Controller;
 
 class StockController extends Controller
 {
+
+    public function Out()
+    {
+        return view('backend.admin.inventory.sales.stock.in', compact('pageTitle', 'products'));
+    }
+
+    public function In()
+    {
+        return view('backend.admin.inventory.purchase.stock.out', compact('pageTitle', 'products'));
+    }
+
     /**
      * Display a listing of the resource.
      */

@@ -265,6 +265,49 @@
             </li>
           @endcan
 
+          <!-- Category -->
+          <li class="nav-item {{ Route::is('admin.category*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('admin.category*') ? 'active' : '' }}">
+                {{-- <i class="far fa-circle nav-icon"></i> --}}
+                <i class="nav-icon fas fa-layer-group"></i>
+                <p>
+                    Category
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{ route('admin.category.index') }}" class="nav-link {{ Route::is('admin.category.index') || Route::is('admin.category.create') || Route::is('admin.category.edit') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Manage Category</p>
+                    </a>
+                </li>
+            </ul>
+          </li>
+
+          <!-- Product -->
+          <li class="nav-item {{ Route::is('admin.product*') ? 'menu-open' : '' }}">
+              <a href="#" class="nav-link {{ Route::is('admin.product*') ? 'active' : '' }}">
+                  {{-- <i class="far fa-circle nav-icon"></i> --}}
+                  <i class="nav-icon fas fa-box"></i>
+                  <p>
+                      Product
+                      <i class="fas fa-angle-left right"></i>
+                  </p>
+              </a>
+
+              <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                      <a href="{{ route('admin.product.index') }}" class="nav-link {{ Route::is('admin.product.index') || Route::is('admin.product.create') || Route::is('admin.product.edit') ? 'active' : '' }}">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Manage Product</p>
+                      </a>
+                  </li>
+              </ul>
+          </li>
+
+          <!-- Supplier -->
           <li class="nav-item {{ $isSupplierActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isSupplierActive ? 'active' : '' }}">
                   <i class="nav-icon fas fa-truck"></i>
@@ -273,7 +316,7 @@
                       <i class="fas fa-angle-left right"></i>
                   </p>
               </a>
-              <!-- Supplier -->
+              
               <ul class="nav nav-treeview">
                   <li class="nav-item">
                       <a href="{{ route('admin.supplier.index') }}" class="nav-link {{ Route::is('admin.supplier.index') || Route::is('admin.supplier.view') || Route::is('admin.supplier.edit') || Route::is('admin.supplier.create') ? 'active' : '' }}">
@@ -284,6 +327,7 @@
               </ul>
           </li>
 
+          <!-- Clients -->
           <li class="nav-item {{ $isClientActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isClientActive ? 'active' : '' }}">
                   <i class="nav-icon fas fa-user"></i>
@@ -292,7 +336,7 @@
                       <i class="fas fa-angle-left right"></i>
                   </p>
               </a>
-              <!-- Clients -->
+              
               <ul class="nav nav-treeview">
                   <li class="nav-item">
                       <a href="{{ route('admin.client.index') }}" class="nav-link {{ Route::is('admin.client.index') || Route::is('admin.client.create') || Route::is('admin.client.view') || Route::is('admin.client.edit') ? 'active' : '' }}">
@@ -303,6 +347,7 @@
               </ul>
           </li>
 
+          <!-- Sales -->
           <li class="nav-item {{ $isSalesActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isSalesActive ? 'active' : '' }}">
                   <i class="nav-icon fas fa-shopping-cart"></i>
@@ -311,7 +356,7 @@
                       <i class="fas fa-angle-left right"></i>
                   </p>
               </a>
-              <!-- Sales -->
+              
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                     <a href="{{ route('admin.sale.index') }}" class="nav-link {{ Route::is('admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit') ? 'active' : '' }}">
@@ -325,21 +370,21 @@
                       <i class="far fa-circle nav-icon"></i>
                       <p>Outgoing Chalan List</p>
                   </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('receipt.payment.index') }}" 
-                  class="nav-link {{ Route::is('receipt.payment.index', 'receipt.payment.create') ? 'active' : '' }}">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Payment Receive List</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" 
-                  class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Stock Out List</p>
-                </a>
-            </li>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('receipt.payment.index') }}" 
+                    class="nav-link {{ Route::is('receipt.payment.index', 'receipt.payment.create') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Payment Receive List</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('stock.out') }}" 
+                    class="nav-link {{ Route::is('stock.out', 'stock.out.view') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Stock Out List</p>
+                  </a>
+                </li>
                 <li class="nav-item">
                     <a href="{{ route('quotations.index') }}" 
                       class="nav-link {{ Route::is('quotations.index', 'quotations.create', 'quotations.show', 'quotations.edit') ? 'active' : '' }}">
@@ -350,15 +395,16 @@
               </ul>
           </li>
 
+          <!-- Purchase -->
           <li class="nav-item {{ $isPurchaseActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isPurchaseActive ? 'active' : '' }}">
                   <i class="nav-icon fas fa-shopping-bag"></i>
                   <p>
-                  Purchase
+                      Purchase
                       <i class="fas fa-angle-left right"></i>
                   </p>
               </a>
-              <!-- Sales -->
+              
               <ul class="nav nav-treeview">
                   <li class="nav-item">
                       <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index','admin.purchase.create', 'admin.purchase.show', 'admin.purchase.edit') ? 'active' : '' }}">
@@ -371,25 +417,26 @@
                         <i class="far fa-circle nav-icon"></i>
                         <p>Incoming Chalan List</p>
                     </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{{ route('sale.payment.index') }}" 
-                    class="nav-link {{ Route::is('sale.payment.index', 'sale.payment.create') ? 'active' : '' }}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Make Payment List</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" 
-                    class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Stock In List</p>
-                  </a>
-              </li>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ route('sale.payment.index') }}" 
+                      class="nav-link {{ Route::is('sale.payment.index', 'sale.payment.create') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Make Payment List</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ route('stock.in') }}" 
+                      class="nav-link {{ Route::is('stock.in', 'stock.in.view') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Stock In List</p>
+                    </a>
+                  </li>
               </ul>
           </li>
 
-          <li class="nav-item {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('stock*') ? 'menu-open' : '' }}">
+          {{-- <li class="nav-item {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('stock*') ? 'menu-open' : '' }}"> --}}
+              {{--               
               <a href="#" class="nav-link {{ Route::is('admin.category*') || Route::is('admin.product*') || Route::is('stock*')  ? 'active' : '' }}">
                   <i class="nav-icon fas fa-boxes"></i>
                   <p>
@@ -397,7 +444,9 @@
                       <i class="fas fa-angle-left right"></i>
                   </p>
               </a>
+               --}}
               <!-- Category -->
+              {{-- 
               <ul class="nav nav-treeview">
                 <li class="nav-item {{ Route::is('admin.category*') ? 'menu-open' : '' }}">
                   <a href="#" class="nav-link {{ Route::is('admin.category*') ? 'active' : '' }}">
@@ -416,9 +465,11 @@
                       </li>
                   </ul>
                 </li>
-              </ul>
+              </ul> 
+              --}}
 
               <!-- Product -->
+              {{-- 
               <ul class="nav nav-treeview">
                   <li class="nav-item {{ Route::is('admin.product*') ? 'menu-open' : '' }}">
                       <a href="#" class="nav-link {{ Route::is('admin.product*') ? 'active' : '' }}">
@@ -437,12 +488,14 @@
                           </li>
                       </ul>
                   </li>
-              </ul>
+              </ul> 
+              --}}
+
               <!-- Stock Management -->
+              {{-- 
               <ul class="nav nav-treeview">
                 <li class="nav-item {{ Route::is('stock*') ? 'menu-open' : '' }}">
                   <a href="#" class="nav-link {{ Route::is('stock*') ? 'active' : '' }}">
-                      <!-- <i class="fa-solid fa-money-check"></i> -->
                       <i class="far fa-circle nav-icon"></i>
                       <p>
                         Stock
@@ -459,7 +512,8 @@
                   </ul>
                 </li>
               </ul>
-          </li>
+               --}}
+          {{-- </li> --}}
 
          @can('user-menu')  
          <li class="nav-item {{ Route::is('users.index','users.create','users.edit','users.show') ? 'menu-open' : '' }}">
