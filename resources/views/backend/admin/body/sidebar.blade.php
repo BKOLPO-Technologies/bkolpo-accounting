@@ -60,7 +60,7 @@
           @can('company-menu')  
          <li class="nav-item {{ Route::is('company.index','company.create','company.edit','company.show') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('company.index','company.create','company.edit','company.show') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-project-diagram"></i>
+              <i class="nav-icon fas fa-building"></i>
               <p>
                 Company
                 <i class="fas fa-angle-left right"></i>
@@ -154,7 +154,7 @@
           @can('journal-menu')  
           <li class="nav-item {{ Route::is('journal-voucher.index','journal-voucher.excel', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('journal-voucher.index','journal-voucher.excel', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-receipt"></i>
+              <i class="nav-icon fas fa-book"></i>
               <p>
               Journal
                 <i class="fas fa-angle-left right"></i>
@@ -214,7 +214,7 @@
           @can('report-menu')  
             <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
                 <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-receipt"></i>
+                    <i class="nav-icon fas fa-chart-line"></i>
                     <p>
                         Report
                         <i class="fas fa-angle-left right"></i>
