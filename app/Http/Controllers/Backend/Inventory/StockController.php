@@ -12,12 +12,37 @@ class StockController extends Controller
 
     public function Out()
     {
-        return view('backend.admin.inventory.sales.stock.in', compact('pageTitle', 'products'));
+        $pageTitle = 'Stock Out List';
+
+        // Load products with stock-out data
+        $products = Product::with('stockOuts')->get();
+
+        return view('backend.admin.inventory.sales.stock.out', compact('pageTitle', 'products'));
     }
 
+    public function OutView($id)
+    {
+        $pageTitle = 'Stock Out List';
+
+        return view('backend.admin.inventory.sales.stock.outView', compact('pageTitle'));
+    }
+
+    //purchase
     public function In()
     {
-        return view('backend.admin.inventory.purchase.stock.out', compact('pageTitle', 'products'));
+        $pageTitle = 'Stock In List';
+
+        // Load products with stock-in data
+        $products = Product::with('stockIns')->get();
+
+        return view('backend.admin.inventory.purchase.stock.in', compact('pageTitle', 'products'));
+    }
+
+    public function InView($id)
+    {
+        $pageTitle = 'Stock In List';
+
+        return view('backend.admin.inventory.purchase.stock.inView', compact('pageTitle'));
     }
 
     /**
