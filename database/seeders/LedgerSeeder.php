@@ -36,6 +36,7 @@ class LedgerSeeder extends Seeder
             ['name' => 'Entertainment', 'group' => 'Expense'],
             ['name' => 'Repair & Maintenance', 'group' => 'Expense'],
             ['name' => 'CEO Withdraw', 'group' => 'Expense'],
+            ['name' => 'Purchase Accounts', 'group' => 'Expense'],
             ['name' => 'Sales', 'group' => 'Income'],
             ['name' => 'Banking Payable', 'group' => 'Liabilities'],
             ['name' => 'GPH Ispat Ltd', 'group' => 'Liabilities'],
