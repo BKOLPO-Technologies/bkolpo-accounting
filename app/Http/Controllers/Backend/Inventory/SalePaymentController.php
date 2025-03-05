@@ -107,10 +107,14 @@ class SalePaymentController extends Controller
      */
     public function store(Request $request)
     {
+        // this is ok
+        // payment/sales/create
+        //dd($request->all());
         // Validate the incoming form data
         $request->validate([
             'supplier_id' => 'required|exists:suppliers,id',
             'incoming_chalan_id' => 'nullable|exists:incoming_chalans,id',
+            'invoice_no' => 'required',
             'total_amount' => 'required|numeric|min:0',
             'pay_amount' => 'required|numeric|min:0',
             'due_amount' => 'required|numeric|min:0',
@@ -126,6 +130,8 @@ class SalePaymentController extends Controller
             $payment = Payment::where('incoming_chalan_id', $request->input('incoming_chalan_id'))
                               ->where('supplier_id', $request->input('supplier_id'))
                               ->first();
+
+            //dd("payment = ", $payment);
     
             // Create a new payment
             $payment = Payment::create([
@@ -138,11 +144,29 @@ class SalePaymentController extends Controller
                 'payment_method' => $request->input('payment_method'),
                 'payment_date' => $request->input('payment_date'),
             ]);
+
+            // dd("payment = ", $payment);
         
             // Find the supplier_id based on the supplier_id ID and incoming chalan (you can adjust this logic based on your relationships)
-            $purchases = Purchase::where('supplier_id', $request->input('supplier_id'))->first();
+            
+            
+            
+            // ******************* Here beed to query invoice_no ***************************** //
+            // $purchases = Purchase::where('supplier_id', $request->input('supplier_id'))->first();
+            $purchases = Purchase::where('supplier_id', $request->input('supplier_id'))
+                     ->where('invoice_no', $request->input('invoice_no'))
+                     ->first();
+
+            // **********************************************************************************
+
+
+
+
+            //dd("purchases = ", $purchases);
             
             $purchase_amount = $purchases->total ?? 0;
+
+            //dd("purchase_amount = ", $purchase_amount);
 
             // Step 3: Get payment method from request (Cash, Bank, etc.)
             $payment_method = $request->input('payment_method'); // Get payment method from request

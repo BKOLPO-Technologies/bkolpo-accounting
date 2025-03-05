@@ -82,11 +82,14 @@ class SaleReceiptController extends Controller
      */
     public function store(Request $request)
     {
+        // this is not ok
+        // payment/receipt/create
         // dd($request->all());
         // Validate the incoming form data
         $request->validate([
             'client_id' => 'required|exists:clients,id',
             'outcoming_chalan_id' => 'nullable|exists:outcoming_chalans,id',
+            'invoice_no' => 'required',
             'total_amount' => 'required|numeric|min:0',
             'pay_amount' => 'required|numeric|min:0',
             'due_amount' => 'required|numeric|min:0',
@@ -102,6 +105,8 @@ class SaleReceiptController extends Controller
             $receipt = Receipt::where('outcoming_chalan_id', $request->input('outcoming_chalan_id'))
                               ->where('client_id', $request->input('client_id'))
                               ->first();
+
+            // dd("Receipt = ", $receipt);
     
 
             // Create a new receipt
@@ -116,13 +121,20 @@ class SaleReceiptController extends Controller
                 'payment_date' => $request->input('payment_date'),
                 'status' => 'outcoming',
             ]);
+
+            //dd("Receipt = ", $receipt);
     
             // Find the sale based on the sale ID and outcoming chalan (you can adjust this logic based on your relationships)
-            $sale = Sale::where('client_id', $request->input('client_id'))->first();
-            // dd($sale);
+            // $sale = Sale::where('client_id', $request->input('client_id'))->first();
+            $sale = Sale::where('client_id', $request->input('client_id'))
+                ->where('invoice_no', $request->input('invoice_no'))
+                ->first();
+            //dd("sale = ", $sale);
+
             // journal payment receipt add amount
             $sale_amount = $sale->total ?? 0; // Get the total sale amount
-            // dd($sale_amount);
+
+            //dd("sale_amount = ", $sale_amount);
 
             // Step 3: Get payment method from request (Cash, Bank, etc.)
             $payment_method = $request->input('payment_method'); // Get payment method from request

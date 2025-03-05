@@ -50,6 +50,8 @@
                                     </div>
                                 </div>
 
+                                <input type="hidden" name="invoice_no" id="invoice_no">
+
                                 <!-- Incoming Chalan -->
                                 <div class="col-md-6 mb-3">
                                     <label for="incoming_chalan_id" class="form-label">Incoming Chalan:</label>
@@ -163,6 +165,8 @@
                     type: "GET",
                     data: { supplier_id: supplierId },
                     success: function (response) {
+                        console.log(response); // Log the response to the console
+
                         let options = '<option value="">Select Chalan</option>';
                         response.chalans.forEach(chalan => {
                             options += `<option value="${chalan.id}" data-amount="${chalan.total_amount}">${chalan.invoice_no}</option>`;
@@ -175,8 +179,11 @@
 
         // Show Total Amount when Chalan is selected
         $('#incoming_chalan_id').on('change', function () {
+            let selectedOption = $(this).find(':selected'); // Get the selected option
             let totalAmount = $(this).find(':selected').data('amount') || '';
+            let invoiceNo = selectedOption.text(); // Get invoice number from option text
             $('#total_amount').val(totalAmount);
+            $('#invoice_no').val(invoiceNo); // Store invoice_no in a hidden field
         });
     });
 
