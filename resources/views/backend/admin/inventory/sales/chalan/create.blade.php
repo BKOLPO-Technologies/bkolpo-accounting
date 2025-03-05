@@ -141,6 +141,7 @@
 @push('js')
 <script>
     $('.select2').select2();
+
     $(document).ready(function () {
         $('.select2').select2();
 
@@ -152,7 +153,6 @@
                     url: '/admin/sales/get-invoice-details/' + invoiceId,
                     type: 'GET',
                     success: function (response) {
-                        // console.log(response)
                         // Show client details
                         if (response.client) {
                             $('#client-details-body').html(`
@@ -173,12 +173,13 @@
                         if (response.products.length > 0) {
                             response.products.forEach(function (product, index) {
                                 let maxReceiveQty = product.quantity - product.receive_quantity; // Available quantity
-                                
+
                                 $('#product-table tbody').append(`
                                     <tr>
                                         <td>${product.name}</td>
                                         <td>
-                                            <input type="number" name="quantity[]" class="form-control quantity" value="${product.quantity}" min="1" readonly>
+                                            <input type="number" name="quantity[]" class="form-control quantity" 
+                                                value="${product.quantity}" min="1" readonly>
                                         </td>
                                         <td>
                                             <input type="number" class="form-control" value="${product.receive_quantity}" readonly>
@@ -216,15 +217,15 @@
             var availableQty = parseInt($(this).data('available')) || 0;
 
             if (receiveQty > availableQty) {
-                toastr.error('Received quantity cannot be greater than available quantity!.', {
+                toastr.error('Received quantity cannot be greater than available quantity!', {
                     closeButton: true,
                     progressBar: true,
                     timeOut: 5000
                 });
-                // alert("Received quantity cannot be greater than available quantity!");
                 $(this).val(availableQty); // Reset to max available quantity
             }
         });
     });
+
 </script>
 @endpush

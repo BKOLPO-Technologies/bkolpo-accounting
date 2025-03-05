@@ -46,7 +46,7 @@ class OutComingChalanController extends Controller
     { 
         $pageTitle = 'Out Going Chalan';
 
-        // $sales = Sale::latest()->get();
+        //$sales = Sale::with('outcomingChalans.outcomingChalanProducts')->latest()->get();
 
         // Fetch all sales with their associated OutcomingChalans and OutcomingChalanProducts
         $sales = Sale::with(['outcomingChalans.outcomingChalanProducts', 'saleProducts'])
@@ -69,7 +69,7 @@ class OutComingChalanController extends Controller
                         //$totalQuantity = $product->quantity;
                         $totalReceivedQuantity += $product->receive_quantity;
 
-                       //Log::info('Product Quantity:', ['quantity' => $product->quantity, 'receive_quantity' => $product->receive_quantity]);
+                        // Log::info('Product Quantity:', ['quantity' => $product->quantity, 'receive_quantity' => $product->receive_quantity]);
                     }
                 }
                 // Log::info('Total Quantity for Sale ID ' . $sale->id . ':', ['totalQuantity' => $totalQuantity]);
@@ -79,7 +79,14 @@ class OutComingChalanController extends Controller
                 return $totalQuantity > $totalReceivedQuantity;
             });
 
-        return view('backend.admin.inventory.sales.chalan.create',compact('pageTitle','sales')); 
+        // Log the filtered sales
+        //Log::info('Sales where quantity > receive_quantity:', $sales->toArray());
+
+        // For debugging purposes, you can log or dump the result
+        // dd($sales);  // This will show the filtered sales
+
+
+        return view('backend.admin.inventory.sales.chalan.create', compact('pageTitle', 'sales')); 
     }
 
     /**

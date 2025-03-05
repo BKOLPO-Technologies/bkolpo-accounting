@@ -347,20 +347,20 @@ class SalesController extends Controller
         //     ];
         // });
 
-        // Way-1
+        // // Way-1
         // // Fetch products along with receive_quantity from OutcomingChalanProduct
-        // $products = $sale->saleProducts->map(function ($saleProduct) use ($id) {
-        //     // Find the receive quantity from the outcoming_chalan_product table
-        //     $receiveQuantity = OutcomingChalanProduct::where('product_id', $saleProduct->product->id)
-        //         ->whereHas('outcomingChalan', function ($query) use ($id) {
-        //             $query->where('sale_id', $id);
-        //         })
-        //         ->sum('receive_quantity'); // Sum in case of multiple entries
+        $products = $sale->saleProducts->map(function ($saleProduct) use ($id) {
+            // Find the receive quantity from the outcoming_chalan_product table
+            $receiveQuantity = OutcomingChalanProduct::where('product_id', $saleProduct->product->id)
+                ->whereHas('outcomingChalan', function ($query) use ($id) {
+                    $query->where('sale_id', $id);
+                })
+                ->sum('receive_quantity'); // Sum in case of multiple entries
 
-        // Way-2
-        // Fetch products and receive_quantity via relationship
-        $products = $sale->saleProducts->map(function ($saleProduct) {
-            $receiveQuantity = $saleProduct->product->receivedQuantities->sum('receive_quantity');
+        // // Way-2
+        // // Fetch products and receive_quantity via relationship
+        // $products = $sale->saleProducts->map(function ($saleProduct) {
+        //     $receiveQuantity = $saleProduct->product->receivedQuantities->sum('receive_quantity');
 
             // Log::debug("Processing product:", [
             //     'id' => $saleProduct->product->id,
