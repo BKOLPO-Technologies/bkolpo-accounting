@@ -30,9 +30,9 @@ class SalePaymentController extends Controller
         $pageTitle = 'Payment List';
     
         $payments = Payment::with(['ledger', 'client', 'supplier', 'incomingChalan', 'outcomingChalan'])
-        ->orderBy('id', 'desc')
-        ->whereNotNull('incoming_chalan_id')
-        ->get();
+            ->orderBy('id', 'desc')
+            //->whereNotNull('incoming_chalan_id')
+            ->get();
 
         //dd($payments->toArray());
     
@@ -71,31 +71,52 @@ class SalePaymentController extends Controller
         return response()->json(['ledgers' => $formattedLedgers]);
     }
 
+    // public function getChalansBySupplier(Request $request)
+    // {
+    //     //dd($request->supplier_id);
+    //     // Step 1: Find Purchase where supplier_id matches
+    //     $purchase = Purchase::where('supplier_id', $request->supplier_id)->pluck('id'); 
+    //     //dd($purchase);
+
+    //     // Step 2: Find Incoming Chalans based on purchase_id
+    //     $chalans = IncomingChalan::whereIn('purchase_id', $purchase)
+    //         ->whereHas('purchase', function($query) {
+    //             $query->where('status', '!=', 'paid'); 
+    //         })
+    //         ->with('purchase') // Ensure related purchase invoice is fetched
+    //         ->get();
+
+    //     // Step 3: Format the response
+    //     $formattedChalans = $chalans->map(function ($chalan) {
+    //         return [
+    //             'id' => $chalan->id,
+    //             'invoice_no' => $chalan->purchase->invoice_no ?? 'N/A',
+    //             'total_amount' => $chalan->purchase->total-$chalan->purchase->paid_amount ?? 0
+    //         ];
+    //     });
+
+    //     return response()->json(['chalans' => $formattedChalans]);
+    // }
+
     public function getChalansBySupplier(Request $request)
     {
         //dd($request->supplier_id);
         // Step 1: Find Purchase where supplier_id matches
-        $purchase = Purchase::where('supplier_id', $request->supplier_id)->pluck('id'); 
+        $purchases = Purchase::where('supplier_id', $request->supplier_id)
+            ->where('status', '!=', 'paid')
+            ->get(['id', 'invoice_no', 'total', 'paid_amount']);
         //dd($purchase);
 
         // Step 2: Find Incoming Chalans based on purchase_id
-        $chalans = IncomingChalan::whereIn('purchase_id', $purchase)
-            ->whereHas('purchase', function($query) {
-                $query->where('status', '!=', 'paid'); 
-            })
-            ->with('purchase') // Ensure related purchase invoice is fetched
-            ->get();
-
-        // Step 3: Format the response
-        $formattedChalans = $chalans->map(function ($chalan) {
+        $formattedpurchases = $purchases->map(function ($purchase) {
             return [
-                'id' => $chalan->id,
-                'invoice_no' => $chalan->purchase->invoice_no ?? 'N/A',
-                'total_amount' => $chalan->purchase->total-$chalan->purchase->paid_amount ?? 0
+                'id' => $purchase->id,
+                'invoice_no' => $purchase->invoice_no ?? 'N/A',
+                'total_amount' => ($purchase->total ?? 0) - ($purchase->paid_amount ?? 0)
             ];
         });
 
-        return response()->json(['chalans' => $formattedChalans]);
+        return response()->json(['purchases' => $formattedpurchases]);
     }
 
 
@@ -113,7 +134,7 @@ class SalePaymentController extends Controller
         // Validate the incoming form data
         $request->validate([
             'supplier_id' => 'required|exists:suppliers,id',
-            'incoming_chalan_id' => 'nullable|exists:incoming_chalans,id',
+            //'incoming_chalan_id' => 'nullable|exists:incoming_chalans,id',
             'invoice_no' => 'required',
             'total_amount' => 'required|numeric|min:0',
             'pay_amount' => 'required|numeric|min:0',
@@ -137,7 +158,8 @@ class SalePaymentController extends Controller
             $payment = Payment::create([
                 'supplier_id' => $request->input('supplier_id'),
                 'ledger_id' => '1',
-                'incoming_chalan_id' => $request->input('incoming_chalan_id'),
+                //'incoming_chalan_id' => $request->input('incoming_chalan_id'),
+                'invoice_no' => $request->input('invoice_no'),
                 'total_amount' => $request->input('total_amount'),
                 'pay_amount' => $request->input('pay_amount'),
                 'due_amount' => $request->input('due_amount'),

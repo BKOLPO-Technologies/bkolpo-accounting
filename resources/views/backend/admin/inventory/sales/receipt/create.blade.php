@@ -171,9 +171,8 @@
                     type: "GET",
                     data: { client_id: clientId },
                     success: function (response) {
-                        console.log(response);
+                        //console.log(response);
 
-                        //let options = '<option value="">Select Chalan</option>';
                         let options = '<option value="">Select Invoice No</option>';
 
                         // Loop through `response.sales` instead of `response.chalans`

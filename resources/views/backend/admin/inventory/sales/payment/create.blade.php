@@ -50,15 +50,26 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="invoice_no" id="invoice_no">
+                                {{-- <input type="hidden" name="invoice_no" id="invoice_no"> --}}
 
                                 <!-- Incoming Chalan -->
-                                <div class="col-md-6 mb-3">
+                                {{-- <div class="col-md-6 mb-3">
                                     <label for="incoming_chalan_id" class="form-label">Incoming Chalan:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
                                         <select class="form-control select2" name="incoming_chalan_id" id="incoming_chalan_id">
                                             <option value="">Select Chalan</option>
+                                        </select>
+                                    </div>
+                                </div> --}}
+
+                                <!-- Purchase Invoice No -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="invoice_no" class="form-label">Purchase Invoice No:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
+                                        <select class="form-control select2" name="invoice_no" id="invoice_no">
+                                            <option value="">Select Invoice No</option>
                                         </select>
                                     </div>
                                 </div>
@@ -146,14 +157,14 @@
             // alert(supplierId);
             
             // Clear Incoming Chalan and Total Amount
-            $('#incoming_chalan_id').html('<option value="">Select Chalan</option>');
+            $('#invoice_no').html('<option value="">Select Invoice No</option>');
             $('#total_amount').val(''); // Clear total amount field
             $('#pay_amount').val('');
             $('#due_amount').val('');
 
             // When chalan is selected, update total amount
             if (supplierId) {
-                $('#incoming_chalan_id').html('<option value="">Loading...</option>'); // Show loading state
+                $('#invoice_no').html('<option value="">Loading...</option>'); // Show loading state
                 
                 let totalAmount = $(this).find(':selected').data('amount') || 0;
                 $('#total_amount').val(totalAmount);
@@ -165,26 +176,70 @@
                     type: "GET",
                     data: { supplier_id: supplierId },
                     success: function (response) {
-                        console.log(response); // Log the response to the console
+                        //console.log(response); // Log the response to the console
 
-                        let options = '<option value="">Select Chalan</option>';
-                        response.chalans.forEach(chalan => {
-                            options += `<option value="${chalan.id}" data-amount="${chalan.total_amount}">${chalan.invoice_no}</option>`;
+                        let options = '<option value="">Select Invoice No</option>';
+
+                        response.purchases.forEach(purchase => {
+                            options += `<option value="${purchase.invoice_no}" data-amount="${purchase.total_amount}">${purchase.invoice_no}</option>`;
                         });
-                        $('#incoming_chalan_id').html(options);
+
+                        $('#invoice_no').html(options);
                     }
                 });
             }
         });
 
         // Show Total Amount when Chalan is selected
-        $('#incoming_chalan_id').on('change', function () {
-            let selectedOption = $(this).find(':selected'); // Get the selected option
+        $('#invoice_no').on('change', function () {
             let totalAmount = $(this).find(':selected').data('amount') || '';
-            let invoiceNo = selectedOption.text(); // Get invoice number from option text
             $('#total_amount').val(totalAmount);
-            $('#invoice_no').val(invoiceNo); // Store invoice_no in a hidden field
         });
+        // // When customer changes, reset fields
+        // $('#supplier_id').on('change', function () {
+        //     let supplierId = $(this).val();
+        //     // alert(supplierId);
+            
+        //     // Clear Incoming Chalan and Total Amount
+        //     $('#incoming_chalan_id').html('<option value="">Select Chalan</option>');
+        //     $('#total_amount').val(''); // Clear total amount field
+        //     $('#pay_amount').val('');
+        //     $('#due_amount').val('');
+
+        //     // When chalan is selected, update total amount
+        //     if (supplierId) {
+        //         $('#incoming_chalan_id').html('<option value="">Loading...</option>'); // Show loading state
+                
+        //         let totalAmount = $(this).find(':selected').data('amount') || 0;
+        //         $('#total_amount').val(totalAmount);
+        //         $('#pay_amount').val(''); // Reset pay amount
+        //         $('#due_amount').val(totalAmount); // Default due = total at first
+
+        //         $.ajax({
+        //             url: "{{ route('sale.payment.get.chalans.by.supplier') }}", // Make sure this route exists
+        //             type: "GET",
+        //             data: { supplier_id: supplierId },
+        //             success: function (response) {
+        //                 console.log(response); // Log the response to the console
+
+        //                 let options = '<option value="">Select Chalan</option>';
+        //                 response.chalans.forEach(chalan => {
+        //                     options += `<option value="${chalan.id}" data-amount="${chalan.total_amount}">${chalan.invoice_no}</option>`;
+        //                 });
+        //                 $('#incoming_chalan_id').html(options);
+        //             }
+        //         });
+        //     }
+        // });
+
+        // // Show Total Amount when Chalan is selected
+        // $('#incoming_chalan_id').on('change', function () {
+        //     let selectedOption = $(this).find(':selected'); // Get the selected option
+        //     let totalAmount = $(this).find(':selected').data('amount') || '';
+        //     let invoiceNo = selectedOption.text(); // Get invoice number from option text
+        //     $('#total_amount').val(totalAmount);
+        //     $('#invoice_no').val(invoiceNo); // Store invoice_no in a hidden field
+        // });
     });
 
     // When pay amount is entered, calculate due amount
