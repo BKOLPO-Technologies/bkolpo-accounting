@@ -131,8 +131,10 @@
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Qty</th>
                                                 <th>Product</th>
+                                                <th>Unit Price</th>
+                                                <th>Purchase Price</th>
+                                                <th>Qtuantity</th>
                                                 <th>Subtotal</th>
                                             </tr>
                                         </thead>
@@ -146,9 +148,11 @@
                                                 $subtotal += $productTotal;
                                             @endphp
                                             <tr data-product-id="{{ $product->id }}">
-                                                <td>{{ $product->pivot->quantity }}</td>
                                                 <td>{{ $product->name }}</td>
-                                                <td>{{ number_format($product->pivot->quantity * $product->price, 2) }}</td>
+                                                <td>{{ $product->price }}</td>
+                                                <td>{{  $product->pivot->price }}</td>
+                                                <td>{{ $product->pivot->quantity }}</td>
+                                                <td>{{ number_format($product->pivot->quantity * $product->pivot->price, 2) }}</td>
                                             </tr>
                                         @endforeach
                                         </tbody>
