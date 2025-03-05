@@ -292,7 +292,19 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::put('/update/{id}', [SalesController::class, 'update'])->name('admin.sale.update');
         Route::get('/delete/{id}', [SalesController::class, 'destroy'])->name('admin.sale.destroy');
         Route::get('/get-invoice-details/{id}', [SalesController::class, 'getInvoiceDetails']);
-
+    });
+    
+    /* ==================== Sales Receipt Controller =================== */
+    Route::prefix('payment/receipt')->group(function () {
+        Route::get('/', [SaleReceiptController::class, 'index'])->name('receipt.payment.index');
+        Route::get('/create', [SaleReceiptController::class, 'create'])->name('receipt.payment.create');
+        Route::post('/store', [SaleReceiptController::class, 'store'])->name('receipt.payment.store');
+        Route::get('/view/{id}', [SaleReceiptController::class, 'view'])->name('receipt.payment.show');
+        Route::get('/edit/{id}', [SaleReceiptController::class, 'edit'])->name('receipt.payment.edit');
+        Route::put('/update/{id}', [SaleReceiptController::class, 'update'])->name('receipt.payment.update');
+        Route::get('/delete/{id}', [SaleReceiptController::class, 'destroy'])->name('receipt.payment.destroy');
+        Route::get('/get-ledgers-by-group', [SaleReceiptController::class, 'getLedgersByGroup'])->name('receipt.payment.get.ledgers.by.group');
+        Route::get('/payment/get-chalans-by-client', [SaleReceiptController::class, 'getChalansByClient'])->name('receipt.payment.get.chalans.by.client');
     });
 
     /* ==================== Incoming Chalan =================== */
@@ -331,18 +343,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
     });
 
-    /* ==================== Sales Receipt Controller =================== */
-    Route::prefix('payment/receipt')->group(function () {
-        Route::get('/', [SaleReceiptController::class, 'index'])->name('receipt.payment.index');
-        Route::get('/create', [SaleReceiptController::class, 'create'])->name('receipt.payment.create');
-        Route::post('/store', [SaleReceiptController::class, 'store'])->name('receipt.payment.store');
-        Route::get('/view/{id}', [SaleReceiptController::class, 'view'])->name('receipt.payment.show');
-        Route::get('/edit/{id}', [SaleReceiptController::class, 'edit'])->name('receipt.payment.edit');
-        Route::put('/update/{id}', [SaleReceiptController::class, 'update'])->name('receipt.payment.update');
-        Route::get('/delete/{id}', [SaleReceiptController::class, 'destroy'])->name('receipt.payment.destroy');
-        Route::get('/get-ledgers-by-group', [SaleReceiptController::class, 'getLedgersByGroup'])->name('receipt.payment.get.ledgers.by.group');
-        Route::get('/payment/get-chalans-by-client', [SaleReceiptController::class, 'getChalansByClient'])->name('receipt.payment.get.chalans.by.client');
-    });
 
 
     // Quotation Routes

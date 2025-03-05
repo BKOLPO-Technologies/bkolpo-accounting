@@ -29,10 +29,10 @@ class SaleReceiptController extends Controller
         $pageTitle = 'Receive Payment List';
     
         $receipts = Receipt::with(['ledger', 'client', 'supplier', 'incomingChalan', 'outcomingChalan'])
-        ->orderBy('payment_date', 'desc')
-        ->whereNotNull('outcoming_chalan_id')
-        ->get();
-    
+            ->orderBy('payment_date', 'desc')
+            //->whereNotNull('outcoming_chalan_id')
+            ->get();
+        
         return view('backend.admin.inventory.sales.receipt.index', compact('pageTitle', 'receipts'));
     }
 
@@ -51,31 +51,55 @@ class SaleReceiptController extends Controller
         return view('backend.admin.inventory.sales.receipt.create',compact('pageTitle','outcomingChalans','customers','ledgerGroups')); 
     }
 
+    // public function getChalansByClient(Request $request)
+    // {
+    //     //dd($request->client_id);
+    //     // Step 1: Find sales where client_id matches
+    //     $sales = Sale::where('client_id', $request->client_id)->pluck('id'); 
+    //     //dd($sales);
+    //     // Step 2: Find Outcoming Chalans based on sale_id
+    //     $chalans = OutcomingChalan::whereIn('sale_id', $sales)
+    //         ->whereHas('sale', function($query) {
+    //             $query->where('status', '!=', 'paid'); 
+    //         })
+    //         ->with('sale') // Ensure related purchase invoice is fetched
+    //         ->get();
+    //     //dd($chalans);
+    //     // Step 3: Format the response
+    //     $formattedChalans = $chalans->map(function ($chalan) {
+    //         return [
+    //             'id' => $chalan->id,
+    //             'invoice_no' => $chalan->sale->invoice_no ?? 'N/A',
+    //             'total_amount' => $chalan->sale->total-$chalan->sale->paid_amount ?? 0
+    //         ];
+    //     });
+
+    //     return response()->json(['chalans' => $formattedChalans]);
+    // }
+
     public function getChalansByClient(Request $request)
     {
-        //dd($request->client_id);
-        // Step 1: Find sales where client_id matches
-        $sales = Sale::where('client_id', $request->client_id)->pluck('id'); 
-        //dd($sales);
-        // Step 2: Find Outcoming Chalans based on sale_id
-        $chalans = OutcomingChalan::whereIn('sale_id', $sales)
-            ->whereHas('sale', function($query) {
-                $query->where('status', '!=', 'paid'); 
-            })
-            ->with('sale') // Ensure related purchase invoice is fetched
-            ->get();
-        //dd($chalans);
-        // Step 3: Format the response
-        $formattedChalans = $chalans->map(function ($chalan) {
+        //Log::info('Hit');
+
+        // Step 1: Find sales where client_id matches and status is not 'paid'
+        $sales = Sale::where('client_id', $request->client_id)
+            ->where('status', '!=', 'paid')
+            ->get(['id', 'invoice_no', 'total', 'paid_amount']);
+
+        //Log::info('Sales = ' . json_encode($sales));
+
+        // Step 2: Format the response
+        $formattedSales = $sales->map(function ($sale) {
             return [
-                'id' => $chalan->id,
-                'invoice_no' => $chalan->sale->invoice_no ?? 'N/A',
-                'total_amount' => $chalan->sale->total-$chalan->sale->paid_amount ?? 0
+                'id' => $sale->id,
+                'invoice_no' => $sale->invoice_no ?? 'N/A',
+                'total_amount' => ($sale->total ?? 0) - ($sale->paid_amount ?? 0),
             ];
         });
 
-        return response()->json(['chalans' => $formattedChalans]);
+        return response()->json(['sales' => $formattedSales]);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -84,11 +108,11 @@ class SaleReceiptController extends Controller
     {
         // this is not ok
         // payment/receipt/create
-        // dd($request->all());
+        //dd($request->all());
         // Validate the incoming form data
         $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'outcoming_chalan_id' => 'nullable|exists:outcoming_chalans,id',
+            //'outcoming_chalan_id' => 'nullable|exists:outcoming_chalans,id',
             'invoice_no' => 'required',
             'total_amount' => 'required|numeric|min:0',
             'pay_amount' => 'required|numeric|min:0',
@@ -113,7 +137,8 @@ class SaleReceiptController extends Controller
             $receipt = Receipt::create([
                 'client_id' => $request->input('client_id'),
                 'ledger_id' => '1',
-                'outcoming_chalan_id' => $request->input('outcoming_chalan_id'),
+                //'outcoming_chalan_id' => $request->input('outcoming_chalan_id'),
+                'invoice_no' => $request->input('invoice_no'),
                 'total_amount' => $request->input('total_amount'),
                 'pay_amount' => $request->input('pay_amount'),
                 'due_amount' => $request->input('due_amount'),
