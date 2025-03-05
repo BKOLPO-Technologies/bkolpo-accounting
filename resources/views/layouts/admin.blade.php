@@ -199,6 +199,7 @@
             autoclose: true,
             todayHighlight: true
         });
+        
     });
 </script>
 
@@ -297,6 +298,18 @@
             text: 'Comming Soon.',
         });
     }
+</script>
+<script>
+  $(function () {
+    // Summernote
+    $('#summernote').summernote()
+
+    // CodeMirror
+    CodeMirror.fromTextArea(document.getElementById("codeMirrorDemo"), {
+      mode: "htmlmixed",
+      theme: "monokai"
+    });
+  })
 </script>
 @stack('js')
 </body>

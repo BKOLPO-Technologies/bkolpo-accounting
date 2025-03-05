@@ -12,7 +12,6 @@ use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\Backend\CompanyController;
 use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\JournalController;
-use App\Http\Controllers\Backend\ProjectController;
 use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\EmployeeController;
 use App\Http\Controllers\Backend\SupplierController;
@@ -30,6 +29,7 @@ use App\Http\Controllers\Backend\Inventory\IncomingChalanController;
 use App\Http\Controllers\Backend\Inventory\OutComingChalanController;
 use App\Http\Controllers\Backend\Inventory\SalePaymentController;
 use App\Http\Controllers\Backend\Inventory\SaleReceiptController;
+use App\Http\Controllers\Backend\Inventory\ProjectController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
@@ -156,16 +156,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     });
 
     /* ==================== Projects =================== */
-    Route::prefix('projects')->group(function () {
-        Route::get('/', [ProjectController::class, 'AdminProjectIndex'])->name('admin.project');
-        Route::get('/create', [ProjectController::class, 'AdminProjectCreate'])->name('admin.projectCreate');
-        Route::get('/details/1', [InvoiceController::class, 'AdminInvoiceDetails'])->name('admin.invoiceDetails');
-        Route::post('/store', [ProjectController::class, 'store'])->name('projects.store');
-        Route::delete('/delete/{id}', [ProjectController::class, 'destroy'])->name('admin.projectDelete');
-        Route::get('/edit/{id}', [ProjectController::class, 'edit'])->name('admin.projectEdit');
-        Route::get('/view/{id}', [ProjectController::class, 'view'])->name('admin.projectView');
-        Route::put('/update/{id}', [ProjectController::class, 'update'])->name('admin.projectUpdate');
-    });
+    // Route::prefix('projects')->group(function () {
+    //     Route::get('/', [ProjectController::class, 'AdminProjectIndex'])->name('admin.project');
+    //     Route::get('/create', [ProjectController::class, 'AdminProjectCreate'])->name('admin.projectCreate');
+    //     Route::get('/details/1', [InvoiceController::class, 'AdminInvoiceDetails'])->name('admin.invoiceDetails');
+    //     Route::post('/store', [ProjectController::class, 'store'])->name('projects.store');
+    //     Route::delete('/delete/{id}', [ProjectController::class, 'destroy'])->name('admin.projectDelete');
+    //     Route::get('/edit/{id}', [ProjectController::class, 'edit'])->name('admin.projectEdit');
+    //     Route::get('/view/{id}', [ProjectController::class, 'view'])->name('admin.projectView');
+    //     Route::put('/update/{id}', [ProjectController::class, 'update'])->name('admin.projectUpdate');
+    // });
 
     /* ==================== supplier =================== */
     Route::prefix('supplier')->group(function () {
@@ -345,6 +345,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     });
 
 
+    // Project Routes
+    Route::resource('projects', ProjectController::class);
+    Route::get('/projects/delete/{id}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+    
     // Quotation Routes
     Route::resource('quotations', QuotationController::class);
     Route::get('/quotations/delete/{id}', [QuotationController::class, 'destroy'])->name('quotations.destroy');

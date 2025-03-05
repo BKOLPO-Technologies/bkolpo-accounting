@@ -207,6 +207,7 @@
               $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet','report.ledger.report','report.ledger.single.report','report.ledger.group.report','report.ledger.group.single.report','report.ledger.profit.loss');
               $isSupplierActive = Route::is('admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit');
               $isClientActive = Route::is('admin.client.index','admin.client.create','admin.client.view','admin.client.edit');
+              $isProjectActive = Route::is('projects.index', 'projects.create', 'projects.show', 'projects.edit');
               $isSalesActive = Route::is('admin.sale.index','admin.sale.create','admin.sale.view','admin.sale.edit','quotations.index','quotations.create','quotations.edit','quotations.show','outcoming.chalan.index','outcoming.chalan.create','outcoming.chalan.show','outcoming.chalan.edit','receipt.payment.index','receipt.payment.create','stock.out','stock.out.view');
               $isPurchaseActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.view','admin.purchase.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create','stock.in','stock.in.view');
           @endphp
@@ -346,6 +347,27 @@
                   </li>
               </ul>
           </li>
+
+        <!-- Projects -->
+        <li class="nav-item {{ $isProjectActive ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ $isProjectActive ? 'active' : '' }}">
+              <i class="nav-icon fas fa-folder"></i> <!-- Updated Icon -->
+              <p>
+                  Projects
+                  <i class="fas fa-angle-left right"></i>
+              </p>
+          </a>
+          
+          <ul class="nav nav-treeview">
+              <li class="nav-item">
+                  <a href="{{ route('projects.index') }}" class="nav-link {{ Route::is('projects.index', 'projects.create', 'projects.show', 'projects.edit') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Manage Projects</p>
+                  </a>
+              </li>
+          </ul>
+        </li>
+
 
           <!-- Sales -->
           <li class="nav-item {{ $isSalesActive ? 'menu-open' : '' }}">
