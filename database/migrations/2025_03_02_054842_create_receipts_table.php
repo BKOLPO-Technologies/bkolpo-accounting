@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('cascade'); // Supplier Payments
             $table->foreignId('incoming_chalan_id')->nullable()->constrained('incoming_chalans')->onDelete('cascade'); // Chalan-wise receipt for incoming
             $table->foreignId('outcoming_chalan_id')->nullable()->constrained('outcoming_chalans')->onDelete('cascade'); // Chalan-wise receipt for outgoing
+
+            $table->string('invoice_no');
         
             $table->decimal('total_amount', 15, 2);
             $table->decimal('pay_amount', 15, 2);

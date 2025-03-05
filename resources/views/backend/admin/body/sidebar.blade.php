@@ -386,6 +386,7 @@
                         <p>Order Invoice List</p>
                     </a>
                 </li>
+                {{--         
                 <li class="nav-item">
                   <a href="{{ route('outcoming.chalan.index') }}" 
                     class="nav-link {{ Route::is('outcoming.chalan.index', 'outcoming.chalan.create', 'outcoming.chalan.show', 'outcoming.chalan.edit') ? 'active' : '' }}">
@@ -393,8 +394,9 @@
                       <p>Outgoing Chalan List</p>
                   </a>
                 </li>
+                --}}
                 <li class="nav-item">
-                  <a href="{{ route('receipt.payment.index') }}" 
+                  <a href="{{ route('receipt.payment.index') }}"
                     class="nav-link {{ Route::is('receipt.payment.index', 'receipt.payment.create') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
                       <p>Payment Receive List</p>
@@ -434,12 +436,14 @@
                           <p>Work Order List</p>
                       </a>
                   </li>
+                  {{--       
                   <li class="nav-item">
                     <a href="{{ route('incoming.chalan.index') }}" class="nav-link {{ Route::is('incoming.chalan.index','incoming.chalan.create', 'incoming.chalan.show', 'incoming.chalan.edit') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Incoming Chalan List</p>
                     </a>
                   </li>
+                  --}}
                   <li class="nav-item">
                     <a href="{{ route('sale.payment.index') }}" 
                       class="nav-link {{ Route::is('sale.payment.index', 'sale.payment.create') ? 'active' : '' }}">

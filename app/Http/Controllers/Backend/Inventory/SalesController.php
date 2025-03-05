@@ -288,65 +288,6 @@ class SalesController extends Controller
             return response()->json(['error' => 'Invoice not found'], 404);
         }
 
-        //Log::info("Sale record found:", ['sale_id' => $sale->id]);
-
-        // // Log client details
-        // Log::debug("Client Details:", [
-        //     'id' => $sale->client->id,
-        //     'name' => $sale->client->name,
-        //     'company' => $sale->client->company,
-        //     'phone' => $sale->client->phone,
-        //     'email' => $sale->client->email,
-        // ]);
-
-        // // Map saleProducts to extract necessary product details
-        // $products = $sale->saleProducts->map(function ($saleProduct) {
-        //     Log::debug("Processing product:", [
-        //         'id' => $saleProduct->product->id,
-        //         'name' => $saleProduct->product->name,
-        //         'price' => $saleProduct->price,
-        //         'quantity' => $saleProduct->quantity,
-        //         'discount' => $saleProduct->discount,
-        //         'stockqty' => $saleProduct->product->quantity,
-        //     ]);
-
-        //     return [
-        //         'id' => $saleProduct->product->id,
-        //         'name' => $saleProduct->product->name,
-        //         'price' => $saleProduct->price,
-        //         'quantity' => $saleProduct->quantity,
-        //         'discount' => $saleProduct->discount,
-        //         'stockqty' => $saleProduct->product->quantity,
-        //     ];
-        // });
-
-        // // Fetch product details with received quantity from OutcomingChalanProduct table
-        // $products = $sale->saleProducts->map(function ($saleProduct) {
-        //     $receivedQuantity = OutcomingChalanProduct::where('product_id', $saleProduct->product->id)
-        //         ->where('sale_id', $saleProduct->sale_id)
-        //         ->sum('receive_quantity'); // Get total received quantity for this product in the given sale
-
-        //     Log::debug("Processing product:", [
-        //         'id' => $saleProduct->product->id,
-        //         'name' => $saleProduct->product->name,
-        //         'price' => $saleProduct->price,
-        //         'quantity' => $saleProduct->quantity,
-        //         'discount' => $saleProduct->discount,
-        //         'stockqty' => $saleProduct->product->quantity,
-        //         'receive_quantity' => $receivedQuantity,
-        //     ]);
-
-        //     return [
-        //         'id' => $saleProduct->product->id,
-        //         'name' => $saleProduct->product->name,
-        //         'price' => $saleProduct->price,
-        //         'quantity' => $saleProduct->quantity,
-        //         'discount' => $saleProduct->discount,
-        //         'stockqty' => $saleProduct->product->quantity,
-        //         'receive_quantity' => $receivedQuantity, // Include received quantity
-        //     ];
-        // });
-
         // // Way-1
         // // Fetch products along with receive_quantity from OutcomingChalanProduct
         $products = $sale->saleProducts->map(function ($saleProduct) use ($id) {
@@ -395,38 +336,5 @@ class SalesController extends Controller
             'products' => $products,
         ]);
     }
-
-    // public function getInvoiceDetails($id)
-    // {
-    //     $sale = Sale::with(['client', 'saleProducts.product'])->find($id);
-    
-    //     if (!$sale) {
-    //         return response()->json(['error' => 'Invoice not found'], 404);
-    //     }
-    
-    //     // Map saleProducts to extract necessary product details
-    //     $products = $sale->saleProducts->map(function ($saleProduct) {
-    //         return [
-    //             'id' => $saleProduct->product->id,
-    //             'name' => $saleProduct->product->name,
-    //             'price' => $saleProduct->price,
-    //             'quantity' => $saleProduct->quantity,
-    //             'discount' => $saleProduct->discount,
-    //             'stockqty' => $saleProduct->product->quantity,
-    //         ];
-    //     });
-    
-    //     return response()->json([
-    //         'client' => [
-    //             'name' => $sale->client->name,
-    //             'company' => $sale->client->company,
-    //             'phone' => $sale->client->phone,
-    //             'email' => $sale->client->email,
-    //         ],
-    //         'products' => $products, // Properly passing the products array
-    //     ]);
-    // }
-    
-
     
 }
