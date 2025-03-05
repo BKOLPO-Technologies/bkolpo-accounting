@@ -36,7 +36,12 @@ class ProjectController extends Controller
 
         $clients = Client::latest()->get();
 
-        return view('backend.admin.inventory.project.create',compact('pageTitle','clients')); 
+        // Generate a random 8-digit number
+        $randomNumber = mt_rand(100000, 999999);
+
+        $referance_no = 'BKOLPO-'. $randomNumber;
+
+        return view('backend.admin.inventory.project.create',compact('pageTitle','clients','referance_no')); 
     }
 
     /**

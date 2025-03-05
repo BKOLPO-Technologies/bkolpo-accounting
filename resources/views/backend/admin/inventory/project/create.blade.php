@@ -32,14 +32,65 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('projects.store') }}" enctype="multipart/form-data">
+                        <form method="POST" action="#" enctype="multipart/form-data">
                             @csrf
 
                             <div class="row">
-                                <!-- Supplier Select -->
+                                <!-- Project Name -->
                                 <div class="col-lg-4 col-md-6 mb-3">
-                                    <label for="supplier">Customer</label>
+                                    <label for="project_name">Project Name</label>
                                     <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-project-diagram"></i></span>
+                                        </div>
+                                        <input type="text" name="project_name" id="project_name" class="form-control @error('project_name') is-invalid @enderror" placeholder="Enter Project Name" required>
+                                    </div>
+                                    @error('project_name')
+                                    <div class="invalid-feedback">
+                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            
+                                <!-- Project Location -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label for="project_location">Project Location</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                        </div>
+                                        <input type="text" name="project_location" id="project_location" class="form-control @error('project_location') is-invalid @enderror" placeholder="Enter Project Location" required>
+                                    </div>
+                                    @error('project_location')
+                                    <div class="invalid-feedback">
+                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            
+                                <!-- Project Coordinator -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label for="project_coordinator">Project Coordinator</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
+                                        </div>
+                                        <input type="text" name="project_coordinator" id="project_coordinator" class="form-control @error('project_coordinator') is-invalid @enderror" placeholder="Enter Project Coordinator" required>
+                                    </div>
+                                    @error('project_coordinator')
+                                    <div class="invalid-feedback">
+                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            
+                                <!-- Customer Select -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label for="customer">Customer</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                        </div>
                                         <select name="client" id="client" class="form-control select2 @error('client') is-invalid @enderror">
                                             <option value="" disabled>Select Customer</option>
                                             @foreach($clients as $client)
@@ -48,13 +99,13 @@
                                                     data-company="{{ $client->company }}" 
                                                     data-phone="{{ $client->phone }}" 
                                                     data-email="{{ $client->email }}"
-                                                    {{ old('supplier') == $client->id ? 'selected' : '' }}>
+                                                    {{ old('customer') == $client->id ? 'selected' : '' }}>
                                                     {{ $client->name }}
                                                 </option>
                                             @endforeach
                                         </select>
                                         <div class="input-group-append">
-                                           <!-- Button to trigger modal for adding a new client -->
+                                            <!-- Button to trigger modal for adding a new client -->
                                             <button class="btn btn-danger" type="button" id="addClientBtn" data-toggle="modal" data-target="#createClientModal">
                                                 <i class="fas fa-plus"></i>
                                             </button>
@@ -66,53 +117,89 @@
                                     </div>
                                     @enderror
                                 </div>
-
-                                <!-- Invoice No -->
-                                <div class="col-lg-2 col-md-6 mb-3">
-                                    <label for="invoice_no">Invoice No</label>
-                                    <input type="text" id="invoice_no" name="invoice_no" class="form-control @error('invoice_no') is-invalid @enderror" value="{{ old('invoice_no') }}" readonly />
-                                    @error('invoice_no')
+                            
+                                <!-- Reference No -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label for="referance_no">Reference No</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                                        </div>
+                                        <input type="text" id="referance_no" name="referance_no" class="form-control @error('referance_no') is-invalid @enderror" value="{{ old('invoice_no', $referance_no) }}" readonly />
+                                    </div>
+                                    @error('referance_no')
                                     <div class="invalid-feedback">
                                         <i class="fas fa-exclamation-circle"></i> {{ $message }}
                                     </div>
                                     @enderror
                                 </div>
-
-                                <!-- Invoice Date -->
-                                <div class="col-lg-3 col-md-6 mb-3">
-                                    <label for="project_date">Invoice Date</label>
-                                    <input type="date" id="project_date" name="project_date" class="form-control @error('project_date') is-invalid @enderror" value="{{ old('project_date', now()->format('Y-m-d')) }}" readonly />
-                                    @error('project_date')
+                            
+                                <!-- Project Schedule Date -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label for="schedule_date">Project Schedule Date</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                        </div>
+                                        <input type="text" id="date" name="schedule_date" class="form-control @error('schedule_date') is-invalid @enderror" value="{{ old('schedule_date', now()->format('Y-m-d')) }}" />
+                                    </div>
+                                    @error('schedule_date')
                                     <div class="invalid-feedback">
                                         <i class="fas fa-exclamation-circle"></i> {{ $message }}
                                     </div>
                                     @enderror
                                 </div>
                             </div>
+                            
                                 
                             <!-- Product Table -->
                             <div class="row">
                                 <div class="col-12">
                                     <div class="table-responsive">
                                         <table id="product-table" class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>Item Description</th>
-                                                    <th>Order Unit</th>
-                                                    <th>Unit Price ({{ bdt() }})</th>
-                                                    <th>Quantity</th>
-                                                    <th>Subtotal</th>
-                                                    <th>Discount</th>
-                                                    <th>Total ({{ bdt() }})</th>
-                                                    <th>Remove</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr id="no-products-row">
-                                                    <td colspan="8" class="text-center">No product found</td>
-                                                </tr>
-                                                <!-- Dynamic rows will be inserted here -->
-                                            </tbody>
+                                            <table id="product-table" class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Item Description</th>
+                                                        <th>Order Unit</th>
+                                                        <th>Unit Price ({{ bdt() }})</th>
+                                                        <th>Quantity</th>
+                                                        <th>Subtotal</th>
+                                                        <th>Discount</th>
+                                                        <th>Total ({{ bdt() }})</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="product-tbody">
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" name="items[]" class="form-control" placeholder="Enter Item Description" required>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="order_unit[]" class="form-control" placeholder="Ener Unit" required>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" name="unit_price[]" class="form-control unit-price" placeholder="Enter Unit Price" min="0" step="0.01" required>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" name="quantity[]" class="form-control quantity" placeholder="Enter Quantity" min="1" required>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="subtotal[]" class="form-control subtotal"  readonly>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" name="discount[]" class="form-control discount" placeholder="Enter Discount" min="0" step="0.01">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="total[]" class="form-control total" readonly>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <button type="button" class="btn btn-success btn-sm add-row"><i class="fas fa-plus"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                                                                     
                                         </table>
                                     </div>
                                 </div>
@@ -120,19 +207,43 @@
 
                             <div class="d-flex justify-content-end flex-column align-items-end">
                                 <!-- Subtotal -->
-                                <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="col-lg-3 col-md-6 mb-2">
                                     <label for="subtotal">Subtotal</label>
                                     <input type="text" id="subtotal" name="subtotal" class="form-control" value="0" readonly />
                                 </div>
 
                                 <!-- Discount -->
-                                <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="col-lg-3 col-md-6 mb-2">
                                     <label for="toal_discount">Total Discount</label>
                                     <input type="number" min="0" id="toal_discount" name="toal_discount" class="form-control" value="0" />
                                 </div>
 
-                                <!-- Total -->
+                                <!-- Transport Cost -->
+                                <div class="col-lg-3 col-md-6 mb-2">
+                                    <label for="transport_cost">Transport Cost</label>
+                                    <input type="number" min="0" id="transport_cost" name="transport_cost" class="form-control" value="0" />
+                                </div>
+
+                                <!-- Carrying/Labour Charge -->
+                                <div class="col-lg-3 col-md-6 mb-2">
+                                    <label for="carrying_charge">Carrying/Labour Charge</label>
+                                    <input type="number" min="0" id="carrying_charge" name="carrying_charge" class="form-control" value="0" />
+                                </div>
+
+                                <!-- Vat -->
+                                <div class="col-lg-3 col-md-6 mb-2">
+                                    <label for="vat">Vat</label>
+                                    <input type="number" min="0" id="vat" name="vat" class="form-control" value="0" />
+                                </div>
+
+                                <!-- Tax -->
                                 <div class="col-lg-3 col-md-6 mb-3">
+                                    <label for="tax">Tax</label>
+                                    <input type="number" min="0" id="tax" name="tax" class="form-control" value="0" />
+                                </div>
+
+                                <!-- Total -->
+                                <div class="col-lg-3 col-md-6 mb-2">
                                     <label for="total">Grand Total Taka</label>
                                     <input type="text" id="grand_total" name="grand_total" class="form-control" value="0" readonly />
                                 </div>
@@ -145,7 +256,7 @@
                             <!-- Terms & Conditions -->
                             <div class="col-lg-12 col-md-12 mb-3">
                                 <label for="note">Terms & Conditions</label>
-                                <textarea id="summernote" name="note" class="form-control" rows="3" placeholder="Enter Some Note"></textarea>
+                                <textarea id="summernote" name="note" class="form-control" rows="3" placeholder="Enter Terms & Conditions"></textarea>
                             </div>
                             <div class="row text-right">
                                 <div class="col-12">
@@ -169,297 +280,80 @@
     // Initialize Select2 if necessary
     $(document).ready(function() {
         $('.select2').select2();
-
-        // Supplier selection event
-        $('#client').on('change', function () {
-            const selectedOption = $(this).find(':selected');
-            const clientId = selectedOption.val();
-            const supplierName = selectedOption.data('name') || 'N/A';
-            const supplierCompany = selectedOption.data('company') || 'N/A';
-            const supplierPhone = selectedOption.data('phone') || 'N/A';
-            const supplierEmail = selectedOption.data('email') || 'N/A';
-
-            if (clientId) {
-                $('#client-details-table').show();
-                $('#client-details-body').empty(); // Clear previous selection
-
-                const supplierRow = `
-                    <tr id="supplier-row">
-                        <td>${supplierName}</td>
-                        <td>${supplierCompany}</td>
-                        <td>${supplierPhone}</td>
-                        <td>${supplierEmail}</td>
-                    </tr>
-                `;
-
-                $('#client-details-body').append(supplierRow);
-            } else {
-                $('#client-details-table').hide();
-            }
-        });
         
     });
-</script>
+    
+    // All Functionality Calculations
+    $(document).ready(function () {
+        // Function to calculate totals
+        function calculateTotal() {
+            let subtotal = 0;
+            let totalDiscount = 0;
 
-<script> 
-    $('#createClientForm').on('submit', function(e) {
-        e.preventDefault(); // Prevent default form submission
+            // Loop through all product rows
+            $('#product-tbody tr').each(function () {
+                let price = parseFloat($(this).find('.unit-price').val()) || 0;
+                let quantity = parseFloat($(this).find('.quantity').val()) || 0;
+                let discount = parseFloat($(this).find('.discount').val()) || 0;
 
-        let formData = $(this).serialize(); // Get form data
+                let rowSubtotal = price * quantity;
+                let rowTotal = rowSubtotal - discount;
 
-        $.ajax({
-            url: '{{ route('admin.client2.store') }}',
-            type: 'POST',
-            data: formData,
-            success: function(response) {
-                // Check if the supplier was created successfully
-                if (response.success) {
-                    // Close the modal
-                    $('#createClientModal').modal('hide');
-                    
-                    // Clear form inputs
-                    $('#createClientForm')[0].reset();
-
-                    // Append new supplier to the supplier select dropdown
-                    $('#client').append(new Option(response.client.name, response.client.id));
-
-                    // Re-initialize the select2 to refresh the dropdown
-                    $('#client').trigger('change');
-
-                    // Show success message
-                    toastr.success('Client added successfully!');
-                } else {
-                    toastr.error('Something went wrong. Please try again.');
-                }
-            },
-            error: function(response) {
-                // Handle error (validation errors, etc.)
-                let errors = response.responseJSON.errors;
-                for (let field in errors) {
-                    $(`#new_client_${field}`).addClass('is-invalid');
-                    $(`#new_client_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
-                }
-            }
-        });
-    });
-</script>
-
-<script>
-    // Initialize product table and searchable select
-    let products = [];
-
-    // Add product to the table
-    $('#product').on('change', function() {
-        const selectedOption = $(this).find(':selected');
-        const productId = selectedOption.val();
-        
-        // Check if product is already in the table
-        if ($('#product-table tbody tr[data-product-id="' + productId + '"]').length > 0) {
-            toastr.error('This product is already added!.', {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 5000
-            });
-            return;
-        }
-
-        const productName = selectedOption.data('name');
-        const productPrice = parseFloat(selectedOption.data('price'));
-        const productStock = parseInt(selectedOption.data('stock'));
-
-        const productRow = `
-            <tr data-product-id="${productId}">
-                <td class="col-3">${productName}</td>
-                <td class="col-2">
-                    <input type="number" class="price-input form-control" value="${productPrice.toFixed(2)}" step="1" data-product-id="${productId}" oninput="updateRow(this)">
-                </td>
-                <td class="col-1">
-                    <input type="number" class="quantity form-control" value="1" min="1" data-price="${productPrice}" data-stock="${productStock}" oninput="updateRow(this)" />
-                </td>
-                <td class="current-stock col-2">
-                    <span class="badge bg-info">${productStock}</span>
-                </td>
-                <td class="subtotal">${productPrice.toFixed(2)}</td>
-                <td class="discount-col">
-                    <input type="number" class="product-discount form-control" value="0" oninput="updateRow(this)" />
-                </td>
-                <td class="total">${productPrice.toFixed(2)}</td>
-                <td><button type="button" class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button></td>
-            </tr>
-        `;
-
-        $('#product-table tbody').append(productRow);
-        updateTotal();
-
-        // Hide "No Product Found" row if there are products in the table
-        $('#no-products-row').hide();
-
-        // Reset product select
-        $(this).val('');
-
-        // Add the product to the hidden fields
-        addToHiddenFields(productId, 1, productPrice);
-    });
-
-    // Function to add selected product to hidden fields
-    function addToHiddenFields(productId, quantity, price) {
-        let productIds = $('#product_ids').val() ? $('#product_ids').val().split(',') : [];
-        let quantities = $('#quantities').val() ? $('#quantities').val().split(',') : [];
-        let prices = $('#prices').val() ? $('#prices').val().split(',') : [];
-
-        // Add product details to arrays
-        productIds.push(productId);
-        quantities.push(quantity);
-        prices.push(price);
-
-        // Update hidden fields with the new values
-        $('#product_ids').val(productIds.join(','));
-        $('#quantities').val(quantities.join(','));
-        $('#prices').val(prices.join(','));
-    }
-
-    // Update row subtotal, discount, and total when quantity, price, or discount changes
-    function updateRow(input) {
-        const row = $(input).closest('tr');
-        const priceInput = row.find('.price-input');
-        const quantityInput = row.find('.quantity');
-        const discountInput = row.find('.product-discount');
-
-        const price = parseFloat(priceInput.val());
-        let quantity = parseInt(quantityInput.val());
-        const stock = parseInt(quantityInput.data('stock'));
-        const discount = parseFloat(discountInput.val());
-
-        if (isNaN(price) || price < 0) {
-            toastr.error('Invalid price entered.', 'Error', {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 5000
-            });
-
-            priceInput.val(0); // Reset to 0 if invalid input
-            return;
-        }
-
-        // if (quantity > stock) {
-        //     // Display toastr alert
-        //     toastr.error('Quantity cannot exceed available stock.', 'Stock Limit Exceeded', {
-        //         closeButton: true,
-        //         progressBar: true,
-        //         timeOut: 5000
-        //     });
-
-        //     $(input).val(stock);  // Reset to stock value
-        // }
-
-        // Calculate subtotal (before discount) for this product
-        const subtotal = price * quantity;
-
-        // Apply the product-specific discount
-        const discountedTotal = subtotal - discount;
-
-        // Update row subtotal and discounted total
-        row.find('.subtotal').text(subtotal.toFixed(2));
-        row.find('.total').text(discountedTotal.toFixed(2));
-
-        // Update hidden fields
-        updateHiddenFields();
-        updateTotal();  // Update total after any change
-    }
-
-    // Function to update hidden fields when quantity changes
-    function updateHiddenFields() {
-        let productIds = [];
-        let quantities = [];
-        let prices = [];
-        let discounts = [];
-
-        $('#product-table tbody tr').each(function() {
-            const row = $(this);
-            const productId = row.data('product-id');
-            const quantity = row.find('.quantity').val();
-            const price = row.find('.price-input').val();
-            const discount = row.find('.product-discount').val();
-            // console.log(discounts)
-
-            if (productId !== undefined) {
-                productIds.push(productId);
-                quantities.push(quantity);
-                prices.push(price);
-                discounts.push(discount);
-            }
-        });
-
-        // Update the hidden fields
-        $('#product_ids').val(productIds.join(','));
-        $('#quantities').val(quantities.join(','));
-        $('#prices').val(prices.join(','));
-        $('#discounts').val(discounts.join(','));
-    }
-
-    // Calculate the subtotal for all products, apply flat discount to the subtotal, and calculate final total
-    function updateTotal() {
-        let subtotal = 0;
-
-        $('#product-table tbody tr').each(function() {
-            const rowSubtotal = parseFloat($(this).find('.total').text()); // Use the total (after product discount)
-            if (!isNaN(rowSubtotal)) {
                 subtotal += rowSubtotal;
-            }
+                totalDiscount += discount;
+
+                $(this).find('.subtotal').val(rowSubtotal.toFixed(2));
+                $(this).find('.total').val(rowTotal.toFixed(2));
+            });
+
+            // Update subtotal and discount values
+            $('#subtotal').val(subtotal.toFixed(2));
+            $('#toal_discount').val(totalDiscount.toFixed(2));
+
+            let transportCost = parseFloat($('#transport_cost').val()) || 0;
+            let carryingCharge = parseFloat($('#carrying_charge').val()) || 0;
+            let vat = parseFloat($('#vat').val()) || 0;
+            let tax = parseFloat($('#tax').val()) || 0;
+
+            // Calculate grand total
+            let grandTotal = subtotal - totalDiscount + transportCost + carryingCharge + vat + tax;
+            $('#grand_total').val(grandTotal.toFixed(2));
+        }
+
+        // Trigger calculation on unit price entry (keyup)
+        $(document).on('input keyup', '.unit-price, .quantity, .discount, #transport_cost, #carrying_charge, #vat, #tax', function () {
+            calculateTotal();
         });
 
-        // Get the flat discount amount (order-wide discount)
-        const discount = parseFloat($('#discount').val());
-        const validDiscount = isNaN(discount) ? 0 : discount;
+        // Add new row dynamically
+        $(document).on('click', '.add-row', function () {
+            let newRow = `
+                <tr>
+                    <td><input type="text" name="items[]" class="form-control" placeholder="Enter Item Description" required></td>
+                    <td><input type="text" name="order_unit[]" class="form-control" placeholder="Enter Unit" required></td>
+                    <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" required></td>
+                    <td><input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required></td>
+                    <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
+                    <td><input type="number" name="discount[]" class="form-control discount" min="0" step="0.01" placeholder="Enter Discount"></td>
+                    <td><input type="text" name="total[]" class="form-control total" readonly></td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            $('#product-tbody').append(newRow);
+        });
 
-        // Calculate the final total with the flat discount applied
-        const total = subtotal - validDiscount;
+        // Remove row and recalculate total
+        $(document).on('click', '.remove-row', function () {
+            $(this).closest('tr').remove();
+            calculateTotal();
+        });
 
-        // Update subtotal and total fields
-        $('#subtotal').val(subtotal.toFixed(2));
-        $('#total').val(total.toFixed(2));
-    }
-
-    // Remove product from table and hidden fields
-    $('#product-table').on('click', '.remove-product', function() {
-        const row = $(this).closest('tr');
-        const productId = row.data('product-id');
-        const quantity = row.find('.quantity').val();
-        const price = row.find('.subtotal').text();
-
-        // Remove product details from hidden fields
-        removeFromHiddenFields(productId, quantity, price);
-
-        // Remove the row from the table
-        row.remove();
-
-        // Show "No Product Found" row if table is empty
-        if ($('#product-table tbody tr').length === 0) {
-            $('#no-products-row').show();
-        }
-
-        updateTotal();
+        // Initial calculation when the page loads
+        calculateTotal();
     });
 
-    // Function to remove product from hidden fields
-    function removeFromHiddenFields(productId, quantity, price) {
-        let productIds = $('#product_ids').val().split(',');
-        let quantities = $('#quantities').val().split(',');
-        let prices = $('#prices').val().split(',');
 
-        // Find the index of the product to remove
-        const index = productIds.indexOf(productId);
-
-        if (index !== -1) {
-            productIds.splice(index, 1);
-            quantities.splice(index, 1);
-            prices.splice(index, 1);
-        }
-
-        // Update hidden fields with the new values
-        $('#product_ids').val(productIds.join(','));
-        $('#quantities').val(quantities.join(','));
-        $('#prices').val(prices.join(','));
-    }
 </script>
+
 @endpush

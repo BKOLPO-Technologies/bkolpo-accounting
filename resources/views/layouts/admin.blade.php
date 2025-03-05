@@ -301,16 +301,20 @@
 </script>
 <script>
   $(function () {
-    // Summernote
-    $('#summernote').summernote()
+    // Summernote with placeholder
+    $('#summernote').summernote({
+      placeholder: 'Enter some text here',
+      height: 200 // You can adjust the height as per your need
+    });
 
     // CodeMirror
     CodeMirror.fromTextArea(document.getElementById("codeMirrorDemo"), {
       mode: "htmlmixed",
       theme: "monokai"
     });
-  })
+  });
 </script>
+
 @stack('js')
 </body>
 </html>
