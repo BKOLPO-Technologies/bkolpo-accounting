@@ -41,10 +41,10 @@
                                             <th>Date</th>
                                             <th>Name</th>
                                             <th>Group Name</th> 
-                                            <th>Opening DR ({{ bdt() }})</th>
-                                            <th>DR ({{ bdt() }})</th>
-                                            <th>CR ({{ bdt() }})</th>
-                                            <th>Current DR ({{ bdt() }})</th>
+                                            <th>Opening DR</th>
+                                            <th>DR</th>
+                                            <th>CR</th>
+                                            <th>Current DR</th>
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
@@ -121,7 +121,7 @@
                                         @endforeach
                                     </tbody>
                                     <!-- Total Row -->
-                                    <tfoot>
+                                    {{-- <tfoot>
                                         <tr>
                                             <th colspan="5" class="text-right">Total:</th>
                                             <th>{{ bdt() }} {{ number_format($totals['totalDebit'], 2) }}</th> 
@@ -129,7 +129,7 @@
                                             <!-- <th>{{ bdt() }} {{ number_format($totalCurrentDr, 2) }}</th> -->
                                             <th colspan="2"></th>
                                         </tr>
-                                    </tfoot>
+                                    </tfoot> --}}
                                 </table>
 
                                 <!-- Move all modals outside the table -->
