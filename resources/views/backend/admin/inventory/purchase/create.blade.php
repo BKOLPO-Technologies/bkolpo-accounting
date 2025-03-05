@@ -323,7 +323,7 @@
                 <td class="subtotal">${productPrice.toFixed(2)}</td>
                 
                 <td class="discount-col">
-                    <input type="number" class="product-discount form-control" value="0" min="0" max="100" oninput="updateRow(this)" placeholder="Enter discount">
+                    <input type="number" class="product-discount form-control" value="0" min="0"  oninput="updateRow(this)" placeholder="Enter discount">
                 </td>
 
                 <td class="total">${productPrice.toFixed(2)}</td>
