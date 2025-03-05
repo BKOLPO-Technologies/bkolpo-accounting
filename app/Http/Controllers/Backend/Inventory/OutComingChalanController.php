@@ -46,7 +46,38 @@ class OutComingChalanController extends Controller
     { 
         $pageTitle = 'Out Going Chalan';
 
-        $sales = Sale::latest()->get();
+        // $sales = Sale::latest()->get();
+
+        // Fetch all sales with their associated OutcomingChalans and OutcomingChalanProducts
+        $sales = Sale::with(['outcomingChalans.outcomingChalanProducts', 'saleProducts'])
+            ->get()
+            ->filter(function ($sale) {
+                // Sum the quantities and received quantities
+                $totalQuantity = 0;
+                $totalReceivedQuantity = 0;
+
+                // Fetch quantity from SaleProduct for each sale
+                foreach ($sale->saleProducts as $saleProduct) {
+                    // This assumes `quantity` is in the SaleProduct model
+                    $totalQuantity += $saleProduct->quantity;  // Assuming SaleProduct has quantity field
+                }
+
+                // Loop through each OutcomingChalan associated with the sale
+                foreach ($sale->outcomingChalans as $chalan) {
+                    // Sum the quantity and received quantity for each OutcomingChalanProduct
+                    foreach ($chalan->outcomingChalanProducts as $product) {
+                        //$totalQuantity = $product->quantity;
+                        $totalReceivedQuantity += $product->receive_quantity;
+
+                       //Log::info('Product Quantity:', ['quantity' => $product->quantity, 'receive_quantity' => $product->receive_quantity]);
+                    }
+                }
+                // Log::info('Total Quantity for Sale ID ' . $sale->id . ':', ['totalQuantity' => $totalQuantity]);
+                // Log::info('Total Received Quantity for Sale ID ' . $sale->id . ':', ['totalReceivedQuantity' => $totalReceivedQuantity]);
+
+                // Check if the total quantity is greater than the total received quantity
+                return $totalQuantity > $totalReceivedQuantity;
+            });
 
         return view('backend.admin.inventory.sales.chalan.create',compact('pageTitle','sales')); 
     }

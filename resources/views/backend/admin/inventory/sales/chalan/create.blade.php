@@ -101,7 +101,8 @@
                                                 <tr>
                                                     <th>Product</th>
                                                     <th>Quantity</th>
-                                                    <th>Receive Quantity</th>
+                                                    <th>Received Quantity</th>
+                                                    <th>New Receive Quantity</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -171,6 +172,8 @@
                         // Show product details
                         if (response.products.length > 0) {
                             response.products.forEach(function (product, index) {
+                                let maxReceiveQty = product.quantity - product.receive_quantity; // Available quantity
+                                
                                 $('#product-table tbody').append(`
                                     <tr>
                                         <td>${product.name}</td>
@@ -178,7 +181,11 @@
                                             <input type="number" name="quantity[]" class="form-control quantity" value="${product.quantity}" min="1" readonly>
                                         </td>
                                         <td>
-                                            <input type="number" name="receive_quantity[]" class="form-control receive-quantity" value="${product.receive_quantity}" min="1" data-available="${product.quantity}">
+                                            <input type="number" class="form-control" value="${product.receive_quantity}" readonly>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="receive_quantity[]" class="form-control receive-quantity" 
+                                                value="0" min="0" max="" data-available="${maxReceiveQty}">
                                         </td>
                                         <input type="hidden" name="product_id[]" value="${product.id}">
                                     </tr>
