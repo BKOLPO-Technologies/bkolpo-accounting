@@ -165,6 +165,8 @@ class SaleReceiptController extends Controller
             $payment_method = $request->input('payment_method'); // Get payment method from request
             $ledger = null;
 
+            // dd("ledger = ", $ledger);
+
             // Step 4: Based on payment method, get the corresponding ledger
             if ($payment_method == 'cash') {
                 $ledger = Ledger::where('name', 'Cash')->first(); // Find Cash ledger
@@ -172,19 +174,34 @@ class SaleReceiptController extends Controller
                 $ledger = Ledger::where('name', 'Bank')->first(); // Find Bank ledger
             }
 
+            //dd("ledger = ", $ledger);
+
             // Step 1: Get the Sales ledger
             $salesLedger = Ledger::where('name', 'Sales')->first();
 
+            //dd("salesLedger = ", $salesLedger);
+
             // Step 2: Ensure the ledger exists for the given payment method (Cash or Bank)
             $paymentMethod = $request->input('payment_method'); // Get payment method (Cash/Bank)
-            $paymentLedger = Ledger::where('name', $paymentMethod)->first(); // Find the Cash or Bank ledger
+            //$paymentLedger = Ledger::where('name', $paymentMethod)->first(); // Find the Cash or Bank ledger
+            $paymentLedger = $ledger; // Find the Cash or Bank ledger
+
+            //dd("paymentMethod = ", $paymentMethod);
+            //dd("paymentLedger = ", $paymentLedger);
 
             if ($salesLedger && $paymentLedger) {
+
+                //dd("hello");
+
                 // Step 3: Determine the payment amount (can come from the request)
                 $paymentAmount = $request->input('pay_amount', 0); // Amount being paid (in your case, 73)
+
+                //dd("paymentAmount = ", $paymentAmount);
             
                 // Step 4: Check if this invoice already exists in JournalVoucher
                 $journalVoucher = JournalVoucher::where('transaction_code', $sale->invoice_no)->first();
+
+                //dd("journalVoucher = ", $journalVoucher);
                 
                 if ($journalVoucher) {
                     // Step 5: Update existing journal voucher
@@ -231,6 +248,8 @@ class SaleReceiptController extends Controller
                 } 
                 
             }
+
+            //dd('fail');
             
 
 
