@@ -102,6 +102,7 @@
                                                         <th>Description</th>
                                                         <th>Debit</th>
                                                         <th>Credit</th>
+                                                        <th>Add</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="transactionTableBody">
@@ -131,6 +132,11 @@
                                                         <td>
 
                                                         </td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-sm btn-success add-debit-row">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </td>
                                                     </tr>
 
                                                     <tr>
@@ -158,6 +164,11 @@
                                                         </td>
                                                         <td>
                                                             <input type="number" class="form-control text-end credit" name="credit[]" placeholder="Enter Credit Amount">
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-sm btn-success add-credit-row">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -193,6 +204,146 @@
 @push('js')
 <script>
     $(document).ready(function () {
+
+        ///////////////////////////
+        // Function to add a new debit row after the current debit row
+        $(document).on("click", ".add-debit-row", function () {
+
+            let debitRow = $(this).closest("tr");  // Current Debit Row
+
+            // // Check if there's already a row with "Debit" transaction type
+            if ($("tr").find(".transaction-type[value='Debit']").length >= 0) {
+                // let newRow = debitRow.clone();  // Clone the row
+
+                // // Clear the cloned row fields (except transaction_type)
+                // newRow.find("input[type='number']").val("");  // Clear debit and credit
+                // newRow.find("textarea").val("");  // Clear description
+
+                // // Remove the "Add Debit Row" button from the cloned row
+                // newRow.find(".add-debit-row").remove();
+
+                // // Update the transaction type for the new row to 'Debit'
+                // newRow.find(".transaction-type").val("Debit");
+
+                // // Insert the new row after the current row
+                // debitRow.after(newRow);
+
+                let newDebitRow = debitRow.clone();  // Clone the debit row
+
+                // Clear the cloned row fields (except transaction_type)
+                newDebitRow.find("input[type='number']").val("");  // Clear debit and credit
+                newDebitRow.find("textarea").val("");  // Clear description
+
+                // Remove the "Add Debit Row" button from the cloned row
+                newDebitRow.find(".add-debit-row").remove();
+
+                // Update the transaction type for the new row to 'Debit'
+                newDebitRow.find(".transaction-type").val("Debit");
+
+                // // Insert the new row after the current row
+                debitRow.after(newDebitRow);
+
+            }
+
+            // Recalculate the totals after adding a new row
+            calculateTotals();
+        });
+
+        // Function to add a new credit row after the current row
+        function addCreditRow(debitRow) {
+            let newCreditRow = debitRow.clone();  // Clone the debit row to create a credit row
+
+            // Clear the cloned row fields (except transaction_type)
+            newCreditRow.find("input[type='number']").val("");  // Clear debit and credit
+            newCreditRow.find("textarea").val("");  // Clear description
+
+            // Remove the "Add Debit Row" button from the cloned row
+            newCreditRow.find(".add-debit-row").remove();
+            
+            // Update the transaction type for the new row to 'Credit'
+            newCreditRow.find(".transaction-type").val("Credit");
+
+            // Remove the Add button for credit row (to prevent duplicate additions in the credit row)
+            newCreditRow.find(".add-credit-row").remove();
+
+            // Insert the new credit row after the debit row
+            debitRow.after(newCreditRow);
+
+            // Recalculate the totals after adding the credit row
+            calculateTotals();
+        }
+
+        // Function to add a new credit row after the current credit row
+        $(document).on("click", ".add-credit-row", function () {
+
+            let creditRow = $(this).closest("tr");  // Current Credit Row
+
+            // Check if there's already a row with "Credit" transaction type
+            if ($("tr").find(".transaction-type[value='Credit']").length >= 0) {
+                // let newRow = creditRow.clone();  // Clone the row
+
+                // // Clear the cloned row fields (except transaction_type)
+                // newRow.find("input[type='number']").val("");  // Clear debit and credit
+                // newRow.find("textarea").val("");  // Clear description
+
+                // // Remove the "Add Credit Row" button from the cloned row
+                // newRow.find(".add-credit-row").remove();
+
+                // // Update the transaction type for the new row to 'Credit'
+                // newRow.find(".transaction-type").val("Credit");
+
+                // // Insert the new row after the current row
+                // creditRow.after(newRow);
+
+                let newCreditRow = creditRow.clone();  // Clone the credit row
+
+                // Clear the cloned row fields (except transaction_type)
+                newCreditRow.find("input[type='number']").val("");  // Clear debit and credit
+                newCreditRow.find("textarea").val("");  // Clear description
+
+                // Remove the "Add Credit Row" button from the cloned row
+                newCreditRow.find(".add-credit-row").remove();
+
+                // Update the transaction type for the new row to 'Credit'
+                newCreditRow.find(".transaction-type").val("Credit");
+
+                // Insert the new row after the current row
+                creditRow.after(newCreditRow);
+
+                // After the credit row, add the debit row
+                addDebitRow(newCreditRow);  // Add the associated Debit row
+            }
+
+            // Recalculate the totals after adding a new row
+            calculateTotals();
+        });
+
+        // Function to add a new debit row after the credit row
+        function addDebitRow(creditRow) {
+            let newDebitRow = creditRow.clone();  // Clone the credit row to create a debit row
+
+            // Clear the cloned row fields (except transaction_type)
+            newDebitRow.find("input[type='number']").val("");  // Clear debit and credit
+            newDebitRow.find("textarea").val("");  // Clear description
+
+            // Remove the "Add Debit Row" button from the cloned row
+            newDebitRow.find(".add-debit-row").remove();
+            
+            // Update the transaction type for the new row to 'Debit'
+            newDebitRow.find(".transaction-type").val("Debit");
+
+            // Remove the Add button for debit row (to prevent duplicate additions in the debit row)
+            newDebitRow.find(".add-debit-row").remove();
+
+            // Insert the new debit row after the credit row
+            //creditRow.after(newDebitRow);
+
+            // Recalculate the totals after adding the debit row
+            calculateTotals();
+        }
+
+        ////////////////////////////////////////////
+        
         function formatCurrency(amount) {
             return '৳' + new Intl.NumberFormat('en-BD', { 
                 minimumFractionDigits: 2, 
@@ -211,33 +362,49 @@
                 totalCredit += parseFloat($(this).val()) || 0;
             });
 
-            $("#debitTotal").text(formatCurrency(totalDebit));
-            $("#creditTotal").text(formatCurrency(totalCredit));
+            // Only update debit total if it has been changed
+            if (totalDebit !== parseFloat($("#debitTotal").data("previousTotal"))) {
+                $("#debitTotal").text(formatCurrency(totalDebit));
+                $("#debitTotal").data("previousTotal", totalDebit);  // Store the previous total for comparison
+            }
+
+            // Only update credit total if it has been changed
+            if (totalCredit !== parseFloat($("#creditTotal").data("previousTotal"))) {
+                $("#creditTotal").text(formatCurrency(totalCredit));
+                $("#creditTotal").data("previousTotal", totalCredit);  // Store the previous total for comparison
+            }
         }
 
-        // $(document).on("keyup", ".debit, .credit", function () {
-        //     calculateTotals();
-        // });
+        function syncDebitCredit(inputField, targetClass, isDebit) {
+            let value = inputField.val().trim();
+            let currentRow = inputField.closest("tr");
+            let targetRow = (targetClass === ".credit") ? currentRow.next() : currentRow.prev();
+            let targetField = targetRow.find(targetClass);
 
-        $(document).on("keyup", ".debit", function () {
+            console.log(`${isDebit ? "Debit" : "Credit"} value entered:`, value);
 
-            let debitValue = $(this).val().trim();
-            let debitRow = $(this).closest("tr"); // Get the current debit row
-            let creditRow = debitRow.next(); // Get the next row (Credit row)
-            //let creditField = $(this).closest("tr").find(".credit");
-            let creditField = creditRow.find(".credit"); // Find the credit input
-
-            console.log("Debit value entered:", debitValue);
-
-            if (debitValue !== "") {
-                creditField.val(debitValue); // Copy debit value to credit field
+            if (value !== "") {
+                targetField.val(value); // Sync values only for Debit input
             } else {
-                creditField.val(""); // Clear credit field if debit is empty
+                targetField.val(""); // Clear target field if input is empty
             }
 
             calculateTotals(); // Update totals
+        }
+
+        $(document).on("keyup", ".debit", function () {
+            syncDebitCredit($(this), ".credit", true); // Sync Debit -> Credit
         });
-        
+
+        $(document).on("keyup", ".credit", function () {
+            // Do not sync Credit to Debit
+            let value = $(this).val().trim();
+            if (value === "") {
+                $(this).closest("tr").prev().find(".debit").val(""); // Clear Debit if Credit is empty
+            }
+            calculateTotals(); // Update totals
+        });
+
         // Call once to update if there are pre-filled values
         calculateTotals();
     });

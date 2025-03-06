@@ -135,6 +135,8 @@ class JournalController extends Controller
      */
     public function store(Request $request)
     {
+
+        dd($request->all());
         // Validate the request
         $request->validate([
             'transaction_code' => 'required|unique:journal_vouchers',
