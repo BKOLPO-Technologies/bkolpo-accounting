@@ -229,12 +229,12 @@
                                     <div class="col-12 col-lg-4 mb-2">
                                         <div class="row w-100">
                                             <div class="col-12 col-lg-6 mb-2">
-                                                <label for="total_discount">Total Discount</label>
-                                                <input type="number" min="0" id="total_discount" name="total_discount" class="form-control" placeholder="Enter Total Discount" />
-                                            </div>
-                                            <div class="col-12 col-lg-6 mb-2">
                                                 <label for="subtotal">Subtotal</label>
                                                 <input type="text" id="subtotal" name="total_subtotal" class="form-control" value="0" readonly />
+                                            </div>
+                                            <div class="col-12 col-lg-6 mb-2">
+                                                <label for="total_discount">Total Discount</label>
+                                                <input type="number" min="0" id="total_discount" name="total_discount" class="form-control" placeholder="Enter Total Discount" />
                                             </div>
                                         </div>
 
