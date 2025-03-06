@@ -296,7 +296,16 @@
                 let quantity = parseFloat($(this).find('.quantity').val()) || 0;
                 let discount = parseFloat($(this).find('.discount').val()) || 0;
 
-                let rowSubtotal = price * quantity;
+                // Initialize rowSubtotal to 0
+                let rowSubtotal = 0;
+
+                // Calculate rowSubtotal based on quantity and price
+                if (price && quantity) {
+                    rowSubtotal = price * quantity; // When both price and quantity are valid
+                } else {
+                    rowSubtotal = price; // When quantity is 0 or invalid, use only price
+                }
+
                 let rowTotal = rowSubtotal - discount;
 
                 subtotal += rowSubtotal;
