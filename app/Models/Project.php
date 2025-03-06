@@ -11,8 +11,15 @@ class Project extends Model
 
     protected $guarded = [];
 
-    public function customer()
+    public function client()
     {
-        return $this->belongsTo(Customer::class, 'customer_id');
+        return $this->belongsTo(Client::class);
     }
+
+    public function items()
+    {
+        return $this->hasMany(ProjectItem::class);
+    }
+
+
 }

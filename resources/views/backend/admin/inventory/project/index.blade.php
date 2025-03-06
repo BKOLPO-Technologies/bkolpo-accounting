@@ -42,29 +42,38 @@
                                             <th>Paid Amount</th>
                                             <th>Due Amount</th>
                                             <th>Status</th>
-                                            <th>Order Status</th>
+                                            <th>Project Type</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($projects as $project)
+                                        @foreach ($projects as $key => $project)
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $project->name }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($project->created_at)->format('d F Y') }}</td>
-                                                <td>{{ $project->name ?? 'N/A' }}</td> 
-                                                <td>{{ bdt() }} {{ number_format($project->total_amount ?? 'N/A', 2) }}</td>
-                                                <td>{{ bdt() }} {{ number_format($project->paid_amount ?? 'N/A', 2) }}</td> 
-                                                <td>{{ bdt() }} {{ number_format($project->paid_amount ?? 'N/A', 2) }}</td> 
-                                                <!-- Status column with Badge -->
+                                                <td>{{ $key + 1 }}</td>
+                                                <td>{{ $project->project_name }}</td>
+                                                <td>{{ $project->client->name ?? 'N/A' }}</td>
+                                                <td>{{ bdt() }} {{ number_format($project->grand_total, 2) }}</td>
+                                                <td>{{ bdt() }} {{ number_format($project->paid_amount, 2) }}</td>
+                                                <td>{{ bdt() }} {{ number_format($project->grand_total - $project->paid_amount, 2) }}</td>
                                                 <td>
-                                                    <span class="badge bg-danger">Ongoing</span>
+                                                    @if($project->status == 'pending')
+                                                        <span class="badge bg-danger">Pending</span>
+                                                    @elseif($project->status == 'paid')
+                                                        <span class="badge bg-success">Paid</span>
+                                                    @else
+                                                        <span class="badge bg-warning">Partially Paid</span>
+                                                    @endif
                                                 </td>
                                                 <td>
-                                                    <span class="badge bg-danger">Pending</span>
+                                                    @if($project->project_type == 'ongoing')
+                                                        <span class="badge bg-danger">Ongoing</span>
+                                                    @elseif($project->project_type == 'upcoming')
+                                                        <span class="badge bg-primary">Upcoming</span>
+                                                    @else
+                                                        <span class="badge bg-success">Completed</span>
+                                                    @endif
                                                 </td>
-                                                
-                                                <td class="col-2">
+                                                <td>
                                                     <!-- View Button -->
                                                     <a href="{{ route('projects.show', $project->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>

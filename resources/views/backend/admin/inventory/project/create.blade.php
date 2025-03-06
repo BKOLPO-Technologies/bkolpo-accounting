@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="#" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('projects.store') }}" enctype="multipart/form-data">
                             @csrf
 
                             <div class="row">
@@ -43,15 +43,18 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-project-diagram"></i></span>
                                         </div>
-                                        <input type="text" name="project_name" id="project_name" class="form-control @error('project_name') is-invalid @enderror" placeholder="Enter Project Name" required>
+                                        <input type="text" name="project_name" id="project_name" 
+                                            class="form-control @error('project_name') is-invalid @enderror" 
+                                            placeholder="Enter Project Name" 
+                                            value="{{ old('project_name') }}" required>
                                     </div>
                                     @error('project_name')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                    </div>
+                                        <div class="invalid-feedback">
+                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                        </div>
                                     @enderror
                                 </div>
-                            
+                                
                                 <!-- Project Location -->
                                 <div class="col-lg-4 col-md-6 mb-3">
                                     <label for="project_location">Project Location</label>
@@ -59,15 +62,18 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                         </div>
-                                        <input type="text" name="project_location" id="project_location" class="form-control @error('project_location') is-invalid @enderror" placeholder="Enter Project Location" required>
+                                        <input type="text" name="project_location" id="project_location" 
+                                            class="form-control @error('project_location') is-invalid @enderror" 
+                                            placeholder="Enter Project Location" 
+                                            value="{{ old('project_location') }}" required>
                                     </div>
                                     @error('project_location')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                    </div>
+                                        <div class="invalid-feedback">
+                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                        </div>
                                     @enderror
                                 </div>
-                            
+
                                 <!-- Project Coordinator -->
                                 <div class="col-lg-4 col-md-6 mb-3">
                                     <label for="project_coordinator">Project Coordinator</label>
@@ -75,15 +81,18 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
                                         </div>
-                                        <input type="text" name="project_coordinator" id="project_coordinator" class="form-control @error('project_coordinator') is-invalid @enderror" placeholder="Enter Project Coordinator" required>
+                                        <input type="text" name="project_coordinator" id="project_coordinator" 
+                                            class="form-control @error('project_coordinator') is-invalid @enderror" 
+                                            placeholder="Enter Project Coordinator" 
+                                            value="{{ old('project_coordinator') }}" required>
                                     </div>
                                     @error('project_coordinator')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                    </div>
+                                        <div class="invalid-feedback">
+                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                        </div>
                                     @enderror
                                 </div>
-                            
+
                                 <!-- Customer Select -->
                                 <div class="col-lg-4 col-md-6 mb-3">
                                     <label for="customer">Customer</label>
@@ -91,7 +100,8 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                         </div>
-                                        <select name="client" id="client" class="form-control select2 @error('client') is-invalid @enderror">
+                                        <select name="client_id" id="client_id" 
+                                            class="form-control select2 @error('client_id') is-invalid @enderror">
                                             <option value="" disabled>Select Customer</option>
                                             @foreach($clients as $client)
                                                 <option value="{{ $client->id }}" 
@@ -99,25 +109,24 @@
                                                     data-company="{{ $client->company }}" 
                                                     data-phone="{{ $client->phone }}" 
                                                     data-email="{{ $client->email }}"
-                                                    {{ old('customer') == $client->id ? 'selected' : '' }}>
+                                                    {{ old('client_id') == $client->id ? 'selected' : '' }}>
                                                     {{ $client->name }}
                                                 </option>
                                             @endforeach
                                         </select>
                                         <div class="input-group-append">
-                                            <!-- Button to trigger modal for adding a new client -->
                                             <button class="btn btn-danger" type="button" id="addClientBtn" data-toggle="modal" data-target="#createClientModal">
                                                 <i class="fas fa-plus"></i>
                                             </button>
                                         </div>
                                     </div>
-                                    @error('client')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                    </div>
+                                    @error('client_id')
+                                        <div class="invalid-feedback">
+                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                        </div>
                                     @enderror
                                 </div>
-                            
+
                                 <!-- Reference No -->
                                 <div class="col-lg-4 col-md-6 mb-3">
                                     <label for="referance_no">Reference No</label>
@@ -125,15 +134,17 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
                                         </div>
-                                        <input type="text" id="referance_no" name="referance_no" class="form-control @error('referance_no') is-invalid @enderror" value="{{ old('invoice_no', $referance_no) }}" readonly />
+                                        <input type="text" id="referance_no" name="reference_no" 
+                                            class="form-control @error('referance_no') is-invalid @enderror" 
+                                            value="{{ old('referance_no', $referance_no) }}" readonly />
                                     </div>
                                     @error('referance_no')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                    </div>
+                                        <div class="invalid-feedback">
+                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                        </div>
                                     @enderror
                                 </div>
-                            
+
                                 <!-- Project Schedule Date -->
                                 <div class="col-lg-4 col-md-6 mb-3">
                                     <label for="schedule_date">Project Schedule Date</label>
@@ -141,17 +152,18 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                                         </div>
-                                        <input type="text" id="date" name="schedule_date" class="form-control @error('schedule_date') is-invalid @enderror" value="{{ old('schedule_date', now()->format('Y-m-d')) }}" />
+                                        <input type="text" id="date" name="schedule_date" 
+                                            class="form-control @error('schedule_date') is-invalid @enderror" 
+                                            value="{{ old('schedule_date', now()->format('Y-m-d')) }}" />
                                     </div>
                                     @error('schedule_date')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                    </div>
+                                        <div class="invalid-feedback">
+                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                        </div>
                                     @enderror
                                 </div>
                             </div>
                             
-                                
                             <!-- Product Table -->
                             <div class="row">
                                 <div class="col-12">
@@ -179,7 +191,7 @@
                                                             <input type="text" name="order_unit[]" class="form-control" placeholder="Ener Unit" required>
                                                         </td>
                                                         <td>
-                                                            <input type="number" name="unit_price[]" class="form-control unit-price" placeholder="Enter Unit Price" min="0" step="0.01" required>
+                                                            <input type="number" name="unit_price[]" class="form-control unit-price" placeholder="Enter Unit Price" min="0" required>
                                                         </td>
                                                         <td>
                                                             <input type="number" name="quantity[]" class="form-control quantity" placeholder="Enter Quantity" min="1" required>
@@ -188,7 +200,7 @@
                                                             <input type="text" name="subtotal[]" class="form-control subtotal"  readonly>
                                                         </td>
                                                         <td>
-                                                            <input type="number" name="discount[]" class="form-control discount" placeholder="Enter Discount" min="0" step="0.01">
+                                                            <input type="number" name="discount[]" class="form-control discount" placeholder="Enter Discount" min="0">
                                                         </td>
                                                         <td>
                                                             <input type="text" name="total[]" class="form-control total" readonly>
@@ -206,57 +218,95 @@
                             </div>
 
                             <div class="d-flex justify-content-end flex-column align-items-end">
-                                <!-- Subtotal -->
-                                <div class="col-lg-3 col-md-6 mb-2">
-                                    <label for="subtotal">Subtotal</label>
-                                    <input type="text" id="subtotal" name="subtotal" class="form-control" value="0" readonly />
-                                </div>
+                                <!-- First Row: Subtotal and Total Discount -->
+                                <div class="row w-100">
+                                    <!-- Subtotal -->
+                                    <div class="col-12 col-lg-8 mb-2">
+                                       
+                                    </div>
+                            
+                                    <!-- Total Discount -->
+                                    <div class="col-12 col-lg-4 mb-2">
+                                        <div class="row w-100">
+                                            <div class="col-12 col-lg-6 mb-2">
+                                                <label for="total_discount">Total Discount</label>
+                                                <input type="number" min="0" id="total_discount" name="total_discount" class="form-control" placeholder="Enter Total Discount" />
+                                            </div>
+                                            <div class="col-12 col-lg-6 mb-2">
+                                                <label for="subtotal">Subtotal</label>
+                                                <input type="text" id="subtotal" name="total_subtotal" class="form-control" value="0" readonly />
+                                            </div>
+                                        </div>
 
-                                <!-- Discount -->
-                                <div class="col-lg-3 col-md-6 mb-2">
-                                    <label for="toal_discount">Total Discount</label>
-                                    <input type="number" min="0" id="toal_discount" name="toal_discount" class="form-control" value="0" />
+                                        <!-- Second Row: Remaining fields (Transport Cost, Carrying Charge, Vat, Tax, Grand Total) -->
+                                        <div class="row w-100">
+                                            <!-- Transport Cost -->
+                                            <div class="col-12 col-lg-6 mb-2">
+                                                <label for="transport_cost">Transport Cost</label>
+                                                <input type="number" min="0" id="transport_cost" name="transport_cost" class="form-control" placeholder="Enter Transport Cost" />
+                                            </div>
+                                    
+                                            <!-- Carrying/Labour Charge -->
+                                            <div class="col-12 col-lg-6 mb-2">
+                                                <label for="carrying_charge">Carrying/Labour Charge</label>
+                                                <input type="number" min="0" id="carrying_charge" name="carrying_charge" class="form-control" placeholder="Enter Carrying Charge"   />
+                                            </div>
+                                    
+                                            <!-- Vat -->
+                                            <div class="col-12 col-lg-6 mb-2">
+                                                <label for="vat">Vat</label>
+                                                <input type="number" min="0" id="vat" name="vat" class="form-control" placeholder="Enter Vat" />
+                                            </div>
+                                    
+                                            <!-- Tax -->
+                                            <div class="col-12 col-lg-6 mb-3">
+                                                <label for="tax">Tax</label>
+                                                <input type="number" min="0" id="tax" name="tax" class="form-control" placeholder="Enter Tax" />
+                                            </div>
+                                            
+                                            {{-- <div class="col-6 mb-2">
+                                            </div> --}}
+                                            <!-- Grand Total -->
+                                            <div class="col-12 mb-2">
+                                                <label for="grand_total">Grand Total Taka</label>
+                                                <input type="text" id="grand_total" name="grand_total" class="form-control" value="0" readonly />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+                            <hr>
 
-                                <!-- Transport Cost -->
-                                <div class="col-lg-3 col-md-6 mb-2">
-                                    <label for="transport_cost">Transport Cost</label>
-                                    <input type="number" min="0" id="transport_cost" name="transport_cost" class="form-control" value="0" />
+                            <!-- Project Type -->
+                            <div class="col-lg-12 col-md-12 mb-3">
+                                <label for="project_type">Project Type</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-cogs"></i></span> <!-- Example icon -->
+                                    </div>
+                                    <select name="project_type" id="project_type" class="form-control @error('project_type') is-invalid @enderror" required>
+                                        <option value="" disabled>Select Project Type</option>
+                                        <option value="ongoing" {{ old('project_type') == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
+                                        <option value="upcoming" {{ old('project_type') == 'upcoming' ? 'selected' : '' }}>Upcoming</option>
+                                        <option value="completed" {{ old('project_type') == 'completed' ? 'selected' : '' }}>Completed</option>
+                                    </select>
                                 </div>
+                                @error('project_type')
+                                <div class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
 
-                                <!-- Carrying/Labour Charge -->
-                                <div class="col-lg-3 col-md-6 mb-2">
-                                    <label for="carrying_charge">Carrying/Labour Charge</label>
-                                    <input type="number" min="0" id="carrying_charge" name="carrying_charge" class="form-control" value="0" />
-                                </div>
-
-                                <!-- Vat -->
-                                <div class="col-lg-3 col-md-6 mb-2">
-                                    <label for="vat">Vat</label>
-                                    <input type="number" min="0" id="vat" name="vat" class="form-control" value="0" />
-                                </div>
-
-                                <!-- Tax -->
-                                <div class="col-lg-3 col-md-6 mb-3">
-                                    <label for="tax">Tax</label>
-                                    <input type="number" min="0" id="tax" name="tax" class="form-control" value="0" />
-                                </div>
-
-                                <!-- Total -->
-                                <div class="col-lg-3 col-md-6 mb-2">
-                                    <label for="total">Grand Total Taka</label>
-                                    <input type="text" id="grand_total" name="grand_total" class="form-control" value="0" readonly />
-                                </div>
-                            </div><hr>
                             <!-- Note -->
                             <div class="col-lg-12 col-md-12 mb-3">
                                 <label for="note">Note</label>
-                                <textarea id="note" name="note" class="form-control" rows="3" placeholder="Enter Some Note"></textarea>
+                                <textarea id="note" name="description" class="form-control" rows="3" placeholder="Enter Some Note"></textarea>
                             </div>
                             <!-- Terms & Conditions -->
                             <div class="col-lg-12 col-md-12 mb-3">
                                 <label for="note">Terms & Conditions</label>
-                                <textarea id="summernote" name="note" class="form-control" rows="3" placeholder="Enter Terms & Conditions"></textarea>
+                                <textarea id="summernote" name="terms_conditions" class="form-control" rows="3" placeholder="Enter Terms & Conditions"></textarea>
                             </div>
                             <div class="row text-right">
                                 <div class="col-12">
@@ -285,7 +335,7 @@
     
     // All Functionality Calculations
     $(document).ready(function () {
-        // Function to calculate totals
+    // Function to calculate totals
         function calculateTotal() {
             let subtotal = 0;
             let totalDiscount = 0;
@@ -308,7 +358,7 @@
 
                 let rowTotal = rowSubtotal - discount;
 
-                subtotal += rowSubtotal;
+                subtotal += rowTotal;
                 totalDiscount += discount;
 
                 $(this).find('.subtotal').val(rowSubtotal.toFixed(2));
@@ -317,7 +367,12 @@
 
             // Update subtotal and discount values
             $('#subtotal').val(subtotal.toFixed(2));
-            $('#toal_discount').val(totalDiscount.toFixed(2));
+
+            // Manually update total discount in the input field and reflect it in the calculation
+            // Get the manually entered discount from the total_discount field
+            let manualTotalDiscount = parseFloat($('#total_discount').val()) || totalDiscount;
+            // Ensure the input field is updated with the correct total discount value
+            $('#total_discount').val(manualTotalDiscount.toFixed(2));
 
             let transportCost = parseFloat($('#transport_cost').val()) || 0;
             let carryingCharge = parseFloat($('#carrying_charge').val()) || 0;
@@ -325,12 +380,12 @@
             let tax = parseFloat($('#tax').val()) || 0;
 
             // Calculate grand total
-            let grandTotal = subtotal - totalDiscount + transportCost + carryingCharge + vat + tax;
+            let grandTotal = subtotal - manualTotalDiscount + transportCost + carryingCharge + vat + tax;
             $('#grand_total').val(grandTotal.toFixed(2));
         }
 
-        // Trigger calculation on unit price entry (keyup)
-        $(document).on('input keyup', '.unit-price, .quantity, .discount, #transport_cost, #carrying_charge, #vat, #tax', function () {
+        // Trigger calculation on unit price, quantity, discount, and total_discount fields
+        $(document).on('input keyup', '.unit-price, .quantity, .discount, #transport_cost, #carrying_charge, #vat, #tax, #total_discount', function () {
             calculateTotal();
         });
 
@@ -361,8 +416,6 @@
         // Initial calculation when the page loads
         calculateTotal();
     });
-
-
 </script>
 
 @endpush

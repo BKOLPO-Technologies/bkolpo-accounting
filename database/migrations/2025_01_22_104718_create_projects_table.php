@@ -10,24 +10,26 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('status')->default('Waiting');
-            $table->string('priority')->default('Low');
-            $table->unsignedBigInteger('customer_id');
-            $table->boolean('customerview')->default(true);
-            $table->boolean('customercomment')->default(true);
-            $table->decimal('budget', 10, 2)->nullable();
-            $table->string('phase')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->unsignedInteger('link_to_calendar')->default(0);
-            $table->string('color')->nullable();
-            $table->text('note')->nullable();
-            $table->string('tags')->nullable();
-            $table->unsignedInteger('task_communication')->default(0);
+            $table->string('project_name');
+            $table->string('project_location');
+            $table->string('project_coordinator');
+            $table->unsignedBigInteger('client_id'); // Foreign key
+            $table->string('reference_no')->unique();
+            $table->date('schedule_date')->nullable();
+            $table->decimal('total_discount', 10, 2)->default(0);
+            $table->decimal('subtotal', 10, 2)->default(0);
+            $table->decimal('transport_cost', 10, 2)->default(0);
+            $table->decimal('carrying_charge', 10, 2)->default(0);
+            $table->decimal('vat', 10, 2)->default(0);
+            $table->decimal('tax', 10, 2)->default(0);
+            $table->decimal('grand_total', 10, 2)->default(0);
+            $table->decimal('paid_amount', 15, 2)->default(0); // Amount already paid
+            $table->enum('status', ['pending', 'paid', 'partially_paid'])->default('pending'); // Project status
+            $table->enum('project_type', ['ongoing', 'upcoming', 'completed'])->default('ongoing'); // Project Type
+            $table->text('description')->nullable();
+            $table->longText('terms_conditions')->nullable();
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->timestamps();
-
-            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
         });
     }
 
