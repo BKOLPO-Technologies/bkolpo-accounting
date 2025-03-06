@@ -273,13 +273,27 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::prefix('purchase')->group(function () {
         Route::get('/', [PurchaseController::class, 'index'])->name('admin.purchase.index');
         Route::get('/create', [PurchaseController::class, 'AdminPurchaseCreate'])->name('admin.purchase.create');
-        Route::post('/storeClient', [PurchaseController::class, 'AdminPurchaseStore'])->name('admin.purchase.store');
+        Route::post('/store', [PurchaseController::class, 'AdminPurchaseStore'])->name('admin.purchase.store');
         Route::get('/view/{id}', [PurchaseController::class, 'AdminPurchaseView'])->name('admin.purchase.show');
         Route::get('/edit/{id}', [PurchaseController::class, 'AdminPurchaseEdit'])->name('admin.purchase.edit');
         Route::put('/update/{id}', [PurchaseController::class, 'AdminPurchaseUpdate'])->name('admin.purchase.update');
         Route::get('/delete/{id}', [PurchaseController::class, 'destroy'])->name('admin.purchase.destroy');
         Route::get('/get-invoice-details/{id}', [PurchaseController::class, 'getInvoiceDetails']);
         Route::get('/print', [PurchaseController::class, 'Print'])->name('admin.purchase.print');
+    });
+    
+    /* ==================== Sales Payment Controller =================== */
+    Route::prefix('payment/sales')->group(function () {
+        Route::get('/', [SalePaymentController::class, 'index'])->name('sale.payment.index');
+        Route::get('/create', [SalePaymentController::class, 'create'])->name('sale.payment.create');
+        Route::post('/store', [SalePaymentController::class, 'store'])->name('sale.payment.store');
+        Route::get('/view/{id}', [SalePaymentController::class, 'view'])->name('sale.payment.show');
+        Route::get('/edit/{id}', [SalePaymentController::class, 'edit'])->name('sale.payment.edit');
+        Route::put('/update/{id}', [SalePaymentController::class, 'update'])->name('sale.payment.update');
+        Route::get('/delete/{id}', [SalePaymentController::class, 'destroy'])->name('sale.payment.destroy');
+        Route::get('/get-ledgers-by-group', [SalePaymentController::class, 'getLedgersByGroup'])->name('sale.payment.get.ledgers.by.group');
+        Route::get('/payment/get-chalans-by-supplier', [SalePaymentController::class, 'getChalansBySupplier'])->name('sale.payment.get.chalans.by.supplier');
+
     });
 
     /* ==================== sales =================== */
@@ -329,19 +343,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/delete/{id}', [OutComingChalanController::class, 'destroy'])->name('outcoming.chalan.destroy');
     });
 
-    /* ==================== Sales Payment Controller =================== */
-    Route::prefix('payment/sales')->group(function () {
-        Route::get('/', [SalePaymentController::class, 'index'])->name('sale.payment.index');
-        Route::get('/create', [SalePaymentController::class, 'create'])->name('sale.payment.create');
-        Route::post('/store', [SalePaymentController::class, 'store'])->name('sale.payment.store');
-        Route::get('/view/{id}', [SalePaymentController::class, 'view'])->name('sale.payment.show');
-        Route::get('/edit/{id}', [SalePaymentController::class, 'edit'])->name('sale.payment.edit');
-        Route::put('/update/{id}', [SalePaymentController::class, 'update'])->name('sale.payment.update');
-        Route::get('/delete/{id}', [SalePaymentController::class, 'destroy'])->name('sale.payment.destroy');
-        Route::get('/get-ledgers-by-group', [SalePaymentController::class, 'getLedgersByGroup'])->name('sale.payment.get.ledgers.by.group');
-        Route::get('/payment/get-chalans-by-supplier', [SalePaymentController::class, 'getChalansBySupplier'])->name('sale.payment.get.chalans.by.supplier');
-
-    });
 
 
 

@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Backend\Inventory;
 
-use DB;
 use Carbon\Carbon;
+use App\Models\Ledger;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use App\Models\JournalVoucher;
 use App\Models\PurchaseProduct;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\JournalVoucherDetail;
 
 class PurchaseController extends Controller
 {
@@ -43,7 +46,6 @@ class PurchaseController extends Controller
     // purchase store
     public function AdminPurchaseStore(Request $request)
     {
-
         // dd($request->all());
 
         // Validate the request data
@@ -56,7 +58,6 @@ class PurchaseController extends Controller
             'total' => 'required|numeric',
             'product_ids' => 'required|not_in:',  // Ensure at least one product is selected
         ]);
-
 
         // dd($validated);
 
@@ -74,7 +75,7 @@ class PurchaseController extends Controller
 
         try {
             // Start the transaction
-            \DB::beginTransaction();
+            DB::beginTransaction();
         
             // Create a new purchase record
             $purchase = new Purchase();
@@ -103,15 +104,65 @@ class PurchaseController extends Controller
                 $purchaseProduct->discount = $discount; // Discount
                 $purchaseProduct->save(); // Save the record
             }
+            
+            // Step 2: Get purchase amount
+            $purchase_amount = $purchase->total ?? 0; // If purchase doesn't have amount, default to 0
+
+            // Step 3: Retrieve Purchase ledger
+            $ledger = Ledger::where('name', 'Purchase Accounts')->first();
+
+            // Step 4: If the ledger exists, proceed with journal creation/update
+            if ($ledger) {
+                // Step 5: Check if this invoice already exists in JournalVoucher
+                $journalVoucher = JournalVoucher::where('transaction_code', $purchase->invoice_no)->first();
+
+                // If journal voucher exists, update it; otherwise, create a new one
+                if ($journalVoucher) {
+                    // Update existing journal voucher
+                    $journalVoucher->update([
+                        'transaction_date' => $request->invoice_date,
+                        'description' => $request->description,
+                    ]);
+
+                    // Update the corresponding journal voucher details
+                    JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)
+                        ->where('ledger_id', $ledger->id)
+                        ->update([
+                            'debit' => $purchase_amount, // Update the debit amount
+                            'credit' => 0,           // Credit is zero for debit entry
+                            'updated_at' => now(),
+                        ]);
+                } else {
+                    // If journal voucher does not exist, create a new one
+                    $journalVoucher = JournalVoucher::create([
+                        'transaction_code'  => $purchase->invoice_no,
+                        'transaction_date'  => $request->invoice_date,
+                        'description'       => $request->description,
+                        'status'            => 1, // Pending status
+                    ]);
+
+                    // Create journal voucher details
+                    JournalVoucherDetail::create([
+                        'journal_voucher_id' => $journalVoucher->id,
+                        'ledger_id'          => $ledger->id,
+                        'reference_no'       => $request->reference_no ?? '',
+                        'description'        => $request->description ?? '',
+                        'debit'              => $purchase_amount,
+                        'credit'             => 0,
+                        'created_at'         => now(),
+                        'updated_at'         => now(),
+                    ]);
+                }
+            }
         
             // Commit the transaction
-            \DB::commit();
+            DB::commit();
         
             // Redirect back with a success message
             return redirect()->route('admin.purchase.index')->with('success', 'Purchase created successfully!');
         } catch (\Exception $e) {
             // Rollback transaction if anything fails
-            \DB::rollback();
+            DB::rollback();
         
             // Return with error message
             return back()->withErrors(['error' => 'Something went wrong! Please try again.']);
