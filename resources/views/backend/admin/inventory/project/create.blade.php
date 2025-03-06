@@ -268,7 +268,7 @@
                                             </div> --}}
                                             <!-- Grand Total -->
                                             <div class="col-12 mb-2">
-                                                <label for="grand_total">Grand Total Taka</label>
+                                                <label for="grand_total">Grand Total</label>
                                                 <input type="text" id="grand_total" name="grand_total" class="form-control" value="0" readonly />
                                             </div>
                                         </div>
