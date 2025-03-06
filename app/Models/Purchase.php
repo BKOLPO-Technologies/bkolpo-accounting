@@ -21,10 +21,16 @@ class Purchase extends Model
         return $this->belongsTo(Supplier::class);
     }
 
-        // Relationship with Purchase Products
-        public function purchaseProducts()
-        {
-            return $this->hasMany(PurchaseProduct::class, 'purchase_id');
-        }
+    // Relationship with Purchase Products
+    public function purchaseProducts()
+    {
+        return $this->hasMany(PurchaseProduct::class, 'purchase_id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'invoice_no', 'invoice_no');
+    }
+
 
 }

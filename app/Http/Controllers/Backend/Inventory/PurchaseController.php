@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend\Inventory;
 
 use Carbon\Carbon;
 use App\Models\Ledger;
+use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Supplier;
@@ -287,6 +288,13 @@ class PurchaseController extends Controller
         
 
         if ($purchase) {
+
+            // // Delete related payments where invoice_no matches
+            // Payment::where('invoice_no', $purchase->invoice_no)->delete();
+
+            // Delete related payments using the defined relationship
+            $purchase->payments()->delete();
+
             // Detach the related PurchaseProduct records (pivot table entries)
             $purchase->products()->detach();
     
