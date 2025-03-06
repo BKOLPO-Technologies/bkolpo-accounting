@@ -206,7 +206,10 @@ class SalePaymentController extends Controller
 
             // Step 2: Ensure the ledger exists for the given payment method (Cash or Bank)
             $paymentMethod = $request->input('payment_method'); // Get payment method (Cash/Bank)
-            $paymentLedger = Ledger::where('name', $paymentMethod)->first(); // Find the Cash or Bank ledger
+            //$paymentLedger = Ledger::where('name', $paymentMethod)->first(); // Find the Cash or Bank ledger
+            $paymentLedger = $ledger;
+
+            //dd($paymentLedger);
 
             if ($purchasesLedger && $paymentLedger) {
                 // Step 3: Determine the payment amount (can come from the request)
