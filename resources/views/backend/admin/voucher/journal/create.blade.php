@@ -1,20 +1,21 @@
 @extends('layouts.admin', ['pageTitle' => 'Journal Voucher Create'])
 @section('admin')
     <div class="content-wrapper">
+
         <div class="content-header">
             <div class="container-fluid">
               <div class="row mb-2">
                 <div class="col-sm-6">
                   <h1 class="m-0">{{ $pageTitle ?? 'N/A'}}</h1>
-                </div><!-- /.col -->
+                </div>
                 <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A'}}</li>
                   </ol>
-                </div><!-- /.col -->
-              </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
+                </div>
+              </div>
+            </div>
         </div>
 
         <section class="content">
@@ -22,6 +23,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card card-primary card-outline shadow-lg">
+
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
@@ -30,6 +32,7 @@
                                     </a>
                                 </div>
                             </div>
+
                             <div class="card-body">
                                 <form method="POST" action="{{ route('journal-voucher.store') }}" enctype="multipart/form-data">
                                     @csrf
@@ -91,66 +94,84 @@
                                     <div class="row p-1">
                                         <div class="table-responsive">
                                             <table class="table table-bordered border-secondary">
-                                                <tbody>
-                                                <table class="table table-bordered border-secondary">
-                                                    <thead class="table-light">
-                                                        <tr style="background:#dcdcdc; text-align:center;">
-                                                            <th style="background:#dcdcdc;">Sl</th>
-                                                            <th>Account</th>
-                                                            <th>Reference No</th>
-                                                            <th>Description</th>
-                                                            <th>Debit</th>
-                                                            <th>Credit</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <!-- Manually added 10 rows -->
-                                                        @for ($i = 0; $i < 10; $i++)
-                                                            <tr>
-                                                                <td class="text-center">{{ $i + 1 }}</td>
-                                                                <td>
-                                                                    <select class="form-control" name="ledger_id[]">
-                                                                        <option value="">Select Account</option>
-                                                                        @foreach($ledgers as $ledger)
-                                                                            <option value="{{ $ledger->id }}" 
-                                                                                {{ old("ledger_id.$i") == $ledger->id ? 'selected' : '' }}>
-                                                                                {{ $ledger->name }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" class="form-control" name="reference_no[]" 
-                                                                        placeholder="Enter Reference No" value="{{ old("reference_no.$i") }}">
-                                                                </td>
-                                                                <td>
-                                                                    <textarea class="form-control" name="description[]" rows="1"  
-                                                                        placeholder="Enter Description">{{ old("description.$i") }}</textarea>
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" class="form-control text-end debit" name="debit[]" 
-                                                                        value="{{ old("debit.$i", '') }}" placeholder="Enter Debit Amount">
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" class="form-control text-end credit" name="credit[]" 
-                                                                        value="{{ old("credit.$i", '') }}" placeholder="Enter Credit Amount">
-                                                                </td>
-                                                            </tr>
-                                                        @endfor
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td colspan="4" style="text-align: right; padding-right: 1rem;"><strong>Total:</strong></td>
-                                                            <td style="text-align: right;"><strong id="debitTotal">৳0.00</strong></td>
-                                                            <td style="text-align: right;"><strong id="creditTotal">৳0.00</strong></td>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
+                                                <thead class="table-light">
+                                                    <tr style="background:#dcdcdc; text-align:center;">
+                                                        <th>Dr/Cr</th>
+                                                        <th>Account</th>
+                                                        <th>Reference No</th>
+                                                        <th>Description</th>
+                                                        <th>Debit</th>
+                                                        <th>Credit</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="transactionTableBody">
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" class="form-control transaction-type" name="transaction_type[]"  value="Debit" readonly>
+                                                        </td>
+
+                                                        <td>
+                                                            <select class="form-control" name="ledger_id[]">
+                                                                <option value="">Select Account</option>
+                                                                @foreach($ledgers as $ledger)
+                                                                    <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+
+                                                        <td>
+                                                            <input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No">
+                                                        </td>
+                                                        <td>
+                                                            <textarea class="form-control" name="description[]" rows="1" placeholder="Enter Description"></textarea>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" class="form-control text-end debit" name="debit[]" placeholder="Enter Debit Amount">
+                                                        </td>
+                                                        <td>
+
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" class="form-control transaction-type" name="transaction_type[]" value="Credit" readonly>
+                                                        </td>
+
+                                                        <td>
+                                                            <select class="form-control" name="ledger_id[]">
+                                                                <option value="">Select Account</option>
+                                                                @foreach($ledgers as $ledger)
+                                                                    <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+
+                                                        <td>
+                                                            <input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No">
+                                                        </td>
+                                                        <td>
+                                                            <textarea class="form-control" name="description[]" rows="1" placeholder="Enter Description"></textarea>
+                                                        </td>
+                                                        <td>
+
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" class="form-control text-end credit" name="credit[]" placeholder="Enter Credit Amount">
+                                                        </td>
+                                                    </tr>
                                                 </tbody>
-                                                
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="4" style="text-align: right; padding-right: 1rem;"><strong>Total:</strong></td>
+                                                        <td style="text-align: right;"><strong id="debitTotal">৳0.00</strong></td>
+                                                        <td style="text-align: right;"><strong id="creditTotal">৳0.00</strong></td>
+                                                    </tr>
+                                                </tfoot>
                                             </table>
                                         </div>
                                     </div>
+                                    {{-- work end --}}
                                     
                                     <div class="row mt-3">
                                         <div class="col-lg-12">
@@ -194,10 +215,29 @@
             $("#creditTotal").text(formatCurrency(totalCredit));
         }
 
-        $(document).on("keyup", ".debit, .credit", function () {
-            calculateTotals();
-        });
+        // $(document).on("keyup", ".debit, .credit", function () {
+        //     calculateTotals();
+        // });
 
+        $(document).on("keyup", ".debit", function () {
+
+            let debitValue = $(this).val().trim();
+            let debitRow = $(this).closest("tr"); // Get the current debit row
+            let creditRow = debitRow.next(); // Get the next row (Credit row)
+            //let creditField = $(this).closest("tr").find(".credit");
+            let creditField = creditRow.find(".credit"); // Find the credit input
+
+            console.log("Debit value entered:", debitValue);
+
+            if (debitValue !== "") {
+                creditField.val(debitValue); // Copy debit value to credit field
+            } else {
+                creditField.val(""); // Clear credit field if debit is empty
+            }
+
+            calculateTotals(); // Update totals
+        });
+        
         // Call once to update if there are pre-filled values
         calculateTotals();
     });
