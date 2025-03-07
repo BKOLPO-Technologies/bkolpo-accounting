@@ -107,77 +107,61 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="transactionTableBody">
-                                                    <tr>
-                                                        <td>
-                                                            <input type="text" class="form-control transaction-type" name="transaction_type[]"  value="Debit" readonly>
-                                                        </td>
+                                                    <!-- Debit Section -->
+                                                    <tbody id="debitSection">
+                                                        <tr>
+                                                            <td><input type="text" class="form-control transaction-type" name="transaction_type[]" value="Debit" readonly></td>
+                                                            <td>
+                                                                <select class="form-control" name="ledger_id[]">
+                                                                    <option value="">Select Account</option>
+                                                                    @foreach($ledgers as $ledger)
+                                                                        <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </td>
+                                                            <td><input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No"></td>
+                                                            <td><textarea class="form-control" name="description[]" rows="1" placeholder="Enter Description"></textarea></td>
+                                                            <td><input type="number" class="form-control text-end debit" name="debit[]" placeholder="Enter Debit Amount"></td>
+                                                            <td></td>
 
-                                                        <td>
-                                                            <select class="form-control" name="ledger_id[]">
-                                                                <option value="">Select Account</option>
-                                                                @foreach($ledgers as $ledger)
-                                                                    <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-sm btn-success add-row add-debit-row"><i class="fa fa-plus"></i></button>
+                                                                <button type="button" class="btn btn-sm btn-danger remove-row remove-debit-row" style="display:none;"><i class="fa fa-minus"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                
+                                                    <!-- Credit Section -->
+                                                    <tbody id="creditSection">
+                                                        <tr>
+                                                            <td><input type="text" class="form-control transaction-type" name="transaction_type[]" value="Credit" readonly></td>
+                                                            <td>
+                                                                <select class="form-control" name="ledger_id[]">
+                                                                    <option value="">Select Account</option>
+                                                                    @foreach($ledgers as $ledger)
+                                                                        <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </td>
+                                                            <td><input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No"></td>
+                                                            <td><textarea class="form-control" name="description[]" rows="1" placeholder="Enter Description"></textarea></td>
+                                                            <td></td>
+                                                            <td><input type="number" class="form-control text-end credit" name="credit[]" placeholder="Enter Credit Amount"></td>
 
-                                                        <td>
-                                                            <input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No">
-                                                        </td>
-                                                        <td>
-                                                            <textarea class="form-control" name="description[]" rows="1" placeholder="Enter Description"></textarea>
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control text-end debit" name="debit[]" placeholder="Enter Debit Amount">
-                                                        </td>
-                                                        <td>
-
-                                                        </td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-sm btn-success add-debit-row">
-                                                                <i class="fa fa-plus"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td>
-                                                            <input type="text" class="form-control transaction-type" name="transaction_type[]" value="Credit" readonly>
-                                                        </td>
-
-                                                        <td>
-                                                            <select class="form-control" name="ledger_id[]">
-                                                                <option value="">Select Account</option>
-                                                                @foreach($ledgers as $ledger)
-                                                                    <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </td>
-
-                                                        <td>
-                                                            <input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No">
-                                                        </td>
-                                                        <td>
-                                                            <textarea class="form-control" name="description[]" rows="1" placeholder="Enter Description"></textarea>
-                                                        </td>
-                                                        <td>
-
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control text-end credit" name="credit[]" placeholder="Enter Credit Amount">
-                                                        </td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-sm btn-success add-credit-row">
-                                                                <i class="fa fa-plus"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
+                                                            <td>
+                                                                <button type="button" class="btn btn-sm btn-success add-row add-credit-row"><i class="fa fa-plus"></i></button>
+                                                                <button type="button" class="btn btn-sm btn-danger remove-row remove-credit-row" style="display:none;"><i class="fa fa-minus"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
                                                 </tbody>
+                                                
                                                 <tfoot>
                                                     <tr>
                                                         <td colspan="4" style="text-align: right; padding-right: 1rem;"><strong>Total:</strong></td>
                                                         <td style="text-align: right;"><strong id="debitTotal">৳0.00</strong></td>
                                                         <td style="text-align: right;"><strong id="creditTotal">৳0.00</strong></td>
+                                                        <td></td>
                                                     </tr>
                                                 </tfoot>
                                             </table>
@@ -204,125 +188,6 @@
 
 @push('js')
 <script>
-    $(document).ready(function () {
-
-        ///////////////////////////
-        // Function to add a new debit row after the current debit row
-        $(document).on("click", ".add-debit-row", function () {
-
-            let debitRow = $(this).closest("tr");  // Current Debit Row
-
-            // // Check if there's already a row with "Debit" transaction type
-            if ($("tr").find(".transaction-type[value='Debit']").length >= 0) {
-                
-                let newRow = debitRow.clone();  // Clone the row
-
-                // Clear the cloned row fields (except transaction_type)
-                newRow.find("input[type='number']").val("");  // Clear debit and credit
-                newRow.find("textarea").val("");  // Clear description
-
-                // Remove the "Add Debit Row" button from the cloned row
-                newRow.find(".add-debit-row").remove();
-
-                // Update the transaction type for the new row to 'Debit'
-                newRow.find(".transaction-type").val("Debit");
-
-                // Insert the new row after the current row
-                debitRow.after(newRow);
-
-            }
-
-            // Recalculate the totals after adding a new row
-            calculateTotals();
-        });
-
-        // Function to add a new credit row after the current credit row
-        $(document).on("click", ".add-credit-row", function () {
-
-            let creditRow = $(this).closest("tr");  // Current Credit Row
-
-            // Check if there's already a row with "Credit" transaction type
-            if ($("tr").find(".transaction-type[value='Credit']").length >= 0) {
-
-                let newRow = creditRow.clone();  // Clone the row
-
-                // Clear the cloned row fields (except transaction_type)
-                newRow.find("input[type='number']").val("");  // Clear debit and credit
-                newRow.find("textarea").val("");  // Clear description
-
-                // Remove the "Add Credit Row" button from the cloned row
-                newRow.find(".add-credit-row").remove();
-
-                // Update the transaction type for the new row to 'Credit'
-                newRow.find(".transaction-type").val("Credit");
-
-                // Insert the new row after the current row
-                creditRow.after(newRow);
-            }
-
-            // Recalculate the totals after adding a new row
-            calculateTotals();
-        });
-        
-        function formatCurrency(amount) {
-            return '৳' + new Intl.NumberFormat('en-BD', { 
-                minimumFractionDigits: 2, 
-                maximumFractionDigits: 2 
-            }).format(amount);
-        }
-
-        function calculateTotals() {
-            let totalDebit = 0, totalCredit = 0;
-
-            $(".debit").each(function () {
-                totalDebit += parseFloat($(this).val()) || 0;
-            });
-
-            $(".credit").each(function () {
-                totalCredit += parseFloat($(this).val()) || 0;
-            });
-
-            // Only update debit total if it has been changed
-            if (totalDebit !== parseFloat($("#debitTotal").data("previousTotal"))) {
-                $("#debitTotal").text(formatCurrency(totalDebit));
-                $("#debitTotal").data("previousTotal", totalDebit);  // Store the previous total for comparison
-            }
-
-            // Only update credit total if it has been changed
-            if (totalCredit !== parseFloat($("#creditTotal").data("previousTotal"))) {
-                $("#creditTotal").text(formatCurrency(totalCredit));
-                $("#creditTotal").data("previousTotal", totalCredit);  // Store the previous total for comparison
-            }
-        }
-
-        function syncDebitCredit(inputField, targetClass, isDebit) {
-            let value = inputField.val().trim();
-            let currentRow = inputField.closest("tr");
-            let targetRow = (targetClass === ".credit") ? currentRow.next() : currentRow.prev();
-            let targetField = targetRow.find(targetClass);
-
-            console.log(`${isDebit ? "Debit" : "Credit"} value entered:`, value);
-
-            if (value !== "") {
-                targetField.val(value); // Sync values only for Debit input
-            } else {
-                targetField.val(""); // Clear target field if input is empty
-            }
-
-            calculateTotals(); // Update totals
-        }
-
-        $(document).on("keyup", ".debit", function () {
-            syncDebitCredit($(this), ".credit", true); // Sync Debit -> Credit
-        });
-
-        $(document).on("keyup", ".credit", function () {
-            calculateTotals(); // Update totals
-        });
-
-        // Call once to update if there are pre-filled values
-        calculateTotals();
-    });
 
     // company to branch show
     $(document).ready(function () {
@@ -368,5 +233,105 @@
             }
         });
     });
+
+    ////
+    $(document).ready(function () {
+
+        function updateRowControls(sectionClass) {
+            let rows = $(sectionClass + " tr");
+
+            // Hide all + buttons except for the last row
+            rows.find(".add-row").hide();
+            rows.last().find(".add-row").show();
+
+            // Hide all - buttons except for the last row (if multiple rows exist)
+            rows.find(".remove-row").hide();
+            if (rows.length > 1) {
+                rows.last().find(".remove-row").show();
+            }
+        }
+
+        function addNewRow(sectionClass, transactionType) {
+            let lastRow = $(sectionClass + " tr").last();
+            let newRow = lastRow.clone();
+
+            // Clear input values for the new row
+            newRow.find("input[type='text'], input[type='number'], textarea").val("");
+
+            // Ensure the transaction type remains the same
+            newRow.find(".transaction-type").val(transactionType);
+
+            // Append the new row
+            lastRow.after(newRow);
+
+            // Update button visibility
+            updateRowControls(sectionClass);
+        }
+
+        function removeRow(sectionClass) {
+            let rows = $(sectionClass + " tr");
+
+            // Only allow deleting the last row if there are at least two rows
+            if (rows.length > 1) {
+                rows.last().remove();
+                updateRowControls(sectionClass);
+                calculateTotals();
+            }
+        }
+
+        // Add debit row
+        $(document).on("click", ".add-debit-row", function () {
+            addNewRow("#debitSection", "Debit");
+        });
+
+        // Add credit row
+        $(document).on("click", ".add-credit-row", function () {
+            addNewRow("#creditSection", "Credit");
+        });
+
+        // Remove only the last row
+        $(document).on("click", ".remove-debit-row", function () {
+            removeRow("#debitSection");
+        });
+
+        $(document).on("click", ".remove-credit-row", function () {
+            removeRow("#creditSection");
+        });
+
+        function calculateTotals() {
+            let totalDebit = 0, totalCredit = 0;
+
+            $(".debit").each(function () {
+                totalDebit += parseFloat($(this).val()) || 0;
+            });
+
+            $(".credit").each(function () {
+                totalCredit += parseFloat($(this).val()) || 0;
+            });
+
+            $("#debitTotal").text(formatCurrency(totalDebit));
+            $("#creditTotal").text(formatCurrency(totalCredit));
+        }
+
+        function formatCurrency(amount) {
+            return '৳' + new Intl.NumberFormat('en-BD', { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            }).format(amount);
+        }
+
+        $(document).on("keyup", ".debit, .credit", function () {
+            calculateTotals();
+        });
+
+        // Initial update to set button visibility
+        updateRowControls("#debitSection");
+        updateRowControls("#creditSection");
+
+    });
+
+
+
 </script>
+
 @endpush

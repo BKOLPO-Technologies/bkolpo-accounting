@@ -108,7 +108,10 @@ class JournalController extends Controller
 
         $transactionCode = 'BKOLPO-'. $randomNumber;
 
-        return view('backend.admin.voucher.journal.create',compact('pageTitle','branches','ledgers','transactionCode','companies'));
+        return view('backend.admin.voucher.journal.create_2',compact('pageTitle','branches','ledgers','transactionCode','companies'));
+        //return view('backend.admin.voucher.journal.create_1',compact('pageTitle','branches','ledgers','transactionCode','companies'));
+        //return view('backend.admin.voucher.journal.27-02-2025-old_create',compact('pageTitle','branches','ledgers','transactionCode','companies'));
+        
     }
 
     public function getBranchesByCompany($companyId)
@@ -153,10 +156,15 @@ class JournalController extends Controller
             $details = [];
 
             if (empty(array_filter($request->ledger_id))) {
-                // Send an error message and redirect back if all values are null
-                session()->flash('error', 'At least one ledger entry is required.');
-                return redirect()->back();
+                //dd('hello');
+                // // Send an error message and redirect back if all values are null
+                // session()->flash('error', 'At least one ledger entry is required.');    
+                // return redirect()->back();
+                
+                return back()->with('error', 'At least one ledger entry is required.');
             }
+
+            //dd('hello');
     
             foreach ($request->ledger_id as $index => $ledgerId) {
                 if (!empty($ledgerId)) { // Only process non-empty ledger IDs
@@ -184,10 +192,8 @@ class JournalController extends Controller
                     ->withErrors(['error' => 'Total Debit (৳' . number_format($totalDebit, 2) . ') and Total Credit (৳' . number_format($totalCredit, 2) . ') must be equal.'])
                     ->withInput();
             }
-            
-            // if ($totalDebit !== $totalCredit) {
-            //     return back()->withErrors(['error' => 'Total Debit (৳' . number_format($totalDebit, 2) . ') and Total Credit (৳' . number_format($totalCredit, 2) . ') must be equal.']);
-            // }
+
+            //dd('hello');
     
             // **Proceed with JournalVoucher creation if valid**
             $journalVoucher = JournalVoucher::create([
