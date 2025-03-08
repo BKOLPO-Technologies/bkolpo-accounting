@@ -279,6 +279,13 @@
             }
         }
 
+        // Auto-fill first Credit row based on first Debit row input
+        $(document).on("input", "#debitSection tr:first .debit", function () {
+            let debitValue = $(this).val();
+            $("#creditSection tr:first .credit").val(debitValue);
+            calculateTotals();
+        });
+
         // Add debit row
         $(document).on("click", ".add-debit-row", function () {
             addNewRow("#debitSection", "Debit");
