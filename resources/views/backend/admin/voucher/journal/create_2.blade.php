@@ -240,7 +240,6 @@
         });
     });
 
-    ////
     $(document).ready(function () {
 
         function updateRowControls(sectionClass) {
@@ -343,8 +342,5 @@
 
     });
 
-
-
 </script>
-
 @endpush
