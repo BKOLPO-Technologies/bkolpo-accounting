@@ -80,7 +80,7 @@ class SalesController extends Controller
             // If no product is selected, return an error message
             return back()->with('error', 'At least one product must be selected.');
         }
-        dd($productIds);
+        // dd($productIds);
 
         try {
             // Start the transaction
@@ -114,61 +114,50 @@ class SalesController extends Controller
                 $saleProduct->save(); // Save the record
             }
 
-              // Step 2: Get sale amount
+            // Step 2: Get sale amount
             $sale_amount = $sale->total ?? 0; // If sale doesn't have amount, default to 0
 
-            //dd($sale_amount);
 
-            // Step 3: Retrieve Sales ledger
-            $ledger = Ledger::where('name', 'Sales')->first();
+            $salesLedger = Ledger::where('name', 'Sales')->first();
+            $receivableLedger = Ledger::where('name', 'Accounts Receivable')->first();
 
-            //dd('ledger', $ledger);
-            
-            // Step 4: If the ledger exists, proceed with journal creation/update
-            if ($ledger) {
-                // Step 5: Check if this invoice already exists in JournalVoucher
+            if ($salesLedger && $receivableLedger) {
+                // Check if a Journal Voucher already exists for the given invoice
                 $journalVoucher = JournalVoucher::where('transaction_code', $sale->invoice_no)->first();
 
-                //dd('journalVoucher', $journalVoucher);
-
-                // If journal voucher exists, update it; otherwise, create a new one
-                if ($journalVoucher) {
-                    // Update existing journal voucher
-                    $journalVoucher->update([
-                        'transaction_date' => $request->invoice_date,
-                        'description' => $request->description,
-                    ]);
-
-                    // Update the corresponding journal voucher details
-                    JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)
-                        ->where('ledger_id', $ledger->id)
-                        ->update([
-                            'debit' => $sale_amount, // Update the debit amount
-                            'credit' => 0,           // Credit is zero for debit entry
-                            'updated_at' => now(),
-                        ]);
-                } else {
-                    // If journal voucher does not exist, create a new one
+                if (!$journalVoucher) {
+                    // Create a new Journal Voucher if not exists
                     $journalVoucher = JournalVoucher::create([
                         'transaction_code'  => $sale->invoice_no,
                         'transaction_date'  => $request->invoice_date,
-                        'description'       => $request->description,
+                        'description'       => 'Invoice Entry for Sales',
                         'status'            => 1, // Pending status
-                    ]);
-
-                    // Create journal voucher details
-                    JournalVoucherDetail::create([
-                        'journal_voucher_id' => $journalVoucher->id,
-                        'ledger_id'          => $ledger->id,
-                        'reference_no'       => $request->reference_no ?? '',
-                        'description'        => $request->description ?? '',
-                        'debit'              => $sale_amount,
-                        'credit'             => 0,
-                        'created_at'         => now(),
-                        'updated_at'         => now(),
                     ]);
                 }
 
+                // Create journal voucher details for Accounts Receivable (Debit Entry)
+                JournalVoucherDetail::create([
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id'          => $receivableLedger->id, // Accounts Receivable Ledger
+                    'reference_no'       => $sale->invoice_no,
+                    'description'        => 'Accounts Receivable Entry for Invoice ' . $sale->invoice_no, 
+                    'debit'              => $sale_amount, // Debit Entry for Receivable
+                    'credit'             => 0,
+                    'created_at'         => now(),
+                    'updated_at'         => now(),
+                ]);
+
+                // Create journal voucher details for Sales (Credit Entry)
+                JournalVoucherDetail::create([
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id'          => $salesLedger->id, // Sales Ledger
+                    'reference_no'       => $sale->invoice_no,
+                    'description'        => 'Sales Entry for Invoice ' . $sale->invoice_no . ' - Amount: ' . number_format($sale_amount, 2),  
+                    'debit'              => 0,
+                    'credit'             => $sale_amount, // Credit Entry for Sales
+                    'created_at'         => now(),
+                    'updated_at'         => now(),
+                ]);
             }
 
             // Commit the transaction

@@ -130,7 +130,7 @@ class SalePaymentController extends Controller
     {
         // this is ok
         // payment/sales/create
-        //dd($request->all());
+        // dd($request->all());
         // Validate the incoming form data
         $request->validate([
             'supplier_id' => 'required|exists:suppliers,id',
@@ -148,9 +148,9 @@ class SalePaymentController extends Controller
     
         try {
             // Check if the payment for this incoming chalan already exists
-            $payment = Payment::where('incoming_chalan_id', $request->input('incoming_chalan_id'))
-                              ->where('supplier_id', $request->input('supplier_id'))
-                              ->first();
+            // $payment = Payment::where('incoming_chalan_id', $request->input('incoming_chalan_id'))
+            //                   ->where('supplier_id', $request->input('supplier_id'))
+            //                   ->first();
 
             //dd("payment = ", $payment);
     
@@ -175,9 +175,11 @@ class SalePaymentController extends Controller
             
             // ******************* Here beed to query invoice_no ***************************** //
             // $purchases = Purchase::where('supplier_id', $request->input('supplier_id'))->first();
-            $purchases = Purchase::where('supplier_id', $request->input('supplier_id'))
+            $purchase = Purchase::where('supplier_id', $request->input('supplier_id'))
                      ->where('invoice_no', $request->input('invoice_no'))
                      ->first();
+
+                    //  dd($purchase);
 
             // **********************************************************************************
 
@@ -185,10 +187,6 @@ class SalePaymentController extends Controller
 
 
             //dd("purchases = ", $purchases);
-            
-            $purchase_amount = $purchases->total ?? 0;
-
-            //dd("purchase_amount = ", $purchase_amount);
 
             // Step 3: Get payment method from request (Cash, Bank, etc.)
             $payment_method = $request->input('payment_method'); // Get payment method from request
@@ -201,90 +199,71 @@ class SalePaymentController extends Controller
                 $ledger = Ledger::where('name', 'Bank')->first(); // Find Bank ledger
             }
 
-            // Step 1: Get the Purchase ledger
-            $purchasesLedger =  Ledger::where('name', 'Purchase Accounts')->first();
+            $cashBankLedger = $ledger;
+            $payableLedger = Ledger::where('name', 'Accounts Payable')->first();
+            $paymentAmount = $request->input('pay_amount', 0);
 
-            // Step 2: Ensure the ledger exists for the given payment method (Cash or Bank)
-            $paymentMethod = $request->input('payment_method'); // Get payment method (Cash/Bank)
-            //$paymentLedger = Ledger::where('name', $paymentMethod)->first(); // Find the Cash or Bank ledger
-            $paymentLedger = $ledger;
-
-            //dd($paymentLedger);
-
-            if ($purchasesLedger && $paymentLedger) {
-                // Step 3: Determine the payment amount (can come from the request)
-                $paymentAmount = $request->input('pay_amount', 0); // Amount being paid (in your case, 73)
+            if ($cashBankLedger && $payableLedger) {
+                // Check if a Journal Voucher exists for this payment transaction
+                $journalVoucher = JournalVoucher::where('transaction_code', $purchase->invoice_no . '-PAY')->first();
             
-                // Step 4: Check if this invoice already exists in JournalVoucher
-                $journalVoucher = JournalVoucher::where('transaction_code', $purchases->invoice_no)->first();
-                
-                if ($journalVoucher) {
-                    // Step 5: Update existing journal voucher
-                    $journalVoucher->update([
-                        'transaction_date' => $request->input('payment_date'),
-                        'description' => $request->input('description'),
+                if (!$journalVoucher) {
+                    // Create a new Journal Voucher for Payment
+                    $journalVoucher = JournalVoucher::create([
+                        'transaction_code'  => $purchase->invoice_no . '-PAY',
+                        'transaction_date'  => $request->payment_date,
+                        'description'       => 'Payment Made to Supplier',
+                        'status'            => 1, // Pending status
                     ]);
-                
-                    // Step 6: Find the existing Purchases ledger entry (debit) and subtract the payment amount
-                    $purchasesLedgerDetail = JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)
-                        ->where('ledger_id', $purchasesLedger->id)
-                        ->first();
-                
-                    if ($purchasesLedgerDetail) {
-                        // Existing Sales ledger debit amount (let's assume it's 2173)
-                        $existingDebit = $purchasesLedgerDetail->debit;
-                
-                        // New debit amount after payment (decrease by payment amount)
-                        $newDebitAmount = $existingDebit - $paymentAmount;
-                
-                        // Ensure debit does not go negative
-                        $newDebitAmount = max(0, $newDebitAmount);
-                
-                        // Update the Sales ledger debit amount by reducing the payment amount
-                        $purchasesLedgerDetail->update([
-                            'debit' => $newDebitAmount,  // Update Sales ledger debit to the new value (after payment)
-                            'credit' => 0,  // No credit for Sales ledger
-                            'updated_at' => now(),
-                        ]);
-                    }
-
-                    // Step 9: Create Journal Voucher Detail for Payment (Cash or Bank ledger) - credit the payment amount
-                    JournalVoucherDetail::create([
-                        'journal_voucher_id' => $journalVoucher->id,
-                        'ledger_id'          => $paymentLedger->id,  // Cash or Bank ledger
-                        'reference_no'       => $request->input('reference_no', ''),
-                        'description'        => $request->input('description', ''),
-                        'debit'              => 0, 
-                        'credit'             => $paymentAmount, 
-                        'created_at'         => now(),
-                        'updated_at'         => now(),
-                    ]);
-
-                } 
-                
+                }
+            
+                // Payment -> Accounts Payable (Debit Entry)
+                JournalVoucherDetail::create([
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id'          => $payableLedger->id, // Accounts Payable
+                    'reference_no'       => $purchase->invoice_no ?? '',
+                    'description'        => 'Payment to Supplier', 
+                    'debit'              => $paymentAmount, 
+                    'credit'             => 0,
+                    'created_at'         => now(),
+                    'updated_at'         => now(),
+                ]);
+            
+                // Payment -> Cash & Bank (Credit Entry)
+                JournalVoucherDetail::create([
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id'          => $cashBankLedger->id, // Cash & Bank
+                    'reference_no'       => $purchase->invoice_no ?? '',
+                    'description'        => 'Cash Paid to Supplier A', 
+                    'debit'              => 0,
+                    'credit'             => $paymentAmount, // নগদ টাকা কমলো
+                    'created_at'         => now(),
+                    'updated_at'         => now(),
+                ]);
             }
 
+
             // If purchases exists
-            if ($purchases) {
+            if ($purchase) {
                 // Update the paid amount
-                $purchases->paid_amount += $request->input('pay_amount');
+                $purchase->paid_amount += $request->input('pay_amount');
 
                 // dd($purchases->total,$purchases->paid_amount);
 
                 // Check if the total paid amount is equal to or greater than the purchases amount
-                if ($purchases->paid_amount >= $purchases->total) {
+                if ($purchase->paid_amount >= $purchase->total) {
 
 
                     // If fully paid, update status to 'paid'
-                    $purchases->status = 'paid';
+                    $purchase->status = 'paid';
                 } else {
                     // dd('not paid');
                     // If partially paid, update status to 'partially_paid'
-                    $purchases->status = 'partially_paid';
+                    $purchase->status = 'partially_paid';
                 }
 
                 // Save the updated purchases
-                $purchases->save();
+                $purchase->save();
             }
             
 

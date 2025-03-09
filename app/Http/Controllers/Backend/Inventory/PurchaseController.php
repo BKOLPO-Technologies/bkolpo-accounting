@@ -110,50 +110,48 @@ class PurchaseController extends Controller
             $purchase_amount = $purchase->total ?? 0; // If purchase doesn't have amount, default to 0
 
             // Step 3: Retrieve Purchase ledger
-            $ledger = Ledger::where('name', 'Purchase Accounts')->first();
+            $purchasesLedger = Ledger::where('name', 'Purchases')->first();
+            $payableLedger = Ledger::where('name', 'Accounts Payable')->first();
 
-            // Step 4: If the ledger exists, proceed with journal creation/update
-            if ($ledger) {
-                // Step 5: Check if this invoice already exists in JournalVoucher
+            // dd($purchasesLedger,$payableLedger);
+
+            if ($purchasesLedger && $payableLedger) {
+                // Check if a Journal Voucher exists for this purchase transaction
                 $journalVoucher = JournalVoucher::where('transaction_code', $purchase->invoice_no)->first();
 
-                // If journal voucher exists, update it; otherwise, create a new one
-                if ($journalVoucher) {
-                    // Update existing journal voucher
-                    $journalVoucher->update([
-                        'transaction_date' => $request->invoice_date,
-                        'description' => $request->description,
-                    ]);
-
-                    // Update the corresponding journal voucher details
-                    JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)
-                        ->where('ledger_id', $ledger->id)
-                        ->update([
-                            'debit' => $purchase_amount, // Update the debit amount
-                            'credit' => 0,           // Credit is zero for debit entry
-                            'updated_at' => now(),
-                        ]);
-                } else {
-                    // If journal voucher does not exist, create a new one
+                if (!$journalVoucher) {
+                    // Create a new Journal Voucher for Purchase Invoice
                     $journalVoucher = JournalVoucher::create([
                         'transaction_code'  => $purchase->invoice_no,
                         'transaction_date'  => $request->invoice_date,
-                        'description'       => $request->description,
+                        'description'       => 'Purchase Invoice Recorded - Supplier',
                         'status'            => 1, // Pending status
                     ]);
-
-                    // Create journal voucher details
-                    JournalVoucherDetail::create([
-                        'journal_voucher_id' => $journalVoucher->id,
-                        'ledger_id'          => $ledger->id,
-                        'reference_no'       => $request->reference_no ?? '',
-                        'description'        => $request->description ?? '',
-                        'debit'              => $purchase_amount,
-                        'credit'             => 0,
-                        'created_at'         => now(),
-                        'updated_at'         => now(),
-                    ]);
                 }
+
+                // Purchase -> Purchases Account (Debit Entry)
+                JournalVoucherDetail::create([
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id'          => $purchasesLedger->id, // Purchases Ledger
+                    'reference_no'       => $purchase->invoice_no ?? '',
+                    'description'        => 'Purchased Goods from Supplier',
+                    'debit'              => $purchase_amount, // পণ্য ক্রয় ব্যয়
+                    'credit'             => 0,
+                    'created_at'         => now(),
+                    'updated_at'         => now(),
+                ]);
+
+                // Purchase Payable -> Accounts Payable (Credit Entry)
+                JournalVoucherDetail::create([
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id'          => $payableLedger->id, // Accounts Payable Ledger
+                    'reference_no'       => $purchase->invoice_no  ?? '',
+                    'description'        => 'Supplier Payable Recorded for Purchase',
+                    'debit'              => 0,
+                    'credit'             => $purchase_amount, // দেনা বৃদ্ধি পাবে
+                    'created_at'         => now(),
+                    'updated_at'         => now(),
+                ]);
             }
         
             // Commit the transaction
