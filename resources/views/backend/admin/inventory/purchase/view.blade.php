@@ -153,7 +153,6 @@
                                     
                                             // Update the running totals
                                             $subtotal += $productTotal;
-                                            $totalDiscount += $productDiscount;
                                         @endphp
                                         <tr data-product-id="{{ $product->id }}">
                                             <td>{{ $product->name }}</td>
