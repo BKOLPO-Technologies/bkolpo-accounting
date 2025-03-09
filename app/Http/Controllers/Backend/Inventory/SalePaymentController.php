@@ -195,8 +195,10 @@ class SalePaymentController extends Controller
             // Step 4: Based on payment method, get the corresponding ledger
             if ($payment_method == 'cash') {
                 $ledger = Ledger::where('name', 'Cash')->first(); // Find Cash ledger
+                $paymentDescription = 'Cash Paid to Supplier'; 
             } elseif ($payment_method == 'bank') {
                 $ledger = Ledger::where('name', 'Bank')->first(); // Find Bank ledger
+                $paymentDescription = 'Bank Payment Made to Supplier';
             }
 
             $cashBankLedger = $ledger;
@@ -234,7 +236,7 @@ class SalePaymentController extends Controller
                     'journal_voucher_id' => $journalVoucher->id,
                     'ledger_id'          => $cashBankLedger->id, // Cash & Bank
                     'reference_no'       => $purchase->invoice_no ?? '',
-                    'description'        => 'Cash Paid to Supplier A', 
+                    'description'        => ucfirst($paymentDescription), 
                     'debit'              => 0,
                     'credit'             => $paymentAmount, // নগদ টাকা কমলো
                     'created_at'         => now(),
