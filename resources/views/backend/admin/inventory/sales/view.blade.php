@@ -147,11 +147,11 @@
                                     </tr>
                                     <tr>
                                         <th>Total Discount:</th>
-                                        <td>{{ bdt() }} {{ number_format($totalDiscount, 2) }}</td>
+                                        <td>{{ bdt() }} {{ number_format($totalDiscount+$sale->discount, 2) }}</td>
                                     </tr>
                                     <tr>
                                         <th>Total:</th>
-                                        <td>{{ bdt() }} {{ number_format($subtotal - $totalDiscount, 2) }}</td>
+                                        <td>{{ bdt() }} {{ number_format($sale->total, 2) }}</td>
                                     </tr>
                                     </table>
                                 </div>

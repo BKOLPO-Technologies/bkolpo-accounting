@@ -141,20 +141,28 @@
                                         <tbody>
                                         @php
                                             $subtotal = 0;
+                                            $totalDiscount = 0;
                                         @endphp
                                         @foreach ($purchase->products as $product)
-                                            @php
-                                                $productTotal = $product->pivot->quantity * $product->pivot->price;
-                                                $subtotal += $productTotal;
-                                            @endphp
-                                            <tr data-product-id="{{ $product->id }}">
-                                                <td>{{ $product->name }}</td>
-                                                <td>{{ $product->price }}</td>
-                                                <td>{{  $product->pivot->price }}</td>
-                                                <td>{{ $product->pivot->quantity }}</td>
-                                                <td>{{ number_format($product->pivot->quantity * $product->pivot->price, 2) }}</td>
-                                            </tr>
-                                        @endforeach
+                                        @php
+                                            // Calculate product total
+                                            $productTotal = $product->pivot->quantity * $product->pivot->price;
+                                    
+                                            $productDiscount = $product->pivot->discount ?? 0; // Set discount to 0 if not available
+                                            $totalDiscount += $productDiscount;
+                                    
+                                            // Update the running totals
+                                            $subtotal += $productTotal;
+                                            $totalDiscount += $productDiscount;
+                                        @endphp
+                                        <tr data-product-id="{{ $product->id }}">
+                                            <td>{{ $product->name }}</td>
+                                            <td>{{ $product->price }}</td>
+                                            <td>{{ $product->pivot->price }}</td>
+                                            <td>{{ $product->pivot->quantity }}</td>
+                                            <td>{{ number_format($product->pivot->price*$product->pivot->quantity, 2) }}</td> <!-- Total after discount -->
+                                        </tr>
+                                    @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -176,11 +184,11 @@
                                     </tr>
                                     <tr>
                                         <th>Discount</th>
-                                        <td>{{ bdt() }} {{ number_format($purchase->discount, 2) }}</td>
+                                        <td>{{ bdt() }} {{ number_format($totalDiscount+$purchase->discount, 2) }}</td>
                                     </tr>
                                     <tr>
                                         <th>Total:</th>
-                                        <td>{{ bdt() }} {{ number_format($subtotal - $purchase->discount, 2) }}</td>
+                                        <td>{{ bdt() }} {{ number_format($purchase->total, 2) }}</td>
                                     </tr>
                                     </table>
                                 </div>
