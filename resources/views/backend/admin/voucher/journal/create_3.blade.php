@@ -294,21 +294,16 @@
 
             let creditRows = $("#creditSection tr");
 
-            // if (creditRows.length === 1) {
-            //     $("#creditSection tr:first .credit").val(totalDebit);
-            // } else {
-            //     let firstCreditValue = parseFloat($("#creditSection tr:first .credit").val()) || 0;
-            //     let difference = totalDebit - firstCreditValue;
-            //     $("#creditSection tr:nth-child(2) .credit").val(difference);
-            // }
-
             if (creditRows.length > 0) {
                 let remainingAmount = totalDebit;
                 creditRows.each(function (index) {
                     if (index === creditRows.length - 1) {
-                        $(this).find(".credit").val(remainingAmount);
+                        //$(this).find(".credit").val(remainingAmount);
+                        // Ensure the last credit value is never negative
+                        $(this).find(".credit").val(Math.max(remainingAmount, 0));
                     } else {
                         remainingAmount -= parseFloat($(this).find(".credit").val()) || 0;
+                        remainingAmount = Math.max(remainingAmount, 0); // Prevent negative accumulation
                     }
                 });
             }
