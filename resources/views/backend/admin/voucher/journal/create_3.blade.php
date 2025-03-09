@@ -298,7 +298,6 @@
                 let remainingAmount = totalDebit;
                 creditRows.each(function (index) {
                     if (index === creditRows.length - 1) {
-                        //$(this).find(".credit").val(remainingAmount);
                         // Ensure the last credit value is never negative
                         $(this).find(".credit").val(Math.max(remainingAmount, 0));
                     } else {
@@ -336,8 +335,6 @@
                 totalCredit += parseFloat($(this).val()) || 0;
             });
             $("#creditTotal").text(formatCurrency(totalCredit));
-
-            //calculateTotals();
 
              // If credit is manually updated, we don't want the automatic calculation of debit to happen
             // But still need to check totals
