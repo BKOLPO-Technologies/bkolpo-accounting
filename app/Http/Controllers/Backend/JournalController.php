@@ -108,9 +108,7 @@ class JournalController extends Controller
 
         $transactionCode = 'BKOLPO-'. $randomNumber;
 
-        return view('backend.admin.voucher.journal.create_2',compact('pageTitle','branches','ledgers','transactionCode','companies'));
-        //return view('backend.admin.voucher.journal.create_1',compact('pageTitle','branches','ledgers','transactionCode','companies'));
-        //return view('backend.admin.voucher.journal.27-02-2025-old_create',compact('pageTitle','branches','ledgers','transactionCode','companies'));
+        return view('backend.admin.voucher.journal.create_3',compact('pageTitle','branches','ledgers','transactionCode','companies'));
         
     }
 

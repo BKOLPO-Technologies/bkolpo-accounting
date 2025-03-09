@@ -240,16 +240,11 @@
         });
     });
 
-    $(document).ready(function () {
-
+    $(document).ready(function () { 
         function updateRowControls(sectionClass) {
             let rows = $(sectionClass + " tr");
-
-            // Hide all + buttons except for the last row
             rows.find(".add-row").hide();
             rows.last().find(".add-row").show();
-
-            // Hide all - buttons except for the last row (if multiple rows exist)
             rows.find(".remove-row").hide();
             if (rows.length > 1) {
                 rows.last().find(".remove-row").show();
@@ -259,24 +254,15 @@
         function addNewRow(sectionClass, transactionType) {
             let lastRow = $(sectionClass + " tr").last();
             let newRow = lastRow.clone();
-
-            // Clear input values for the new row
             newRow.find("input[type='text'], input[type='number'], textarea").val("");
-
-            // Ensure the transaction type remains the same
             newRow.find(".transaction-type").val(transactionType);
-
-            // Append the new row
             lastRow.after(newRow);
-
-            // Update button visibility
             updateRowControls(sectionClass);
+            calculateTotals();
         }
 
         function removeRow(sectionClass) {
             let rows = $(sectionClass + " tr");
-
-            // Only allow deleting the last row if there are at least two rows
             if (rows.length > 1) {
                 rows.last().remove();
                 updateRowControls(sectionClass);
@@ -284,24 +270,14 @@
             }
         }
 
-        // Auto-fill first Credit row based on first Debit row input
-        $(document).on("input", "#debitSection tr:first .debit", function () {
-            let debitValue = $(this).val();
-            $("#creditSection tr:first .credit").val(debitValue);
-            calculateTotals();
-        });
-
-        // Add debit row
         $(document).on("click", ".add-debit-row", function () {
             addNewRow("#debitSection", "Debit");
         });
 
-        // Add credit row
         $(document).on("click", ".add-credit-row", function () {
             addNewRow("#creditSection", "Credit");
         });
 
-        // Remove only the last row
         $(document).on("click", ".remove-debit-row", function () {
             removeRow("#debitSection");
         });
@@ -311,35 +287,91 @@
         });
 
         function calculateTotals() {
-            let totalDebit = 0, totalCredit = 0;
-
+            let totalDebit = 0;
             $(".debit").each(function () {
                 totalDebit += parseFloat($(this).val()) || 0;
             });
 
+            let creditRows = $("#creditSection tr");
+
+            if (creditRows.length > 0) {
+                let remainingAmount = totalDebit;
+                creditRows.each(function (index) {
+                    if (index === creditRows.length - 1) {
+                        // Ensure the last credit value is never negative
+                        $(this).find(".credit").val(Math.max(remainingAmount, 0));
+                    } else {
+                        remainingAmount -= parseFloat($(this).find(".credit").val()) || 0;
+                        remainingAmount = Math.max(remainingAmount, 0); // Prevent negative accumulation
+                    }
+                });
+            }
+
+            let totalCredit = 0;
             $(".credit").each(function () {
                 totalCredit += parseFloat($(this).val()) || 0;
             });
 
             $("#debitTotal").text(formatCurrency(totalDebit));
             $("#creditTotal").text(formatCurrency(totalCredit));
+
+            checkTotals(totalDebit, totalCredit);
         }
 
         function formatCurrency(amount) {
-            return '৳' + new Intl.NumberFormat('en-BD', { 
-                minimumFractionDigits: 2, 
-                maximumFractionDigits: 2 
+            return '৳' + new Intl.NumberFormat('en-BD', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
             }).format(amount);
         }
 
-        $(document).on("keyup", ".debit, .credit", function () {
+        $(document).on("keyup", ".debit", function () {
             calculateTotals();
         });
 
-        // Initial update to set button visibility
+        $(document).on("keyup", ".credit", function () {
+            let totalCredit = 0;
+            $(".credit").each(function () {
+                totalCredit += parseFloat($(this).val()) || 0;
+            });
+            $("#creditTotal").text(formatCurrency(totalCredit));
+
+             // If credit is manually updated, we don't want the automatic calculation of debit to happen
+            // But still need to check totals
+            let totalDebit = 0;
+            $(".debit").each(function () {
+                totalDebit += parseFloat($(this).val()) || 0;
+            });
+
+            checkTotals(totalDebit, totalCredit);
+        });
+
+        function checkTotals(debitTotal, creditTotal) {
+
+            // Round totals to avoid precision issues
+            debitTotal = Math.round(debitTotal * 100) / 100;
+            creditTotal = Math.round(creditTotal * 100) / 100;
+
+            //console.log("Debit Total:", debitTotal, "Credit Total:", creditTotal);  // Debugging output
+            
+            // Check if totals are equal
+            if (debitTotal !== creditTotal) {
+                // Change total fields color to red
+                $("#debitTotal").css("color", "red");
+                $("#creditTotal").css("color", "red");
+                // Disable the submit button
+                $("button[type='submit']").attr("disabled", true);
+            } else {
+                // Reset total fields color to default
+                $("#debitTotal").css("color", "black");
+                $("#creditTotal").css("color", "black");
+                // Enable the submit button
+                $("button[type='submit']").attr("disabled", false);
+            }
+        }
+
         updateRowControls("#debitSection");
         updateRowControls("#creditSection");
-
     });
 
 </script>

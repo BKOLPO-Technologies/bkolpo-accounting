@@ -240,16 +240,12 @@
         });
     });
 
-    $(document).ready(function () {
+    $(document).ready(function () { 
 
         function updateRowControls(sectionClass) {
             let rows = $(sectionClass + " tr");
-
-            // Hide all + buttons except for the last row
             rows.find(".add-row").hide();
             rows.last().find(".add-row").show();
-
-            // Hide all - buttons except for the last row (if multiple rows exist)
             rows.find(".remove-row").hide();
             if (rows.length > 1) {
                 rows.last().find(".remove-row").show();
@@ -259,24 +255,15 @@
         function addNewRow(sectionClass, transactionType) {
             let lastRow = $(sectionClass + " tr").last();
             let newRow = lastRow.clone();
-
-            // Clear input values for the new row
             newRow.find("input[type='text'], input[type='number'], textarea").val("");
-
-            // Ensure the transaction type remains the same
             newRow.find(".transaction-type").val(transactionType);
-
-            // Append the new row
             lastRow.after(newRow);
-
-            // Update button visibility
             updateRowControls(sectionClass);
+            calculateTotals();
         }
 
         function removeRow(sectionClass) {
             let rows = $(sectionClass + " tr");
-
-            // Only allow deleting the last row if there are at least two rows
             if (rows.length > 1) {
                 rows.last().remove();
                 updateRowControls(sectionClass);
@@ -284,24 +271,14 @@
             }
         }
 
-        // Auto-fill first Credit row based on first Debit row input
-        $(document).on("input", "#debitSection tr:first .debit", function () {
-            let debitValue = $(this).val();
-            $("#creditSection tr:first .credit").val(debitValue);
-            calculateTotals();
-        });
-
-        // Add debit row
         $(document).on("click", ".add-debit-row", function () {
             addNewRow("#debitSection", "Debit");
         });
 
-        // Add credit row
         $(document).on("click", ".add-credit-row", function () {
             addNewRow("#creditSection", "Credit");
         });
 
-        // Remove only the last row
         $(document).on("click", ".remove-debit-row", function () {
             removeRow("#debitSection");
         });
@@ -312,11 +289,24 @@
 
         function calculateTotals() {
             let totalDebit = 0, totalCredit = 0;
-
+            
             $(".debit").each(function () {
                 totalDebit += parseFloat($(this).val()) || 0;
             });
-
+            
+            let creditRows = $("#creditSection tr");
+            
+            if (creditRows.length > 0) {
+                let remainingAmount = totalDebit;
+                creditRows.each(function (index) {
+                    if (index === creditRows.length - 1) {
+                        $(this).find(".credit").val(remainingAmount);
+                    } else {
+                        remainingAmount -= parseFloat($(this).find(".credit").val()) || 0;
+                    }
+                });
+            }
+            
             $(".credit").each(function () {
                 totalCredit += parseFloat($(this).val()) || 0;
             });
@@ -336,7 +326,6 @@
             calculateTotals();
         });
 
-        // Initial update to set button visibility
         updateRowControls("#debitSection");
         updateRowControls("#creditSection");
 
