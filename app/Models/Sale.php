@@ -36,4 +36,9 @@ class Sale extends Model
     {
         return $this->hasMany(OutcomingChalan::class, 'sale_id');
     }
+
+    public function receipts()
+    {
+        return $this->hasMany(Receipt::class, 'invoice_no', 'invoice_no');
+    }
 }
