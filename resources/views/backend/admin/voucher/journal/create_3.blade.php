@@ -352,7 +352,7 @@
             debitTotal = Math.round(debitTotal * 100) / 100;
             creditTotal = Math.round(creditTotal * 100) / 100;
 
-            console.log("Debit Total:", debitTotal, "Credit Total:", creditTotal);  // Debugging output
+            //console.log("Debit Total:", debitTotal, "Credit Total:", creditTotal);  // Debugging output
             
             // Check if totals are equal
             if (debitTotal !== creditTotal) {
