@@ -330,20 +330,22 @@
         });
 
         $(document).on("keyup", ".credit", function () {
-            let totalCredit = 0;
-            $(".credit").each(function () {
-                totalCredit += parseFloat($(this).val()) || 0;
-            });
-            $("#creditTotal").text(formatCurrency(totalCredit));
 
-             // If credit is manually updated, we don't want the automatic calculation of debit to happen
+            // If credit is manually updated, we don't want the automatic calculation of debit to happen
             // But still need to check totals
             let totalDebit = 0;
             $(".debit").each(function () {
                 totalDebit += parseFloat($(this).val()) || 0;
             });
-
+            
             adjustFirstCredit(totalDebit);
+
+            let totalCredit = 0;
+            $(".credit").each(function () {
+                totalCredit += parseFloat($(this).val()) || 0;
+            });
+            $("#creditTotal").text(formatCurrency(totalCredit));
+            
             checkTotals(totalDebit, totalCredit);
         });
 
@@ -369,7 +371,8 @@
                     });
 
                     let lastCreditValue = totalDebit - totalFixedCredit;
-                    lastCreditField.val(Math.max(lastCreditValue, 0));
+                    // lastCreditField.val(Math.max(lastCreditValue, 0));
+                    lastCreditField.val(lastCreditValue > 0 ? lastCreditValue : ""); // Set empty if 0
 
                 } else {
                     // If any other field is edited, adjust C1
@@ -379,7 +382,8 @@
                         }
                     });
 
-                    firstCreditField.val(Math.max(remainingAmount, 0));
+                    //firstCreditField.val(Math.max(remainingAmount, 0));
+                    firstCreditField.val(remainingAmount > 0 ? remainingAmount : ""); // Set empty if 0
                 }
             }
         }
