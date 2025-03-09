@@ -349,22 +349,41 @@
 
         function adjustFirstCredit(totalDebit) {
             let creditRows = $("#creditSection tr");
+            let firstCreditField = $("#creditSection tr:first .credit");
+            let lastCreditField = $("#creditSection tr:last .credit");
 
             if (creditRows.length > 1) {
                 let remainingAmount = totalDebit;
 
-                // Subtract all credits except the first one
-                creditRows.each(function (index) {
-                    if (index !== 0) {
-                        remainingAmount -= parseFloat($(this).find(".credit").val()) || 0;
-                    }
-                });
+                // Check if C1 is manually edited
+                let isC1Edited = firstCreditField.is(":focus");
 
-                // Set the first credit field
-                let firstCreditField = $("#creditSection tr:first .credit");
-                firstCreditField.val(Math.max(remainingAmount, 0));
+                if (isC1Edited) {
+                    // If C1 is being edited, adjust the last credit field instead
+                    let totalFixedCredit = 0;
+                    
+                    creditRows.each(function (index) {
+                        if (index !== creditRows.length - 1) { // Exclude last credit field
+                            totalFixedCredit += parseFloat($(this).find(".credit").val()) || 0;
+                        }
+                    });
+
+                    let lastCreditValue = totalDebit - totalFixedCredit;
+                    lastCreditField.val(Math.max(lastCreditValue, 0));
+
+                } else {
+                    // If any other field is edited, adjust C1
+                    creditRows.each(function (index) {
+                        if (index !== 0) {
+                            remainingAmount -= parseFloat($(this).find(".credit").val()) || 0;
+                        }
+                    });
+
+                    firstCreditField.val(Math.max(remainingAmount, 0));
+                }
             }
         }
+
 
         function checkTotals(debitTotal, creditTotal) {
 
