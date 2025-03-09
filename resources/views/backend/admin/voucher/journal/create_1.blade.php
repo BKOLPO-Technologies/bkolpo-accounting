@@ -105,7 +105,7 @@
                                                     </thead>
                                                     <tbody>
                                                         <!-- Manually added 10 rows -->
-                                                        @for ($i = 0; $i < 10; $i++)
+                                                        @for ($i = 0; $i < 2; $i++)
                                                             <tr>
                                                                 <td class="text-center">{{ $i + 1 }}</td>
                                                                 <td>

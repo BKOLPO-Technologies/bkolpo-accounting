@@ -63,7 +63,7 @@ class SalesController extends Controller
             'subtotal' => 'required|numeric',
             'discount' => 'required|numeric',
             'total' => 'required|numeric',
-            'product_ids' => 'required|not_in:',  // Ensure at least one product is selected
+            //'product_ids' => 'required|not_in:',  // Ensure at least one product is selected
         ]);
 
 
@@ -80,6 +80,7 @@ class SalesController extends Controller
             // If no product is selected, return an error message
             return back()->with('error', 'At least one product must be selected.');
         }
+        dd($productIds);
 
         try {
             // Start the transaction
