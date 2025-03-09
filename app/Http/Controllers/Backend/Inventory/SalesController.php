@@ -80,7 +80,7 @@ class SalesController extends Controller
             // If no product is selected, return an error message
             return back()->with('error', 'At least one product must be selected.');
         }
-        // dd($productIds);
+        dd($productIds);
 
         try {
             // Start the transaction
@@ -327,6 +327,10 @@ class SalesController extends Controller
         $sale = Sale::find($id);
     
         if ($sale) {
+
+            // Delete related payments using the defined relationship
+            $sale->receipts()->delete();
+
             // Detach the related SaleProduct records (pivot table entries)
             $sale->products()->detach();
     

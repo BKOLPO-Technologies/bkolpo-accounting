@@ -121,8 +121,12 @@
                                                             </td>
                                                             <td><input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No"></td>
                                                             <td><textarea class="form-control" name="description[]" rows="1" placeholder="Enter Description"></textarea></td>
-                                                            <td><input type="number" class="form-control text-end debit" name="debit[]" placeholder="Enter Debit Amount"></td>
-                                                            <td></td>
+                                                            <td>
+                                                                <input type="number" class="form-control text-end debit" name="debit[]" placeholder="Enter Debit Amount">
+                                                            </td>
+                                                            <td>
+                                                                <input type="hidden" class="form-control text-end debit" name="credit[]" value="0">
+                                                            </td>
 
                                                             <td>
                                                                 <button type="button" class="btn btn-sm btn-success add-row add-debit-row"><i class="fa fa-plus"></i></button>
@@ -145,7 +149,9 @@
                                                             </td>
                                                             <td><input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No"></td>
                                                             <td><textarea class="form-control" name="description[]" rows="1" placeholder="Enter Description"></textarea></td>
-                                                            <td></td>
+                                                            <td>
+                                                                <input type="hidden" class="form-control text-end debit" name="debit[]" value="0">
+                                                            </td>
                                                             <td><input type="number" class="form-control text-end credit" name="credit[]" placeholder="Enter Credit Amount"></td>
 
                                                             <td>

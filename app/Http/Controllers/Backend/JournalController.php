@@ -2,31 +2,31 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Auth;
+use Hash;
+use Carbon\Carbon;
 use App\Models\Branch;
 use App\Models\Ledger;
-use App\Models\LedgerGroup;
-use App\Models\Journal;
-use App\Models\JournalVoucher;
-use App\Models\JournalVoucherDetail;
 use App\Models\Company;
-use App\Models\Transaction;
-use Spatie\Permission\Models\Role;
-use DB;
-use Hash;
-use Illuminate\Support\Arr;
+use App\Models\Journal;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Validator;
-use Carbon\Carbon;
-use Auth;
+use App\Models\LedgerGroup;
+use App\Models\Transaction;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 use App\Exports\JournalExport;
+use App\Models\JournalVoucher;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use App\Models\JournalVoucherDetail;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\JournalVoucherImport;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class JournalController extends Controller
 {
@@ -139,7 +139,7 @@ class JournalController extends Controller
     public function store(Request $request)
     {
 
-        dd($request->all());
+        //dd($request->all());
         // Validate the request
         $request->validate([
             'transaction_code' => 'required|unique:journal_vouchers',
@@ -147,6 +147,7 @@ class JournalController extends Controller
             'branch_id' => 'required',
             'transaction_date' => 'required|date',
         ]);
+        //dd($request->all());
     
         DB::beginTransaction();
     
@@ -165,11 +166,19 @@ class JournalController extends Controller
             }
 
             //dd('hello');
+
+            //dd($details);
     
             foreach ($request->ledger_id as $index => $ledgerId) {
+                //dd($request->ledger_id);
                 if (!empty($ledgerId)) { // Only process non-empty ledger IDs
-                    $debit = (float) $request->debit[$index] ?? 0;
-                    $credit = (float) $request->credit[$index] ?? 0;
+                    //dd($ledgerId);
+                    // $debit = (float) $request->debit[$index] ?? 0;
+                    // $credit = (float) $request->credit[$index] ?? 0;
+                    $debit = isset($request->debit[$index]) ? (float) $request->debit[$index] : 0;
+                    $credit = isset($request->credit[$index]) ? (float) $request->credit[$index] : 0;
+
+                    //dd($ledgerId);
     
                     $totalDebit += $debit;
                     $totalCredit += $credit;
@@ -183,11 +192,25 @@ class JournalController extends Controller
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
+
+                    //dd($details);
                 }
+
+                //dd('hello');
+
             }
+
+            // Debugging: Check if $details is being populated correctly
+            if (empty($details)) {
+                return back()->withErrors(['error' => 'No valid ledger entries found.']);
+            }
+
+            //dd($details);
+
     
             // **Validation: Check if total debit equals total credit**
             if ($totalDebit !== $totalCredit) {
+                dd($totalDebit, $totalCredit);
                 return back()
                     ->withErrors(['error' => 'Total Debit (৳' . number_format($totalDebit, 2) . ') and Total Credit (৳' . number_format($totalCredit, 2) . ') must be equal.'])
                     ->withInput();
