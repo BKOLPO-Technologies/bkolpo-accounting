@@ -92,40 +92,53 @@
                                                 <th>Product</th>
                                                 <th>Unit Price</th>
                                                 <th>Sell Price</th>
-                                                <th>Qtuantity</th>
+                                                <th>Quantity</th>
                                                 <th>Subtotal</th>
+                                                {{-- <th>Discount</th>
+                                                <th>Final Total</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody>
                                         @php
                                             $subtotal = 0;
+                                            $totalDiscount = 0; // For the overall discount across all products
                                         @endphp
                                         @foreach ($sale->products as $product)
                                             @php
+                                                // Calculate the product's total price
                                                 $productTotal = $product->pivot->quantity * $product->pivot->price;
                                                 $subtotal += $productTotal;
+                                                
+                                                // Assume there is a 'discount' field in the pivot table or product
+                                                $productDiscount = $product->pivot->discount ?? 0; // Set discount to 0 if not available
+                                                $totalDiscount += $productDiscount;
+                            
+                                                // Calculate the final total for the product after discount
+                                                $finalTotal = $productTotal - $productDiscount;
                                             @endphp
                                             <tr data-product-id="{{ $product->id }}">
                                                 <td>{{ $product->name }}</td>
-                                                <td>{{ $product->price }}</td>
-                                                <td>{{  $product->pivot->price }}</td>
+                                                <td>{{ number_format($product->price, 2) }}</td>
+                                                <td>{{ number_format($product->pivot->price, 2) }}</td>
                                                 <td>{{ $product->pivot->quantity }}</td>
-                                                <td>{{ number_format($product->pivot->quantity * $product->pivot->price, 2) }}</td>
+                                                <td>{{ number_format($productTotal, 2) }}</td>
+                                                {{-- <td>{{ number_format($productDiscount, 2) }}</td>
+                                                <td>{{ number_format($finalTotal, 2) }}</td> --}}
                                             </tr>
                                         @endforeach
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-
+                            
                             <hr>
-
+                            
                             <div class="row">
                                 <div class="col-6">
                                 </div> 
                                 <div class="col-6">
                                 <p class="lead">Amount Due 2/22/2014</p>
-
+                            
                                 <div class="table-responsive">
                                     <table class="table">
                                     <tr>
@@ -133,17 +146,18 @@
                                         <td>{{ bdt() }} {{ number_format($subtotal, 2) }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Discount</th>
-                                        <td>{{ bdt() }} {{ number_format($sale->discount, 2) }}</td>
+                                        <th>Total Discount:</th>
+                                        <td>{{ bdt() }} {{ number_format($totalDiscount, 2) }}</td>
                                     </tr>
                                     <tr>
                                         <th>Total:</th>
-                                        <td>{{ bdt() }} {{ number_format($subtotal - $sale->discount, 2) }}</td>
+                                        <td>{{ bdt() }} {{ number_format($subtotal - $totalDiscount, 2) }}</td>
                                     </tr>
                                     </table>
                                 </div>
                                 </div>
                             </div>
+                            
 
                             <div class="row no-print">
                                 <div class="col-12">
