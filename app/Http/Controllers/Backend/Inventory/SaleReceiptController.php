@@ -231,6 +231,17 @@ class SaleReceiptController extends Controller
                             'credit' => 0,  // No credit for Sales ledger
                             'updated_at' => now(),
                         ]);
+
+                        // JournalVoucherDetail::create([
+                        //     'journal_voucher_id' => $journalVoucher->id,
+                        //     'ledger_id'          => $paymentLedger->id,  // Cash or Bank ledger
+                        //     'reference_no'       => $request->input('reference_no', ''),
+                        //     'description'        => 'Sales Amount To Payment Recived by total sum,'.$newDebitAmount,
+                        //     'debit'              => $newDebitAmount, 
+                        //     'credit'             => 0, 
+                        //     'created_at'         => now(),
+                        //     'updated_at'         => now(),
+                        // ]);
                     }
 
                     // Step 9: Create Journal Voucher Detail for Payment (Cash or Bank ledger) - credit the payment amount
