@@ -343,8 +343,28 @@
                 totalDebit += parseFloat($(this).val()) || 0;
             });
 
+            adjustFirstCredit(totalDebit);
             checkTotals(totalDebit, totalCredit);
         });
+
+        function adjustFirstCredit(totalDebit) {
+            let creditRows = $("#creditSection tr");
+
+            if (creditRows.length > 1) {
+                let remainingAmount = totalDebit;
+
+                // Subtract all credits except the first one
+                creditRows.each(function (index) {
+                    if (index !== 0) {
+                        remainingAmount -= parseFloat($(this).find(".credit").val()) || 0;
+                    }
+                });
+
+                // Set the first credit field
+                let firstCreditField = $("#creditSection tr:first .credit");
+                firstCreditField.val(Math.max(remainingAmount, 0));
+            }
+        }
 
         function checkTotals(debitTotal, creditTotal) {
 
