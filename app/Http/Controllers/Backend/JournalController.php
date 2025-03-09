@@ -208,7 +208,7 @@ class JournalController extends Controller
     
             // **Validation: Check if total debit equals total credit**
             if ($totalDebit !== $totalCredit) {
-                dd($totalDebit, $totalCredit);
+                //dd($totalDebit, $totalCredit);
                 return back()
                     ->withErrors(['error' => 'Total Debit (৳' . number_format($totalDebit, 2) . ') and Total Credit (৳' . number_format($totalCredit, 2) . ') must be equal.'])
                     ->withInput();

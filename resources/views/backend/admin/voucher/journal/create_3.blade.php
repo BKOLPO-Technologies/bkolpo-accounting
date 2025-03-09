@@ -51,7 +51,7 @@
                                         <!-- Company Select -->
                                         <div class="col-lg-4 mb-3">
                                             <label for="company_id">Company</label>
-                                            <select name="company_id" id="company_id" class="form-control select2 @error('company_id') is-invalid @enderror">
+                                            <select name="company_id" id="company_id" class="form-control select2 @error('company_id') is-invalid @enderror" required>
                                                 <option value="">Select Company</option>
                                                 @foreach($companies as $company)
                                                     <option value="{{ $company->id }}" {{ old('company_id') == $company->id ? 'selected' : '' }}>{{ $company->name }}</option>
@@ -67,7 +67,7 @@
                                         <!-- Branch Select -->
                                         <div class="col-lg-4 mb-3">
                                             <label for="branch_id">Branch</label>
-                                            <select name="branch_id" id="branch_id" class="form-control @error('branch_id') is-invalid @enderror">
+                                            <select name="branch_id" id="branch_id" class="form-control @error('branch_id') is-invalid @enderror" required>
                                                 <option value="">Select Branch</option>
                                             </select>
                                             @error('branch_id')
@@ -112,17 +112,17 @@
                                                         <tr>
                                                             <td><input type="text" class="form-control transaction-type" name="transaction_type[]" value="Debit" readonly></td>
                                                             <td>
-                                                                <select class="form-control" name="ledger_id[]">
+                                                                <select class="form-control" name="ledger_id[]" required>
                                                                     <option value="">Select Account</option>
                                                                     @foreach($ledgers as $ledger)
                                                                         <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </td>
-                                                            <td><input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No"></td>
+                                                            <td><input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No" required></td>
                                                             <td><textarea class="form-control" name="description[]" rows="1" placeholder="Enter Description"></textarea></td>
                                                             <td>
-                                                                <input type="number" class="form-control text-end debit" name="debit[]" placeholder="Enter Debit Amount">
+                                                                <input type="number" class="form-control text-end debit" name="debit[]" placeholder="Enter Debit Amount" required>
                                                             </td>
                                                             <td>
                                                                 <input type="hidden" class="form-control text-end debit" name="credit[]" value="0">
@@ -140,19 +140,19 @@
                                                         <tr>
                                                             <td><input type="text" class="form-control transaction-type" name="transaction_type[]" value="Credit" readonly></td>
                                                             <td>
-                                                                <select class="form-control" name="ledger_id[]">
+                                                                <select class="form-control" name="ledger_id[]" required>
                                                                     <option value="">Select Account</option>
                                                                     @foreach($ledgers as $ledger)
                                                                         <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </td>
-                                                            <td><input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No"></td>
+                                                            <td><input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No" required></td>
                                                             <td><textarea class="form-control" name="description[]" rows="1" placeholder="Enter Description"></textarea></td>
                                                             <td>
                                                                 <input type="hidden" class="form-control text-end debit" name="debit[]" value="0">
                                                             </td>
-                                                            <td><input type="number" class="form-control text-end credit" name="credit[]" placeholder="Enter Credit Amount"></td>
+                                                            <td><input type="number" class="form-control text-end credit" name="credit[]" placeholder="Enter Credit Amount" required></td>
 
                                                             <td>
                                                                 <button type="button" class="btn btn-sm btn-success add-row add-credit-row"><i class="fa fa-plus"></i></button>
