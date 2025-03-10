@@ -101,11 +101,12 @@ class JournalController extends Controller
         $companies = Company::where('status',1)->latest()->get();
         $ledgers = Ledger::where('status',1)->latest()->get();
 
-        // Get current timestamp in 'dmyHis' format (day, month, year, hour, minute, second)
-        $timestamp = now()->format('dmyHis');
+        // Get current timestamp in 'dmyHis' format (day, month, year)
+        $randomNumber = rand(100000, 999999);
+        $fullDate = now()->format('d/m/y');
 
-        // Concatenate timestamp with random number for uniqueness
-        $transactionCode = 'BCL-V-' . $timestamp;
+        // Combine the timestamp, random number, and full date
+        $transactionCode = 'BCL-V-'.$fullDate.' - '.$randomNumber;
 
         return view('backend.admin.voucher.journal.create_3',compact('pageTitle','branches','ledgers','transactionCode','companies'));
         
@@ -117,12 +118,12 @@ class JournalController extends Controller
         $companies = Company::where('status',1)->latest()->get();
         $ledgers = Ledger::where('status',1)->latest()->get();
 
-        $date = now()->format('mY');
+        // Get current timestamp in 'dmyHis' format (day, month, year)
+        $randomNumber = rand(100000, 999999);
+        $fullDate = now()->format('d/m/y');
 
-        // Generate a random 8-digit number
-        $randomNumber = mt_rand(100000, 999999);
-
-        $transactionCode = 'BKOLPO-'. $randomNumber;
+        // Combine the timestamp, random number, and full date
+        $transactionCode = 'BCL-V-'.$fullDate.' - '.$randomNumber;
 
         return view('backend.admin.voucher.journal.manually_create',compact('pageTitle','branches','ledgers','transactionCode','companies'));
     }

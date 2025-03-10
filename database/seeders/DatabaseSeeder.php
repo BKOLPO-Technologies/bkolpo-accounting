@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             SupplierSeeder::class,
             BranchSeeder::class,
             CompanySeeder::class,
+            ProjectsSeeder::class,
             // Add other seeders here 
         ]);
 

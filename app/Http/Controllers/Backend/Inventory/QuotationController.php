@@ -35,10 +35,17 @@ class QuotationController extends Controller
         $products = Product::where('status',1)->latest()->get();
         $pageTitle = 'Quotation';
 
-        // Generate a random 8-digit number
-        $randomNumber = mt_rand(100000, 999999);
+        // Get current timestamp in 'dmyHis' format (day, month, year)
+        $randomNumber = rand(100000, 999999);
+        $fullDate = now()->format('d/m/y');
 
-        $invoice_no = 'BKOLPO-'. $randomNumber;
+        // Combine the timestamp, random number, and full date
+        $invoice_no = 'BCL-QO-'.$fullDate.' - '.$randomNumber;
+
+        // // Generate a random 8-digit number
+        // $randomNumber = mt_rand(100000, 999999);
+
+        // $invoice_no = 'BKOLPO-'. $randomNumber;
 
         return view('backend.admin.inventory.quotation.create',compact('pageTitle', 'clients', 'products','invoice_no')); 
     }

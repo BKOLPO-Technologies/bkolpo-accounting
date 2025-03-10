@@ -43,7 +43,7 @@
 
                             <div class="row">
                                 <!-- Supplier Select -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="client">Client</label>
                                     <div class="input-group">
                                         <!-- --- -->
@@ -94,26 +94,35 @@
                                     @enderror
                                 </div>
 
+                                <!-- Project Select with Search Feature -->
+                                <div class="col-lg-3 col-md-6 mb-3">
+                                    <label for="project_id">Project</label>
+                                    <div class="input-group">
+                                        <select name="project_id" id="project_id" class="form-control select2 @error('project_id') is-invalid @enderror" style="width: 100%;">
+                                            <option value="">Select Project</option>
+                                            @foreach($projects as $project)
+                                                <option value="{{ $project->id }}" 
+                                                    @if(old('project_id', $sale->project_id) == $project->id) selected @endif>
+                                                    {{ $project->project_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    @error('project_id')
+                                        <div class="invalid-feedback">
+                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+
+
                                 <!-- Invoice No -->
-                                <div class="col-lg-2 col-md-6 mb-3">
+                                <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="invoice_no">Invoice No</label>
 
                                     <input type="text" id="invoice_no" name="invoice_no" class="form-control @error('invoice_no') is-invalid @enderror" value="{{ old('invoice_no', $sale->invoice_no) }}" readonly />
 
                                     @error('invoice_no')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-
-                                <!-- Invoice Date -->
-                                <div class="col-lg-3 col-md-6 mb-3">
-                                    <label for="invoice_date">Invoice Date</label>
-
-                                    <input type="date" id="invoice_date" name="invoice_date" class="form-control @error('invoice_date') is-invalid @enderror" value="{{ old('invoice_date', $sale->invoice_date->format('Y-m-d')) }}" readonly />
-
-                                    @error('invoice_date')
                                     <div class="invalid-feedback">
                                         <i class="fas fa-exclamation-circle"></i> {{ $message }}
                                     </div>

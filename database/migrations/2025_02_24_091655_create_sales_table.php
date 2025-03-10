@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->constrained()->onDelete('cascade'); 
+            $table->integer('project_id')->nullable(); 
             $table->string('invoice_no')->unique(); 
             $table->date('invoice_date'); 
             $table->decimal('subtotal', 10, 2); 
@@ -25,6 +26,8 @@ return new class extends Migration
             $table->enum('status', ['pending', 'paid', 'partially_paid'])->default('pending'); // Sale status
             
             $table->text('description')->nullable();
+           
+
             $table->timestamps();    
         });
     }

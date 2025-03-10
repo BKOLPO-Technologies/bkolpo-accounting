@@ -8,6 +8,7 @@ use App\Models\Client;
 use App\Models\Ledger;
 use App\Models\Product;
 use App\Models\Purchase;
+use App\Models\Project;
 use App\Models\SaleProduct;
 use Illuminate\Http\Request;
 use App\Models\JournalVoucher;
@@ -38,14 +39,22 @@ class SalesController extends Controller
         $clients = Client::orderBy('id', 'desc')->get();
 
         $products = Product::where('status',1)->latest()->get();
+        $projects = Project::where('project_type','Running')->latest()->get();
         $pageTitle = 'Sales';
 
+        // Get current timestamp in 'dmyHis' format (day, month, year)
+        $randomNumber = rand(100000, 999999);
+        $fullDate = now()->format('d/m/y');
+
+        // Combine the timestamp, random number, and full date
+        $invoice_no = 'BCL-S-'.$fullDate.' - '.$randomNumber;
+
         // Generate a random 8-digit number
-        $randomNumber = mt_rand(100000, 999999);
+        // $randomNumber = mt_rand(100000, 999999);
 
-        $invoice_no = 'BKOLPO-'. $randomNumber;
+        // $invoice_no = 'BKOLPO-'. $randomNumber;
 
-        return view('backend.admin.inventory.sales.create',compact('pageTitle', 'clients', 'products','invoice_no')); 
+        return view('backend.admin.inventory.sales.create',compact('pageTitle', 'clients', 'products','invoice_no','projects')); 
     }
 
     /**
@@ -59,7 +68,7 @@ class SalesController extends Controller
         $validated = $request->validate([
             'client' => 'required|exists:clients,id',
             'invoice_no' => 'required|unique:sales,invoice_no',
-            'invoice_date' => 'required|date',
+            // 'invoice_date' => 'required|date',
             'subtotal' => 'required|numeric',
             'discount' => 'required|numeric',
             'total' => 'required|numeric',
@@ -90,11 +99,12 @@ class SalesController extends Controller
             $sale = new Sale();
             $sale->client_id = $validated['client'];
             $sale->invoice_no = $validated['invoice_no'];
-            $sale->invoice_date = $validated['invoice_date'];
+            $sale->invoice_date = now()->format('Y-m-d');
             $sale->subtotal = $validated['subtotal'];
             $sale->discount = $validated['discount'];
             $sale->total = $validated['total'];
             $sale->description = $request->description;
+            $sale->project_id = $request->project_id;
             $sale->save();
 
             // Loop through the product data and save it to the database
@@ -129,7 +139,7 @@ class SalesController extends Controller
                     // Create a new Journal Voucher if not exists
                     $journalVoucher = JournalVoucher::create([
                         'transaction_code'  => $sale->invoice_no,
-                        'transaction_date'  => $request->invoice_date,
+                        'transaction_date'  => now()->format('Y-m-d'),
                         'description'       => 'Invoice Entry for Sales',
                         'status'            => 1, // Pending status
                     ]);
@@ -278,11 +288,12 @@ class SalesController extends Controller
             // Update Sale
             $sale->client_id = $validated['client'];  // Ensure this field exists in DB
             $sale->invoice_no = $validated['invoice_no'];
-            $sale->invoice_date = $validated['invoice_date'];
+            $sale->invoice_date = now()->format('Y-m-d');
             $sale->subtotal = $validated['subtotal'];
             $sale->discount = $validated['discount'];
             $sale->total = $validated['total'];
             $sale->description = $request->description;
+            $sale->project_id = $request->project_id;
             $sale->save();
 
             // Delete Old Products

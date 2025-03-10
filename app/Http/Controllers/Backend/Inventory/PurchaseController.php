@@ -36,10 +36,17 @@ class PurchaseController extends Controller
         $products = Product::where('status',1)->latest()->get();
         $pageTitle = 'Purchase';
 
-        // Generate a random 8-digit number
-        $randomNumber = mt_rand(100000, 999999);
+        // Get current timestamp in 'dmyHis' format (day, month, year)
+        $randomNumber = rand(100000, 999999);
+        $fullDate = now()->format('d/m/y');
 
-        $invoice_no = 'BKOLPO-'. $randomNumber;
+        // Combine the timestamp, random number, and full date
+        $invoice_no = 'BCL-PO-'.$fullDate.' - '.$randomNumber;
+
+        // // Generate a random 8-digit number
+        // $randomNumber = mt_rand(100000, 999999);
+
+        // $invoice_no = 'BKOLPO-'. $randomNumber;
 
         return view('backend.admin.inventory.purchase.create',compact('pageTitle', 'suppliers', 'products','invoice_no')); 
     }

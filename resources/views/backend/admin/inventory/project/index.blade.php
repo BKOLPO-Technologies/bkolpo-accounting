@@ -65,10 +65,12 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if($project->project_type == 'ongoing')
+                                                    @if($project->project_type == 'Ongoing')
                                                         <span class="badge bg-danger">Ongoing</span>
-                                                    @elseif($project->project_type == 'upcoming')
+                                                    @elseif($project->project_type == 'Upcoming')
                                                         <span class="badge bg-primary">Upcoming</span>
+                                                    @elseif($project->project_type == 'Running')
+                                                        <span class="badge bg-info">Running</span>
                                                     @else
                                                         <span class="badge bg-success">Completed</span>
                                                     @endif
