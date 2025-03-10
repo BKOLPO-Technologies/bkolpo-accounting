@@ -372,5 +372,5 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 require __DIR__.'/auth.php';
 require __DIR__.'/zim.php';
 
-Route::view('/invoice', 'backend/admin/invoice/invoice');
-Route::view('/invoice2', 'backend/admin/invoice/invoice2');
+Route::view('/invoice', 'backend.admin.invoice.invoice');
+Route::view('/invoice2', 'backend.admin.invoice.invoice2');
