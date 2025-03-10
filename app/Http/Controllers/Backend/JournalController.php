@@ -101,12 +101,11 @@ class JournalController extends Controller
         $companies = Company::where('status',1)->latest()->get();
         $ledgers = Ledger::where('status',1)->latest()->get();
 
-        $date = now()->format('mY');
+        // Get current timestamp in 'dmyHis' format (day, month, year, hour, minute, second)
+        $timestamp = now()->format('dmyHis');
 
-        // Generate a random 8-digit number
-        $randomNumber = mt_rand(100000, 999999);
-
-        $transactionCode = 'BKOLPO-'. $randomNumber;
+        // Concatenate timestamp with random number for uniqueness
+        $transactionCode = 'BCL-V-' . $timestamp;
 
         return view('backend.admin.voucher.journal.create_3',compact('pageTitle','branches','ledgers','transactionCode','companies'));
         

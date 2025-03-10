@@ -338,7 +338,7 @@
                 totalDebit += parseFloat($(this).val()) || 0;
             });
             
-            adjustFirstCredit(totalDebit);
+            // adjustFirstCredit(totalDebit);
 
             let totalCredit = 0;
             $(".credit").each(function () {
