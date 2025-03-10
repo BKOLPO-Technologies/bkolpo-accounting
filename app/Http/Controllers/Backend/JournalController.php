@@ -112,6 +112,22 @@ class JournalController extends Controller
         
     }
 
+    public function manuallyCreate(){
+        $pageTitle = 'Journal Entry';
+        $branches = Branch::where('status',1)->latest()->get();
+        $companies = Company::where('status',1)->latest()->get();
+        $ledgers = Ledger::where('status',1)->latest()->get();
+
+        $date = now()->format('mY');
+
+        // Generate a random 8-digit number
+        $randomNumber = mt_rand(100000, 999999);
+
+        $transactionCode = 'BKOLPO-'. $randomNumber;
+
+        return view('backend.admin.voucher.journal.manually_create',compact('pageTitle','branches','ledgers','transactionCode','companies'));
+    }
+
     public function getBranchesByCompany($companyId)
     {
         // Find the company and load its related branch

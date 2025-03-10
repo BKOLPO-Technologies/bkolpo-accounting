@@ -116,6 +116,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [JournalController::class, 'index'])->name('index')->middleware('can:journal-list');
         Route::get('/excel', [JournalController::class, 'excel'])->name('excel');
         Route::get('/create', [JournalController::class, 'create'])->name('create')->middleware('can:journal-create');
+        Route::get('/create/manually', [JournalController::class, 'manuallyCreate'])->name('manually.create');
         Route::post('/store', [JournalController::class, 'store'])->name('store');
         Route::get('/edit/{id}', [JournalController::class, 'edit'])->name('edit')->middleware('can:journal-edit');
         Route::post('/update/{id}', [JournalController::class, 'update'])->name('update');
