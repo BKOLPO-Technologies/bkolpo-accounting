@@ -12,33 +12,37 @@ class SupplierController extends Controller
     public function AdminSupplierIndex() 
     {
         $suppliers = Supplier::all();
-        $pageTitle = 'Admin Supplier';
-        return view('backend/admin/supplier/index',compact('pageTitle', 'suppliers'));
+        $pageTitle = 'Supplier List';
+        return view('backend.admin.supplier.index',compact('pageTitle', 'suppliers'));
     }
 
     public function AdminSupplierCreate() {
 
-        $pageTitle = 'Admin Supplier Create';
-        return view('backend/admin/supplier/create',compact('pageTitle'));
+        $pageTitle = 'Supplier Create';
+        return view('backend.admin.supplier.create',compact('pageTitle'));
 
     }
 
     public function AdminSupplierView($id)
     {
-        //dd($id);
         $supplier = Supplier::findOrFail($id);
-        //dd($supplier);
-        $pageTitle = 'Admin Supplier View';
-        //return view('backend/admin/supplier/view',compact('pageTitle', 'supplier'));
-        return view('backend.admin.supplier.view',compact('pageTitle', 'supplier'));
+        $pageTitle = 'Supplier View';
+
+        // Get the total purchases and total due
+        $totalPurchases = $supplier->totalPurchases(); // Total purchase
+        $totalDue = $supplier->totalDue(); // Total due
+
+        // dd($totalPurchases,$totalDue);
+
+        return view('backend.admin.supplier.view',compact('pageTitle', 'supplier','totalPurchases','totalDue'));
 
     }
 
     public function AdminSupplierEdit($id)
     {
         $supplier = Supplier::findOrFail($id);
-        $pageTitle = 'Admin Supplier Edit';
-        return view('backend/admin/supplier/edit',compact('pageTitle', 'supplier'));
+        $pageTitle = 'Supplier Edit';
+        return view('backend.admin.supplier.edit',compact('pageTitle', 'supplier'));
     }
 
     public function AdminSupplierStore(Request $request)
@@ -69,7 +73,7 @@ class SupplierController extends Controller
             'postbox'  => $request->postbox,
             'taxid'    => $request->taxid,
             'password' => $request->password ? Hash::make($request->password) : null,
-            'status'   => $request->status ?? 1,
+            // 'status'   => $request->status ?? 1,
         ]);
 
         return redirect()->route('admin.supplier.index')->with('success', 'Supplier added successfully.');
@@ -103,7 +107,7 @@ class SupplierController extends Controller
             'postbox'  => $request->postbox,
             'taxid'    => $request->taxid,
             'password' => $request->password ? Hash::make($request->password) : null,
-            'status'   => $request->status ?? 1,
+            // 'status'   => $request->status ?? 1,
         ]);
 
         //return redirect()->route('admin.supplier.index')->with('success', 'Supplier added successfully.');
@@ -152,7 +156,7 @@ class SupplierController extends Controller
             'postbox' => $request->input('postbox'),
             'taxid' => $request->input('taxid'),
             'password' => $request->input('password') ? bcrypt($request->input('password')) : $supplier->password, // Only update password if provided
-            'active' => $request->input('active') ?? $supplier->active, // Set default active value if not provided
+            // 'active' => $request->input('active') ?? $supplier->active, // Set default active value if not provided
         ]);
 
         // Redirect back to the supplier index with a success message

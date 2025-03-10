@@ -1,4 +1,5 @@
-@extends('layouts.admin')
+@extends('layouts.admin', ['pageTitle' => 'Supplier View'])
+
 @section('admin')
 
 <!-- Content Wrapper. Contains page content -->
@@ -8,12 +9,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <!-- <h1>DataTables</h1> -->
+                    <h1 class="m-0">{{ $pageTitle ?? 'N/A'}}</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: black;">Home</a></li>
-                        <li class="breadcrumb-item active">View</li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A'}}</li>
                     </ol>
                 </div>
             </div>
@@ -28,19 +29,21 @@
                 <!-- left column -->
                 <div class="col-md-12">
                     <!-- general form elements -->
-                    <div class="card card-secondary">
-
-                        <div class="card-header d-flex align-items-center">
-                            <h3 class="card-title">Supplier Details</h3>
-                            <a href="{{ route('admin.supplier.index') }}" class="btn btn-success ml-auto">Back</a>
+                    <div class="card card-primary card-outline shadow-lg">
+                        <div class="card-header py-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                                <a href="{{ route('admin.supplier.index')}}" class="btn btn-sm btn-danger rounded-0">
+                                    <i class="fa-solid fa-arrow-left"></i> Back To List
+                                </a>
+                            </div>
                         </div>
-
                         <!-- ------ -->
                         <div class="card-body">
                             <div class="row wrapper white-bg page-heading">
                                 <div class="col-md-4">
                                     <div class="card card-block p-3">
-                                        <h4 class="text-xs-center">GPH Ispat Ltd.</h4>
+                                        <h4 class="text-xs-center"> {{ $supplier->name }}</h4>
                                         <div class="ibox-content mt-2">
                                             <img alt="image" id="dpic" class="img-responsive"
                                                 src="https://accounts.bkolpo.com/userfiles/customers/example.png">
@@ -49,18 +52,14 @@
                                         <div class="user-button">
                                             <div class="row mt-3">
                                                 <div class="col-md-6">
-
-                                                    <a href="{{ route('admin.supplier.edit', ['id' => $supplier->id ]) }}" class="btn btn-warning btn-md">
+                                                    <a href="{{ route('admin.supplier.edit', ['id' => $supplier->id ]) }}" class="btn btn-warning btn-sm">
                                                         <i class="icon-pencil"></i> Edit Profile
                                                     </a>
-
                                                 </div>
                                                 <div class="col-md-6">
-                                                    
-                                                    {{-- <a href="#sendMail" data-toggle="modal" data-remote="false" class="btn btn-primary btn-md " data-type="reminder">
+                                                    <a href="#sendMail" data-toggle="modal" data-remote="false" class="btn btn-primary btn-sm " data-type="reminder">
                                                         <i class="icon-envelope"></i> Send Message
-                                                    </a> --}}
-
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -72,30 +71,33 @@
                                                 <h5>Balance Summary</h5>
                                                 <hr>
                                                 <ul class="list-group list-group-flush">
-                                                    <!-- Income Row -->
+                                                    <!-- Total Spent Row (Total amount the supplier has spent) -->
                                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                        <span class="ml-2">Income</span>
-                                                        <span class="tag tag-default tag-pill bg-primary p-1">৳ 0.00</span>
+                                                        <span class="ml-2">Total Purchases Products</span>
+                                                        <span class="tag tag-default tag-pill bg-success p-1">
+                                                            ৳ {{ number_format($totalPurchases, 2) }}
+                                                        </span>
                                                     </li>
-                                                    <!-- Expenses Row -->
+                                        
+                                                    <!-- Due Amount Row (Amount the supplier still owes) -->
                                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                        <span class="ml-2">Expenses</span>
-                                                        <span class="tag tag-default tag-pill bg-danger p-1">৳ 1,350,000.00</span>
+                                                        <span class="ml-2">Amount Due</span>
+                                                        <span class="tag tag-default tag-pill bg-warning p-1">
+                                                            ৳ {{ number_format($totalDue, 2) }}
+                                                        </span>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
-
-
+                                        
                                     </div>
-
                                 </div>
 
                                 <div class="col-md-8">
                                     <div class="card card-block p-3">
                                         <h4>Supplier Details</h4>
                                         <hr>
-                                        <div class="row m-t-lg">
+                                        {{-- <div class="row m-t-lg">
                                             <div class="col-md-2">
                                                 <strong>Name</strong>
                                             </div>
@@ -103,7 +105,7 @@
                                                 {{ $supplier->name }}
                                             </div>
                                         </div>
-                                        <hr>
+                                        <hr> --}}
                                         <div class="row m-t-lg">
                                             <div class="col-md-2">
                                                 <strong>Company</strong>
@@ -211,28 +213,17 @@
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="emailModalLabel">Email</h5>
+                                        <h5 class="modal-title" id="emailModalLabel">Supplier SMS Send</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
                                         <form id="sendmail_form">
-                                            <!-- Email Input -->
-                                            <div class="form-group">
-                                                <label for="mailtoc">Email</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                                    </div>
-                                                    <input type="email" class="form-control" id="mailtoc" name="mailtoc" placeholder="Email" value="stews@gmail.com">
-                                                </div>
-                                            </div>
-
                                             <!-- Customer Name Input -->
                                             <div class="form-group">
-                                                <label for="customername">Customer Name</label>
-                                                <input type="text" class="form-control" id="customername" name="customername" value="GPH Ispat Ltd.">
+                                                <label for="customername">Supplier Name</label>
+                                                <input type="text" class="form-control" id="customername" name="customername" value="{{ $supplier->company }}" readonly> 
                                             </div>
 
                                             <!-- Subject Input -->
