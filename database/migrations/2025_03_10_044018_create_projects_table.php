@@ -28,7 +28,7 @@ return new class extends Migration
             $table->decimal('grand_total', 10, 2)->default(0);
             $table->decimal('paid_amount', 15, 2)->default(0); // Amount already paid
             $table->enum('status', ['pending', 'paid', 'partially_paid'])->default('pending'); // Project status
-            $table->enum('project_type', ['ongoing', 'upcoming', 'completed'])->default('ongoing'); // Project Type
+            $table->enum('project_type', ['ongoing', 'Running', 'upcoming', 'completed'])->default('ongoing'); // Project Type
             $table->text('description')->nullable();
             $table->longText('terms_conditions')->nullable();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
