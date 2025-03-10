@@ -55,7 +55,7 @@
                                             <tr class="{{ $isLatest ? 'bg-success text-white' : 'bg-light' }}">
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>{{ $voucher->transaction_code }}</td>
-                                                <td>{{ $voucher->company->name ?? 'N/A' }} / {{ $voucher->branch->name ?? 'N/A' }}</td>
+                                                <td>{{ $voucher->company->name ?? get_company_info()->company_name }} / {{ $voucher->branch->name ?? get_company_info()->company_branch }}</td>
                                                 {{-- <td>
                                                     <strong>{{ $voucher->details->pluck('ledger.name')->filter()->implode(', ') }}</strong>
                                                 </td>
@@ -108,8 +108,8 @@
                                                     <!-- Invoice Details -->
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <strong>Company Name:</strong> {{ $voucher->company->name ?? 'N/A' }}<br>
-                                                            <strong>Branch Name:</strong> {{ $voucher->branch->name ?? 'N/A' }}<br>
+                                                            <strong>Company Name:</strong> {{ $voucher->company->name ?? get_company_info()->company_name }}<br>
+                                                            <strong>Branch Name:</strong> {{ $voucher->branch->name ?? get_company_info()->company_branch  }}<br>
                                                         </div>
                                                         <div class="col-md-6 text-right">
                                                             <strong>Date:</strong> {{ date('d M, Y', strtotime($voucher->transaction_date)) }}<br>

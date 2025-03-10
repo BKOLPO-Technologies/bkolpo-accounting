@@ -16,7 +16,8 @@ class CompanyInformationSeeder extends Seeder
     {
         CompanyInformation::updateOrCreate(
             [
-                'company_name' => 'Bkolpo Technologies',
+                'company_name' => 'Bkolpo Constructions Ltd',
+                'company_branch' => 'Tongi,Gazipur',
             ],
             [
                 'company_type' => 'Software Company',
@@ -26,8 +27,8 @@ class CompanyInformationSeeder extends Seeder
                 'country' => 'Bangladesh',
                 'address' => 'Tokyo Tower(6th Floor) CeragAli, Tongi, Gazipur-1711, Bangladesh',
                 'address_optional' => 'Tokyo Tower(6th Floor) CeragAli, Tongi, Gazipur-1711, Bangladesh',
-                'email' => 'demo@gmail.com',
-                'phone' => '+8801300295247',
+                'email' => 'info@bkolpo.com.bd',
+                'phone' => '01730742238',
                 'city' => 'Gazipur',
                 'state' => 'Bangladesh',
                 'post_code' => '1000',

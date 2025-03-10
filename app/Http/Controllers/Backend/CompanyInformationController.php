@@ -73,6 +73,7 @@ class CompanyInformationController extends Controller
         // dd($company);
 
         $company->company_name  = $request->company_name;
+        $company->company_branch= $request->company_branch;
         $company->country       = $request->country;
         $company->address       = $request->address;
         $company->city          = $request->city;

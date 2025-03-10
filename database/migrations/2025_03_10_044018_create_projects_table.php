@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('projects', function (Blueprint $table) {
@@ -13,7 +16,7 @@ return new class extends Migration
             $table->string('project_name');
             $table->string('project_location');
             $table->string('project_coordinator');
-            // $table->unsignedBigInteger('client_id'); // Foreign key
+            $table->unsignedBigInteger('client_id'); // Foreign key
             $table->string('reference_no')->unique();
             $table->date('schedule_date')->nullable();
             $table->decimal('total_discount', 10, 2)->default(0);
@@ -28,11 +31,14 @@ return new class extends Migration
             $table->enum('project_type', ['ongoing', 'upcoming', 'completed'])->default('ongoing'); // Project Type
             $table->text('description')->nullable();
             $table->longText('terms_conditions')->nullable();
-            // $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('projects');

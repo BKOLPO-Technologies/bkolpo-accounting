@@ -133,7 +133,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-11 mb-3">
+                                        <div class="col-md-8 mb-3">
                                             <label for="logo" class="form-label">Company Logo</label>
                                             <input type="file" class="form-control" id="logo" name="logo" accept="image/*">
                                         </div>
@@ -145,6 +145,18 @@
                                                     src="{{ !empty($company->logo) ? url('upload/company/' . $company->logo) : url(asset('backend/logo.jpg')) }}" 
                                                     alt="Logo"
                                                     style="width: 100%; height: 60px; border: 1px solid #ddd; border-radius: 5px;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <div class="form-group">
+                                                <label for="company_branch">Company Branch</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                                    <input type="text" name="company_branch" value="{{ old('company_branch', $company->company_branch ?? '') }}" id="company_branch" class="form-control" placeholder="Enter Company Branch">
+                                                </div>
+                                                @error('company_branch')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>

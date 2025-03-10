@@ -3,6 +3,7 @@
 use Rakibhstu\Banglanumber\NumberToBangla;
 
 use App\Models\JournalVoucherDetail;
+use App\Models\CompanyInformation;
 
 function journalvoucher()
 {
@@ -58,4 +59,14 @@ if (!function_exists('bdt')) {
         return 'BDT'; // Taka symbol
     }
 }
+
+
+
+if (!function_exists('get_company_info')) {
+    function get_company_info()
+    {
+        return CompanyInformation::first();
+    }
+}
+
 
