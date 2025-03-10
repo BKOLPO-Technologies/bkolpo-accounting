@@ -234,7 +234,7 @@
                                             </div>
                                             <div class="col-12 col-lg-6 mb-2">
                                                 <label for="total_discount">Total Discount</label>
-                                                <input type="number" min="0" id="total_discount" name="total_discount" class="form-control" placeholder="Enter Total Discount" />
+                                                <input type="number" id="total_discount" name="total_discount" class="form-control" placeholder="Enter Total Discount" />
                                             </div>
                                         </div>
 
@@ -371,10 +371,10 @@
 
         // Manually update total discount in the input field and reflect it in the calculation
         // Get the manually entered discount from the total_discount field
-        let manualTotalDiscount = parseFloat($('#total_discount').val()) || totalDiscount;
+        let manualTotalDiscount = parseFloat($('#total_discount').val()) || 0;
 
         // Update total discount with the sum of product-level discounts and manual discount
-        $('#total_discount').val(manualTotalDiscount.toFixed(2));
+        //$('#total_discount').val(manualTotalDiscount.toFixed(2));
 
         let transportCost = parseFloat($('#transport_cost').val()) || 0;
         let carryingCharge = parseFloat($('#carrying_charge').val()) || 0;
@@ -387,7 +387,7 @@
     }
 
     // Trigger calculation on unit price, quantity, discount, and total_discount fields
-    $(document).on('input keyup', '.unit-price, .quantity, .discount, #transport_cost, #carrying_charge, #vat, #tax', function () {
+    $(document).on('input keyup', '.unit-price, .quantity, .discount, #transport_cost, #carrying_charge, #vat, #tax, #total_discount', function () {
         calculateTotal();
     });
 
