@@ -132,11 +132,11 @@
           className: "btn btn-warning",
           text: '<i class="fa fa-print"></i> Print' // Add Font Awesome icon
         },
-        {
-          extend: "colvis",
-          className: "btn btn-dark",
-          text: '<i class="fa fa-eye"></i> Column Visibility' // Add Font Awesome icon
-        }
+        // {
+        //   extend: "colvis",
+        //   className: "btn btn-dark",
+        //   text: '<i class="fa fa-eye"></i> Column Visibility' // Add Font Awesome icon
+        // }
       ],
       "lengthMenu": [10, 25, 50, 100]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
