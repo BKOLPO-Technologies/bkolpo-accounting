@@ -179,7 +179,7 @@
                                 <!-- Discount -->
                                 <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="discount">Discount</label>
-                                    <input type="number" min="0" id="discount" name="discount" class="form-control" value="0" oninput="updateTotal()" />
+                                    <input type="number" min="0" id="discount" name="discount" class="form-control" value="0" oninput="updateTotal()"/>
                                 </div>
 
                                 <!-- Total -->
@@ -327,7 +327,7 @@
                 </td>
                 <td class="subtotal">${productPrice.toFixed(2)}</td>
                 <td class="discount-col">
-                    <input type="number" class="product-discount form-control" value="0" oninput="updateRow(this)" />
+                    <input type="number" class="product-discount form-control" value="0" oninput="updateRow(this)" step="0.1" min="0"/>
                 </td>
                 <td class="total">${productPrice.toFixed(2)}</td>
                 <td><button type="button" class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button></td>
