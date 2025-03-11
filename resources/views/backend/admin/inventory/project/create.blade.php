@@ -286,10 +286,10 @@
                                     </div>
                                     <select name="project_type" id="project_type" class="form-control @error('project_type') is-invalid @enderror" required>
                                         <option value="" disabled>Select Project Type</option>
-                                        <option value="Ongoing" {{ old('project_type') == 'Ongoing' ? 'selected' : '' }}>Ongoing</option>
+                                        <option value="ongoing" {{ old('project_type') == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
                                         <option value="Running" {{ old('project_type') == 'Running' ? 'selected' : '' }}>Running</option>
-                                        <option value="Upcoming" {{ old('project_type') == 'Upcoming' ? 'selected' : '' }}>Upcoming</option>
-                                        <option value="Completed" {{ old('project_type') == 'Completed' ? 'selected' : '' }}>Completed</option>
+                                        <option value="upcoming" {{ old('project_type') == 'upcoming' ? 'selected' : '' }}>Upcoming</option>
+                                        <option value="completed" {{ old('project_type') == 'completed' ? 'selected' : '' }}>Completed</option>
                                     </select>
                                 </div>
                                 @error('project_type')

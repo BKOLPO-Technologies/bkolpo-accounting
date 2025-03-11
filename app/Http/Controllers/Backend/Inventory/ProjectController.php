@@ -80,7 +80,7 @@ class ProjectController extends Controller
                 'tax' => 'nullable|numeric|min:0',
                 'grand_total' => 'nullable|numeric|min:0',
                 'paid_amount' => 'nullable|numeric|min:0',
-                'project_type' => 'required|in:ongoing,upcoming,completed',
+                'project_type' => 'required|in:ongoing,Running,upcoming,completed',
                 'description' => 'nullable|string',
                 'terms_conditions' => 'nullable|string',
                 'items' => 'required|array',
@@ -98,6 +98,8 @@ class ProjectController extends Controller
                 'total' => 'required|array',
                 'total.*' => 'required|numeric|min:0',
             ]);
+
+            //dd($request->all());
     
             // Store the project in the database
             $project = Project::create([
@@ -178,6 +180,7 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
+
         //dd($request->all());
         DB::beginTransaction(); // Start a database transaction
 
@@ -198,7 +201,7 @@ class ProjectController extends Controller
                 'tax' => 'nullable|numeric|min:0',
                 'grand_total' => 'nullable|numeric|min:0',
                 'paid_amount' => 'nullable|numeric|min:0',
-                'project_type' => 'required|in:ongoing,upcoming,completed',
+                'project_type' => 'required|in:ongoing,Running,upcoming,completed',
                 'description' => 'nullable|string',
                 'terms_conditions' => 'nullable|string',
                 'items' => 'required|array',
@@ -215,6 +218,8 @@ class ProjectController extends Controller
                 'discount.*' => 'nullable|numeric|min:0',
                 'total' => 'required|array',
                 'total.*' => 'required|numeric|min:0',
+                'item_ids' => 'nullable|array', // To track existing item IDs
+                'item_ids.*' => 'nullable|integer|exists:project_items,id', 
             ]);
 
             // Update project details
@@ -238,20 +243,40 @@ class ProjectController extends Controller
                 'terms_conditions' => $request->terms_conditions,
             ]);
 
-            // Delete old items and insert new ones
-            $project->items()->delete(); // Remove old items
+            // Get existing project items
+            $existingItems = $project->items()->pluck('id')->toArray();
+            $incomingItemIds = $request->item_ids ?? []; // IDs of existing items from request
 
+            // Identify items to be deleted
+            $itemsToDelete = array_diff($existingItems, $incomingItemIds);
+            ProjectItem::whereIn('id', $itemsToDelete)->delete(); // Delete removed items
+
+            // Loop through request items to update or create
             foreach ($request->items as $index => $item) {
-                ProjectItem::create([
-                    'project_id' => $project->id,
-                    'items' => $item,
-                    'order_unit' => $request->order_unit[$index],
-                    'unit_price' => $request->unit_price[$index],
-                    'quantity' => $request->quantity[$index],
-                    'subtotal' => $request->subtotal[$index],
-                    'discount' => $request->discount[$index] ?? 0,
-                    'total' => $request->total[$index],
-                ]);
+                if (!empty($incomingItemIds[$index])) {
+                    // Update existing item
+                    ProjectItem::where('id', $incomingItemIds[$index])->update([
+                        'items' => $item,
+                        'order_unit' => $request->order_unit[$index],
+                        'unit_price' => $request->unit_price[$index],
+                        'quantity' => $request->quantity[$index],
+                        'subtotal' => $request->subtotal[$index],
+                        'discount' => $request->discount[$index] ?? 0,
+                        'total' => $request->total[$index],
+                    ]);
+                } else {
+                    // Create new item
+                    ProjectItem::create([
+                        'project_id' => $project->id,
+                        'items' => $item,
+                        'order_unit' => $request->order_unit[$index],
+                        'unit_price' => $request->unit_price[$index],
+                        'quantity' => $request->quantity[$index],
+                        'subtotal' => $request->subtotal[$index],
+                        'discount' => $request->discount[$index] ?? 0,
+                        'total' => $request->total[$index],
+                    ]);
+                }
             }
 
             DB::commit(); // Commit transaction if everything is successful
@@ -267,6 +292,7 @@ class ProjectController extends Controller
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
+
 
 
     /**
