@@ -17,19 +17,20 @@ use App\Http\Controllers\Backend\EmployeeController;
 use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\LedgerGroupController;
 use App\Http\Controllers\Backend\PaymentMethodController;
+use App\Http\Controllers\Backend\Inventory\SalesController;
+use App\Http\Controllers\Backend\Inventory\ClientController;
 use App\Http\Controllers\Backend\Inventory\ProductController;
+use App\Http\Controllers\Backend\Inventory\ProjectController;
 use App\Http\Controllers\Backend\CompanyInformationController;
 use App\Http\Controllers\Backend\Inventory\CategoryController;
-use App\Http\Controllers\Backend\Inventory\ClientController;
 use App\Http\Controllers\Backend\Inventory\PurchaseController;
-use App\Http\Controllers\Backend\Inventory\SalesController;
 use App\Http\Controllers\Backend\Inventory\QuotationController;
 use App\Http\Controllers\Backend\Inventory\WorkOrderController;
-use App\Http\Controllers\Backend\Inventory\IncomingChalanController;
-use App\Http\Controllers\Backend\Inventory\OutComingChalanController;
 use App\Http\Controllers\Backend\Inventory\SalePaymentController;
 use App\Http\Controllers\Backend\Inventory\SaleReceiptController;
-use App\Http\Controllers\Backend\Inventory\ProjectController;
+use App\Http\Controllers\Backend\Inventory\IncomingChalanController;
+use App\Http\Controllers\Backend\Inventory\OutComingChalanController;
+use App\Http\Controllers\Backend\Inventory\ProductSaleReceiveController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
@@ -347,13 +348,23 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/delete/{id}', [OutComingChalanController::class, 'destroy'])->name('outcoming.chalan.destroy');
     });
 
-
-
-
     // Project Routes
     Route::resource('projects', ProjectController::class);
     Route::get('/projects/delete/{id}', [ProjectController::class, 'destroy'])->name('projects.destroy');
     Route::get('/projects/sales/{id}', [ProjectController::class, 'projectsSales'])->name('projects.sales');
+
+    /* ==================== Project Payment Receipt Controller =================== */
+    Route::prefix('project/payment/receipt')->group(function () {
+        Route::get('/', [ProductSaleReceiveController::class, 'index'])->name('project.receipt.payment.index');
+        Route::get('/create', [ProductSaleReceiveController::class, 'create'])->name('project.receipt.payment.create');
+        Route::post('/store', [ProductSaleReceiveController::class, 'store'])->name('project.receipt.payment.store');
+        Route::get('/view/{id}', [ProductSaleReceiveController::class, 'view'])->name('project.receipt.payment.show');
+        Route::get('/edit/{id}', [ProductSaleReceiveController::class, 'edit'])->name('project.receipt.payment.edit');
+        Route::put('/update/{id}', [ProductSaleReceiveController::class, 'update'])->name('project.receipt.payment.update');
+        Route::get('/delete/{id}', [ProductSaleReceiveController::class, 'destroy'])->name('project.receipt.payment.destroy');
+        Route::get('/get-ledgers-by-group', [ProductSaleReceiveController::class, 'getLedgersByGroup'])->name('project.receipt.payment.get.ledgers.by.group');
+        Route::get('/payment/get-chalans-by-client', [ProductSaleReceiveController::class, 'getChalansByClient'])->name('project.receipt.payment.get.chalans.by.client');
+    });
     
     // Quotation Routes
     Route::resource('quotations', QuotationController::class);

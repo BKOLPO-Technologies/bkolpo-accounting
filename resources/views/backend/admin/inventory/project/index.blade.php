@@ -26,7 +26,7 @@
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
-                                    <a href="{{ route('projects.create') }}" class="btn btn-sm btn-success rounded-0">
+                                    <a href="{{ route('project.receipt.payment.create') }}" class="btn btn-sm btn-success rounded-0">
                                         <i class="fas fa-plus fa-sm"></i> Add New Project
                                     </a>
                                 </div>
