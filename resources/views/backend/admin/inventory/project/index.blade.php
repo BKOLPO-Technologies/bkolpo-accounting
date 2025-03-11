@@ -38,9 +38,8 @@
                                             <th>SL</th>
                                             <th>Project Name</th>
                                             <th>Customer Name</th>
+                                            <th>Project Coordinator Name</th>
                                             <th>Total Amount</th>
-                                            <th>Paid Amount</th>
-                                            <th>Due Amount</th>
                                             <th>Status</th>
                                             <th>Project Type</th>
                                             <th>Actions</th>
@@ -52,9 +51,8 @@
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>{{ $project->project_name }}</td>
                                                 <td>{{ $project->client->name ?? 'N/A' }}</td>
+                                                <td>{{ $project->project_coordinator ?? 'N/A' }}</td>
                                                 <td>{{ bdt() }} {{ number_format($project->grand_total, 2) }}</td>
-                                                <td>{{ bdt() }} {{ number_format($project->paid_amount, 2) }}</td>
-                                                <td>{{ bdt() }} {{ number_format($project->grand_total - $project->paid_amount, 2) }}</td>
                                                 <td>
                                                     @if($project->status == 'pending')
                                                         <span class="badge bg-danger">Pending</span>
@@ -81,9 +79,9 @@
                                                         <i class="fas fa-shopping-cart"></i>
                                                     </a>
                                                     <!-- View Button -->
-                                                    <a href="{{ route('projects.show', $project->id) }}" class="btn btn-success btn-sm">
+                                                    {{-- <a href="{{ route('projects.show', $project->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
-                                                    </a>
+                                                    </a> --}}
                                                     <!-- Edit Button -->
                                                     <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-primary btn-sm">
                                                         <i class="fas fa-edit"></i>
