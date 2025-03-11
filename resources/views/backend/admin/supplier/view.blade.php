@@ -71,24 +71,50 @@
                                                 <h5>Balance Summary</h5>
                                                 <hr>
                                                 <ul class="list-group list-group-flush">
-                                                    <!-- Total Spent Row (Total amount the supplier has spent) -->
+                                                    <!-- Total Purchases Products -->
                                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                                         <span class="ml-2">Total Purchases Products</span>
                                                         <span class="tag tag-default tag-pill bg-success p-1">
-                                                            ৳ {{ number_format($totalPurchases, 2) }}
+                                                            {{ bdt() }} {{ number_format($totalPurchaseAmount, 2) }}
                                                         </span>
                                                     </li>
                                         
-                                                    <!-- Due Amount Row (Amount the supplier still owes) -->
+                                                    <!-- Amount Paid -->
                                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                        <span class="ml-2">Amount Due</span>
+                                                        <span class="ml-2">Total Paid Amount</span>
+                                                        <span class="tag tag-default tag-pill bg-info p-1">
+                                                            {{ bdt() }} {{ number_format($totalPaidAmount, 2) }}
+                                                        </span>
+                                                    </li>
+                                            
+                                                    <!-- Amount Due -->
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <span class="ml-2">Total Due Amount</span>
                                                         <span class="tag tag-default tag-pill bg-warning p-1">
-                                                            ৳ {{ number_format($totalDue, 2) }}
+                                                            {{ bdt() }} {{ number_format($totalDueAmount, 2) }}
                                                         </span>
                                                     </li>
                                                 </ul>
                                             </div>
+                                        </div><hr>
+                                        
+                                        <div class="row mt-3">
+                                            <!-- Button to View Purchase History -->
+                                            <div class="col-md-6">
+                                                <a href="{{ route('admin.supplier.products', $supplier->id) }}" class="btn btn-primary btn-sm">
+                                                   View Products Purchased
+                                                </a>
+                                            </div>
+                                        
+                                            <!-- Button to View Transaction History -->
+                                            <div class="col-md-6 text-right">
+                                                <a href="{{ route('admin.supplier.transactions', $supplier->id) }}" class="btn btn-success btn-sm">
+                                                    View Transactions
+                                                </a>
+                                            </div>
                                         </div>
+                                        
+                                        
                                         
                                     </div>
                                 </div>

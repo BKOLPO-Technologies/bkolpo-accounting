@@ -178,6 +178,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/edit/{id}', [SupplierController::class, 'AdminSupplierEdit'])->name('admin.supplier.edit');
         Route::put('/update/{id}', [SupplierController::class, 'AdminSupplierUpdate'])->name('admin.supplier.update');
         Route::delete('/delete/{id}', [SupplierController::class, 'AdminSupplierDestroy'])->name('admin.supplier.destroy');
+        Route::get('/products/{supplier}', [SupplierController::class, 'viewProducts'])->name('admin.supplier.products');
+        Route::get('/transactions/{supplier}', [SupplierController::class, 'viewTransactions'])->name('admin.supplier.transactions');
+
 
     });
 

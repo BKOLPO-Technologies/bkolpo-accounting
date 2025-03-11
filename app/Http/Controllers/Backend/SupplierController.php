@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Models\Supplier;
+use App\Models\Payment;
+use App\Models\Purchase;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -28,13 +30,11 @@ class SupplierController extends Controller
         $supplier = Supplier::findOrFail($id);
         $pageTitle = 'Supplier View';
 
-        // Get the total purchases and total due
-        $totalPurchases = $supplier->totalPurchases(); // Total purchase
-        $totalDue = $supplier->totalDue(); // Total due
+        $totalPurchaseAmount = $supplier->totalPurchaseAmount();
+        $totalPaidAmount = $supplier->totalPaidAmount();
+        $totalDueAmount = $supplier->totalDueAmount();
 
-        // dd($totalPurchases,$totalDue);
-
-        return view('backend.admin.supplier.view',compact('pageTitle', 'supplier','totalPurchases','totalDue'));
+        return view('backend.admin.supplier.view',compact('pageTitle', 'supplier','totalPurchaseAmount','totalPaidAmount','totalDueAmount'));
 
     }
 
@@ -174,6 +174,43 @@ class SupplierController extends Controller
         // Redirect back to the supplier index with a success message
         return redirect()->route('admin.supplier.index')->with('success', 'Supplier deleted successfully!');
     }
+
+
+    public function viewProducts($supplierId)
+    {
+        // Fetch the supplier
+        $supplier = Supplier::findOrFail($supplierId);
+
+        // Fetch the purchased products for this supplier
+        $purchasedProducts = Purchase::where('supplier_id', $supplierId)
+                                    ->with('products') // Assuming Purchase has a relation with products
+                                    ->get();
+
+        $pageTitle = 'Purchased Products History';
+
+        $totalPurchaseAmount = $supplier->totalPurchaseAmount();
+        $totalPaidAmount = $supplier->totalPaidAmount();
+        $totalDueAmount = $supplier->totalDueAmount();
+        $totalDiscounta = $supplier->totalDiscount();
+
+        // Return the view for purchased products
+        return view('backend.admin.supplier.products', compact('pageTitle','supplier', 'purchasedProducts','totalPurchaseAmount','totalDiscounta','totalPaidAmount','totalDueAmount'));
+    }
+
+    public function viewTransactions($supplierId)
+    {
+        // Fetch the supplier
+        $supplier = Supplier::findOrFail($supplierId);
+
+        // Fetch the transactions/payments related to this supplier
+        $transactions = Payment::where('supplier_id', $supplierId)->get();
+
+        $pageTitle = 'Supplier Transactions';
+
+        // Return the view for transactions
+        return view('backend.admin.supplier.transactions', compact('pageTitle','supplier', 'transactions'));
+    }
+
 
 
 }

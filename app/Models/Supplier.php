@@ -2,35 +2,26 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use DB;
+use App\Traits\CalculatesSupplierPurchases;
 
 class Supplier extends Model
 {
+    use CalculatesSupplierPurchases;
+
     protected $guarded = [];
 
-    // Define relationship with purchases
+    // Define the relationship with purchases
     public function purchases()
     {
-        return $this->hasMany(Purchase::class); // Each supplier has many purchases
+        return $this->hasMany(Purchase::class);
     }
 
-    // Get Total Purchases for a supplier
-    public function totalPurchases()
+    // Define the relationship with payments
+    public function payments()
     {
-        return $this->purchases()
-                    ->join('purchase_product', 'purchases.id', '=', 'purchase_product.purchase_id')
-                    ->sum(DB::raw('(purchase_product.quantity * purchase_product.price) - purchase_product.discount'));
+        return $this->hasMany(Payment::class);
     }
 
-
-    // Get Total Due for a supplier (Amount remaining)
-    public function totalDue()
-    {
-        return $this->purchases()
-                    ->leftJoin('payments', 'purchases.invoice_no', '=', 'payments.invoice_no')
-                    ->selectRaw('SUM(purchases.total) - SUM(payments.pay_amount) as due_amount')
-                    ->groupBy('purchases.invoice_no')
-                    ->sum('due_amount');
-    }
+   
 }
 
