@@ -126,14 +126,27 @@
                                         <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
+                                <div class="col-lg-3 col-6">
+                                    <!-- small box -->
+                                    <div class="small-box bg-success">
+                                        <div class="inner">
+                                            <h3>{{ $dueAmount }}</h3>
+                        
+                                        <p>Due Amount</p>
+                                        </div>
+                                        <div class="icon">
+                                        <i class="ion ion-stats-bars"></i>
+                                        </div>
+                                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
                                 <!-- ./col -->
                                 <div class="col-lg-3 col-6">
                                     <!-- small box -->
                                     <div class="small-box bg-warning">
                                         <div class="inner">
-                                        <h3>{{ $project->status }}</h3>
-                        
-                                        <p>Project Status</p>
+                                            <h3>{{ ucwords($project->status) }}</h3>
+                                            <p>{{ ucwords('Project Status') }}</p>
                                         </div>
                                         <div class="icon">
                                             <i class="fas fa-tasks"></i>

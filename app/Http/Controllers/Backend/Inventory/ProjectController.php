@@ -190,10 +190,11 @@ class ProjectController extends Controller
         //$trialBalances = $this->getTrialBalance($fromDate, $toDate);
 
         // Calculate totals in backend
-        $totalAmount = $project->sales->sum('total');
-        $paidAmount = $project->sales->sum('paid_amount');
+        $totalAmount = $project->grand_total;
+        $paidAmount = $project->paid_amount;
+        $dueAmount = $project->grand_total-$project->paid_amount;
 
-        return view('backend.admin.inventory.project.sale',compact('pageTitle', 'project', 'fromDate', 'toDate', 'totalAmount', 'paidAmount'));
+        return view('backend.admin.inventory.project.sale',compact('pageTitle', 'project', 'fromDate', 'toDate', 'totalAmount', 'paidAmount','dueAmount'));
     }
 
     /**
