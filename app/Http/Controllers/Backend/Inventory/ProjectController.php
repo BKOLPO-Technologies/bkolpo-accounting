@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log; 
 use Illuminate\Database\QueryException;
 use Exception;
+use App\Traits\TrialBalanceTrait;
 
 class ProjectController extends Controller
 {
@@ -166,7 +167,7 @@ class ProjectController extends Controller
         return view('backend.admin.inventory.project.view',compact('pageTitle', 'project'));
     }
 
-    public function projectsSales(string $id)
+    public function projectsSales(Request $request, $id)
     {
         //dd($id);
         $pageTitle = 'Project Sale Details';
@@ -175,7 +176,20 @@ class ProjectController extends Controller
             ->with(['client', 'items', 'sales']) 
             ->first();
 
-        return view('backend.admin.inventory.project.sale',compact('pageTitle', 'project'));
+        // Check if the request has date filters
+        if ($request->has('from_date') && $request->has('to_date')) {
+            // Use the provided date range
+            $fromDate = $request->input('from_date');
+            $toDate = $request->input('to_date');
+        } else {
+            // Default: Last 1 month from today
+            $fromDate = now()->subMonth()->format('Y-m-d'); // Last 1 month
+            $toDate = now()->format('Y-m-d'); // Today's date
+        }
+        // Fetch the trial balance data based on the date range
+        //$trialBalances = $this->getTrialBalance($fromDate, $toDate);
+
+        return view('backend.admin.inventory.project.sale',compact('pageTitle', 'project', 'fromDate', 'toDate'));
     }
 
     /**
