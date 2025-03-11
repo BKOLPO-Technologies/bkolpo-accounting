@@ -18,6 +18,7 @@ use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\LedgerGroupController;
 use App\Http\Controllers\Backend\PaymentMethodController;
 use App\Http\Controllers\Backend\Inventory\SalesController;
+use App\Http\Controllers\Backend\Inventory\StockController;
 use App\Http\Controllers\Backend\Inventory\ClientController;
 use App\Http\Controllers\Backend\Inventory\ProductController;
 use App\Http\Controllers\Backend\Inventory\ProjectController;
@@ -374,7 +375,28 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/delete/{id}', [WorkOrderController::class, 'destroy'])->name('workorders.destroy');
     Route::get('/workorders/invoice/{id}', [WorkOrderController::class, 'invoice'])->name('workorders.invoice');
 
+
+    /* ==================== Stock =================== */
+    Route::prefix('stock')->group(function () {
+        Route::get('/', [StockController::class, 'index'])->name('stock.index');
+        // Route::get('/create', [OutComingChalanController::class, 'create'])->name('outcoming.chalan.create');
+        // Route::post('/store', [OutComingChalanController::class, 'store'])->name('outcoming.chalan.store');
+        Route::get('/view/{id}', [StockController::class, 'view'])->name('stock.show');
+        // Route::get('/edit/{id}', [OutComingChalanController::class, 'edit'])->name('outcoming.chalan.edit');
+        // Route::put('/update/{id}', [OutComingChalanController::class, 'update'])->name('outcoming.chalan.update');
+        // Route::get('/delete/{id}', [OutComingChalanController::class, 'destroy'])->name('outcoming.chalan.destroy');
+
+
+
+        Route::get('/out', [StockController::class, 'Out'])->name('stock.out');
+        Route::get('/out/{id}', [StockController::class, 'OutView'])->name('stock.out.view');
+        Route::get('/in', [StockController::class, 'In'])->name('stock.in');
+        Route::get('/in/{id}', [StockController::class, 'InView'])->name('stock.in.view');
+    });
+
 });
+
+
 
 /* =============== End Admin Route  ============= */
 
