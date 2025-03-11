@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('receipt.payment.store') }}" method="POST">
+                        <form action="{{ route('project.receipt.payment.store') }}" method="POST">
                             @csrf
                             <div class="row">
                                

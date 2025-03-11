@@ -44,7 +44,24 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+                                        @foreach($receipts as $key => $receipt)
+                                            <tr>
+                                                <td>{{ $key + 1 }}</td>
+                                                <td>{{ $receipt->invoice_no ?? 'N/A' }}</td>
+                                                <td>{{ $receipt->client->name ?? 'N/A' }}</td>
+                                                <td>{{ number_format($receipt->pay_amount, 2) }}</td>
+                                                <td>
+                                                    @if($receipt->payment_method == 'cash')
+                                                        Cash
+                                                    @elseif($receipt->payment_method == 'bank')
+                                                        Bank
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                </td>
+                                                <td>{{ $receipt->payment_date }}</td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
