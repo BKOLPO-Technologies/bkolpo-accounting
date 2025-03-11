@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Inventory;
 use App\Models\Sale;
 use App\Models\Client;
 use App\Models\Ledger;
+use App\Models\Project;
 use App\Models\Receipt;
 use App\Models\LedgerGroup;
 use Illuminate\Http\Request;
@@ -38,8 +39,9 @@ class ProductSaleReceiveController extends Controller
 
         $customers = Client::latest()->get();
         $ledgerGroups = LedgerGroup::with('ledgers')->latest()->get();
+        $projects = Project::all();
 
-        return view('backend.admin.inventory.project.payment.receipt.create',compact('pageTitle', 'customers', 'ledgerGroups'));
+        return view('backend.admin.inventory.project.payment.receipt.create',compact('pageTitle', 'customers', 'ledgerGroups', 'projects'));
     }
 
     public function store(Request $request)
