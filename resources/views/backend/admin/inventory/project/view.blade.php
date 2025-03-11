@@ -5,12 +5,21 @@
             display: none !important;
         }
     } */
+    @media screen {
+        .print-only {
+            display: none;
+        }
+    }
 
     @media print {
         /* Set A4 Page Size */
         @page {
             size: A4 portrait; /* or "A4 landscape" */
             margin: 20mm; /* Adjust margins */
+        }
+
+        .print-only {
+            display: block !important;
         }
 
         /* Ensure Proper Page Breaks */
@@ -83,6 +92,9 @@
                         </div>
 
                         <div id="printable-area">
+
+                            <h4 class="ml-3 mb-0 print-only">{{ $pageTitle ?? 'N/A' }}</h4>
+
                             <div class="card-body">
                                 <table class="table table-bordered">
                                     <tr>
@@ -147,7 +159,16 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                $subtotal = 0;
+                                                $grandTotal = 0;
+                                            @endphp
                                             @foreach ($project->items as $index => $item)
+                                                @php
+                                                $productTotal = ($item->unit_price * $item->quantity) - $item->discount;
+                                                $subtotal += $productTotal;
+                                                $grandTotal = $subtotal - $project->total_discount + $project->transport_cost + $project->carrying_charge + $project->vat + $project->tax;
+                                                @endphp
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $item->items }}</td>
@@ -164,17 +185,68 @@
                                 </div>
                             </div>
 
+                            <hr>
+                            
+                            <div class="row">
+                                <div class="col-6">
+                                </div> 
+                                <div class="col-6">
+                                    {{-- <p class="lead">Amount Due 2/22/2014</p> --}}
+                            
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tr>
+                                                <th style="width:50%">Subtotal:</th>
+                                                <td>{{ bdt() }} {{ number_format($subtotal, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Total Discount:</th>
+                                                <td>{{ bdt() }} {{ number_format($project->total_discount, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Transport Cost:</th>
+                                                <td>{{ bdt() }} {{ number_format($project->transport_cost, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Carrying/Labour Charge:</th>
+                                                <td>{{ bdt() }} {{ number_format($project->carrying_charge, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Vat:</th>
+                                                <td>{{ bdt() }} {{ number_format($project->vat, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Tax:</th>
+                                                <td>{{ bdt() }} {{ number_format($project->tax, 2) }}</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <th>Total:</th>
+                                                <td>{{ bdt() }} {{ number_format($grandTotal, 2) }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
+
+                        <hr/>
+
+                        <div class="row no-print">
+                            <div class="col-12">
+                                <button class="btn btn-primary ml-3 mb-3" onclick="printBalanceSheet()">
+                                    <i class="fa fa-print"></i> Print
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="mt-4">
-            <button class="btn btn-primary" onclick="printBalanceSheet()">
-                <i class="fa fa-print"></i> Print
-            </button>
-        </div>
+        
 
         <br/>
         <br/>
