@@ -156,7 +156,14 @@ class ProjectController extends Controller
      */
     public function show(string $id)
     {
-        //
+        //dd($id);
+        $pageTitle = 'Project Details';
+
+        $project = Project::where('id', $id)
+            ->with(['client', 'items']) 
+            ->first();
+
+        return view('backend.admin.inventory.project.view',compact('pageTitle', 'project'));
     }
 
     /**
