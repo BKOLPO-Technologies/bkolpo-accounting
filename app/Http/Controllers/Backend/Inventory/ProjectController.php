@@ -189,7 +189,11 @@ class ProjectController extends Controller
         // Fetch the trial balance data based on the date range
         //$trialBalances = $this->getTrialBalance($fromDate, $toDate);
 
-        return view('backend.admin.inventory.project.sale',compact('pageTitle', 'project', 'fromDate', 'toDate'));
+        // Calculate totals in backend
+        $totalAmount = $project->sales->sum('total');
+        $paidAmount = $project->sales->sum('paid_amount');
+
+        return view('backend.admin.inventory.project.sale',compact('pageTitle', 'project', 'fromDate', 'toDate', 'totalAmount', 'paidAmount'));
     }
 
     /**

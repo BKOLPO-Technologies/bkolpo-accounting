@@ -91,7 +91,77 @@
                                 </a>
                             </div>
                         </div>
+                        
+                        <div class="card-body">
+                            <!-- Small boxes (Stat box) -->
+                            <div class="row">
+                                <div class="col-lg-3 col-6">
+                                    <!-- small box -->
+                                    <div class="small-box bg-info">
+                                        <div class="inner">
+                                        <h3>{{ $totalAmount }}</h3>
+                        
+                                        <p>Total Amount</p>
+                                        </div>
+                                        <div class="icon">
+                                        <i class="ion ion-bag"></i>
+                                        </div>
+                                        <a href="#" class="small-box-footer">
+                                            More info <i class="fas fa-arrow-circle-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-lg-3 col-6">
+                                    <!-- small box -->
+                                    <div class="small-box bg-success">
+                                        <div class="inner">
+                                            <h3>{{ $paidAmount }}</h3>
+                        
+                                        <p>Paid Amount</p>
+                                        </div>
+                                        <div class="icon">
+                                        <i class="ion ion-stats-bars"></i>
+                                        </div>
+                                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-lg-3 col-6">
+                                    <!-- small box -->
+                                    <div class="small-box bg-warning">
+                                        <div class="inner">
+                                        <h3>{{ $project->status }}</h3>
+                        
+                                        <p>Project Status</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-tasks"></i>
+                                        </div>
+                                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-lg-3 col-6">
+                                    <!-- small box -->
+                                    <div class="small-box bg-danger">
+                                        <div class="inner">
+                                        <h3>{{ $project->project_type }}</h3>
+                        
+                                        <p>Project Type</p>
+                                        </div>
+                                        <div class="icon">
+                                        <i class="ion ion-pie-graph"></i>
+                                        </div>
+                                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <!-- ./col -->
+                            </div>
+                        </div>
 
+                        <hr/>
+                        
                         <form action="{{ route('report.trial.balance') }}" method="GET" class="mb-3">
                             <div class="row justify-content-center">
                                 <div class="col-md-3 mt-3">
