@@ -76,6 +76,10 @@
                                                     @endif
                                                 </td>
                                                 <td>
+                                                    <!-- Sale Button -->
+                                                    <a href="{{ route('projects.sales', $project->id) }}" class="btn btn-success btn-sm">
+                                                        <i class="fas fa-shopping-cart"></i>
+                                                    </a>
                                                     <!-- View Button -->
                                                     <a href="{{ route('projects.show', $project->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>

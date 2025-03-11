@@ -166,6 +166,18 @@ class ProjectController extends Controller
         return view('backend.admin.inventory.project.view',compact('pageTitle', 'project'));
     }
 
+    public function projectsSales(string $id)
+    {
+        //dd($id);
+        $pageTitle = 'Project Sale Details';
+
+        $project = Project::where('id', $id)
+            ->with(['client', 'items', 'sales']) 
+            ->first();
+
+        return view('backend.admin.inventory.project.sale',compact('pageTitle', 'project'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
