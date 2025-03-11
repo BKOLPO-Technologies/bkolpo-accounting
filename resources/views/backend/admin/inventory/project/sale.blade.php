@@ -1,4 +1,5 @@
 @extends('layouts.admin', ['pageTitle' => 'Project List'])
+
 <style>
     /* @media print {
         #filter-form {
@@ -91,6 +92,27 @@
                             </div>
                         </div>
 
+                        <form action="{{ route('report.trial.balance') }}" method="GET" class="mb-3">
+                            <div class="row justify-content-center">
+                                <div class="col-md-3 mt-3">
+                                    <label for="from_date">From Date:</label>
+                                    <input type="text" name="from_date" id="from_date" class="form-control" value="">
+                                </div>
+                                <div class="col-md-3 mt-3">
+                                    <label for="to_date">To Date:</label>
+                                    <input type="text" name="to_date" id="to_date" class="form-control" value="">
+                                </div>
+                                <div class="col-md-1 mt-3 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                                </div>
+                                <div class="col-md-1 mt-3 d-flex align-items-end">
+                                    <a href="{{ route('report.trial.balance') }}"  class="btn btn-danger w-100">Clear</a>
+                                </div>
+                            </div>
+                        </form>
+
+                        <hr/>
+
                         <div id="printable-area">
 
                             <h4 class="ml-3 mb-0 print-only">{{ $pageTitle ?? 'N/A' }}</h4>
@@ -142,43 +164,45 @@
 
                             <div class="mt-4">
                                 <div class="card-header">
-                                    <h4>Project Items</h4>
+                                    <h4>Sales list</h4>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Item Name</th>
-                                                <th>Order Unit</th>
-                                                <th>Unit Price</th>
-                                                <th>Quantity</th>
+                                                <th>Invoice No</th>
+                                                <th>Invoice Date</th>
                                                 <th>Subtotal</th>
                                                 <th>Discount</th>
                                                 <th>Total</th>
+                                                <th>Paid Amount</th>
+                                                <th>Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @php
-                                                $subtotal = 0;
-                                                $grandTotal = 0;
+                                                $total = 0;
+                                                $paidAmount = 0;
                                             @endphp
-                                            @foreach ($project->items as $index => $item)
+                                            @foreach ($project->sales as $index => $sale)
                                                 @php
-                                                $productTotal = ($item->unit_price * $item->quantity) - $item->discount;
-                                                $subtotal += $productTotal;
-                                                $grandTotal = $subtotal - $project->total_discount + $project->transport_cost + $project->carrying_charge + $project->vat + $project->tax;
+                                                $productTotal = $sale->total;
+                                                $total += $productTotal;
+                                                $individualPaidAmount = $sale->paid_amount;
+                                                $paidAmount += $individualPaidAmount;
                                                 @endphp
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
-                                                    <td>{{ $item->items }}</td>
-                                                    <td>{{ $item->order_unit }}</td>
-                                                    <td>{{ number_format($item->unit_price, 2) }}</td>
-                                                    <td>{{ $item->quantity }}</td>
-                                                    <td>{{ number_format($item->subtotal, 2) }}</td>
-                                                    <td>{{ number_format($item->discount, 2) }}</td>
-                                                    <td>{{ number_format($item->total, 2) }}</td>
+                                                    <td>{{ $sale->invoice_no }}</td>
+                                                    <td>{{ $sale->invoice_date }}</td>
+                                                    <td>{{ $sale->subtotal }}</td>
+                                                    <td>{{ $sale->discount }}</td>
+                                                    <td>{{ $sale->total }}</td>
+                                                    <td>{{ $sale->paid_amount }}</td>
+                                                    <td>{{ $sale->status }}</td>
                                                 </tr>
+
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -191,44 +215,27 @@
                                 <div class="col-6">
                                 </div> 
                                 <div class="col-6">
-                                    {{-- <p class="lead">Amount Due 2/22/2014</p> --}}
                             
+                                    <br/>
+                                    
                                     <div class="table-responsive">
                                         <table class="table">
                                             <tr>
-                                                <th style="width:50%">Subtotal:</th>
-                                                <td>{{ bdt() }} {{ number_format($subtotal, 2) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Total Discount:</th>
-                                                <td>{{ bdt() }} {{ number_format($project->total_discount, 2) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Transport Cost:</th>
-                                                <td>{{ bdt() }} {{ number_format($project->transport_cost, 2) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Carrying/Labour Charge:</th>
-                                                <td>{{ bdt() }} {{ number_format($project->carrying_charge, 2) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Vat:</th>
-                                                <td>{{ bdt() }} {{ number_format($project->vat, 2) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Tax:</th>
-                                                <td>{{ bdt() }} {{ number_format($project->tax, 2) }}</td>
+                                                <th style="width:50%">Total:</th>
+                                                <td>{{ bdt() }} {{ number_format($total, 2) }}</td>
                                             </tr>
                                             
                                             <tr>
-                                                <th>Total:</th>
-                                                <td>{{ bdt() }} {{ number_format($grandTotal, 2) }}</td>
+                                                <th>Paid Amount:</th>
+                                                <td>{{ bdt() }} {{ number_format($paidAmount, 2) }}</td>
                                             </tr>
                                         </table>
                                     </div>
                                 </div>
                             </div>
 
+                            <hr>
+                            
                         </div>
 
                         <hr/>

@@ -353,6 +353,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     // Project Routes
     Route::resource('projects', ProjectController::class);
     Route::get('/projects/delete/{id}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+    Route::get('/projects/sales/{id}', [ProjectController::class, 'projectsSales'])->name('projects.sales');
     
     // Quotation Routes
     Route::resource('quotations', QuotationController::class);

@@ -65,9 +65,9 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if($project->project_type == 'Ongoing')
+                                                    @if($project->project_type == 'ongoing')
                                                         <span class="badge bg-danger">Ongoing</span>
-                                                    @elseif($project->project_type == 'Upcoming')
+                                                    @elseif($project->project_type == 'upcoming')
                                                         <span class="badge bg-primary">Upcoming</span>
                                                     @elseif($project->project_type == 'Running')
                                                         <span class="badge bg-info">Running</span>
@@ -76,6 +76,10 @@
                                                     @endif
                                                 </td>
                                                 <td>
+                                                    <!-- Sale Button -->
+                                                    <a href="{{ route('projects.sales', $project->id) }}" class="btn btn-success btn-sm">
+                                                        <i class="fas fa-shopping-cart"></i>
+                                                    </a>
                                                     <!-- View Button -->
                                                     <a href="{{ route('projects.show', $project->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>

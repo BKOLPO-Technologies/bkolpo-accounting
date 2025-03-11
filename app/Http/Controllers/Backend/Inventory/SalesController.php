@@ -236,7 +236,9 @@ class SalesController extends Controller
         $clients = Client::orderBy('id', 'desc')->get();
         $products = Product::where('status',1)->latest()->get();
 
-        return view('backend.admin.inventory.sales.edit',compact('pageTitle', 'sale', 'clients', 'products', 'subtotal')); 
+        $projects = Project::where('project_type','Running')->latest()->get();
+
+        return view('backend.admin.inventory.sales.edit',compact('pageTitle', 'sale', 'clients', 'products', 'subtotal', 'projects')); 
     }
 
     /**
@@ -252,7 +254,7 @@ class SalesController extends Controller
         $validated = $request->validate([
             'client' => 'required|exists:clients,id',
             'invoice_no' => 'required|unique:purchases,invoice_no,' . $id,
-            'invoice_date' => 'required|date',
+            //'invoice_date' => 'required|date',
             'subtotal' => 'required|numeric',
             'discount' => 'required|numeric',
             'total' => 'required|numeric',
