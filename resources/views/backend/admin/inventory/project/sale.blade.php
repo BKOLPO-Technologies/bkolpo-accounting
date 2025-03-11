@@ -96,11 +96,11 @@
                             <div class="row justify-content-center">
                                 <div class="col-md-3 mt-3">
                                     <label for="from_date">From Date:</label>
-                                    <input type="text" name="from_date" id="from_date" class="form-control" value="">
+                                    <input type="text" name="from_date" id="from_date" class="form-control" value="{{ request('from_date', $fromDate) }}">
                                 </div>
                                 <div class="col-md-3 mt-3">
                                     <label for="to_date">To Date:</label>
-                                    <input type="text" name="to_date" id="to_date" class="form-control" value="">
+                                    <input type="text" name="to_date" id="to_date" class="form-control" value="{{ request('to_date', $toDate) }}">
                                 </div>
                                 <div class="col-md-1 mt-3 d-flex align-items-end">
                                     <button type="submit" class="btn btn-primary w-100">Filter</button>
