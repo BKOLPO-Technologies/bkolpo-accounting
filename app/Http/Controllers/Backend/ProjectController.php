@@ -25,7 +25,7 @@ class ProjectController extends Controller
 
         $pageTitle = 'Admin Project';
 
-        return view('backend/admin/project/index',compact(
+        return view('backend.admin.project.index',compact(
             'pageTitle', 
             'projects',
             'countPendingProject', 
@@ -43,7 +43,7 @@ class ProjectController extends Controller
         $employees = Employee::all();
         $customers = Customer::all();
         $pageTitle = 'Admin Project Create';
-        return view('backend/admin/project/create',compact('pageTitle', 'customers', 'employees'));
+        return view('backend.admin.project.create',compact('pageTitle', 'customers', 'employees'));
 
     }
 
@@ -115,7 +115,7 @@ class ProjectController extends Controller
 
         //dd($assignedEmployees);
 
-        return view('backend/admin/project/view', compact('project', 'customers', 'employees', 'assignedEmployees')); // Return the edit view
+        return view('backend.admin.project.view', compact('project', 'customers', 'employees', 'assignedEmployees')); // Return the edit view
     }
 
     public function edit($id)
@@ -128,7 +128,7 @@ class ProjectController extends Controller
 
         //dd($assignedEmployees);
 
-        return view('backend/admin/project/edit', compact('project', 'customers', 'employees', 'assignedEmployees')); // Return the edit view
+        return view('backend.admin.project.edit', compact('project', 'customers', 'employees', 'assignedEmployees')); // Return the edit view
     }
 
     public function update(Request $request, $id)

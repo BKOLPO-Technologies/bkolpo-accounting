@@ -355,4 +355,21 @@ class ProjectController extends Controller
         }
     }
 
+    // get project details
+    public function getProjectDetails(Request $request)
+    {
+        $project = Project::find($request->project_id);
+
+        if ($project) {
+            return response()->json([
+                'success' => true,
+                'total_amount' => $project->grand_total-$project->paid_amount,
+                'due_amount' => $project->due_amount
+            ]);
+        }
+
+        return response()->json(['success' => false]);
+    }
+
+
 }

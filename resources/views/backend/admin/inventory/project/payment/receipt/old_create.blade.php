@@ -50,6 +50,17 @@
                                     </div>
                                 </div>
 
+                                <!-- Sales Invoice No -->
+                                {{-- <div class="col-md-6 mb-3">
+                                    <label for="invoice_no" class="form-label">Sales Invoice No:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
+                                        <select class="form-control select2" name="invoice_no" id="invoice_no">
+                                            <option value="">Select Invoice No</option>
+                                        </select>
+                                    </div>
+                                </div> --}}
+
                                 <!-- Total Amount (Display) -->
                                 <div class="col-md-6 mb-3">
                                     <label for="total_amount" class="form-label">Total Amount:</label>
@@ -64,7 +75,7 @@
                                     <label for="amount" class="form-label">Pay Amount:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
-                                        <input type="number" class="form-control" id="pay_amount" name="pay_amount" placeholder="Enter Pay Amount" required>
+                                        <input type="number" class="form-control" id="pay_amount" name="pay_amount"  step="0.01" required>
                                     </div>
                                 </div>
 
@@ -120,47 +131,100 @@
         </div>
     </section>
 </div>
-@endsection
 
+@endsection
 @push('js')
 <script>
-    $(document).ready(function () {
-        $('.select2').select2();
-        $('#project_id').change(function () {
-            let projectId = $(this).val();
+   $(document).ready(function () {
+        // When customer changes, reset fields
+        $('#client_id').on('change', function () {
+            let clientId = $(this).val();
+            
+            // Clear Out Coming Chalan and Total Amount
+            $('#invoice_no').html('<option value="">Select Invoice No</option>');
+            $('#total_amount').val(''); // Clear total amount field
+            $('#pay_amount').val('');
+            $('#due_amount').val('');
 
-            if (projectId) {
+            // When chalan is selected, update total amount
+            if (clientId) {
+                $('#invoice_no').html('<option value="">Loading...</option>'); // Show loading state
+                
+                let totalAmount = $(this).find(':selected').data('amount') || 0;
+                $('#total_amount').val(totalAmount);
+                $('#pay_amount').val(''); // Reset pay amount
+                $('#due_amount').val(totalAmount); // Default due = total at first
+
                 $.ajax({
-                    url: "{{ route('project.get.details') }}",
+                    url: "{{ route('receipt.payment.get.chalans.by.client') }}", // Make sure this route exists
                     type: "GET",
-                    data: { project_id: projectId },
+                    data: { client_id: clientId },
                     success: function (response) {
-                        if (response.success) {
-                            $('#total_amount').val(response.total_amount);
-                            $('#due_amount').val(response.due_amount);
-                        } else {
-                            toastr.error('Project details not found.');
-                        }
-                    },
-                    error: function () {
-                        toastr.error('Error fetching project details.');
+                        //console.log(response);
+
+                        let options = '<option value="">Select Invoice No</option>';
+
+                        // Loop through `response.sales` instead of `response.chalans`
+                        response.sales.forEach(sale => {
+                            options += `<option value="${sale.invoice_no}" data-amount="${sale.total_amount}">${sale.invoice_no}</option>`;
+                        });
+
+                        $('#invoice_no').html(options);
                     }
                 });
-            } else {
-                $('#total_amount').val('');
-                $('#due_amount').val('');
             }
         });
 
-        // Auto calculate Due Amount on Pay Amount input
-        $('#pay_amount').on('input', function () {
-            let totalAmount = parseFloat($('#total_amount').val()) || 0;
-            let payAmount = parseFloat($(this).val()) || 0;
-            let dueAmount = totalAmount - payAmount;
+        // Show Total Amount when Chalan is selected
+        $('#invoice_no').on('change', function () {
+            let totalAmount = $(this).find(':selected').data('amount') || '';
+            $('#total_amount').val(totalAmount);
+        });
+        
+    });
 
-            $('#due_amount').val(dueAmount.toFixed(2));
+    // When pay amount is entered, calculate due amount
+    $('#pay_amount').on('keyup change', function () {
+        let totalAmount = parseFloat($('#total_amount').val()) || 0;
+        let payAmount = parseFloat($(this).val()) || 0;
+
+        if (payAmount > totalAmount) {
+            toastr.error('Pay amount cannot be greater than Total Amount!');
+            $(this).val(totalAmount); // Reset pay amount to total amount
+            payAmount = totalAmount; // Prevent further calculation issues
+        }
+
+        let dueAmount = totalAmount - payAmount;
+        $('#due_amount').val(dueAmount.toFixed(2));
+    });
+
+    
+    
+    // ledger group wise change
+    $(document).ready(function() {
+        $('.select2').select2();
+
+        $('#ledger_group_id').on('change', function() {
+            let groupId = $(this).val();
+            $('#ledger_id').html('<option value="">Loading...</option>');
+
+            if (groupId) {
+                $.ajax({
+                    url: "{{ route('sale.payment.get.ledgers.by.group') }}",
+                    type: "GET",
+                    data: { ledger_group_id: groupId },
+                    success: function(response) {
+                        let options = '<option value="">Choose Ledger</option>';
+                        response.ledgers.forEach(ledger => {
+                            options += `<option value="${ledger.id}">${ledger.name}</option>`;
+                        });
+                        $('#ledger_id').html(options);
+                    }
+                });
+            } else {
+                $('#ledger_id').html('<option value="">Choose Ledger</option>');
+            }
         });
     });
 </script>
 @endpush
-
