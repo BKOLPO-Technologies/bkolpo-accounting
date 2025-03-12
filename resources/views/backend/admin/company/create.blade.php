@@ -195,7 +195,7 @@
     // select 2
     $(document).ready(function() {
         $('.select2').select2({
-            placeholder: "Select roles",
+            placeholder: "Select Branch",
             allowClear: true
         });
     });
