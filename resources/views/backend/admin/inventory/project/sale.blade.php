@@ -85,7 +85,7 @@
                     <div class="card card-primary card-outline shadow-lg">
                         <div class="card-header py-2">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                                <h3 class="mb-0 font-weight-bold">{{ $project->project_name ?? 'N/A' }}</h3>
                                 <a href="{{ route('projects.index')}}" class="btn btn-sm btn-danger rounded-0">
                                     <i class="fa-solid fa-arrow-left"></i> Back To List
                                 </a>
