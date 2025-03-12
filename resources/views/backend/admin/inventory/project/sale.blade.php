@@ -145,7 +145,15 @@
                                     <!-- small box -->
                                     <div class="small-box bg-warning">
                                         <div class="inner">
-                                            <h3>{{ ucfirst(str_replace('_', ' ', $project->status)) }}</h3>
+                                            <h3>
+                                                @if($project->status == 'pending')
+                                                    Pending
+                                                @elseif($project->status == 'paid')
+                                                   Paid
+                                                @else
+                                                   Partially Paid
+                                                @endif
+                                            </h3>
                                             <p>{{ ucwords('Project Status') }}</p>
                                         </div>
                                         <div class="icon">
@@ -241,7 +249,15 @@
                                     </tr>
                                     <tr>
                                         <th>Status</th>
-                                        <td><span class="badge bg-info">{{ ucfirst($project->status) }}</span></td>
+                                        <td>
+                                            @if($project->status == 'pending')
+                                                <span class="badge bg-danger">Pending</span>
+                                            @elseif($project->status == 'paid')
+                                                <span class="badge bg-success">Paid</span>
+                                            @else
+                                                <span class="badge bg-warning">Partially Paid</span>
+                                            @endif
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
