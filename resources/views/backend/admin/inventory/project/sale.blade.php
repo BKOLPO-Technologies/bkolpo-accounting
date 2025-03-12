@@ -145,7 +145,7 @@
                                     <!-- small box -->
                                     <div class="small-box bg-warning">
                                         <div class="inner">
-                                            <h3>{{ ucwords($project->status) }}</h3>
+                                            <h3>{{ ucfirst(str_replace('_', ' ', $project->status)) }}</h3>
                                             <p>{{ ucwords('Project Status') }}</p>
                                         </div>
                                         <div class="icon">
@@ -153,6 +153,7 @@
                                         </div>
                                         <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                                     </div>
+                                    
                                 </div>
                                 <!-- ./col -->
                                 <div class="col-lg-3 col-6">
@@ -236,7 +237,7 @@
                                     </tr>
                                     <tr>
                                         <th>Terms & Conditions</th>
-                                        <td>{{ $project->terms_conditions ?? 'N/A' }}</td>
+                                        <td>{!! $project->terms_conditions ?? '' !!}</td>
                                     </tr>
                                     <tr>
                                         <th>Status</th>
