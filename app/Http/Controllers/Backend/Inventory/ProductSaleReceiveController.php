@@ -39,14 +39,19 @@ class ProductSaleReceiveController extends Controller
 
         $customers = Client::latest()->get();
         $ledgerGroups = LedgerGroup::with('ledgers')->latest()->get();
-        $projects = Project::where('project_type','Running')->latest()->get();
+        // $projects = Project::where('project_type','Running')->latest()->get();
+        $projects = Project::where('project_type', 'Running')
+            ->whereColumn('paid_amount', '<', 'grand_total')
+            ->latest()
+            ->get();
+
 
         return view('backend.admin.inventory.project.payment.receipt.create',compact('pageTitle', 'customers', 'ledgerGroups', 'projects'));
     }
 
     public function store(Request $request)
     {
-        // dd($request->all());
+        //dd($request->all());
         // Validate the incoming form data
         $request->validate([
             // 'client_id' => 'required|exists:clients,id',
@@ -57,6 +62,8 @@ class ProductSaleReceiveController extends Controller
             'payment_method' => 'required|in:cash,bank',
             'payment_date' => 'required|date',
         ]);
+
+        //dd($request->all());
     
         // Begin a transaction to ensure atomicity
         DB::beginTransaction();
