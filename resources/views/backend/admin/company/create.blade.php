@@ -94,7 +94,7 @@
 
                                         {{-- Table --}}
                                         <div class="table-responsive mt-3">
-                                            <table class="table table-bordered table-striped">
+                                            <table class="table table-bordered table-striped" id="dynamicTable">
                                                 <thead class="table-secondary">
                                                     <tr>
                                                         <th class="text-center">Type</th>
@@ -102,6 +102,7 @@
                                                         <th class="text-center">Sub Group</th>
                                                         <th class="text-center">Ledger</th>
                                                         <th class="text-center">O.B.</th>
+                                                        <th class="text-center">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -110,13 +111,12 @@
                                                         <td>
                                                             <div class="input-group">
                                                                 <span class="input-group-text"><i class="fa fa-folder"></i></span>
-                                                                <select class="form-control" name="group[]">
-                                                                    <option value="">Select Group</option>
+                                                                <select class="form-control" name="type[]">
+                                                                    <option value="">Select Type</option>
                                                                     <option value="Asset">Asset</option>
                                                                     <option value="Liability">Liability</option>
                                                                 </select>
                                                             </div>
-                                                            
                                                         </td>
                                                         <td>
                                                             <div class="input-group">
@@ -142,34 +142,14 @@
                                                                 <input type="number" class="form-control" name="ob[]" placeholder="Enter O.B.">
                                                             </div>
                                                         </td>
+                                                        <td class="text-center">
+                                                            <button type="button" class="btn btn-sm btn-success addRow"><i class="fa fa-plus"></i></button>
+                                                        </td>
                                                     </tr>
-                                        
-                                                    {{-- Second Row (Submit Buttons for Each Column) --}}
-                                                    {{-- <tr>
-                                                        <td class="text-center">
-                                                            <button type="submit" class="btn btn-success btn-sm">
-                                                                <i class="fas fa-save"></i> Save Group
-                                                            </button>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <button type="submit" class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-save"></i> Save Sub
-                                                            </button>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <button type="submit" class="btn btn-warning btn-sm">
-                                                                <i class="fas fa-save"></i> Save Ledger
-                                                            </button>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                                <i class="fas fa-save"></i> Save O.B.
-                                                            </button>
-                                                        </td>
-                                                    </tr> --}}
                                                 </tbody>
                                             </table>
-                                        </div>                                        
+                                        </div>
+                                                                                                                   
                                            
                                     </div>
 
@@ -197,6 +177,57 @@
         $('.select2').select2({
             placeholder: "Select Branch",
             allowClear: true
+        });
+    });
+    
+    $(document).ready(function () {
+        // Function to add a new row
+        $(".addRow").click(function () {
+            var newRow = `<tr>
+                <td>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-folder"></i></span>
+                        <select class="form-control" name="type[]">
+                            <option value="">Select Type</option>
+                            <option value="Asset">Asset</option>
+                            <option value="Liability">Liability</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-folder"></i></span>
+                        <input type="text" class="form-control" name="group[]" placeholder="Enter Group">
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-sitemap"></i></span>
+                        <input type="text" class="form-control" name="sub[]" placeholder="Enter Sub Group">
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-book"></i></span>
+                        <input type="text" class="form-control" name="ledger[]" placeholder="Enter Ledger">
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-dollar-sign"></i></span>
+                        <input type="number" class="form-control" name="ob[]" placeholder="Enter O.B.">
+                    </div>
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-sm btn-danger removeRow"><i class="fa fa-minus"></i></button>
+                </td>
+            </tr>`;
+            $("#dynamicTable tbody").append(newRow);
+        });
+
+        // Function to remove a row
+        $(document).on("click", ".removeRow", function () {
+            $(this).closest("tr").remove();
         });
     });
 
