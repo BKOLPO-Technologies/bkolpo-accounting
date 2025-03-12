@@ -99,7 +99,7 @@
                                                     <tr>
                                                         <th class="text-center">Type</th>
                                                         <th class="text-center">Group</th>
-                                                        <th class="text-center">Sub</th>
+                                                        <th class="text-center">Sub Group</th>
                                                         <th class="text-center">Ledger</th>
                                                         <th class="text-center">O.B.</th>
                                                     </tr>
