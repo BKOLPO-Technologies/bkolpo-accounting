@@ -26,11 +26,9 @@
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
-                                    @can('ledger-group-create')
-                                    <a href="#" class="btn btn-sm btn-success rounded-0">
+                                    <a href="{{ route('ledger.sub.group.create') }}" class="btn btn-sm btn-success rounded-0">
                                         <i class="fas fa-plus fa-sm"></i> Add New Ledger Sub Group
                                     </a>
-                                    @endcan
                                 </div>
                             </div>
                             <div class="card-body">
@@ -47,7 +45,32 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+                                        @foreach ($ledgerSubGroups as $key => $subGroup)
+                                            <tr>
+                                                <td>{{ $key + 1 }}</td>
+                                                <td>{{ $subGroup->ledgerGroup->group_name ?? 'N/A' }}</td>
+                                                <td>{{ $subGroup->subgroup_name }}</td>
+                                                <td>{{ $subGroup->ledger ?? 'N/A' }}</td>
+                                                <td>{{ $subGroup->opening_balance ?? '0.00' }}</td>
+                                                <td>
+                                                    <span class="badge {{ $subGroup->status == 1 ? 'bg-success' : 'bg-danger' }}">
+                                                        {{ $subGroup->status == 1 ? 'Active' : 'Inactive' }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('ledger.sub.group.edit', $subGroup->id) }}" class="btn btn-primary btn-sm">
+                                                        <i class="fa fa-edit"></i> Edit
+                                                    </a>
+                                                    <form action="{{ route('ledger.sub.group.destroy', $subGroup->id) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">
+                                                            <i class="fa fa-trash"></i> Delete
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

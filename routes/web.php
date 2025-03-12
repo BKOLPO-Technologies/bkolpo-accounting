@@ -121,7 +121,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::post('/store', [LedgerSubGroupController::class, 'store'])->name('store');
         Route::get('/edit/{id}', [LedgerSubGroupController::class, 'edit'])->name('edit');
         Route::post('/update/{id}', [LedgerSubGroupController::class, 'update'])->name('update');
-        Route::get('/delete/{id}', [LedgerSubGroupController::class, 'destroy'])->name('delete');
+        Route::delete('/delete/{id}', [LedgerSubGroupController::class, 'destroy'])->name('destroy');
         Route::get('/view/{id}', [LedgerSubGroupController::class, 'show'])->name('show');
         Route::get('/import/format', [LedgerSubGroupController::class, 'downloadFormat'])->name('import.format');
         Route::post('/import', [LedgerSubGroupController::class, 'import'])->name('import');
