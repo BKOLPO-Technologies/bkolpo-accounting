@@ -122,8 +122,8 @@
 
           <!-- --- Ledger Category --- -->
           @can('ledger-menu')  
-          <li class="nav-item {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show','ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show','ledger.group.import') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show','ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show','ledger.group.import') ? 'active' : '' }}">
+          <li class="nav-item {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show','ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show','ledger.group.import', 'ledger.sub.group.index', 'ledger.sub.group.create', 'ledger.sub.group.edit','ledger.sub.group.show','ledger.sub.group.import') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show','ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show','ledger.group.import', 'ledger.sub.group.index', 'ledger.sub.group.create', 'ledger.sub.group.edit','ledger.sub.group.show','ledger.sub.group.import') ? 'active' : '' }}">
               <i class="nav-icon fas fa-university"></i>
               <p>
                 Chart Of Accounts 
@@ -137,7 +137,7 @@
                   <i class="far fa-circle nav-icon"></i>
                   <p>Group List</p>
                 </a>
-                <a href="{{ route('ledger.group.index') }}" class="nav-link {{ Route::is('ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show','ledger.group.import') ? 'active' : '' }}">
+                <a href="{{ route('ledger.sub.group.index') }}" class="nav-link {{ Route::is('ledger.sub.group.index', 'ledger.sub.group.create', 'ledger.sub.group.edit','ledger.sub.group.show','ledger.sub.group.import') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Sub Group List</p>
                 </a>

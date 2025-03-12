@@ -17,6 +17,7 @@ use App\Http\Controllers\Backend\EmployeeController;
 use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\LedgerGroupController;
 use App\Http\Controllers\Backend\PaymentMethodController;
+use App\Http\Controllers\Backend\LedgerSubGroupController;
 use App\Http\Controllers\Backend\Inventory\SalesController;
 use App\Http\Controllers\Backend\Inventory\StockController;
 use App\Http\Controllers\Backend\Inventory\ClientController;
@@ -111,6 +112,19 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/view/{id}', [LedgerGroupController::class, 'show'])->name('show')->middleware('can:ledger-group-view');
         Route::get('/import/format', [LedgerGroupController::class, 'downloadFormat'])->name('import.format');
         Route::post('/import', [LedgerGroupController::class, 'import'])->name('import');
+    }); 
+
+    /* ==================== ledger group category  =================== */
+    Route::prefix('ledger-sub-group')->as('ledger.sub.group.')->group(function () {
+        Route::get('/', [LedgerSubGroupController::class, 'index'])->name('index');
+        Route::get('/create', [LedgerSubGroupController::class, 'create'])->name('create');
+        Route::post('/store', [LedgerSubGroupController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [LedgerSubGroupController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}', [LedgerSubGroupController::class, 'update'])->name('update');
+        Route::get('/delete/{id}', [LedgerSubGroupController::class, 'destroy'])->name('delete');
+        Route::get('/view/{id}', [LedgerSubGroupController::class, 'show'])->name('show');
+        Route::get('/import/format', [LedgerSubGroupController::class, 'downloadFormat'])->name('import.format');
+        Route::post('/import', [LedgerSubGroupController::class, 'import'])->name('import');
     }); 
 
     /* ==================== journal voucher  =================== */
