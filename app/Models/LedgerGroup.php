@@ -20,5 +20,11 @@ class LedgerGroup extends Model
         //return $this->hasMany(LedgerGroupDetail::class);
         return $this->hasMany(LedgerGroupDetail::class, 'group_id');
     }
+
+    // Define the relationship to LedgerSubGroup
+    public function ledgerSubGroups()
+    {
+        return $this->hasMany(LedgerSubGroup::class);
+    }
     
 }
