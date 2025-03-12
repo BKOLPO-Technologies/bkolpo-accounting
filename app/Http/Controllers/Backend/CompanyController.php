@@ -6,6 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Company;
 use App\Models\Branch;
+use App\Models\Ledger;
+use App\Models\LedgerGroup;
+use App\Models\LedgerSubGroup;
+use App\Models\JournalVoucher;
+use App\Models\JournalVoucherDetail;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
@@ -45,7 +50,7 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+        dd($request->all());
         // Validate the incoming request
         $validatedData = $request->validate([
             'name' => 'required',
@@ -53,13 +58,54 @@ class CompanyController extends Controller
         ]);
 
         // Create the company record
-        $company = Company::create([
-            'name'          => $request->name,
-            'branch_id'     => $request->branch_id,
-            'description'   => $request->description,
-            'status'        => $request->status,
-            'created_by'    => Auth::user()->id,
-        ]);
+        // $company = Company::create([
+        //     'name'          => $request->name,
+        //     'branch_id'     => $request->branch_id,
+        //     'description'   => $request->description,
+        //     'status'        => $request->status,
+        //     'created_by'    => Auth::user()->id,
+        // ]);
+
+
+        $lastMonthLastDate = now()->subMonth()->endOfMonth()->toDateString();
+        dd($lastMonthLastDate);
+
+        if ($request->has('type')) {
+            foreach ($request->type as $key => $type) {
+                // Ledger Group Create
+                $ledgerGroup = LedgerGroup::create([
+                    'company_id' => $company->id,
+                    'group_name' => $request->group[$key],
+                    'created_by' => Auth::user()->id,
+                ]);
+        
+                // Ledger Sub Group Create
+                $ledgerSubGroup = LedgerSubGroup::create([
+                    'ledger_group_id' => $ledgerGroup->id,
+                    'subgroup_name'   => $request->sub[$key],
+                    'created_by'      => Auth::user()->id,
+                ]);
+        
+                // Ledger Entry Create (Check if already exists)
+                $ledger = Ledger::firstOrCreate(
+                    ['name' => $request->ledger[$key]],
+                    [
+                        'debit' => $request->ob[$key],
+                        'created_by'      => Auth::user()->id,
+                    ]
+                );
+        
+                // Pivot Table Entry
+                DB::table('ledger_group_subgroup_ledgers')->insert([
+                    'group_id'    => $ledgerGroup->id,
+                    'sub_group_id'=> $ledgerSubGroup->id,
+                    'ledger_id'   => $ledger->id,
+                    'created_at'  => now(),
+                    'updated_at'  => now(),
+                ]);
+            }
+        }
+        
 
         return redirect()->route('company.index')->with('success', 'Company created successfully.');
     }

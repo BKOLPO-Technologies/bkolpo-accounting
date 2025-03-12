@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('ledger_groups', function (Blueprint $table) {
             $table->id();
             $table->string('group_name');
+            $table->integer('company_id')->nullable();
             $table->tinyInteger('status')->nullable()->default(1)->comment('1 => Active, 0 => Inactive');
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('branch_id'); 
+            $table->unsignedBigInteger('branch_id')->nullable(); 
             $table->string('account_no')->nullable();
             $table->decimal('initial_balance', 10, 2)->default(0)->nullable();  
             $table->text('description')->nullable();
