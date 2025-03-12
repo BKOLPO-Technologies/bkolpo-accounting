@@ -91,6 +91,86 @@
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
+
+                                        {{-- Table --}}
+                                        <div class="table-responsive mt-3">
+                                            <table class="table table-bordered table-striped">
+                                                <thead class="table-secondary">
+                                                    <tr>
+                                                        <th class="text-center">Type</th>
+                                                        <th class="text-center">Group</th>
+                                                        <th class="text-center">Sub</th>
+                                                        <th class="text-center">Ledger</th>
+                                                        <th class="text-center">O.B.</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {{-- First Row (Input Fields) --}}
+                                                    <tr>
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i class="fa fa-folder"></i></span>
+                                                                <select class="form-control" name="group[]">
+                                                                    <option value="">Select Group</option>
+                                                                    <option value="Asset">Asset</option>
+                                                                    <option value="Liability">Liability</option>
+                                                                </select>
+                                                            </div>
+                                                            
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i class="fa fa-folder"></i></span>
+                                                                <input type="text" class="form-control" name="group[]" placeholder="Enter Group">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i class="fa fa-sitemap"></i></span>
+                                                                <input type="text" class="form-control" name="sub[]" placeholder="Enter Sub Group">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i class="fa fa-book"></i></span>
+                                                                <input type="text" class="form-control" name="ledger[]" placeholder="Enter Ledger">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i class="fa fa-dollar-sign"></i></span>
+                                                                <input type="number" class="form-control" name="ob[]" placeholder="Enter O.B.">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                        
+                                                    {{-- Second Row (Submit Buttons for Each Column) --}}
+                                                    {{-- <tr>
+                                                        <td class="text-center">
+                                                            <button type="submit" class="btn btn-success btn-sm">
+                                                                <i class="fas fa-save"></i> Save Group
+                                                            </button>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                                <i class="fas fa-save"></i> Save Sub
+                                                            </button>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <button type="submit" class="btn btn-warning btn-sm">
+                                                                <i class="fas fa-save"></i> Save Ledger
+                                                            </button>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                                <i class="fas fa-save"></i> Save O.B.
+                                                            </button>
+                                                        </td>
+                                                    </tr> --}}
+                                                </tbody>
+                                            </table>
+                                        </div>                                        
+                                           
                                     </div>
 
                                     <!-- Submit Button -->
