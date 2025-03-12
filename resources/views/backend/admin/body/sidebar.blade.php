@@ -271,9 +271,8 @@
           @endcan
 
           <!-- Category -->
-          <li class="nav-item {{ Route::is('admin.category*') ? 'menu-open' : '' }}">
+          {{-- <li class="nav-item {{ Route::is('admin.category*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('admin.category*') ? 'active' : '' }}">
-                {{-- <i class="far fa-circle nav-icon"></i> --}}
                 <i class="nav-icon fas fa-layer-group"></i>
                 <p>
                     Category
@@ -289,18 +288,26 @@
                     </a>
                 </li>
             </ul>
-          </li>
+          </li> --}}
 
           <!-- Product -->
-          <li class="nav-item {{ Route::is('admin.product*') ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ Route::is('admin.product*') ? 'active' : '' }}">
-                  {{-- <i class="far fa-circle nav-icon"></i> --}}
+          <li class="nav-item {{ Route::is('admin.product*', 'admin.category*') ? 'menu-open' : '' }}">
+              <a href="#" class="nav-link {{ Route::is('admin.product*', 'admin.category*') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-box"></i>
                   <p>
                       Product
                       <i class="fas fa-angle-left right"></i>
                   </p>
               </a>
+
+              <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                      <a href="{{ route('admin.category.index') }}" class="nav-link {{ Route::is('admin.category.index') || Route::is('admin.category.create') || Route::is('admin.category.edit') ? 'active' : '' }}">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Manage Category</p>
+                      </a>
+                  </li>
+              </ul>
 
               <ul class="nav nav-treeview">
                   <li class="nav-item">
