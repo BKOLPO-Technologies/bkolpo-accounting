@@ -48,67 +48,106 @@ class CompanyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
-        dd($request->all());
-        // Validate the incoming request
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'branch_id' => 'required',
-        ]);
+        DB::beginTransaction(); // 🔹 Transaction Start
 
-        // Create the company record
-        // $company = Company::create([
-        //     'name'          => $request->name,
-        //     'branch_id'     => $request->branch_id,
-        //     'description'   => $request->description,
-        //     'status'        => $request->status,
-        //     'created_by'    => Auth::user()->id,
-        // ]);
+        try {
+            // Validate the incoming request
+            $validatedData = $request->validate([
+                'name'       => 'required',
+                'branch_id'  => 'required',
+            ]);
 
+            $accountNumber = 'BK' . rand(1000000000, 9999999999);
 
-        $lastMonthLastDate = now()->subMonth()->endOfMonth()->toDateString();
-        dd($lastMonthLastDate);
+            // Create the company record
+            $company = Company::create([
+                'name'        => $request->name,
+                'branch_id'   => $request->branch_id,
+                'description' => $request->description,
+                'status'      => $request->status,
+                'account_no'  => $accountNumber,
+                'created_by'  => Auth::user()->id,
+            ]);
 
-        if ($request->has('type')) {
-            foreach ($request->type as $key => $type) {
-                // Ledger Group Create
-                $ledgerGroup = LedgerGroup::create([
-                    'company_id' => $company->id,
-                    'group_name' => $request->group[$key],
-                    'created_by' => Auth::user()->id,
-                ]);
-        
-                // Ledger Sub Group Create
-                $ledgerSubGroup = LedgerSubGroup::create([
-                    'ledger_group_id' => $ledgerGroup->id,
-                    'subgroup_name'   => $request->sub[$key],
-                    'created_by'      => Auth::user()->id,
-                ]);
-        
-                // Ledger Entry Create (Check if already exists)
-                $ledger = Ledger::firstOrCreate(
-                    ['name' => $request->ledger[$key]],
-                    [
-                        'debit' => $request->ob[$key],
+            $lastMonthLastDate = now()->subMonth()->endOfMonth()->toDateString(); // 🔹 গত মাসের শেষ তারিখ
+
+            // 🔹 Generate Transaction Code
+            $randomNumber = rand(100000, 999999);
+            $fullDate = now()->format('d/m/y');
+            $transactionCode = 'BCL-O-'.$fullDate.' - '.$randomNumber;
+
+            // 🔹 Create Journal Voucher 
+            $journalVoucher = JournalVoucher::create([
+                'transaction_code' => $transactionCode,
+                'company_id'       => $company->id,
+                'branch_id'        => $request->branch_id,
+                'transaction_date' => $lastMonthLastDate,
+            ]);
+
+            if ($request->has('type')) {
+                foreach ($request->type as $key => $type) {
+                    // 🔹 Ledger Group Create
+                    $ledgerGroup = LedgerGroup::create([
+                        'company_id' => $company->id,
+                        'group_name' => $request->group[$key],
+                        'created_by' => Auth::user()->id,
+                    ]);
+            
+                    // 🔹 Ledger Sub Group Create
+                    $ledgerSubGroup = LedgerSubGroup::create([
+                        'ledger_group_id' => $ledgerGroup->id,
+                        'subgroup_name'   => $request->sub[$key],
                         'created_by'      => Auth::user()->id,
-                    ]
-                );
-        
-                // Pivot Table Entry
-                DB::table('ledger_group_subgroup_ledgers')->insert([
-                    'group_id'    => $ledgerGroup->id,
-                    'sub_group_id'=> $ledgerSubGroup->id,
-                    'ledger_id'   => $ledger->id,
-                    'created_at'  => now(),
-                    'updated_at'  => now(),
-                ]);
-            }
-        }
-        
+                    ]);
+            
+                    // 🔹 Ledger Entry Create (Check if already exists)
+                    $ledger = Ledger::firstOrCreate(
+                        ['name' => $request->ledger[$key]],
+                        [
+                            'created_by' => Auth::user()->id,
+                        ]
+                    );
+            
+                    // 🔹 Pivot Table Entry
+                    DB::table('ledger_group_subgroup_ledgers')->insert([
+                        'group_id'     => $ledgerGroup->id,
+                        'sub_group_id' => $ledgerSubGroup->id,
+                        'ledger_id'    => $ledger->id,
+                        'created_at'   => now(),
+                        'updated_at'   => now(),
+                    ]);
 
-        return redirect()->route('company.index')->with('success', 'Company created successfully.');
+                    // 🔹 Determine Debit or Credit based on Type
+                    $openingBalance = $request->ob[$key] ?? 0;
+                    $debit  = ($type == 'Asset') ? $openingBalance : 0;
+                    $credit = ($type == 'Liability') ? $openingBalance : 0;
+
+                    // 🔹 Journal Entry 
+                    JournalVoucherDetail::create([
+                        'journal_voucher_id' => $journalVoucher->id,
+                        'ledger_id'          => $ledger->id,
+                        'reference_no'       => "REF-" . rand(100000, 999999),
+                        'description'        => 'Opening Balance Entry',
+                        'debit'              => $debit,
+                        'credit'             => $credit,
+                        'created_at'         => $lastMonthLastDate,
+                        'updated_at'         => $lastMonthLastDate,
+                    ]);
+                }
+            }
+
+            DB::commit(); // 🔹 Transaction Commit (সব ঠিক থাকলে)
+
+            return redirect()->route('company.index')->with('success', 'Company created successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack(); // 🔹 কোনো সমস্যা হলে রোলব্যাক
+            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
+        }
     }
+
 
     /**
      * Display the specified resource.
