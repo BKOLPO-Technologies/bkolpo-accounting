@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LedgerSubGroup;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Backend\BankController;
@@ -98,6 +100,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/view/{id}', [LedgerController::class, 'show'])->name('show')->middleware('can:ledger-view');
         Route::get('/ledger/import/format', [LedgerController::class, 'downloadFormat'])->name('import.format');
         Route::post('/import', [LedgerController::class, 'import'])->name('import');
+
+        
         
     });
 
@@ -427,3 +431,10 @@ require __DIR__.'/zim.php';
 
 Route::view('/invoice', 'backend.admin.invoice.invoice');
 Route::view('/invoice2', 'backend.admin.invoice.invoice2');
+
+Route::get('/get-sub-groups/{group_id}', function ($group_id) {
+    Log::info("Fetching sub-groups for group ID: " . $group_id);
+    $subGroups = LedgerSubGroup::where('ledger_group_id', $group_id)->pluck('subgroup_name', 'id');
+    Log::info("Sub-groups fetched: ", $subGroups->toArray());
+    return response()->json($subGroups);
+});
