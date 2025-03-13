@@ -9,8 +9,8 @@ class Ledger extends Model
     //protected $guarded = [];
     protected $fillable = [
         'name',
-        'debit',
-        'credit',
+        'opening_balance',
+        'ob_type',
         'status',
         'created_by',
         'updated_by',

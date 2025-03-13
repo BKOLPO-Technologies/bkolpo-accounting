@@ -107,6 +107,8 @@ class CompanyController extends Controller
                     $ledger = Ledger::firstOrCreate(
                         ['name' => $request->ledger[$key]],
                         [
+                            'opening_balance' => $request->ob[$key] ?? 0, // ✅ ওপেনিং ব্যালেন্স
+                            'ob_type'         => $request->ob_type[$key] ?? 'debit', // ✅ ob_type (debit/credit) 
                             'created_by' => Auth::user()->id,
                         ]
                     );
