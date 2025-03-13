@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\LedgerGroup;
 use App\Models\LedgerSubGroup;
 use App\Models\Ledger;
+use App\Models\LedgerGroupSubgroupLedger;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use DB;
@@ -110,8 +111,8 @@ class LedgerSeeder extends Seeder
                         'created_by'      => $userId,
                     ]);
 
-                    // 🔸 Insert into ledger_group_subgroup_ledgers table
-                    DB::table('ledger_group_subgroup_ledgers')->insert([
+                    // 🔸 Insert into LedgerGroupSubgroupLedger table
+                    LedgerGroupSubgroupLedger::create([
                         'group_id'     => $group->id,
                         'sub_group_id' => $subGroup->id,
                         'ledger_id'    => $ledger->id,

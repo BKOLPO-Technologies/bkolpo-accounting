@@ -41,7 +41,7 @@
                                             <th>Date</th>
                                             <th>Name</th>
                                             <th>Group Name</th> 
-                                            <th>Opening DR</th>
+                                            <th>Opening Balance</th>
                                             <th>DR</th>
                                             <th>CR</th>
                                             <th>Current DR</th>

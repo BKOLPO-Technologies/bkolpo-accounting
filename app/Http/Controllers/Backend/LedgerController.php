@@ -12,6 +12,9 @@ use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Exports\LedgerExport;
 use App\Models\LedgerSubGroup;
+use App\Models\LedgerGroupSubgroupLedger;
+use App\Models\JournalVoucher;
+use App\Models\JournalVoucherDetail;
 use App\Traits\SumLedgerAmounts;
 use App\Models\LedgerGroupDetail;
 use Illuminate\Support\Facades\DB;
@@ -176,14 +179,56 @@ class LedgerController extends Controller
         $ledger->save();
 
         // ✅ Update if exists, otherwise insert (No need to delete)
-        DB::table('ledger_group_subgroup_ledgers')->updateOrInsert(
-            ['ledger_id' => $ledger->id], // Condition to check existing record
+
+        $ledgerGroupSubgroupLedger = LedgerGroupSubgroupLedger::updateOrCreate(
+            ['ledger_id' => $ledger->id], // Condition to check if the record exists
             [
-                'group_id'     => $request->group_id,
+                'group_id' => $request->group_id,
                 'sub_group_id' => $request->sub_group_id,
-                'updated_at'   => now(),
+                'updated_at' => now(), // Automatically update the timestamp
             ]
         );
+
+        // $lastMonthLastDate = now()->subMonth()->endOfMonth()->toDateString(); // 🔹 গত মাসের শেষ তারিখ
+
+        // // 🔹 Generate Transaction Code
+        // $randomNumber = rand(100000, 999999);
+        // $fullDate = now()->format('d/m/y');
+        // $transactionCode = 'BCL-O-'.$fullDate.' - '.$randomNumber;
+
+        // // 🔹 Create Journal Voucher 
+        // $journalVoucher = JournalVoucher::create([
+        //     'transaction_code' => $transactionCode,
+        //     // 'company_id'       => $company->id,
+        //     // 'branch_id'        => $request->branch_id,
+        //     'transaction_date' => $lastMonthLastDate,
+        // ]);
+
+        // $ledgerGroup = LedgerGroup::findOrFail($request->group_id);
+        // $groupType = $ledgerGroup->group_name; 
+
+        // $debit = 0;
+        // $credit = 0;
+        
+        // if ($groupType === 'Assets') {
+        //     $debit = $ledger->opening_balance;
+        // } elseif ($groupType === 'Liabilities') {
+        //     $credit = $ledger->opening_balance;
+        // }
+
+
+        // // 🔹 Journal Entry 
+        // JournalVoucherDetail::create([
+        //     'journal_voucher_id' => $journalVoucher->id,
+        //     'ledger_id'          => $ledger->id,
+        //     'reference_no'       => "REF-" . rand(100000, 999999),
+        //     'description'        => 'Opening Balance Entry',
+        //     'debit'              => $debit,
+        //     'credit'             => $credit,
+        //     'created_at'         => $lastMonthLastDate,
+        //     'updated_at'         => $lastMonthLastDate,
+        // ]);
+
 
         return redirect()->route('ledger.index')->with('success', 'Ledger updated successfully.');
     }

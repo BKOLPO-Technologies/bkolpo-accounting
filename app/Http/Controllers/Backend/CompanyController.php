@@ -9,6 +9,7 @@ use App\Models\Branch;
 use App\Models\Ledger;
 use App\Models\LedgerGroup;
 use App\Models\LedgerSubGroup;
+use App\Models\LedgerGroupSubgroupLedger;
 use App\Models\JournalVoucher;
 use App\Models\JournalVoucherDetail;
 use Spatie\Permission\Models\Role;
@@ -113,8 +114,8 @@ class CompanyController extends Controller
                         ]
                     );
             
-                    // 🔹 Pivot Table Entry
-                    DB::table('ledger_group_subgroup_ledgers')->insert([
+                    // 🔹 LedgerGroupSubgroupLedger Table Entry
+                    LedgerGroupSubgroupLedger::create([
                         'group_id'     => $ledgerGroup->id,
                         'sub_group_id' => $ledgerSubGroup->id,
                         'ledger_id'    => $ledger->id,
