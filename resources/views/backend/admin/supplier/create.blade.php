@@ -50,7 +50,7 @@
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                                <span class="input-group-text"><i class="fas fa-user"></i></span> <!-- Changed Icon -->
                                             </div>
                                             <input type="text" class="form-control" placeholder="Enter Supplier Name" name="name" required>
                                         </div>
@@ -58,18 +58,23 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Company</label>
+                                        <label>Designation
+                                            @error('designation')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                                <span class="input-group-text"><i class="fas fa-briefcase"></i></span> <!-- Changed Icon -->
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Company Name" name="company">
+                                            <input type="text" class="form-control" placeholder="Enter Designation Name" name="designation" required>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>                            
 
                             <div class="row">
+                                
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Phone</label>
@@ -108,31 +113,6 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>City</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-city"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" placeholder="City" name="city">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Region</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-globe"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" placeholder="Region" name="region">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
                                         <label>Country</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
@@ -147,12 +127,12 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>PostBox</label>
+                                        <label>BIN Number</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-inbox"></i></span>
+                                                <span class="input-group-text"><i class="fas fa-building"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Post Box" name="postbox">
+                                            <input type="text" class="form-control" placeholder="Enter BIN Number" name="bin">
                                         </div>
                                     </div>
                                 </div>
