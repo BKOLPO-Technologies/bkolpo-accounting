@@ -11,6 +11,7 @@ use App\Models\LedgerGroup;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Exports\LedgerExport;
+use App\Models\LedgerSubGroup;
 use App\Traits\SumLedgerAmounts;
 use App\Models\LedgerGroupDetail;
 use Illuminate\Support\Facades\DB;
@@ -119,7 +120,10 @@ class LedgerController extends Controller
         $ledger = Ledger::with('groups')->findOrFail($id);
         $groups = LedgerGroup::where('status', 1)->latest()->get();
         $pageTitle = 'Ledger Edit';
-        return view('backend.admin.ledger.edit', compact('ledger','groups','pageTitle'));
+        // Find the Ledger Sub Group
+        $subGroup = LedgerSubGroup::findOrFail($id);
+        
+        return view('backend.admin.ledger.edit', compact('ledger','groups','pageTitle','subGroup'));
     }
 
     /**
