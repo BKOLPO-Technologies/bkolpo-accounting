@@ -38,8 +38,6 @@
                                             <th>SL</th>
                                             <th>Group Name</th>
                                             <th>Sub Group Name</th>
-                                            <th>Ledger</th>
-                                            <th>O.B.</th>
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
@@ -50,8 +48,6 @@
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>{{ $subGroup->ledgerGroup->group_name ?? 'N/A' }}</td>
                                                 <td>{{ $subGroup->subgroup_name }}</td>
-                                                <td>{{ $subGroup->ledger ?? 'N/A' }}</td>
-                                                <td>{{ $subGroup->opening_balance ?? '0.00' }}</td>
                                                 <td>
                                                     <span class="badge {{ $subGroup->status == 1 ? 'bg-success' : 'bg-danger' }}">
                                                         {{ $subGroup->status == 1 ? 'Active' : 'Inactive' }}
