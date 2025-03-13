@@ -45,7 +45,7 @@
                                             <th>DR</th>
                                             <th>CR</th>
                                             <th>Current DR</th>
-                                            <th>Status</th>
+                                            {{-- <th>Status</th> --}}
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -73,25 +73,30 @@
                                                         N/A
                                                     @endif
                                                 </td>
-                                                <td class="font-weight-bolder">{{ bdt() }} {{ number_format($ledger->debit, 2) }}</td>
+                                                <td class="font-weight-bolder">
+                                                    {{ bdt() }} {{ number_format($ledger->opening_balance, 2) }}
+                                                    @php
+                                                        $totalOpeningDr += $ledger->opening_balance;
+                                                    @endphp
+                                                </td>
                                                 <td class="font-weight-bolder">{{ bdt() }} {{ number_format($ledger->ledgerSums['debit'], 2) }}</td>  
                                                 <td class="font-weight-bolder">{{ bdt() }} {{ number_format($ledger->ledgerSums['credit'], 2) }}</td>
                                                 <!-- <td>{{ bdt() }} {{ number_format($ledger->debit + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit'], 2) }}</td> -->
                                                 <td class="font-weight-bolder">
                                                     {{ bdt() }} {{ number_format(
-                                                        ($ledger->debit > 0)
-                                                            ? ($ledger->debit + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit']) // If opening balance is Debit
-                                                            : ($ledger->ledgerSums['debit']), // If opening balance is Credit
+                                                        ($ledger->ob_type == 'debit') 
+                                                            ? ($ledger->opening_balance + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit']) 
+                                                            : ($ledger->opening_balance - $ledger->ledgerSums['credit'] + $ledger->ledgerSums['debit']),
                                                         2
                                                     ) }}
                                                     @php
-                                                        // Add the current debit to total
-                                                        $totalCurrentDr += ($ledger->debit > 0)
-                                                            ? ($ledger->debit + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit'])
-                                                            : ($ledger->ledgerSums['debit']);
+                                                        // বর্তমান ডেবিট টোটালে যোগ করা
+                                                        $totalCurrentDr += ($ledger->ob_type == 'debit') 
+                                                            ? ($ledger->opening_balance + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit']) 
+                                                            : ($ledger->opening_balance - $ledger->ledgerSums['credit'] + $ledger->ledgerSums['debit']);
                                                     @endphp
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     @if($ledger->status == 1)
                                                         <a href="#" class="badge badge-success">
                                                             <span class="badge bg-success">Active</span>
@@ -101,7 +106,7 @@
                                                             <span class="badge bg-danger">Inactive</span>
                                                         </a>
                                                     @endif
-                                                </td>           
+                                                </td>            --}}
                                                 <td class="col-2">
                                                     <!-- View Button -->
                                                     @can('ledger-view')

@@ -95,7 +95,7 @@ class LedgerSeeder extends Seeder
 
                     // Only apply opening balance to Cash and Bank
                     if (in_array($ledgerName, ['Cash', 'Bank'])) {
-                        $openingBalance = 200000; // Default opening balance
+                        $openingBalance = 0; // Default opening balance
                         $obType = 'debit'; // Default type for assets
                     }
 
