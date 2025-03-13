@@ -139,12 +139,13 @@ class LedgerController extends Controller
 
 
         $ledger = Ledger::findOrFail($id);
-
         $ledger->name = $request->input('name');
         $ledger->debit = $request->input('debit');
         $ledger->credit = $request->input('credit');
+        $ledger->opening_balance = $request->opening_balance;
         $ledger->status = $request->input('status');
         $ledger->save();
+        
 
         // Sync groups in ledger_group_details
         $ledger->groups()->sync($request->group_id);

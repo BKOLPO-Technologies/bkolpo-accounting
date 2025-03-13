@@ -73,6 +73,18 @@
                                         </select>
                                     </div>
 
+                                    <div class="col-md-6 mb-2">
+                                        <label for="opening_balance" class="form-label">Opening Balance
+                                            @error('opening_balance')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fa fa-money-bill-wave"></i></span>
+                                            <input type="number" min="0" class="form-control" id="opening_balance" name="opening_balance" value="{{ $ledger->opening_balance }}" placeholder="Enter Opening Balance">
+                                        </div>
+                                    </div>
+
                                     
                                     <div class="col-md-6 mb-2">
                                         <label for="status" class="form-label">Status
