@@ -70,6 +70,11 @@
                                         <label for="sub_group_id" class="form-label">Select Sub Group</label>
                                         <select class="form-control" id="sub_group_id" name="sub_group_id">
                                             <option value="">Select Sub Group</option>
+                                            @foreach($subGroups as $group)
+                                                <option value="{{ $group->id }}" {{ old('group_id', $subGroup->ledger_group_id) == $group->id ? 'selected' : '' }}>
+                                                    {{ $group->subgroup_name }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
 

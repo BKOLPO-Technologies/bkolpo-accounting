@@ -122,36 +122,74 @@ class LedgerController extends Controller
         $pageTitle = 'Ledger Edit';
         // Find the Ledger Sub Group
         $subGroup = LedgerSubGroup::findOrFail($id);
+        $subGroups = LedgerSubGroup::where('ledger_group_id', $id)->get();
+        // dd($subGroups);
         
-        return view('backend.admin.ledger.edit', compact('ledger','groups','pageTitle','subGroup'));
+        return view('backend.admin.ledger.edit', compact('ledger','groups','pageTitle','subGroup', 'subGroups'));
     }
 
     /**
      * Update the specified resource in storage.
      */
+    // public function update(Request $request, string $id)
+    // {
+    //     //dd($request->all());
+
+    //     $validatedData =  $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'group_id' => 'required|array',
+    //         //'group_id.*' => 'exists:ledger_groups,id'
+    //         'sub_group_id' => 'required|exists:ledger_sub_groups,id',
+    //         'status' => 'required|integer',
+    //     ]);
+
+    //     $ledger = Ledger::findOrFail($id);
+    //     $ledger->name = $request->input('name');
+    //     $ledger->debit = $request->input('debit');
+    //     $ledger->credit = $request->input('credit');
+    //     $ledger->opening_balance = $request->opening_balance;
+    //     $ledger->status = $request->input('status');
+    //     $ledger->save();
+        
+    //     // Sync groups in ledger_group_details
+    //     $ledger->groups()->sync($request->group_id);
+
+    //     return redirect()->route('ledger.index')->with('success', 'Ledger updated successfully.');
+    // }
+
     public function update(Request $request, string $id)
     {
+        // Validate the request
         $validatedData =  $request->validate([
-            'name' => 'required|string|max:255',
-            'group_id' => 'required|array',
-            'group_id.*' => 'exists:ledger_groups,id'
+            'name'         => 'required|string|max:255',
+            'group_id'     => 'required', // Assuming it's a single value, not an array
+            'sub_group_id' => 'required|exists:ledger_sub_groups,id',
+            'status'       => 'required|integer',
         ]);
-
 
         $ledger = Ledger::findOrFail($id);
         $ledger->name = $request->input('name');
-        $ledger->debit = $request->input('debit');
-        $ledger->credit = $request->input('credit');
-        $ledger->opening_balance = $request->opening_balance;
+        // $ledger->debit = $request->input('debit');
+        // $ledger->credit = $request->input('credit');
+        $ledger->opening_balance = $request->input('opening_balance');
         $ledger->status = $request->input('status');
         $ledger->save();
-        
 
-        // Sync groups in ledger_group_details
-        $ledger->groups()->sync($request->group_id);
+        // ✅ Update if exists, otherwise insert (No need to delete)
+        DB::table('ledger_group_subgroup_ledgers')->updateOrInsert(
+            ['ledger_id' => $ledger->id], // Condition to check existing record
+            [
+                'group_id'     => $request->group_id,
+                'sub_group_id' => $request->sub_group_id,
+                'updated_at'   => now(),
+            ]
+        );
 
         return redirect()->route('ledger.index')->with('success', 'Ledger updated successfully.');
     }
+
+
+
 
     /**
      * Remove the specified resource from storage.
