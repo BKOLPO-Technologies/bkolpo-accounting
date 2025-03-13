@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Ledger;
-use App\Models\LedgerGroup;
-use App\Models\LedgerGroupDetail;
-use Spatie\Permission\Models\Role;
-use DB;
-use Hash;
-use Illuminate\Support\Arr;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Validator;
-use Carbon\Carbon;
 use Auth;
-use App\Traits\SumLedgerAmounts;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Session;
+use Hash;
+use Carbon\Carbon;
+use App\Models\Ledger;
+use Illuminate\View\View;
+use App\Models\LedgerGroup;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 use App\Exports\LedgerExport;
+use App\Traits\SumLedgerAmounts;
+use App\Models\LedgerGroupDetail;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class LedgerController extends Controller
 {
@@ -32,7 +32,9 @@ class LedgerController extends Controller
     {
         $pageTitle = 'Ledger List';
 
-        $ledgers = Ledger::with(['journalVoucherDetails'])->get();
+        $ledgers = Ledger::with(['groups', 'journalVoucherDetails'])->get();
+
+        dd($ledgers);
 
         $ledgers->each(function ($ledger) {
             $ledger->ledgerSums = $this->getLedgerSums($ledger);
@@ -58,12 +60,15 @@ class LedgerController extends Controller
      */
     public function store(Request $request)
     {  
-        // dd($request->all());
+        //dd($request->all());
         // Validate the incoming request
         $validatedData =  $request->validate([
             'name' => 'required|string|max:255',
-            'group_id' => 'required|array',
-            'group_id.*' => 'exists:ledger_groups,id'
+            //'group_id' => 'required|array',
+            'group_id' => 'required',
+            //'group_id.*' => 'exists:ledger_groups,id'
+            'sub_group_id' => 'required|exists:ledger_sub_groups,id',
+            'status' => 'required|integer',
         ]);
         
         // Create the Ledger record
@@ -75,13 +80,22 @@ class LedgerController extends Controller
             'created_by'    => Auth::user()->id,
         ]);
 
-        // Attach groups to Ledger
-        foreach ($request->group_id as $groupId) {
-            LedgerGroupDetail::create([
-                'ledger_id' => $ledger->id,
-                'group_id' => $groupId
-            ]);
-        }
+        // // Attach groups to Ledger
+        // foreach ($request->group_id as $groupId) {
+        //     LedgerGroupDetail::create([
+        //         'ledger_id' => $ledger->id,
+        //         'group_id' => $groupId
+        //     ]);
+        // }
+
+        // 🔹 Pivot Table Entry
+        DB::table('ledger_group_subgroup_ledgers')->insert([
+            'group_id'     => $request->group_id, // Using directly from request
+            'sub_group_id' => $request->sub_group_id,
+            'ledger_id'    => $ledger->id,
+            'created_at'   => now(),
+            'updated_at'   => now(),
+        ]);
 
         return redirect()->route('ledger.index')->with('success', 'Ledger created successfully.');
     }

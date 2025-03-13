@@ -64,9 +64,14 @@
                                                 </td>
                                                 <td>{{ $ledger->name }}</td>
                                                 <td>
-                                                    @foreach($ledger->groups as $group)
+                                                    {{-- @foreach($ledger->groups as $group)
                                                         <span class="badge badge-info">{{ $group->group_name }}</span>
-                                                    @endforeach
+                                                    @endforeach --}}
+                                                    @if($ledger->groups->isNotEmpty())
+                                                        {{ $ledger->groups->pluck('group_name')->join(', ') }}
+                                                    @else
+                                                        N/A
+                                                    @endif
                                                 </td>
                                                 <td class="font-weight-bolder">{{ bdt() }} {{ number_format($ledger->debit, 2) }}</td>
                                                 <td class="font-weight-bolder">{{ bdt() }} {{ number_format($ledger->ledgerSums['debit'], 2) }}</td>  
