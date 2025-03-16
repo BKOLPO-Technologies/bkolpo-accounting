@@ -25,7 +25,7 @@ class ProductSaleReceiveController extends Controller
         $pageTitle = 'Project Sale Receive List';
     
         $receipts = ProjectReceipt::with(['client'])
-            ->orderBy('payment_date', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
         
         return view('backend.admin.inventory.project.payment.receipt.index', compact('pageTitle', 'receipts'));
