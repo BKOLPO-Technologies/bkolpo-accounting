@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('journal_vouchers', function (Blueprint $table) {
             $table->id();
-            $table->string('transaction_code')->unique();
+            $table->string('transaction_code');
             $table->foreignId('company_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('branch_id')->nullable()->constrained()->onDelete('cascade');
             $table->date('transaction_date'); 
