@@ -3,6 +3,7 @@
 @section('admin')
     <link rel="stylesheet" href="{{ asset('backend/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
     <div class="content-wrapper">
+
         <div class="content-header">
             <div class="container-fluid">
               <div class="row mb-2">
@@ -58,7 +59,8 @@
                                         <select class="form-control" id="group_id" name="group_id">
                                             <option value="">Select Group</option>
                                             @foreach($groups as $group)
-                                                <option value="{{ $group->id }}" {{ old('group_id', $subGroup->ledger_group_id) == $group->id ? 'selected' : '' }}>
+                                                <option value="{{ $group->id }}" 
+                                                    {{ old('group_id', $selectedGroupId) == $group->id ? 'selected' : '' }}>
                                                     {{ $group->group_name }}
                                                 </option>
                                             @endforeach
@@ -71,7 +73,9 @@
                                         <select class="form-control" id="sub_group_id" name="sub_group_id">
                                             <option value="">Select Sub Group</option>
                                             @foreach($subGroups as $group)
-                                                <option value="{{ $group->id }}" {{ old('group_id', $subGroup->ledger_group_id) == $group->id ? 'selected' : '' }}>
+                                                <option value="{{ $group->id }}" 
+                                                    {{-- {{ old('group_id', $subGroup->ledger_group_id) == $group->id ? 'selected' : '' }}> --}}
+                                                    {{ old('group_id', $selectedSubGroupId) == $group->id ? 'selected' : '' }}>
                                                     {{ $group->subgroup_name }}
                                                 </option>
                                             @endforeach

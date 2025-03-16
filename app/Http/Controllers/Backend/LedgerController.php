@@ -120,15 +120,28 @@ class LedgerController extends Controller
      */
     public function edit(string $id)
     {
-        $ledger = Ledger::with('groups')->findOrFail($id);
+        $ledger = Ledger::with('groups', 'ledgerGroupSubgroup')->findOrFail($id);
         $groups = LedgerGroup::where('status', 1)->latest()->get();
         $pageTitle = 'Ledger Edit';
-        // Find the Ledger Sub Group
-        $subGroup = LedgerSubGroup::findOrFail($id);
-        $subGroups = LedgerSubGroup::where('ledger_group_id', $id)->get();
+        // // Find the Ledger Sub Group
+        // $subGroup = LedgerSubGroup::findOrFail($id);
+        // $subGroups = LedgerSubGroup::where('ledger_group_id', $id)->get();
+
         // dd($subGroups);
+
+        // // Retrieve the selected group_id from the pivot table
+        // $selectedGroupId = DB::table('ledger_group_subgroup_ledgers')
+        //     ->where('ledger_id', $id)
+        //     ->value('group_id');
+
+        // Retrieve the selected group_id from the relation
+        $selectedGroupId = optional($ledger->ledgerGroupSubgroup)->group_id;
+        $selectedSubGroupId = optional($ledger->ledgerGroupSubgroup)->sub_group_id;
         
-        return view('backend.admin.ledger.edit', compact('ledger','groups','pageTitle','subGroup', 'subGroups'));
+        // Fetch sub-groups based on the selected group (if exists)
+        $subGroups = $selectedGroupId ? LedgerSubGroup::where('ledger_group_id', $selectedGroupId)->get() : [];
+        
+        return view('backend.admin.ledger.edit', compact('ledger','groups','pageTitle', 'subGroups', 'selectedGroupId', 'selectedSubGroupId'));
     }
 
     /**

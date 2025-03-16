@@ -41,4 +41,10 @@ class Ledger extends Model
         return $this->belongsToMany(LedgerSubGroup::class, 'ledger_group_subgroup_ledgers', 'ledger_id', 'sub_group_id');
     }
 
+    public function ledgerGroupSubgroup()
+    {
+        return $this->hasOne(LedgerGroupSubgroupLedger::class, 'ledger_id');
+    }
+
+
 }
