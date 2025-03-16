@@ -135,7 +135,7 @@ class ProductSaleReceiveController extends Controller
                 JournalVoucherDetail::create([
                     'journal_voucher_id' => $journalVoucher->id,
                     'ledger_id'          => $receivableLedger->id, 
-                    'reference_no'       => $project->invoice_no,
+                    'reference_no'       => $project->reference_no,
                     'description'        => 'Accounts Receivable Reduced by '.$paymentAmount.' Taka',
                     'debit'              => 0,
                     'credit'             => $paymentAmount,  // পাওনা টাকা কমবে
