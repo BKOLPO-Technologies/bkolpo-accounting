@@ -268,18 +268,170 @@ class JournalController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $pageTitle = 'Journal Entry Edit';
+        $journal = JournalVoucher::with('details')->findOrFail($id);
+        $companies = Company::where('status',1)->latest()->get();
+        $branches = Branch::where('status',1)->latest()->get();
+        $ledgers = Ledger::where('status',1)->latest()->get();
+
+        return view('backend.admin.voucher.journal.edit', compact('pageTitle', 'companies', 'branches', 'journal', 'ledgers'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    // public function update(Request $request, $id)
+    // {
+    //     //dd($request->all());
+    //     $request->validate([
+    //         'transaction_code' => 'required|unique:journal_vouchers,transaction_code,' . $id,
+    //         'company_id' => 'required',
+    //         'branch_id' => 'required',
+    //         'transaction_date' => 'required|date',
+    //     ]);
+
+    //     DB::beginTransaction();
+
+    //     try {
+    //         $journalVoucher = JournalVoucher::findOrFail($id);
+    //         $journalVoucher->update([
+    //             'transaction_code' => $request->transaction_code,
+    //             'company_id' => $request->company_id,
+    //             'branch_id' => $request->branch_id,
+    //             'transaction_date' => $request->transaction_date,
+    //         ]);
+
+    //         // Delete old details
+    //         JournalVoucherDetail::where('journal_voucher_id', $id)->delete();
+
+    //         $details = [];
+    //         $totalDebit = 0;
+    //         $totalCredit = 0;
+
+    //         foreach ($request->ledger_id as $index => $ledgerId) {
+    //             if (!empty($ledgerId)) {
+    //                 $debit = isset($request->debit[$index]) ? (float) $request->debit[$index] : 0;
+    //                 $credit = isset($request->credit[$index]) ? (float) $request->credit[$index] : 0;
+
+    //                 $totalDebit += $debit;
+    //                 $totalCredit += $credit;
+
+    //                 $details[] = [
+    //                     'journal_voucher_id' => $journalVoucher->id,
+    //                     'ledger_id' => $ledgerId,
+    //                     'reference_no' => $request->reference_no[$index] ?? '',
+    //                     'description' => $request->description[$index] ?? '',
+    //                     'debit' => $debit,
+    //                     'credit' => $credit,
+    //                     'created_at' => now(),
+    //                     'updated_at' => now(),
+    //                 ];
+    //             }
+    //         }
+
+    //         if ($totalDebit !== $totalCredit) {
+    //             return back()
+    //                 ->withErrors(['error' => 'Total Debit (৳' . number_format($totalDebit, 2) . ') and Total Credit (৳' . number_format($totalCredit, 2) . ') must be equal.'])
+    //                 ->withInput();
+    //         }
+
+    //         // Insert updated details
+    //         JournalVoucherDetail::insert($details);
+
+    //         DB::commit();
+
+    //         return redirect()->route('journal-voucher.index')->with('success', 'Journal Voucher updated successfully!');
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return back()->withErrors(['error' => 'An error occurred while updating the journal voucher.']);
+    //     }
+    // }
+
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'transaction_code' => 'required|unique:journal_vouchers,transaction_code,' . $id,
+            'company_id' => 'required',
+            'branch_id' => 'required',
+            'transaction_date' => 'required|date',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $journalVoucher = JournalVoucher::findOrFail($id);
+            $journalVoucher->update([
+                'transaction_code' => $request->transaction_code,
+                'company_id' => $request->company_id,
+                'branch_id' => $request->branch_id,
+                'transaction_date' => $request->transaction_date,
+            ]);
+
+            // Fetch existing details
+            $existingDetails = JournalVoucherDetail::where('journal_voucher_id', $id)->get()->keyBy('ledger_id');
+
+            $totalDebit = 0;
+            $totalCredit = 0;
+            $updatedLedgerIds = [];
+
+            foreach ($request->ledger_id as $index => $ledgerId) {
+                if (!empty($ledgerId)) {
+                    $debit = isset($request->debit[$index]) ? (float) $request->debit[$index] : 0;
+                    $credit = isset($request->credit[$index]) ? (float) $request->credit[$index] : 0;
+
+                    $totalDebit += $debit;
+                    $totalCredit += $credit;
+
+                    $updatedLedgerIds[] = $ledgerId;
+
+                    if (isset($existingDetails[$ledgerId])) {
+                        // Update existing record
+                        $existingDetails[$ledgerId]->update([
+                            'reference_no' => $request->reference_no[$index] ?? '',
+                            'description' => $request->description[$index] ?? '',
+                            'debit' => $debit,
+                            'credit' => $credit,
+                            'updated_at' => now(),
+                        ]);
+                    } else {
+                        // Insert new record
+                        JournalVoucherDetail::create([
+                            'journal_voucher_id' => $journalVoucher->id,
+                            'ledger_id' => $ledgerId,
+                            'reference_no' => $request->reference_no[$index] ?? '',
+                            'description' => $request->description[$index] ?? '',
+                            'debit' => $debit,
+                            'credit' => $credit,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
+                }
+            }
+
+            if ($totalDebit !== $totalCredit) {
+                return back()
+                    ->withErrors(['error' => 'Total Debit (৳' . number_format($totalDebit, 2) . ') and Total Credit (৳' . number_format($totalCredit, 2) . ') must be equal.'])
+                    ->withInput();
+            }
+
+            // Remove details that are no longer in the request
+            JournalVoucherDetail::where('journal_voucher_id', $id)
+                ->whereNotIn('ledger_id', $updatedLedgerIds)
+                ->delete();
+
+            DB::commit();
+
+            return redirect()->route('journal-voucher.index')->with('success', 'Journal Voucher updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'An error occurred while updating the journal voucher.']);
+        }
     }
+
+
 
     /**
      * Remove the specified resource from storage.
