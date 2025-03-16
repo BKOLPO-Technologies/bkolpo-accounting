@@ -79,9 +79,9 @@
                                                         <i class="fas fa-shopping-cart"></i>
                                                     </a>
                                                     <!-- View Button -->
-                                                    {{-- <a href="{{ route('projects.show', $project->id) }}" class="btn btn-success btn-sm">
+                                                    <a href="{{ route('projects.show', $project->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
-                                                    </a> --}}
+                                                    </a>
                                                     <!-- Edit Button -->
                                                     <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-primary btn-sm">
                                                         <i class="fas fa-edit"></i>
