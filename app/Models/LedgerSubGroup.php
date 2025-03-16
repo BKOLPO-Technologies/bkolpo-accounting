@@ -11,7 +11,7 @@ class LedgerSubGroup extends Model
     // Define the relationship to LedgerGroup
     public function ledgerGroup()
     {
-        return $this->belongsTo(LedgerGroup::class);
+        return $this->belongsTo(LedgerGroup::class, 'ledger_group_id');
     }
 
     public function ledgers()

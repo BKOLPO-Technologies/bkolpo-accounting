@@ -51,31 +51,26 @@ class ReportController extends Controller
     // balance Sheet report
     public function balanceSheet(Request $request)
     {
-        // dd($request->all());
         $pageTitle = 'Balance Sheet Report';
-        // Define the date range for the report
         $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
         $toDate = $request->input('to_date', now()->format('Y-m-d'));
 
-        // Fetch ledger groups with their ledgers and calculate balances
-        $ledgerGroups = LedgerGroup::with(['ledgers' => function ($query) use ($fromDate, $toDate) {
-            $query->withSum(['journalVoucherDetails as total_debit' => function ($query) use ($fromDate, $toDate) {
-                $query->whereDate('created_at', '>=', $fromDate)
-                ->whereDate('created_at', '<=', $toDate);
-            }], 'debit')
-            ->withSum(['journalVoucherDetails as total_credit' => function ($query) use ($fromDate, $toDate) {
-                $query->whereDate('created_at', '>=', $fromDate)
-                    ->whereDate('created_at', '<=', $toDate);
-            }], 'credit');
-        }])
-        ->orderBy('id', 'DESC')
-        ->get();
+        $ledgerGroups = LedgerGroup::with([
+            'subGroups.ledgers' => function ($query) use ($fromDate, $toDate) {
+                $query->withSum(['journalVoucherDetails as total_debit' => function ($query) use ($fromDate, $toDate) {
+                    $query->whereDate('created_at', '>=', $fromDate)
+                        ->whereDate('created_at', '<=', $toDate);
+                }], 'debit')
+                ->withSum(['journalVoucherDetails as total_credit' => function ($query) use ($fromDate, $toDate) {
+                    $query->whereDate('created_at', '>=', $fromDate)
+                        ->whereDate('created_at', '<=', $toDate);
+                }], 'credit');
+            }
+        ])->orderBy('id', 'ASC')->get();
 
-
-        
-
-        return view('backend.admin.report.account.balance_sheet', compact('pageTitle', 'ledgerGroups','fromDate','toDate'));
+        return view('backend.admin.report.account.balance_sheet', compact('pageTitle', 'ledgerGroups', 'fromDate', 'toDate'));
     }
+
 
     // ledger list
     public function ledgerList()
@@ -123,18 +118,21 @@ class ReportController extends Controller
        $toDate = $request->input('to_date', now()->format('Y-m-d'));
 
         // Fetch ledger groups with their ledgers and calculate balances
-        $ledgerGroup = LedgerGroup::with(['ledgers' => function ($query) use ($fromDate, $toDate) {
-            $query->withSum(['journalVoucherDetails as total_debit' => function ($query) use ($fromDate, $toDate) {
-                $query->whereDate('created_at', '>=', $fromDate)
-                ->whereDate('created_at', '<=', $toDate);
-            }], 'debit')
-            ->withSum(['journalVoucherDetails as total_credit' => function ($query) use ($fromDate, $toDate) {
-                $query->whereDate('created_at', '>=', $fromDate)
-                ->whereDate('created_at', '<=', $toDate);
-            }], 'credit');
-        }])
+        $ledgerGroup = LedgerGroup::with([
+            'subGroups.ledgers' => function ($query) use ($fromDate, $toDate) {
+                $query->withSum(['journalVoucherDetails as total_debit' => function ($query) use ($fromDate, $toDate) {
+                    $query->whereDate('created_at', '>=', $fromDate)
+                          ->whereDate('created_at', '<=', $toDate);
+                }], 'debit')
+                ->withSum(['journalVoucherDetails as total_credit' => function ($query) use ($fromDate, $toDate) {
+                    $query->whereDate('created_at', '>=', $fromDate)
+                          ->whereDate('created_at', '<=', $toDate);
+                }], 'credit');
+            }
+        ])
         ->orderBy('id', 'DESC')
         ->findOrFail($id);
+        
 
         // dd($ledgerGroup);
         return view('backend.admin.report.account.ledger_group_report',compact('pageTitle','ledgerGroup','fromDate','toDate'));

@@ -74,18 +74,18 @@
                 <tr>
                     <td style="border: 1px solid #000; padding: 8px; text-align: center;">{{ $key + 1 }}</td>
                     <td style="border: 1px solid #000; padding: 8px; text-align: left;">{{ $detail->ledger->name }}</td>
-                    <td style="border: 1px solid #000; padding: 8px; text-align: right;">৳{{ number_format($detail->debit, 2) }}</td>
-                    <td style="border: 1px solid #000; padding: 8px; text-align: right;">৳{{ number_format($detail->credit, 2) }}</td>
+                    <td style="border: 1px solid #000; padding: 8px; text-align: right;"> {{ bdt() }} {{ number_format($detail->debit, 2) }}</td>
+                    <td style="border: 1px solid #000; padding: 8px; text-align: right;"> {{ bdt() }} {{ number_format($detail->credit, 2) }}</td>
                 </tr>
             @endforeach
             <!-- Sum Row -->
             <tr style="font-weight: bold;">
                 <td style="border: 1px solid #000; padding: 8px; text-align: center;" colspan="2">Total</td>
                 <td style="border: 1px solid #000; padding: 8px; text-align: right;">
-                    ৳{{ number_format($ledger->journalVoucherDetails->sum('debit'), 2) }}
+                     {{ bdt() }} {{ number_format($ledger->journalVoucherDetails->sum('debit'), 2) }}
                 </td>
                 <td style="border: 1px solid #000; padding: 8px; text-align: right;">
-                    ৳{{ number_format($ledger->journalVoucherDetails->sum('credit'), 2) }}
+                     {{ bdt() }} {{ number_format($ledger->journalVoucherDetails->sum('credit'), 2) }}
                 </td>
             </tr>
         </tbody>

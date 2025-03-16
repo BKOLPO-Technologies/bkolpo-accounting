@@ -62,53 +62,61 @@
                             <div clas="card-body">
                                 <div class="row mb-5">
                                     <div class="col-lg-8 col-md-8 col-sm-12 mx-auto">
-                                        <!-- Ledger Balance Table -->
                                         <div class="table-responsive">
-                                            <table id="example5" class="table-striped table-bordered" style=" width: 100%;">
-                                                <thead style="border-bottom: 2px solid black; text-align:center;">
+                                            <table id="example5" class="table-striped table-bordered" style="width: 100%;">
+                                                <thead style="border-bottom: 2px solid black; text-align: center;">
                                                     <tr>
                                                         <th style="width: 5%;">Sl</th>
-                                                        <th  class="text-end"  style="width: 80%;"></th>
-                                                        <th  class="text-end" style="width: 20%;">Amount (৳)</th>
+                                                        <th class="text-end" style="width: 70%;">Name</th>
+                                                        <th class="text-end" style="width: 25%;">Amount</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @php
-                                                        $totalBalance = 0;
-                                                    @endphp
-                                                    @foreach ($ledgerGroup->ledgers as $ledger)
+                                                    @php $totalBalance = 0; @endphp
+                                    
+                                                    @foreach ($ledgerGroup->subGroups as $subGroup)
                                                         @php
-                                                            // Calculate the balance
-                                                            $balance = $ledger->debit;
-
-                                                            if ($ledger->debit > 0) {
-                                                                $balance += $ledger->total_debit - $ledger->total_credit;
-                                                            } else {
-                                                                $balance += $ledger->total_credit - $ledger->total_debit;
+                                                            $subGroupTotal = 0;
+                                                            foreach ($subGroup->ledgers as $ledger) {
+                                                                $subGroupTotal += abs($ledger->total_debit - $ledger->total_credit);
                                                             }
-
-                                                            // Remove the negative sign (make the balance positive)
-                                                            $balance = abs($balance); // This will convert any negative balance to positive
-
-                                                            // Add balance to total balance
-                                                            $totalBalance += $balance;
+                                                            $totalBalance += $subGroupTotal;
                                                         @endphp
-                                                        <tr>
-                                                            <td class="col-1">{{  $loop->iteration }}</td>
-                                                            <td>{{ $ledger->name }}</td>
-                                                            <td class="text-end col-2">৳{{ number_format($balance, 2) }}</td>
+                                    
+                                                        <!-- Sub Group Row -->
+                                                        <tr data-toggle="collapse" data-target="#subgroup-{{ $subGroup->id }}" aria-expanded="false" 
+                                                            style="cursor: pointer; background-color: #f2f2f2;">
+                                                            <td>{{ $loop->iteration }}</td>
+                                                            <td><strong>{{ $subGroup->subgroup_name }}</strong></td>
+                                                            <td class="text-end"><strong>{{ bdt() }} {{ number_format($subGroupTotal, 2) }}</strong></td>
                                                         </tr>
+                                    
+                                                        <!-- Ledgers inside Sub Group -->
+                                                        <tbody id="subgroup-{{ $subGroup->id }}" class="collapse">
+                                                            @foreach ($subGroup->ledgers as $ledger)
+                                                                @php
+                                                                    $balance = abs($ledger->total_debit - $ledger->total_credit);
+                                                                @endphp
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;{{ $ledger->name }}</td>
+                                                                    <td class="text-end">{{ bdt() }} {{ number_format($balance, 2) }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
                                                     @endforeach
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
                                                         <th colspan="2" class="text-right">Total:</th>
-                                                        <th>৳{{ number_format($totalBalance, 2) }}</th>
+                                                        <th class="text-end">{{ bdt() }} {{ number_format($totalBalance, 2) }}</th>
                                                     </tr>
                                                 </tfoot>
                                             </table>
                                         </div>
                                     </div>
+                                    
+                                    
                                 </div>
                             </div>
                         </div>
@@ -171,7 +179,7 @@
                                 <p class="mb-0">Date: {{ now()->format('d M, Y') }}</p>
                             </div>
                             <div class="d-flex justify-content-start mb-3">
-                                <h3 class="mb-0 font-weight-bolder">Ledger Group Name - {{ $ledgerGroup->name }}</h3>
+                                <h3 class="mb-0 font-weight-bolder">Ledger Group Name - {{ $ledgerGroup->group_name }}</h3>
                             </div>
                         `);
 

@@ -170,7 +170,7 @@
                                                             @php
                                                                 $totalDebit = 0;
                                                                 $totalCredit = 0;
-                                                                $openingBalance = $ledger->debit;
+                                                                $openingBalance = $ledger->opening_balance;
                                                             @endphp
                                                             
                                                             @foreach ($ledger->journalVoucherDetails as $index => $voucherDetail)
@@ -197,7 +197,7 @@
                                                             <!-- Opening Balance -->
                                                             <tr>
                                                                 <th colspan="5" class="text-right">Opening Balance:</th>
-                                                                <th colspan="2">{{ bdt() }} {{ number_format($ledger->debit, 2) }}</th>
+                                                                <th colspan="2">{{ bdt() }} {{ number_format($ledger->opening_balance, 2) }}</th>
                                                             </tr>
 
                                                             <!-- Current Balance -->

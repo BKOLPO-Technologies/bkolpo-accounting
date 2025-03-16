@@ -80,40 +80,47 @@
                                         <div class="col-lg-8 col-md-8 col-sm-12 mx-auto">
                                             <!-- Balance Sheet Table -->
                                             @foreach ($ledgerGroups as $group)
-                                                <h2>{{ $group->group_name ?? 'N/A' }}</h2>
+                                                <h2 class="{{ $loop->first ? '' : 'mt-3' }}">{{ $group->group_name ?? 'N/A' }}</h2>
+                                        
                                                 <div class="table-responsive">
                                                     <table id="example10" border="1" class="table-striped table-bordered" cellpadding="5" cellspacing="0" style="width: 100%;">
                                                         <thead>
                                                             <tr>
-                                                                <th style="width: 85%;"></th>
-                                                                <th style="width: 15%;">Amount ({{ bdt() }})</th>
+                                                                <th style="width: 85%;">Name</th>
+                                                                <th style="width: 15%;">Amount</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @php
-                                                                $totalBalance = 0;
-                                                            @endphp
-                                                            @foreach ($group->ledgers as $ledger)
+                                                            @php $totalBalance = 0; @endphp
+                                        
+                                                            <!-- Loop Through Sub Groups -->
+                                                            @foreach ($group->subGroups as $subGroup)
                                                                 @php
-                                                                    // Calculate the balance
-                                                                    $balance = $ledger->debit;
-
-                                                                    if ($ledger->debit > 0) {
-                                                                        $balance += $ledger->total_debit - $ledger->total_credit;
-                                                                    } else {
-                                                                        $balance += $ledger->total_credit - $ledger->total_debit;
+                                                                    $subGroupTotal = 0;
+                                                                    foreach ($subGroup->ledgers as $ledger) {
+                                                                        $subGroupTotal += abs($ledger->total_debit - $ledger->total_credit);
                                                                     }
-
-                                                                    // Remove the negative sign (make the balance positive)
-                                                                    $balance = abs($balance); // This will convert any negative balance to positive
-
-                                                                    // Add balance to total balance
-                                                                    $totalBalance += $balance;
+                                                                    $totalBalance += $subGroupTotal;
                                                                 @endphp
-                                                                <tr>
-                                                                    <td>{{ $ledger->name }}</td>
-                                                                    <td>{{ bdt() }} {{ number_format($balance, 2) }}</td>
+                                                                
+                                                                <!-- Sub Group Row (Clickable for Collapse) -->
+                                                                <tr data-toggle="collapse" data-target="#subgroup-{{ $subGroup->id }}" aria-expanded="false" style="cursor: pointer; background-color: #f2f2f2;">
+                                                                    <td><strong>{{ $subGroup->subgroup_name }}</strong></td>
+                                                                    <td><strong>{{ bdt() }} {{ number_format($subGroupTotal, 2) }}</strong></td>
                                                                 </tr>
+                                        
+                                                                <!-- Ledgers (Initially Collapsed) -->
+                                                                <tbody id="subgroup-{{ $subGroup->id }}" class="collapse">
+                                                                    @foreach ($subGroup->ledgers as $ledger)
+                                                                        @php
+                                                                            $balance = abs($ledger->total_debit - $ledger->total_credit);
+                                                                        @endphp
+                                                                        <tr>
+                                                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;{{ $ledger->name }}</td>
+                                                                            <td>{{ bdt() }} {{ number_format($balance, 2) }}</td>
+                                                                        </tr>
+                                                                    @endforeach
+                                                                </tbody>
                                                             @endforeach
                                                         </tbody>
                                                         <tfoot>

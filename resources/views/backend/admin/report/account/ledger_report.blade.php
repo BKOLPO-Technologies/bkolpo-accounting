@@ -71,15 +71,15 @@
                                                         <th>Reference No</th>
                                                         <th>Description</th>
                                                         <th>Date</th>
-                                                        <th class="text-end" style="width: 5%;">Debit (৳)</th>
-                                                        <th class="text-end" style="width: 5%;">Credit (৳)</th>
+                                                        <th class="text-end" style="width: 5%;">Debit</th>
+                                                        <th class="text-end" style="width: 5%;">Credit</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @php
                                                         $totalDebit = 0;
                                                         $totalCredit = 0;
-                                                        $openingBalance = $ledger->debit;
+                                                        $openingBalance = $ledger->opening_balance;
                                                     @endphp
                                                     @foreach ($ledger->journalVoucherDetails as $index => $voucherDetail)
                                                         @php
@@ -91,28 +91,28 @@
                                                             <td>{{ $voucherDetail->reference_no }}</td>
                                                             <td>{{ $voucherDetail->description }}</td>
                                                             <td>{{ date('d M, Y', strtotime($voucherDetail->journalVoucher->transaction_date)) }}</td>
-                                                            <td class="text-end col-2">৳{{ number_format($voucherDetail->debit, 2) }}</td>
-                                                            <td class="text-end col-2">৳{{ number_format($voucherDetail->credit, 2) }}</td>
+                                                            <td class="text-end col-2">{{ bdt() }} {{ number_format($voucherDetail->debit, 2) }}</td>
+                                                            <td class="text-end col-2">{{ bdt() }} {{ number_format($voucherDetail->credit, 2) }}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
                                                         <th colspan="4" class="text-right">Total:</th>
-                                                        <th>৳{{ number_format($totalDebit, 2) }}</th>
-                                                        <th>৳{{ number_format($totalCredit, 2) }}</th>
+                                                        <th>{{ bdt() }} {{ number_format($totalDebit, 2) }}</th>
+                                                        <th>{{ bdt() }} {{ number_format($totalCredit, 2) }}</th>
                                                     </tr>
                                                     <!-- Opening Balance -->
                                                     <tr>
                                                         <th colspan="5" class="text-right">Opening Balance:</th>
-                                                        <th colspan="2">৳{{ number_format($ledger->debit, 2) }}</th>
+                                                        <th colspan="2">{{ bdt() }} {{ number_format($ledger->opening_balance, 2) }}</th>
                                                     </tr>
 
                                                     <!-- Current Balance -->
                                                     <tr>
                                                         <th colspan="5" class="text-right">Current Balance:</th>
                                                         <th colspan="2">
-                                                            ৳{{ number_format($openingBalance + $totalDebit - $totalCredit, 2) }}
+                                                            {{ bdt() }} {{ number_format($openingBalance + $totalDebit - $totalCredit, 2) }}
                                                         </th>
                                                     </tr>
                                                 </tfoot>

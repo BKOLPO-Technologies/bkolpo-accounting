@@ -69,8 +69,8 @@
                                                     <tr>
                                                         <th style="width: 5%;">Sl</th>
                                                         <th style="width: 40%;">Ledger Name</th>
-                                                        <th class="text-end" style="width: 5%;">Debit ({{ bdt() }})</th>
-                                                        <th class="text-end" style="width: 5%;">Credit ({{ bdt() }})</th>
+                                                        <th class="text-end" style="width: 5%;">Debit</th>
+                                                        <th class="text-end" style="width: 5%;">Credit</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
