@@ -172,7 +172,7 @@ class ReportController extends Controller
                 }], 'credit');
             }
             
-        ])->orderBy('id', 'DESC')
+        ])->orderBy('id', 'ASC')
         ->get();
 
         // Calculate total debit, credit, and net profit/loss

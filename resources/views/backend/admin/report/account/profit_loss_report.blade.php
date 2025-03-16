@@ -92,21 +92,21 @@
                                                     @foreach ($ledgerGroups as $group)
                                                         <tr class="table-secondary">
                                                             <td><strong>{{ $group->group_name }}</strong></td>
-                                                            <td class="text-right"><strong>৳{{ number_format($group->ledgers->sum('total_debit'), 2) }}</strong></td>
-                                                            <td class="text-right"><strong>৳{{ number_format($group->ledgers->sum('total_credit'), 2) }}</strong></td>
+                                                            <td class="text-right"><strong>{{ bdt() }} {{ number_format($group->ledgers->sum('total_debit'), 2) }}</strong></td>
+                                                            <td class="text-right"><strong>{{ bdt() }} {{ number_format($group->ledgers->sum('total_credit'), 2) }}</strong></td>
                                                         </tr>
                                                     @endforeach
                                                     </tbody>
                                                     <tfoot>
                                                         <tr class="table-primary">
                                                             <th colspan="1">Total</th>
-                                                            <th class="text-right">৳{{ number_format($totalDebit, 2) }}</th>
-                                                            <th class="text-right">৳{{ number_format($totalCredit, 2) }}</th>
+                                                            <th class="text-right">{{ bdt() }} {{ number_format($totalDebit, 2) }}</th>
+                                                            <th class="text-right">{{ bdt() }} {{ number_format($totalCredit, 2) }}</th>
                                                         </tr>
                                                         <tr class="table-success">
                                                             <th colspan="2">Net Profit / Loss</th>
                                                             <th class="text-right">
-                                                                ৳{{ number_format($netProfitLoss, 2) }}
+                                                                {{ bdt() }} {{ number_format($netProfitLoss, 2) }}
                                                             </th>
                                                         </tr>
                                                     </tfoot>
