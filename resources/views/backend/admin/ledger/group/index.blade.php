@@ -73,11 +73,11 @@
                                                     </a>
                                                     @endcan
                                                     <!-- Delete Button -->
-                                                    @can('ledger-group-delete')
+                                                    {{-- @can('ledger-group-delete')
                                                     <a href="{{ route('ledger.group.delete',$ledger->id)}}" id="delete" class="btn btn-danger btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
-                                                    @endcan
+                                                    @endcan --}}
                                                 </td>
                                             </tr>
                                         @endforeach
