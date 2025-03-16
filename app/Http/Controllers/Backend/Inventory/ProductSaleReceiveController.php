@@ -6,11 +6,12 @@ use App\Models\Sale;
 use App\Models\Client;
 use App\Models\Ledger;
 use App\Models\Project;
-use App\Models\ProjectReceipt;
 use App\Models\LedgerGroup;
 use Illuminate\Http\Request;
 use App\Models\JournalVoucher;
+use App\Models\ProjectReceipt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\JournalVoucherDetail;
 
@@ -174,6 +175,14 @@ class ProductSaleReceiveController extends Controller
         } catch (\Exception $e) {
             // If an error occurs, roll back the transaction
             DB::rollBack();
+            
+            // Log the error with details
+            Log::error('Payment storing failed', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'request_data' => $request->all(),
+            ]);
     
             // Log the error or return a custom error message
             return redirect()->back()->with('error', 'Payment failed! ' . $e->getMessage());
