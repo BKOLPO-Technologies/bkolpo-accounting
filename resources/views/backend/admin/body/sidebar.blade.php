@@ -389,7 +389,7 @@
 
 
           <!-- Sales -->
-          {{-- <li class="nav-item {{ $isSalesActive ? 'menu-open' : '' }}">
+          <li class="nav-item {{ $isSalesActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isSalesActive ? 'active' : '' }}">
                   <i class="nav-icon fas fa-shopping-cart"></i>
                   <p>
@@ -427,7 +427,7 @@
                     </a>
                 </li>
               </ul>
-          </li> --}}
+          </li>
 
           <!-- Purchase -->
           <li class="nav-item {{ $isPurchaseActive ? 'menu-open' : '' }}">
