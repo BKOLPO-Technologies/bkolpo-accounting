@@ -273,10 +273,10 @@ class JournalController extends Controller
         $pageTitle = 'Journal Entry Edit';
         $journal = JournalVoucher::with('details')->findOrFail($id);
         $companies = Company::where('status',1)->latest()->get();
-        $branches = Branch::where('status',1)->latest()->get();
+        $branch = Branch::where('status',1)->where('id', $journal->branch_id)->first();
         $ledgers = Ledger::where('status',1)->latest()->get();
 
-        return view('backend.admin.voucher.journal.edit', compact('pageTitle', 'companies', 'branches', 'journal', 'ledgers'));
+        return view('backend.admin.voucher.journal.edit', compact('pageTitle', 'companies', 'branch', 'journal', 'ledgers'));
     }
 
     /**

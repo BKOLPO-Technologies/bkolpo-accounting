@@ -27,7 +27,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
                                     @can('journal-create')
-                                    <a href="{{ route('journal-voucher.create') }}" class="btn btn-sm btn-success rounded-0">
+                                    <a href="#" class="btn btn-sm btn-success rounded-0">
                                         <i class="fas fa-plus fa-sm"></i> Add New Journal Voucher 
                                     </a>
                                     @endcan

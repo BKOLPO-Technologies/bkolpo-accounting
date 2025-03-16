@@ -71,11 +71,9 @@
                                             <label for="branch_id">Branch</label>
                                             <select name="branch_id" id="branch_id" class="form-control @error('branch_id') is-invalid @enderror" required>
                                                 <option value="">Select Branch</option>
-                                                @foreach($branches as $branch)
-                                                    <option value="{{ $branch->id }}" {{ (old('branch_id', $journal->branch_id) == $branch->id) ? 'selected' : '' }}>
-                                                        {{ $branch->name }}
-                                                    </option>
-                                                @endforeach
+                                                <option value="{{ $branch->id }}" {{ (old('branch_id', $journal->branch_id) == $branch->id) ? 'selected' : '' }}>
+                                                    {{ $branch->name }}
+                                                </option>
                                             </select>
                                             @error('branch_id')
                                             <div class="invalid-feedback">
