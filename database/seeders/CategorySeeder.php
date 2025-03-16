@@ -16,11 +16,9 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            ['name' => 'Electronics', 'slug' => Str::slug('Electronics'), 'image' => null, 'status' => 1],
-            ['name' => 'Fashion', 'slug' => Str::slug('Fashion'), 'image' => null, 'status' => 1],
-            ['name' => 'Home Appliances', 'slug' => Str::slug('Home Appliances'), 'image' => null, 'status' => 1],
-            ['name' => 'Books', 'slug' => Str::slug('Books'), 'image' => null, 'status' => 1],
-            ['name' => 'Toys', 'slug' => Str::slug('Toys'), 'image' => null, 'status' => 1],
+            ['name' => 'Civil Construction', 'slug' => Str::slug('Civil Construction'), 'image' => null, 'status' => 1],
+            ['name' => 'Still Structure', 'slug' => Str::slug('Still Structure'), 'image' => null, 'status' => 1],
+            ['name' => 'Interior Design', 'slug' => Str::slug('Interior Design'), 'image' => null, 'status' => 1],
         ];
 
         //DB::table('categories')->insert($categories);
