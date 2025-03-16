@@ -51,7 +51,7 @@ class ProductSaleReceiveController extends Controller
 
     public function store(Request $request)
     {
-        //dd($request->all());
+        // dd($request->all());
         // Validate the incoming form data
         $request->validate([
             // 'client_id' => 'required|exists:clients,id',
@@ -90,58 +90,58 @@ class ProductSaleReceiveController extends Controller
             $project_amount = $project->grand_total ?? 0; // Get the total project amount
 
 
-            // $paymentMethod = $request->input('payment_method');
+            $paymentMethod = $request->input('payment_method');
 
-            // // Step 4: Based on payment method, get the corresponding ledger
-            // if ($paymentMethod == 'cash') {
-            //     $ledger = Ledger::where('name', 'Cash')->first();
-            // } elseif ($paymentMethod == 'bank') {
-            //     $ledger = Ledger::where('name', 'Bank')->first(); 
-            // }
+            // Step 4: Based on payment method, get the corresponding ledger
+            if ($paymentMethod == 'cash') {
+                $ledger = Ledger::where('name', 'Cash')->first();
+            } elseif ($paymentMethod == 'bank') {
+                $ledger = Ledger::where('name', 'Bank')->first(); 
+            }
 
-            // $cashBankLedger  = $ledger;
-            // $receivableLedger = Ledger::where('name', 'Accounts Receivable')->first();
+            $cashBankLedger  = $ledger;
+            $receivableLedger = Ledger::where('name', 'Accounts Receivable')->first();
         
-            // $paymentAmount = $request->input('pay_amount', 0); 
+            $paymentAmount = $request->input('pay_amount', 0); 
 
-            // if ($cashBankLedger && $receivableLedger) {
-            //     // Check if a Journal Voucher exists for this payment transaction
-            //     $journalVoucher = JournalVoucher::where('transaction_code', $project->invoice_no)->first();
+            if ($cashBankLedger && $receivableLedger) {
+                // Check if a Journal Voucher exists for this payment transaction
+                $journalVoucher = JournalVoucher::where('transaction_code', $project->invoice_no)->first();
             
-            //     if (!$journalVoucher) {
-            //         // Create a new Journal Voucher for Payment Received
-            //         $journalVoucher = JournalVoucher::create([
-            //             'transaction_code'  => $project->invoice_no,
-            //             'transaction_date'  => $request->payment_date,
-            //             'description'       => 'Invoice Payment Received - First Installment', // ম্যানুয়াল বর্ণনা
-            //             'status'            => 1, // Pending status
-            //         ]);
-            //     }
+                if (!$journalVoucher) {
+                    // Create a new Journal Voucher for Payment Received
+                    $journalVoucher = JournalVoucher::create([
+                        'transaction_code'  => $project->reference_no,
+                        'transaction_date'  => $request->payment_date,
+                        'description'       => 'Invoice Payment Received - First Installment', // ম্যানুয়াল বর্ণনা
+                        'status'            => 1, // Pending status
+                    ]);
+                }
             
-            //     // Payment Received -> Cash & Bank (Debit Entry)
-            //     JournalVoucherDetail::create([
-            //         'journal_voucher_id' => $journalVoucher->id,
-            //         'ledger_id'          => $cashBankLedger->id, // নগদ ও ব্যাংক হিসাব
-            //         'reference_no'       => $project->invoice_no,
-            //         'description'        => 'Payment of ' . number_format($paymentAmount, 2) . ' Taka Received from Customer for Invoice ' . $project->invoice_no,
-            //         'debit'              => $paymentAmount, // টাকা জমা হচ্ছে
-            //         'credit'             => 0,
-            //         'created_at'         => now(),
-            //         'updated_at'         => now(),
-            //     ]);
+                // Payment Received -> Cash & Bank (Debit Entry)
+                JournalVoucherDetail::create([
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id'          => $cashBankLedger->id, // নগদ ও ব্যাংক হিসাব
+                    'reference_no'       => $project->reference_no,
+                    'description'        => 'Payment of ' . number_format($paymentAmount, 2) . ' Taka Received from Customer for Invoice ' . $project->invoice_no,
+                    'debit'              => $paymentAmount, // টাকা জমা হচ্ছে
+                    'credit'             => 0,
+                    'created_at'         => now(),
+                    'updated_at'         => now(),
+                ]);
             
-            //     // Payment Received -> Accounts Receivable (Credit Entry)
-            //     JournalVoucherDetail::create([
-            //         'journal_voucher_id' => $journalVoucher->id,
-            //         'ledger_id'          => $receivableLedger->id, 
-            //         'reference_no'       => $project->invoice_no,
-            //         'description'        => 'Accounts Receivable Reduced by '.$paymentAmount.' Taka',
-            //         'debit'              => 0,
-            //         'credit'             => $paymentAmount,  // পাওনা টাকা কমবে
-            //         'created_at'         => now(),
-            //         'updated_at'         => now(),
-            //     ]);
-            // }
+                // Payment Received -> Accounts Receivable (Credit Entry)
+                JournalVoucherDetail::create([
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id'          => $receivableLedger->id, 
+                    'reference_no'       => $project->invoice_no,
+                    'description'        => 'Accounts Receivable Reduced by '.$paymentAmount.' Taka',
+                    'debit'              => 0,
+                    'credit'             => $paymentAmount,  // পাওনা টাকা কমবে
+                    'created_at'         => now(),
+                    'updated_at'         => now(),
+                ]);
+            }
 
             // If project exists
             if ($project) {
