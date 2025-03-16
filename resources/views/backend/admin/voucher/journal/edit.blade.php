@@ -194,7 +194,7 @@
                                     <div class="row mt-3">
                                         <div class="col-lg-12">
                                             <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;">
-                                                <i class="fas fa-save"></i> Update Journal Voucher
+                                                <i class="fas fa-save"></i> Update Post Journal Voucher
                                             </button>
                                         </div>
                                     </div>

@@ -108,7 +108,7 @@ class JournalController extends Controller
         // Combine the timestamp, random number, and full date
         $transactionCode = 'BCL-V-'.$fullDate.' - '.$randomNumber;
 
-        return view('backend.admin.voucher.journal.create_3',compact('pageTitle','branches','ledgers','transactionCode','companies'));
+        return view('backend.admin.voucher.journal.create',compact('pageTitle','branches','ledgers','transactionCode','companies'));
         
     }
 

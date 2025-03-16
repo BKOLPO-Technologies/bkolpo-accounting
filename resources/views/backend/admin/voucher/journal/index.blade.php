@@ -138,8 +138,8 @@
                                                                 <th>Ledger Name</th>
                                                                 <th>Reference No</th>
                                                                 <th>Description</th>
-                                                                <th class="text-end">Debit ({{ bdt() }})</th>
-                                                                <th class="text-end">Credit ({{ bdt() }})</th>
+                                                                <th class="text-end">Debit</th>
+                                                                <th class="text-end">Credit</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>

@@ -389,7 +389,7 @@
 
 
           <!-- Sales -->
-          <li class="nav-item {{ $isSalesActive ? 'menu-open' : '' }}">
+          {{-- <li class="nav-item {{ $isSalesActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isSalesActive ? 'active' : '' }}">
                   <i class="nav-icon fas fa-shopping-cart"></i>
                   <p>
@@ -405,15 +405,6 @@
                         <p>Order Invoice List</p>
                     </a>
                 </li>
-                {{--         
-                <li class="nav-item">
-                  <a href="{{ route('outcoming.chalan.index') }}" 
-                    class="nav-link {{ Route::is('outcoming.chalan.index', 'outcoming.chalan.create', 'outcoming.chalan.show', 'outcoming.chalan.edit') ? 'active' : '' }}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Outgoing Chalan List</p>
-                  </a>
-                </li>
-                --}}
                 <li class="nav-item">
                   <a href="{{ route('receipt.payment.index') }}"
                     class="nav-link {{ Route::is('receipt.payment.index', 'receipt.payment.create') ? 'active' : '' }}">
@@ -436,7 +427,7 @@
                     </a>
                 </li>
               </ul>
-          </li>
+          </li> --}}
 
           <!-- Purchase -->
           <li class="nav-item {{ $isPurchaseActive ? 'menu-open' : '' }}">
@@ -560,7 +551,7 @@
                --}}
           {{-- </li> --}}
 
-          <li class="nav-item {{ Route::is('stock.index', 'stock.show') ? 'menu-open' : '' }}">
+          {{-- <li class="nav-item {{ Route::is('stock.index', 'stock.show') ? 'menu-open' : '' }}">
                             
               <a href="#" class="nav-link {{ Route::is('stock.index', 'stock.show')  ? 'active' : '' }}">
                   <i class="nav-icon fas fa-boxes"></i>
@@ -591,7 +582,7 @@
                 </li>
               </ul>
               
-          </li>
+          </li> --}}
 
          @can('user-menu')  
          <li class="nav-item {{ Route::is('users.index','users.create','users.edit','users.show') ? 'menu-open' : '' }}">

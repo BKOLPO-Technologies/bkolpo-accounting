@@ -5,6 +5,6 @@
     </strong>
     <div class="float-right d-none d-sm-inline-block">
         Developed by 
-        <a target="_blank" href="https://tech.bkolpo.com/">Bkolpo Technology</a>
+        <a target="_blank" href="https://tech.bkolpo.com/">Bkolpo Technologies</a>
     </div>
   </footer>
