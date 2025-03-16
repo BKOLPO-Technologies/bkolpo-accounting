@@ -461,13 +461,13 @@
                         <p>Make Payment List</p>
                     </a>
                   </li>
-                  <li class="nav-item">
+                  {{-- <li class="nav-item">
                     <a href="{{ route('stock.in') }}" 
                       class="nav-link {{ Route::is('stock.in', 'stock.in.view') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Stock In List</p>
                     </a>
-                  </li>
+                  </li> --}}
               </ul>
           </li>
 
