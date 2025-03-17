@@ -262,6 +262,7 @@
                                 </table>
                             </div>
 
+                            {{-- Start Purchases List --}}
                             <div class="mt-4">
                                 <div class="col-lg-12">
                                     <div class="card ">
@@ -280,6 +281,7 @@
                                                         <th>Total</th>
                                                         <th>Paid Amount</th>
                                                         <th>Status</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -335,6 +337,7 @@
                                     </div>
                                 </div>
                             </div>
+                            {{-- End Purchases List --}}
 
                             {{-- project item --}}
                             {{-- <div class="mt-4">
@@ -440,7 +443,38 @@
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            Purchases Payment Receive List
+                                            <table id="example1" class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sl No</th>
+                                                        <th>Invoice No</th>
+                                                        <th>Customer Name</th>
+                                                        <th>Pay Amount</th>
+                                                        <th>Payment Method</th>  
+                                                        <th>Payment Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($project->receipts as $index => $receipt)
+                                                        <tr>
+                                                            <td>{{ $index + 1 }}</td>
+                                                            <td>{{ $receipt->invoice_no ?? 'N/A' }}</td>
+                                                            <td>{{ $receipt->client->name ?? 'N/A' }}</td>
+                                                            <td>{{ number_format($receipt->pay_amount, 2) }}</td>
+                                                            <td>
+                                                                @if($receipt->payment_method == 'cash')
+                                                                    Cash
+                                                                @elseif($receipt->payment_method == 'bank')
+                                                                    Bank
+                                                                @else
+                                                                    N/A
+                                                                @endif
+                                                            </td>
+                                                            <td>{{ $receipt->payment_date }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
