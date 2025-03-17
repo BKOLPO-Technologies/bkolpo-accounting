@@ -36,10 +36,11 @@
                             <thead>
                                 <tr>
                                     <th>Sl</th>
-                                    <th>Name</th>
+                                    <th>Title</th>
                                     <th>Address</th>
                                     <th>Email</th>
                                     <th>Phone</th>
+                                    <th>Contact Person</th>
                                     <th>Settings</th>
                                 </tr>
                             </thead>
@@ -51,6 +52,7 @@
                                     <td>{{ $client->address }}</td>
                                     <td>{{ $client->email }}</td>
                                     <td>{{ $client->phone }}</td>
+                                    <td>{{ $client->title }}</td>
                                     <td>
                                         <a href="{{ route('admin.client.view', $client->id) }}" class="btn btn-success btn-sm">
                                             <i class="fas fa-eye"></i>

@@ -41,14 +41,29 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Name</label>
-                                    <input type="text" class="form-control" placeholder="Name" name="name" required>
+                                    <label>Title</label>
+                                    <input type="text" class="form-control" placeholder="Title" name="name" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Company</label>
                                     <input type="text" class="form-control" placeholder="Company Name" name="company">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Contact Person</label>
+                                    <input type="text" class="form-control" placeholder="Contact Person Name" name="title" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Designation</label>
+                                    <input type="text" class="form-control" placeholder="Contact Person Designation" name="designation">
                                 </div>
                             </div>
                         </div>

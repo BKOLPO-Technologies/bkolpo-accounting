@@ -38,10 +38,11 @@
                             <thead>
                                 <tr>
                                     <th>Sl</th>
-                                    <th>Name</th>
+                                    <th>Title</th>
                                     <th>Address</th>
                                     <th>Email</th>
                                     <th>Phone</th>
+                                    <th>Contact Person</th>
                                     <th>Settings</th>
                                 </tr>
                             </thead>
@@ -53,6 +54,7 @@
                                     <td>{{ $supplier->address }}</td>
                                     <td>{{ $supplier->email }}</td>
                                     <td>{{ $supplier->phone }}</td>
+                                    <td>{{ $supplier->title }}</td>
                                     <td>
                                         <a href="{{ route('admin.supplier.view', $supplier->id) }}" class="btn btn-success btn-sm">
                                             <i class="fas fa-eye"></i>

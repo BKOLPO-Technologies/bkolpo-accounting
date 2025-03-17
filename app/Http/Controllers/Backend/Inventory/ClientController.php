@@ -14,20 +14,20 @@ class ClientController extends Controller
         $clients = Client::all();
 
         $pageTitle = 'Client List';
-        return view('backend/admin/inventory/client/index',compact('pageTitle', 'clients'));
+        return view('backend.admin.inventory.client.index',compact('pageTitle', 'clients'));
     }
 
     public function AdminClientCreate()
     {
         $pageTitle = 'Client Create';
-        return view('backend/admin/inventory/client/create',compact('pageTitle'));
+        return view('backend.admin.inventory.client.create',compact('pageTitle'));
     }
 
     public function AdminClientView($id)
     {
         $client = Client::findOrFail($id);
         $pageTitle = 'Client View';
-        return view('backend/admin/inventory/client/view',compact('pageTitle', 'client'));
+        return view('backend.admin.inventory.client.view',compact('pageTitle', 'client'));
 
     }
 
@@ -35,7 +35,7 @@ class ClientController extends Controller
     {
         $client = Client::findOrFail($id);
         $pageTitle = 'Client Edit';
-        return view('backend/admin/inventory/client/edit',compact('pageTitle', 'client'));
+        return view('backend.admin.inventory.client.edit',compact('pageTitle', 'client'));
     }
 
     public function AdminClientStore(Request $request)
