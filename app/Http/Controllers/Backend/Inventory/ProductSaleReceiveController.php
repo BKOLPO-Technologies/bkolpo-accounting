@@ -170,7 +170,9 @@ class ProductSaleReceiveController extends Controller
             DB::commit();
     
             // Redirect after storing the payment
-            return redirect()->route('project.receipt.payment.index')->with('success', 'Payment has been successfully recorded!');
+            return redirect()->back()->with('success', 'Payment has been successfully recorded!');
+
+            // return redirect()->route('project.receipt.payment.index')->with('success', 'Payment has been successfully recorded!');
     
         } catch (\Exception $e) {
             // If an error occurs, roll back the transaction
