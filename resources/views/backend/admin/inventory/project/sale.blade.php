@@ -263,53 +263,55 @@
                             </div>
 
                             <div class="mt-4">
-                                <div class="card-header">
-                                    <h4>Sales list</h4>
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Sl</th>
-                                                <th>Invoice No</th>
-                                                <th>Invoice Date</th>
-                                                <th>Subtotal</th>
-                                                <th>Discount</th>
-                                                <th>Total</th>
-                                                <th>Paid Amount</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @php
-                                                $total = 0;
-                                                $paidAmount = 0;
-                                            @endphp
-                                            @foreach ($project->sales as $index => $sale)
-                                                @php
-                                                $productTotal = $sale->total;
-                                                $total += $productTotal;
-                                                $individualPaidAmount = $sale->paid_amount;
-                                                $paidAmount += $individualPaidAmount;
-                                                @endphp
-                                                <tr>
-                                                    <td>{{ $index + 1 }}</td>
-                                                    <td>{{ $sale->invoice_no }}</td>
-                                                    <td>{{ $sale->invoice_date }}</td>
-                                                    <td>{{ $sale->subtotal }}</td>
-                                                    <td>{{ $sale->discount }}</td>
-                                                    <td>{{ $sale->total }}</td>
-                                                    <td>{{ $sale->paid_amount }}</td>
-                                                    <td>{{ $sale->status }}</td>
-                                                </tr>
+                                <div class="col-lg-12">
+                                    <div class="card ">
+                                        <div class="card-header py-2">
+                                            <h4 class="mb-0">Purchases List</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sl</th>
+                                                        <th>Invoice No</th>
+                                                        <th>Invoice Date</th>
+                                                        <th>Subtotal</th>
+                                                        <th>Discount</th>
+                                                        <th>Total</th>
+                                                        <th>Paid Amount</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @php
+                                                        $total = 0;
+                                                        $paidAmount = 0;
+                                                    @endphp
+                                                    @foreach ($project->sales as $index => $sale)
+                                                        @php
+                                                        $productTotal = $sale->total;
+                                                        $total += $productTotal;
+                                                        $individualPaidAmount = $sale->paid_amount;
+                                                        $paidAmount += $individualPaidAmount;
+                                                        @endphp
+                                                        <tr>
+                                                            <td>{{ $index + 1 }}</td>
+                                                            <td>{{ $sale->invoice_no }}</td>
+                                                            <td>{{ $sale->invoice_date }}</td>
+                                                            <td>{{ $sale->subtotal }}</td>
+                                                            <td>{{ $sale->discount }}</td>
+                                                            <td>{{ $sale->total }}</td>
+                                                            <td>{{ $sale->paid_amount }}</td>
+                                                            <td>{{ $sale->status }}</td>
+                                                        </tr>
 
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <hr>
                             
                             <div class="row">
                                 <div class="col-6">
@@ -338,11 +340,16 @@
                             <div class="row mt-3">
                                 <div class="col-lg-12">
                                     <div class="card ">
-                                        <div class="card-header">
-                                            <h4>Purchases list</h4>
+                                        <div class="card-header py-2">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h4 class="mb-0">Purchases Payment Receive List</h4>
+                                                <a href="{{ route('project.receipt.payment.create') }}" class="btn btn-sm btn-success rounded-0">
+                                                    <i class="fas fa-plus fa-sm"></i> Add New Payment Received
+                                                </a>
+                                            </div>
                                         </div>
                                         <div class="card-body">
-                                            Purchases List Asbe
+                                            Purchases Payment Receive List
                                         </div>
                                     </div>
                                 </div>
