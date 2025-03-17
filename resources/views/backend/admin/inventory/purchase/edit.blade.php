@@ -43,7 +43,7 @@
 
                             <div class="row">
                                 <!-- Supplier Select -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="supplier">Supplier</label>
                                     <div class="input-group">
                                         <!-- --- -->
@@ -74,8 +74,26 @@
                                     @enderror
                                 </div>
 
+                                <!-- Category Select with Search Feature -->
+                                <div class="col-lg-2 col-md-6 mb-3">
+                                    <label for="category_id">Category</label>
+                                    <div class="input-group">
+                                        <select name="category_id" id="category_id" class="form-control select2 @error('category_id') is-invalid @enderror" style="width: 100%;">
+                                            <option value="all">All Categories</option> <!-- Option to select all categories -->
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    @error('category_id')
+                                        <div class="invalid-feedback">
+                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+
                                 <!-- Product Select with Search Feature -->
-                                <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="col-lg-2 col-md-6 mb-3">
                                     <label for="product">Product</label>
                                     <div class="input-group">
                                         <select name="products" id="product" class="form-control select2 @error('product') is-invalid @enderror" style="width: 100%;">
@@ -88,6 +106,26 @@
                                         </select>
                                     </div>
                                     @error('product')
+                                        <div class="invalid-feedback">
+                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Project Select with Search Feature -->
+                                <div class="col-lg-3 col-md-6 mb-3">
+                                    <label for="project_id">Project</label>
+                                    <div class="input-group">
+                                        <select name="project_id" id="project_id" class="form-control select2 @error('project_id') is-invalid @enderror" style="width: 100%;">
+                                            <option value="">Select Project</option>
+                                            @foreach($projects as $project)
+                                                <option value="{{ $project->id }}">
+                                                    {{ $project->project_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    @error('project_id')
                                         <div class="invalid-feedback">
                                             <i class="fas fa-exclamation-circle"></i> {{ $message }}
                                         </div>
@@ -108,7 +146,7 @@
                                 </div>
 
                                 <!-- Invoice Date -->
-                                <div class="col-lg-3 col-md-6 mb-3">
+                                {{-- <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="invoice_date">Invoice Date</label>
 
                                     <input type="date" id="invoice_date" name="invoice_date" class="form-control @error('invoice_date') is-invalid @enderror" value="{{ old('invoice_date', $purchase->invoice_date->format('Y-m-d')) }}" readonly />
@@ -118,7 +156,7 @@
                                         <i class="fas fa-exclamation-circle"></i> {{ $message }}
                                     </div>
                                     @enderror
-                                </div>
+                                </div> --}}
                             </div>
 
                             <!-- Supplier Details Table -->
@@ -336,6 +374,12 @@
 </script>
 
 <script>
+    // When a category is selected
+    $('#category_id').on('change', function() {
+        var categoryId = $(this).val();
+        loadProductsByCategory(categoryId);  // Load products for the selected category
+    });
+
     // Initialize product table and searchable select
     let products = [];
 
@@ -344,6 +388,10 @@
         const selectedOption = $(this).find(':selected');
 
         const productId = selectedOption.val();
+
+        if (!productId) {
+            return; // Do nothing if no product is selected
+        }
     
         // Check if product is already in the table
         if ($('#product-table tbody tr[data-product-id="' + productId + '"]').length > 0) {
@@ -398,6 +446,42 @@
         // Add the product to the hidden fields
         addToHiddenFields(productId, 1, productPrice);
     });
+
+    // Function to load products based on the selected category
+    function loadProductsByCategory(categoryId) {
+        var $productSelect = $('#product');
+
+        // Clear the current product options and show loading message
+        $productSelect.empty();
+        $productSelect.append('<option value="">Loading products...</option>');
+
+        // Send an AJAX request to fetch the products for the selected category
+        $.ajax({
+            url: '/admin/product/products-by-category/' + categoryId,
+            method: 'GET',
+            success: function(response) {
+                // Empty the select element and add the default "Select Product" option
+                $productSelect.empty();
+                $productSelect.append('<option value="">Select Product</option>');
+
+                if (response.length > 0) {
+                    // Append products to the select dropdown
+                    response.forEach(function(product) {
+                        $productSelect.append('<option value="' + product.id + '" data-id="' + product.id + '" data-name="' + product.name + '" data-price="' + product.price + '" data-stock="' + product.quantity + '">' + product.name + '</option>');
+                    });
+                } else {
+                    $productSelect.append('<option value="">No products found</option>');
+                }
+
+                // Refresh select2 after updating the options
+                $productSelect.trigger('change');
+            },
+            error: function() {
+                $productSelect.empty();
+                $productSelect.append('<option value="">Error fetching products</option>');
+            }
+        });
+    }
 
     // Function to add selected product to hidden fields
     function addToHiddenFields(productId, quantity, price) {
