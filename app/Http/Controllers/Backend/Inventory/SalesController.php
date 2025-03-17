@@ -47,7 +47,7 @@ class SalesController extends Controller
         $fullDate = now()->format('d/m/y');
 
         // Combine the timestamp, random number, and full date
-        $invoice_no = 'BCL-I-'.$fullDate.' - '.$randomNumber;
+        $invoice_no = 'BCL-INV-'.$fullDate.' - '.$randomNumber;
 
         // Generate a random 8-digit number
         // $randomNumber = mt_rand(100000, 999999);

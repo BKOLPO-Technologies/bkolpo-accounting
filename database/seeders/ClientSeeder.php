@@ -30,7 +30,7 @@ class ClientSeeder extends Seeder
             ],
             [
                 'name' => 'Rifat Zahan Zim',
-                'company' => 'Bkolpo Technologies.',
+                'company' => 'TechBkolpo Solutions.',
                 'phone' => '017834152654',
                 'email' => 'zim@gmail.com',
                 'address' => 'Tongi,Gazipur',
@@ -44,7 +44,7 @@ class ClientSeeder extends Seeder
             ],
             [
                 'name' => 'Ashraful Islam',
-                'company' => 'Bkolpo Technologies.',
+                'company' => 'Innovative Solutions Inc.',
                 'phone' => '0178321452',
                 'email' => 'ashraful@gmail.com',
                 'address' => 'Tongi,Gazipur',

@@ -19,17 +19,22 @@ class ProductSeeder extends Seeder
             return;
         }
 
-        // Fetch existing categories
-        $categories = Category::pluck('id', 'name');
+        // Fetch existing categories by slug
+        $categories = Category::pluck('id', 'slug');
 
+        // Define products and their respective categories
         $products = [
-            ['name' => 'Smartphone', 'category' => 'Electronics', 'price' => 500, 'quantity' => 10, 'status' => 1, 'image' => null],
-            ['name' => 'T-shirt', 'category' => 'Fashion', 'price' => 600, 'quantity' => 50, 'status' => 1, 'image' => null],
-            ['name' => 'Microwave Oven', 'category' => 'Home Appliances', 'price' => 150, 'quantity' => 5, 'status' => 1, 'image' => null],
-            ['name' => 'Novel Book', 'category' => 'Books', 'price' => 700, 'quantity' => 30, 'status' => 1, 'image' => null],
-            ['name' => 'Toy Car', 'category' => 'Toys', 'price' => 800, 'quantity' => 20, 'status' => 1, 'image' => null],
+            ['name' => 'IT Equipment', 'category' => 'civil-construction', 'price' => 5000, 'quantity' => 15, 'status' => 1, 'image' => null],
+            ['name' => 'Bali', 'category' => 'civil-construction', 'price' => 200, 'quantity' => 100, 'status' => 1, 'image' => null],
+            ['name' => 'Khoya', 'category' => 'civil-construction', 'price' => 150, 'quantity' => 50, 'status' => 1, 'image' => null],
+            ['name' => 'Cement Bags', 'category' => 'still-structure', 'price' => 350, 'quantity' => 200, 'status' => 1, 'image' => null],
+            ['name' => 'Steel Rods', 'category' => 'still-structure', 'price' => 1200, 'quantity' => 50, 'status' => 1, 'image' => null],
+            ['name' => 'Brick', 'category' => 'still-structure', 'price' => 25, 'quantity' => 1000, 'status' => 1, 'image' => null],
+            ['name' => 'Wood Planks', 'category' => 'interior-design', 'price' => 300, 'quantity' => 80, 'status' => 1, 'image' => null],
+            ['name' => 'Paint', 'category' => 'interior-design', 'price' => 500, 'quantity' => 60, 'status' => 1, 'image' => null],
         ];
 
+        // Loop through each product and add it to the database
         foreach ($products as $product) {
             if (!isset($categories[$product['category']])) {
                 $this->command->warn("Category '{$product['category']}' not found. Skipping product: {$product['name']}");

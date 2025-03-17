@@ -270,7 +270,7 @@
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>#</th>
+                                                <th>Sl</th>
                                                 <th>Invoice No</th>
                                                 <th>Invoice Date</th>
                                                 <th>Subtotal</th>
@@ -335,6 +335,18 @@
                             </div>
 
                             <hr>
+                            <div class="row mt-3">
+                                <div class="col-lg-12">
+                                    <div class="card ">
+                                        <div class="card-header">
+                                            <h4>Purchases list</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            Purchases List Asbe
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             
                         </div>
 
