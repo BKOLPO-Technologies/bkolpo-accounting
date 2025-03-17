@@ -188,4 +188,28 @@ class ProductSaleReceiveController extends Controller
             return redirect()->back()->with('error', 'Payment failed! ' . $e->getMessage());
         }
     }
+
+    public function view(Request $request)
+    {
+        $invoice_no = $request->query('invoice_no');
+
+        // dd($invoice_no);
+
+        $pageTitle = 'Project Sale Receipt Details';
+
+        $project = Project::where('reference_no', $invoice_no)
+            ->with(['client', 'items']) 
+            ->first();
+
+        if (!$project) {
+            return redirect()->back()->with('error', 'Receipt not found.');
+        }
+
+        $project_receipts = ProjectReceipt::where('invoice_no', $invoice_no)->get();
+
+        //dd($project_receipts);
+
+        return view('backend.admin.inventory.project.payment.receipt.view', compact('pageTitle', 'project', 'project_receipts'));
+    }
+
 }

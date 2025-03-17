@@ -41,6 +41,7 @@
                                             <th>Pay Amount</th>
                                             <th>Payment Method</th>  
                                             <th>Payment Date</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -60,6 +61,12 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $receipt->payment_date }}</td>
+                                                <td>
+                                                    <!-- View Button -->
+                                                    <a href="{{ route('project.receipt.payment.show', ['invoice_no' => $receipt->invoice_no]) }}" class="btn btn-success btn-sm">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>

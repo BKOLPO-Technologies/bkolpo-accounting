@@ -379,7 +379,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [ProductSaleReceiveController::class, 'index'])->name('project.receipt.payment.index');
         Route::get('/create', [ProductSaleReceiveController::class, 'create'])->name('project.receipt.payment.create');
         Route::post('/store', [ProductSaleReceiveController::class, 'store'])->name('project.receipt.payment.store');
-        Route::get('/view/{id}', [ProductSaleReceiveController::class, 'view'])->name('project.receipt.payment.show');
+        // Route::get('/view/{invoice_no}', [ProductSaleReceiveController::class, 'view'])->name('project.receipt.payment.show');
+        Route::get('/view', [ProductSaleReceiveController::class, 'view'])->name('project.receipt.payment.show');
         Route::get('/edit/{id}', [ProductSaleReceiveController::class, 'edit'])->name('project.receipt.payment.edit');
         Route::put('/update/{id}', [ProductSaleReceiveController::class, 'update'])->name('project.receipt.payment.update');
         Route::get('/delete/{id}', [ProductSaleReceiveController::class, 'destroy'])->name('project.receipt.payment.destroy');
