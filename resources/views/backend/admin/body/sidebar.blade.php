@@ -377,13 +377,13 @@
                   </a>
               </li>
 
-              <li class="nav-item">
+              {{-- <li class="nav-item">
                 <a href="{{ route('project.receipt.payment.index') }}"
                   class="nav-link {{ Route::is('project.receipt.payment.index', 'project.receipt.payment.create') ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Payment Receive List</p>
                 </a>
-              </li>
+              </li> --}}
           </ul>
         </li>
 

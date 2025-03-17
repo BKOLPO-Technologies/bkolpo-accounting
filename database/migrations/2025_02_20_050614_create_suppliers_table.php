@@ -14,14 +14,17 @@ return new class extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('title')->nullable();
             $table->string('company')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->unique()->nullable();
             $table->text('address')->nullable();
-            $table->string('city')->nullable();
             $table->string('region')->nullable();
+            $table->string('zip')->nullable();
+            $table->string('city')->nullable();
             $table->string('country')->nullable();
             $table->string('postbox')->nullable();
+            $table->string('biin_no')->nullable();
             $table->string('taxid')->nullable();
             $table->string('password')->nullable();
             $table->tinyInteger('status')->default(1)->comment('1=>Active, 0=>Inactive');
