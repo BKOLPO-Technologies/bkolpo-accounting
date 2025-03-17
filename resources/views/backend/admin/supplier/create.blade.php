@@ -44,15 +44,15 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Title
-                                            @error('title')
+                                            @error('name')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                                <span class="input-group-text"><i class="fas fa-heading"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Enter Title" name="title" required>
+                                            <input type="text" class="form-control" placeholder="Enter Title" name="name" required>
                                         </div>
                                     </div>
                                 </div>
@@ -77,7 +77,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Contact Person
-                                            @error('name')
+                                            @error('title')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </label>
@@ -85,7 +85,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Enter Contact Person Name" name="name" required>
+                                            <input type="text" class="form-control" placeholder="Enter Contact Person Name" name="title" required>
                                         </div>
                                     </div>
                                 </div>
@@ -98,7 +98,7 @@
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                                <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
                                             </div>
                                             <input type="text" class="form-control" placeholder="Enter Contact Designation" name="designation" required>
                                         </div>
@@ -148,7 +148,7 @@
                                         <label>Zip no</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                                <span class="input-group-text"><i class="fas fa-mail-bulk"></i></span>
                                             </div>
                                             <input type="text" class="form-control" placeholder="Zip no" name="zip">
                                         </div>
@@ -173,7 +173,7 @@
                                         <label>City</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-flag"></i></span>
+                                                <span class="input-group-text"><i class="fas fa-city"></i></span>
                                             </div>
                                             <input type="text" class="form-control" placeholder="City" name="city">
                                         </div>

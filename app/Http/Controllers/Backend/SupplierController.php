@@ -133,15 +133,19 @@ class SupplierController extends Controller
         // Validate the incoming data
         $request->validate([
             'name' => 'required|string|max:255',
+            'designation' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'company' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255|unique:suppliers,email,' . $id, // Ensure unique email excluding current supplier
             'address' => 'nullable|string|max:500',
+            'zip' => 'nullable|string',
             'city' => 'nullable|string|max:255',
             'region' => 'nullable|string|max:255',
             'country' => 'nullable|string|max:255',
             'postbox' => 'nullable|string|max:255',
             'taxid' => 'nullable|string|max:20',
+            'bin' => 'nullable|string|max:50',
             'password' => 'nullable|string|min:6', // Only validate password if provided
             'active' => 'nullable|boolean'
         ]);
@@ -154,15 +158,19 @@ class SupplierController extends Controller
         // Update the supplier data
         $supplier->update([
             'name' => $request->input('name'),
+            'designation' => $request->input('designation'),
+            'title' => $request->input('title'),
             'company' => $request->input('company'),
             'phone' => $request->input('phone'),
             'email' => $request->input('email'),
             'address' => $request->input('address'),
+            'zip' => $request->input('zip'),
             'city' => $request->input('city'),
             'region' => $request->input('region'),
             'country' => $request->input('country'),
             'postbox' => $request->input('postbox'),
             'taxid' => $request->input('taxid'),
+            'bin' => $request->input('bin'),
             'password' => $request->input('password') ? bcrypt($request->input('password')) : $supplier->password, // Only update password if provided
             // 'active' => $request->input('active') ?? $supplier->active, // Set default active value if not provided
         ]);

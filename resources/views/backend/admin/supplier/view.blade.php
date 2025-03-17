@@ -96,7 +96,9 @@
                                                     </li>
                                                 </ul>
                                             </div>
-                                        </div><hr>
+                                        </div>
+                                        
+                                        <hr>
                                         
                                         <div class="row mt-3">
                                             <!-- Button to View Purchase History -->
@@ -114,8 +116,6 @@
                                             </div>
                                         </div>
                                         
-                                        
-                                        
                                     </div>
                                 </div>
 
@@ -123,15 +123,15 @@
                                     <div class="card card-block p-3">
                                         <h4>Supplier Details</h4>
                                         <hr>
-                                        {{-- <div class="row m-t-lg">
+                                        <div class="row m-t-lg">
                                             <div class="col-md-2">
-                                                <strong>Name</strong>
+                                                <strong>Title</strong>
                                             </div>
                                             <div class="col-md-10">
                                                 {{ $supplier->name }}
                                             </div>
                                         </div>
-                                        <hr> --}}
+                                        <hr>
                                         <div class="row m-t-lg">
                                             <div class="col-md-2">
                                                 <strong>Company</strong>
@@ -139,7 +139,24 @@
                                             <div class="col-md-10">
                                                 {{ $supplier->company }}
                                             </div>
-
+                                        </div>
+                                        <hr>
+                                        <div class="row m-t-lg">
+                                            <div class="col-md-2">
+                                                <strong>Contact Person</strong>
+                                            </div>
+                                            <div class="col-md-10">
+                                                {{ $supplier->title }}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row m-t-lg">
+                                            <div class="col-md-2">
+                                                <strong>Contact Designation</strong>
+                                            </div>
+                                            <div class="col-md-10">
+                                                {{ $supplier->designation }}
+                                            </div>
                                         </div>
                                         <hr>
                                         <div class="row m-t-lg">
@@ -158,16 +175,6 @@
                                             </div>
                                             <div class="col-md-10">
                                                 {{ $supplier->city }}
-                                            </div>
-
-                                        </div>
-                                        <hr>
-                                        <div class="row m-t-lg">
-                                            <div class="col-md-2">
-                                                <strong>Region</strong>
-                                            </div>
-                                            <div class="col-md-10">
-                                                {{ $supplier->region }}
                                             </div>
 
                                         </div>
