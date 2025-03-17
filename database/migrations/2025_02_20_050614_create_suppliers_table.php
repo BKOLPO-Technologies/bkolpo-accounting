@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('title')->nullable();
+            $table->string('designation')->nullable();
             $table->string('company')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->unique()->nullable();
@@ -24,7 +25,7 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('country')->nullable();
             $table->string('postbox')->nullable();
-            $table->string('biin_no')->nullable();
+            $table->string('bin')->nullable();
             $table->string('taxid')->nullable();
             $table->string('password')->nullable();
             $table->tinyInteger('status')->default(1)->comment('1=>Active, 0=>Inactive');
