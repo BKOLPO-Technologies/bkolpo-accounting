@@ -43,38 +43,70 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Name
+                                        <label>Title
+                                            @error('title')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="Enter Title" name="title" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Company
+                                            @error('company')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="Enter Company Name" name="company" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Contact Person
                                             @error('name')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-user"></i></span> <!-- Changed Icon -->
+                                                <span class="input-group-text"><i class="fas fa-user"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Enter Supplier Name" name="name" required>
+                                            <input type="text" class="form-control" placeholder="Enter Contact Person Name" name="name" required>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Designation
+                                        <label>Contact Designation
                                             @error('designation')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-briefcase"></i></span> <!-- Changed Icon -->
+                                                <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Enter Designation Name" name="designation" required>
+                                            <input type="text" class="form-control" placeholder="Enter Contact Designation" name="designation" required>
                                         </div>
                                     </div>
                                 </div>
-                            </div>                            
+                            </div>
 
                             <div class="row">
-                                
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Phone</label>
@@ -113,12 +145,37 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label>Zip no</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="Zip no" name="zip">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label>Country</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-flag"></i></span>
                                             </div>
                                             <input type="text" class="form-control" placeholder="Country" name="country">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>City</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-flag"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="City" name="city">
                                         </div>
                                     </div>
                                 </div>
