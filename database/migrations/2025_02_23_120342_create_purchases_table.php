@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('supplier_id');
+            $table->integer('category_id')->nullable();
+            $table->integer('project_id')->nullable();
             $table->string('invoice_no');
             $table->date('invoice_date');
             $table->decimal('subtotal', 10, 2);

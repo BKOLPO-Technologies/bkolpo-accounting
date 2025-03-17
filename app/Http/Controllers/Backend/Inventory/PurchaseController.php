@@ -8,6 +8,7 @@ use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Purchase;
+use App\Models\Project;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Models\JournalVoucher;
@@ -36,6 +37,7 @@ class PurchaseController extends Controller
 
         $products = Product::where('status',1)->latest()->get();
         $categories = Category::where('status',1)->latest()->get();
+        $projects = Project::where('project_type','Running')->latest()->get();
         $pageTitle = 'Purchase';
 
         // Get current timestamp in 'dmyHis' format (day, month, year)
@@ -50,7 +52,7 @@ class PurchaseController extends Controller
 
         // $invoice_no = 'BKOLPO-'. $randomNumber;
 
-        return view('backend.admin.inventory.purchase.create',compact('pageTitle', 'suppliers', 'products','categories','invoice_no')); 
+        return view('backend.admin.inventory.purchase.create',compact('pageTitle', 'suppliers', 'products','categories','projects','invoice_no')); 
     }
 
     // purchase store
@@ -62,7 +64,7 @@ class PurchaseController extends Controller
         $validated = $request->validate([
             'supplier' => 'required|exists:suppliers,id',
             'invoice_no' => 'required|unique:purchases,invoice_no',
-            'invoice_date' => 'required|date',
+            // 'invoice_date' => 'required|date',
             'subtotal' => 'required|numeric',
             'discount' => 'required|numeric',
             'total' => 'required|numeric',
@@ -84,19 +86,33 @@ class PurchaseController extends Controller
         }
 
         try {
+          
             // Start the transaction
             DB::beginTransaction();
+
+            if($request->category_id == 'all'){
+                $categoryId = null;
+            }else{
+                $categoryId = $request->category_id;
+            }
         
+
+            // dd($categoryId);
             // Create a new purchase record
             $purchase = new Purchase();
             $purchase->supplier_id = $validated['supplier'];
             $purchase->invoice_no = $validated['invoice_no'];
-            $purchase->invoice_date = $validated['invoice_date'];
+            $purchase->invoice_date = now()->format('Y-m-d');
             $purchase->subtotal = $validated['subtotal'];
             $purchase->discount = $validated['discount'];
             $purchase->total = $validated['total'];
             $purchase->description = $request->description;
+            $purchase->category_id = $categoryId;
+            $purchase->project_id = $request->project_id;
             $purchase->save();
+
+            // dd('ok');
+           
         
             // Loop through the product data and save it to the database
             foreach ($productIds as $index => $productId) {
@@ -118,6 +134,7 @@ class PurchaseController extends Controller
             // Step 2: Get purchase amount
             $purchase_amount = $purchase->total ?? 0; // If purchase doesn't have amount, default to 0
 
+           
             // Step 3: Retrieve Purchase ledger
             $purchasesLedger = Ledger::where('name', 'Purchases')->first();
             $payableLedger = Ledger::where('name', 'Accounts Payable')->first();
@@ -132,7 +149,7 @@ class PurchaseController extends Controller
                     // Create a new Journal Voucher for Purchase Invoice
                     $journalVoucher = JournalVoucher::create([
                         'transaction_code'  => $purchase->invoice_no,
-                        'transaction_date'  => $request->invoice_date,
+                        'transaction_date'  => now()->format('Y-m-d'),
                         'description'       => 'Purchase Invoice Recorded - Supplier',
                         'status'            => 1, // Pending status
                     ]);
@@ -223,8 +240,10 @@ class PurchaseController extends Controller
 
         $suppliers = Supplier::orderBy('id', 'desc')->get();
         $products = Product::where('status',1)->latest()->get();
+        $categories = Category::where('status',1)->latest()->get();
+        $projects = Project::where('project_type','Running')->latest()->get();
 
-        return view('backend.admin.inventory.purchase.edit',compact('pageTitle', 'purchase', 'suppliers', 'products', 'subtotal'));
+        return view('backend.admin.inventory.purchase.edit',compact('pageTitle', 'purchase', 'suppliers', 'products','categories','projects', 'subtotal'));
     }
 
     public function AdminPurchaseUpdate(Request $request, $id)
@@ -233,7 +252,7 @@ class PurchaseController extends Controller
         $validated = $request->validate([
             'supplier' => 'required|exists:suppliers,id',
             'invoice_no' => 'required|unique:purchases,invoice_no,' . $id, // Allow current invoice_no
-            'invoice_date' => 'required|date',
+            // 'invoice_date' => 'required|date',
             'subtotal' => 'required|numeric',
             'discount' => 'required|numeric',
             'total' => 'required|numeric',
@@ -253,15 +272,23 @@ class PurchaseController extends Controller
         try {
             \DB::beginTransaction();
 
+            if($request->category_id == 'all'){
+                $categoryId = null;
+            }else{
+                $categoryId = $request->category_id;
+            }
+
             // Find the existing purchase record
             $purchase = Purchase::findOrFail($id);
             $purchase->supplier_id = $validated['supplier'];
             $purchase->invoice_no = $validated['invoice_no'];
-            $purchase->invoice_date = $validated['invoice_date'];
+            $purchase->invoice_date = now()->format('Y-m-d');
             $purchase->subtotal = $validated['subtotal'];
             $purchase->discount = $validated['discount'];
             $purchase->total = $validated['total'];
             $purchase->description = $request->description;
+            $purchase->category_id = $categoryId;
+            $purchase->project_id = $request->project_id;
             $purchase->save();
 
             // Remove existing purchase product records and update with new ones

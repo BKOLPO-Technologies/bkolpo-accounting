@@ -13,7 +13,7 @@ class ProjectsSeeder extends Seeder
         // Loop through and create 3 projects with dynamic reference_no
         $projectsData = [
             [
-                'project_name' => 'Project Alpha',
+                'project_name' => 'Project Titan',
                 'project_location' => 'Location A',
                 'project_coordinator' => 'John Doe',
                 'client_id' => 1, // Assuming client with ID 1 exists
@@ -28,11 +28,11 @@ class ProjectsSeeder extends Seeder
                 'paid_amount' => 0,
                 'status' => 'pending',
                 'project_type' => 'Running',
-                'description' => 'This is the description for Project Alpha.',
-                'terms_conditions' => 'Terms and conditions for Project Alpha.',
+                'description' => 'This is the description for Project Titan.',
+                'terms_conditions' => 'Terms and conditions for Project Titan.',
             ],
             [
-                'project_name' => 'Project Beta',
+                'project_name' => 'Project Everest',
                 'project_location' => 'Location B',
                 'project_coordinator' => 'Jane Smith',
                 'client_id' => 2, // Assuming client with ID 2 exists
@@ -47,11 +47,11 @@ class ProjectsSeeder extends Seeder
                 'paid_amount' => 0,
                 'status' => 'pending',
                 'project_type' => 'Running',
-                'description' => 'This is the description for Project Beta.',
-                'terms_conditions' => 'Terms and conditions for Project Beta.',
+                'description' => 'This is the description for Project Everest.',
+                'terms_conditions' => 'Terms and conditions for Project Everest.',
             ],
             [
-                'project_name' => 'Project Gamma',
+                'project_name' => 'Project Horizon',
                 'project_location' => 'Location C',
                 'project_coordinator' => 'Mark Lee',
                 'client_id' => 3, // Assuming client with ID 3 exists
@@ -66,10 +66,11 @@ class ProjectsSeeder extends Seeder
                 'paid_amount' => 0,
                 'status' => 'pending',
                 'project_type' => 'Running',
-                'description' => 'This is the description for Project Gamma.',
-                'terms_conditions' => 'Terms and conditions for Project Gamma.',
+                'description' => 'This is the description for Project Horizon.',
+                'terms_conditions' => 'Terms and conditions for Project Horizon.',
             ]
         ];
+        
 
         foreach ($projectsData as $projectData) {
             // Generate a dynamic reference number for each project

@@ -93,9 +93,9 @@
 
                                 <!-- Product Select with Search Feature -->
                                 <div class="col-lg-2 col-md-6 mb-3">
-                                    <label for="product">Product</label>
+                                    <label for="products">Product</label>
                                     <div class="input-group">
-                                        <select name="products" id="product" class="form-control select2 @error('product') is-invalid @enderror" style="width: 100%;">
+                                        <select name="products" id="product" class="form-control select2 @error('products') is-invalid @enderror" style="width: 100%;">
                                             <option value="">Select Product</option>
                                             @foreach($products as $product)
                                                 <option value="{{ $product->id }}" data-category="{{ $product->category_id }}" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-stock="{{ $product->quantity }}">
@@ -104,7 +104,27 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    @error('product')
+                                    @error('products')
+                                        <div class="invalid-feedback">
+                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Project Select with Search Feature -->
+                                <div class="col-lg-3 col-md-6 mb-3">
+                                    <label for="project_id">Project</label>
+                                    <div class="input-group">
+                                        <select name="project_id" id="project_id" class="form-control select2 @error('project_id') is-invalid @enderror" style="width: 100%;">
+                                            <option value="">Select Project</option>
+                                            @foreach($projects as $project)
+                                                <option value="{{ $project->id }}">
+                                                    {{ $project->project_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    @error('project_id')
                                         <div class="invalid-feedback">
                                             <i class="fas fa-exclamation-circle"></i> {{ $message }}
                                         </div>
@@ -112,21 +132,10 @@
                                 </div>
 
                                 <!-- Invoice No -->
-                                <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="col-lg-2 col-md-6 mb-3">
                                     <label for="invoice_no">PO No</label>
                                     <input type="text" id="invoice_no" name="invoice_no" class="form-control @error('invoice_no') is-invalid @enderror" value="{{ old('invoice_no', $invoice_no) }}" readonly />
                                     @error('invoice_no')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-
-                                <!-- Invoice Date -->
-                                <div class="col-lg-2 col-md-6 mb-3">
-                                    <label for="invoice_date">PO Date</label>
-                                    <input type="date" id="invoice_date" name="invoice_date" class="form-control @error('invoice_date') is-invalid @enderror" value="{{ old('invoice_date', now()->format('Y-m-d')) }}" readonly />
-                                    @error('invoice_date')
                                     <div class="invalid-feedback">
                                         <i class="fas fa-exclamation-circle"></i> {{ $message }}
                                     </div>
