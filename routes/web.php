@@ -279,6 +279,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/edit/{id}', [ProductController::class, 'AdminProductEdit'])->name('admin.product.edit');
         Route::put('/update/{id}', [ProductController::class, 'AdminProductUpdate'])->name('admin.product.update');
         Route::get('/delete/{id}', [ProductController::class, 'AdminProductDestroy'])->name('admin.product.destroy');
+        Route::get('/products-by-category/{categoryId}', [ProductController::class, 'getProductsByCategory'])->name('products.by.category');
     });
 
     /* ==================== supplier =================== */

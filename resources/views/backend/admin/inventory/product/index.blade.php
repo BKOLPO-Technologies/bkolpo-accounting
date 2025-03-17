@@ -38,7 +38,8 @@
                             <thead>
                                 <tr>
                                     <th>Sl</th>
-                                    <th>Name</th>
+                                    <th>Product Name</th>
+                                    <th>Category Name</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     <th>Image</th>
@@ -50,6 +51,7 @@
                                 <tr>
                                     <td>{{ $key+1 }}</td>
                                     <td>{{ $product->name }}</td>
+                                    <td>{{ $product->category->name ?? 'N/A' }}</td>
                                     <td>{{ $product->price }}</td>
                                     <td>{{ $product->quantity }}</td>
                                     <td>

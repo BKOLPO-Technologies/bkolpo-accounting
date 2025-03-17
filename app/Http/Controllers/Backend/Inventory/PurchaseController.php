@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Ledger;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
@@ -34,6 +35,7 @@ class PurchaseController extends Controller
         $suppliers = Supplier::orderBy('id', 'desc')->get();
 
         $products = Product::where('status',1)->latest()->get();
+        $categories = Category::where('status',1)->latest()->get();
         $pageTitle = 'Purchase';
 
         // Get current timestamp in 'dmyHis' format (day, month, year)
@@ -48,7 +50,7 @@ class PurchaseController extends Controller
 
         // $invoice_no = 'BKOLPO-'. $randomNumber;
 
-        return view('backend.admin.inventory.purchase.create',compact('pageTitle', 'suppliers', 'products','invoice_no')); 
+        return view('backend.admin.inventory.purchase.create',compact('pageTitle', 'suppliers', 'products','categories','invoice_no')); 
     }
 
     // purchase store

@@ -176,4 +176,18 @@ class ProductController extends Controller
         // Redirect back to the supplier index with a success message
         return redirect()->route('admin.product.index')->with('success', 'Product deleted successfully!');
     }
+
+    // AJAX handler for filtering products by category
+    public function getProductsByCategory($categoryId)
+    {
+        if ($categoryId == 'all') {
+            // Return all products if "all" is selected
+            $products = Product::all();
+        } else {
+            // Filter products by selected category
+            $products = Product::where('category_id', $categoryId)->get();
+        }
+
+        return response()->json($products);
+    }
 }
