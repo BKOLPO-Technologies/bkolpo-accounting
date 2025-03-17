@@ -287,22 +287,22 @@
                                                         $total = 0;
                                                         $paidAmount = 0;
                                                     @endphp
-                                                    @foreach ($project->sales as $index => $sale)
+                                                    @foreach ($project->purchases as $index => $purchase)
                                                         @php
-                                                        $productTotal = $sale->total;
+                                                        $productTotal = $purchase->total;
                                                         $total += $productTotal;
-                                                        $individualPaidAmount = $sale->paid_amount;
+                                                        $individualPaidAmount = $purchase->paid_amount;
                                                         $paidAmount += $individualPaidAmount;
                                                         @endphp
                                                         <tr>
                                                             <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $sale->invoice_no }}</td>
-                                                            <td>{{ $sale->invoice_date }}</td>
-                                                            <td>{{ $sale->subtotal }}</td>
-                                                            <td>{{ $sale->discount }}</td>
-                                                            <td>{{ $sale->total }}</td>
-                                                            <td>{{ $sale->paid_amount }}</td>
-                                                            <td>{{ $sale->status }}</td>
+                                                            <td>{{ $purchase->invoice_no }}</td>
+                                                            <td>{{ $purchase->invoice_date }}</td>
+                                                            <td>{{ $purchase->subtotal }}</td>
+                                                            <td>{{ $purchase->discount }}</td>
+                                                            <td>{{ $purchase->total }}</td>
+                                                            <td>{{ $purchase->paid_amount }}</td>
+                                                            <td>{{ $purchase->status }}</td>
                                                         </tr>
 
                                                     @endforeach
@@ -336,7 +336,98 @@
                                 </div>
                             </div>
 
+                            {{-- project item --}}
+                            {{-- <div class="mt-4">
+                                <div class="card-header">
+                                    <h4>Project Items</h4>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Item Name</th>
+                                                <th>Order Unit</th>
+                                                <th>Unit Price</th>
+                                                <th>Quantity</th>
+                                                <th>Subtotal</th>
+                                                <th>Discount</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $subtotal = 0;
+                                                $grandTotal = 0;
+                                            @endphp
+                                            @foreach ($project->items as $index => $item)
+                                                @php
+                                                $productTotal = ($item->unit_price * $item->quantity) - $item->discount;
+                                                $subtotal += $productTotal;
+                                                $grandTotal = $subtotal - $project->total_discount + $project->transport_cost + $project->carrying_charge + $project->vat + $project->tax;
+                                                @endphp
+                                                <tr>
+                                                    <td>{{ $index + 1 }}</td>
+                                                    <td>{{ $item->items }}</td>
+                                                    <td>{{ $item->order_unit }}</td>
+                                                    <td>{{ number_format($item->unit_price, 2) }}</td>
+                                                    <td>{{ $item->quantity }}</td>
+                                                    <td>{{ number_format($item->subtotal, 2) }}</td>
+                                                    <td>{{ number_format($item->discount, 2) }}</td>
+                                                    <td>{{ number_format($item->total, 2) }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
                             <hr>
+                            
+                            <div class="row">
+                                <div class="col-6">
+                                </div> 
+                                <div class="col-6">
+                            
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tr>
+                                                <th style="width:50%">Subtotal:</th>
+                                                <td>{{ bdt() }} {{ number_format($subtotal, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Total Discount:</th>
+                                                <td>{{ bdt() }} {{ number_format($project->total_discount, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Transport Cost:</th>
+                                                <td>{{ bdt() }} {{ number_format($project->transport_cost, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Carrying/Labour Charge:</th>
+                                                <td>{{ bdt() }} {{ number_format($project->carrying_charge, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Vat:</th>
+                                                <td>{{ bdt() }} {{ number_format($project->vat, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Tax:</th>
+                                                <td>{{ bdt() }} {{ number_format($project->tax, 2) }}</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <th>Total:</th>
+                                                <td>{{ bdt() }} {{ number_format($grandTotal, 2) }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div> --}}
+                            {{-- --- --}}
+
+                            <hr>
+
                             <div class="row mt-3">
                                 <div class="col-lg-12">
                                     <div class="card ">

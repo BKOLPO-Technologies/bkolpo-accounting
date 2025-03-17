@@ -173,7 +173,7 @@ class ProjectController extends Controller
         $pageTitle = 'Project Sale Details';
 
         $project = Project::where('id', $id)
-            ->with(['client', 'items', 'sales']) 
+            ->with(['client', 'items', 'sales', 'purchases']) 
             ->first();
 
         // Check if the request has date filters
