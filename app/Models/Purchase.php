@@ -32,5 +32,10 @@ class Purchase extends Model
         return $this->hasMany(Payment::class, 'invoice_no', 'invoice_no');
     }
 
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
 
 }

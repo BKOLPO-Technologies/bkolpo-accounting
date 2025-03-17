@@ -127,7 +127,8 @@ class PurchaseController extends Controller
                 $purchaseProduct->product_id = $productId; // Product ID
                 $purchaseProduct->quantity = $quantity; // Quantity
                 $purchaseProduct->price = $price; // Price
-                $purchaseProduct->discount = $discount; // Discount
+                //$purchaseProduct->discount = $discount ?? 0; // Discount
+                $purchaseProduct->discount = !empty($discount) ? $discount : 0;
                 $purchaseProduct->save(); // Save the record
             }
             
@@ -225,7 +226,7 @@ class PurchaseController extends Controller
         // $purchase = Purchase::where('id', $id)->with('products')->first();
         // Fetch purchase details with supplier and products
         $purchase = Purchase::where('id', $id)
-            ->with(['products', 'supplier']) // Include supplier details
+            ->with(['products', 'supplier', 'project']) // Include supplier details
             ->first();
 
         //dd($purchase);
@@ -248,6 +249,7 @@ class PurchaseController extends Controller
 
     public function AdminPurchaseUpdate(Request $request, $id)
     {
+        //dd($request->all());
         // Validate the request data
         $validated = $request->validate([
             'supplier' => 'required|exists:suppliers,id',
@@ -270,7 +272,7 @@ class PurchaseController extends Controller
         }
 
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             if($request->category_id == 'all'){
                 $categoryId = null;
@@ -305,11 +307,11 @@ class PurchaseController extends Controller
                 $purchaseProduct->save();
             }
 
-            \DB::commit();
+            DB::commit();
 
             return redirect()->route('admin.purchase.index')->with('success', 'Purchase updated successfully!');
         } catch (\Exception $e) {
-            \DB::rollback();
+            DB::rollback();
             return back()->withErrors(['error' => 'Something went wrong! Please try again.']);
         }
     }

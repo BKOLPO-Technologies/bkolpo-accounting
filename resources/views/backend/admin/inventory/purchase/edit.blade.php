@@ -119,7 +119,7 @@
                                         <select name="project_id" id="project_id" class="form-control select2 @error('project_id') is-invalid @enderror" style="width: 100%;">
                                             <option value="">Select Project</option>
                                             @foreach($projects as $project)
-                                                <option value="{{ $project->id }}">
+                                                <option value="{{ $project->id }}" {{ $project->id == $purchase->project_id ? 'selected' : '' }}>
                                                     {{ $project->project_name }}
                                                 </option>
                                             @endforeach

@@ -147,8 +147,10 @@
                                         @php
                                             // Calculate product total
                                             $productTotal = $product->pivot->quantity * $product->pivot->price;
-                                    
-                                            $productDiscount = $product->pivot->discount ?? 0; // Set discount to 0 if not available
+                                            
+                                            //$productDiscount = $product->pivot->discount ?? 0; // Set discount to 0 if not available
+                                            $productDiscount = !empty($product->pivot->discount) ? $product->pivot->discount : 0;
+                                            //dd($productDiscount);
                                             $totalDiscount += $productDiscount;
                                     
                                             // Update the running totals
