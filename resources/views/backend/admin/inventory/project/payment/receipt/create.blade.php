@@ -90,7 +90,6 @@
                                     </div>
                                 </div>
 
-
                                 <!-- Payment Date -->
                                 <div class="col-md-6 mb-3">
                                     <label for="payment_date" class="form-label">Payment Date:</label>
@@ -99,6 +98,34 @@
                                         <input type="text" id="date" class="form-control" name="payment_date" value="{{ date('Y-m-d') }}" required>
                                     </div>
                                 </div>
+
+                                <!-- Bank Account Number (hidden initially) -->
+                                <div class="col-md-4 mb-3" id="bank_account_div" style="display:none;">
+                                    <label for="bank_account_no" class="form-label">Bank Account No:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
+                                        <input type="text" class="form-control" name="bank_account_no" placeholder="Enter Bank Account No" id="bank_account_no">
+                                    </div>
+                                </div>
+
+                                <!-- Cheque Number (hidden initially) -->
+                                <div class="col-md-4 mb-3" id="cheque_no_div" style="display:none;">
+                                    <label for="cheque_no" class="form-label">Cheque No:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-check"></i></span>
+                                        <input type="text" class="form-control" name="cheque_no" placeholder="Enter Cheque No" id="cheque_no">
+                                    </div>
+                                </div>
+
+                                <!-- Cheque Date (hidden initially) -->
+                                <div class="col-md-4 mb-3" id="cheque_date_div" style="display:none;">
+                                    <label for="cheque_date" class="form-label">Cheque Date:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                        <input type="text" class="form-control" name="cheque_date" id="to_date" value="{{ date('Y-m-d') }}" >
+                                    </div>
+                                </div>
+
                                 <div class="col-lg-12 col-md-12 mb-3">
                                     <label for="description">Note</label>
                                     <div class="input-group">
@@ -160,6 +187,25 @@
 
             $('#due_amount').val(dueAmount.toFixed(2));
         });
+    });
+</script>
+
+ <!-- JS to toggle visibility -->
+ <script>
+    document.getElementById('payment_method').addEventListener('change', function() {
+        var paymentMethod = this.value;
+        
+        // Hide all additional fields
+        document.getElementById('bank_account_div').style.display = 'none';
+        document.getElementById('cheque_no_div').style.display = 'none';
+        document.getElementById('cheque_date_div').style.display = 'none';
+
+        // Show fields based on selected payment method
+        if (paymentMethod === 'bank') {
+            document.getElementById('bank_account_div').style.display = 'block';
+            document.getElementById('cheque_no_div').style.display = 'block';
+            document.getElementById('cheque_date_div').style.display = 'block';
+        }
     });
 </script>
 @endpush

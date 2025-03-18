@@ -373,6 +373,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/project/details', [ProjectController::class, 'getProjectDetails'])->name('project.get.details');
 
 
+
     /* ==================== Project Payment Receipt Controller =================== */
     Route::prefix('project/payment/receipt')->group(function () {
         Route::get('/', [ProductSaleReceiveController::class, 'index'])->name('project.receipt.payment.index');
@@ -438,3 +439,6 @@ Route::get('/get-sub-groups/{group_id}', function ($group_id) {
     Log::info("Sub-groups fetched: ", $subGroups->toArray());
     return response()->json($subGroups);
 });
+
+Route::get('/purchase-details/{purchase_id}', [ProjectController::class, 'showDetails']);
+Route::get('/admin/purchase/view', [PurchaseController::class, 'AdminPurchaseView2'])->name('admin.purchase.view');

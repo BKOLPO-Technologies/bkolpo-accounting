@@ -59,5 +59,12 @@ class Product extends Model
             'id'  // Local key in OutcomingChalan
         );
     }
+
+    public function purchasesFiltered($fromDate, $toDate)
+    {
+        return $this->hasMany(Purchase::class, 'project_id')
+            ->whereBetween('invoice_date', [$fromDate, $toDate]);
+    }
+
     
 }

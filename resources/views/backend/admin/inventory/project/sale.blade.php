@@ -182,33 +182,13 @@
                             </div>
                         </div>
 
-                        {{-- <hr/> --}}
-                        
-                        {{-- <form action="#" method="GET" class="mb-3">
-                            <div class="row justify-content-center">
-                                <div class="col-md-3 mt-3">
-                                    <label for="from_date">From Date:</label>
-                                    <input type="text" name="from_date" id="from_date" class="form-control" value="{{ request('from_date', $fromDate) }}">
-                                </div>
-                                <div class="col-md-3 mt-3">
-                                    <label for="to_date">To Date:</label>
-                                    <input type="text" name="to_date" id="to_date" class="form-control" value="{{ request('to_date', $toDate) }}">
-                                </div>
-                                <div class="col-md-1 mt-3 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-primary w-100">Filter</button>
-                                </div>
-                                <div class="col-md-1 mt-3 d-flex align-items-end">
-                                    <a href="#"  class="btn btn-danger w-100">Clear</a>
-                                </div>
-                            </div>
-                        </form> --}}
-
                         <hr/>
 
                         <div id="printable-area">
 
                             <h4 class="ml-3 mb-0 print-only">{{ $pageTitle ?? 'N/A' }}</h4>
 
+                            {{-- Project details --}}
                             <div class="card-body">
                                 <table class="table table-bordered">
                                     <tr>
@@ -261,8 +241,31 @@
                                     </tr>
                                 </table>
                             </div>
+                            {{-- End Project details --}}
 
-                            {{-- Start Purchases List --}}
+                            <hr/>
+
+                            <form action="{{ route('projects.sales', ['id' => $project->id]) }}" method="GET" class="mb-3">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-3 mt-3">
+                                        <label for="from_date">From Date:</label>
+                                        <input type="text" name="from_date" id="from_date" class="form-control" value="{{ request('from_date', $fromDate) }}">
+                                    </div>
+                                    <div class="col-md-3 mt-3">
+                                        <label for="to_date">To Date:</label>
+                                        <input type="text" name="to_date" id="to_date" class="form-control" value="{{ request('to_date', $toDate) }}">
+                                    </div>
+                                    <div class="col-md-1 mt-3 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary w-100">Filter</button>
+                                    </div>
+                                    <div class="col-md-1 mt-3 d-flex align-items-end">
+                                        <a href="{{ route('projects.sales', ['id' => $project->id]) }}" class="btn btn-danger w-100">Clear</a>
+                                    </div>
+                                </div>
+                            </form>
+
+
+                            {{-- Start Expense List --}}
                             <div class="mt-4">
                                 <div class="col-lg-12">
                                     <div class="card ">
@@ -289,7 +292,8 @@
                                                         $total = 0;
                                                         $paidAmount = 0;
                                                     @endphp
-                                                    @foreach ($project->purchases as $index => $purchase)
+                                                    {{-- @foreach ($project->purchases as $index => $purchase) --}}
+                                                    @foreach ($purchases as $index => $purchase)
                                                         @php
                                                         $productTotal = $purchase->total;
                                                         $total += $productTotal;
@@ -305,8 +309,13 @@
                                                             <td>{{ $purchase->total }}</td>
                                                             <td>{{ $purchase->paid_amount }}</td>
                                                             <td>{{ $purchase->status }}</td>
+                                                            <td>
+                                                                {{-- <button class="btn btn-success" type="button" id="purchaseDetailsBtn" data-toggle="modal" data-target="#purchaseDetailsModal" data-id="{{ $purchase->id }}"> --}}
+                                                                <button class="btn btn-success purchaseDetailsBtn" type="button" data-toggle="modal" data-target="#purchaseDetailsModal" data-id="{{ $purchase->id }}">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </button>
+                                                            </td>
                                                         </tr>
-
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -337,7 +346,7 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- End Purchases List --}}
+                            {{-- End Expense List --}}
 
                             {{-- project item --}}
                             {{-- <div class="mt-4">
@@ -427,11 +436,11 @@
                                     </div>
                                 </div>
                             </div> --}}
-                            {{-- --- --}}
+                            {{-- end project item --}}
 
-                            <hr>
+                            {{-- <hr> --}}
 
-                            <div class="row mt-3">
+                            {{-- <div class="row mt-3">
                                 <div class="col-lg-12">
                                     <div class="card ">
                                         <div class="card-header py-2">
@@ -478,7 +487,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             
                         </div>
 
@@ -497,12 +506,14 @@
             </div>
         </div>
 
-        
-
         <br/>
         <br/>
     </section>
 </div>
+
+<!-- Modal for creating a new supplier -->
+@include('backend.admin.inventory.project.saleDetails')
+
 @endsection
 
 @push('js')
@@ -527,5 +538,39 @@
         window.print();
         document.body.innerHTML = originalContent;
     }
+</script>
+
+<script>
+    $(document).ready(function() {
+        // When the "View" button is clicked
+        // $('#purchaseDetailsBtn').on('click', function() {
+        $(document).on('click', '.purchaseDetailsBtn', function() {
+
+            var purchaseId = $(this).data('id'); // Get the purchase ID
+            var url = '/purchase-details/' + purchaseId; // Create the URL for the AJAX request
+
+            // Make an AJAX request to fetch purchase details
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(response) {
+                    // Update the modal body with the response
+                    // $('#purchaseDetailsBody').html(response);
+                    // Log the response to check what you are getting back
+                    // console.log(response);
+
+                    if (response.html) {
+                        $('#purchaseDetailsBody').html(response.html);
+                    } else {
+                        console.log('Error in response:', response);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', status, error);
+                }
+            });
+        });
+    });
+
 </script>
 @endpush

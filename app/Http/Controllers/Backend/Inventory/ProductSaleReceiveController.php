@@ -82,6 +82,9 @@ class ProductSaleReceiveController extends Controller
                 'due_amount' => $request->input('due_amount'),
                 'payment_method' => $request->input('payment_method'),
                 'payment_date' => $request->input('payment_date'),
+                'bank_account_no' => $request->input('bank_account_no'),
+                'cheque_no' => $request->input('cheque_no'),
+                'cheque_date' => $request->input('cheque_date'),
                 'status' => 'incoming',
             ]);
 
@@ -170,9 +173,9 @@ class ProductSaleReceiveController extends Controller
             DB::commit();
     
             // Redirect after storing the payment
-            return redirect()->back()->with('success', 'Payment has been successfully recorded!');
+            // return redirect()->back()->with('success', 'Payment has been successfully recorded!');
 
-            // return redirect()->route('project.receipt.payment.index')->with('success', 'Payment has been successfully recorded!');
+            return redirect()->route('project.receipt.payment.index')->with('success', 'Payment has been successfully recorded!');
     
         } catch (\Exception $e) {
             // If an error occurs, roll back the transaction
