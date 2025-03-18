@@ -441,3 +441,4 @@ Route::get('/get-sub-groups/{group_id}', function ($group_id) {
 });
 
 Route::get('/purchase-details/{purchase_id}', [ProjectController::class, 'showDetails']);
+Route::get('/admin/purchase/view', [PurchaseController::class, 'AdminPurchaseView2'])->name('admin.purchase.view');

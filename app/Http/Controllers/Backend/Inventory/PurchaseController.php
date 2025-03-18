@@ -20,6 +20,7 @@ use App\Models\JournalVoucherDetail;
 
 class PurchaseController extends Controller
 {
+
     public function index(Request $request)
     {
         $pageTitle = 'Purchase List';
@@ -28,7 +29,6 @@ class PurchaseController extends Controller
         //dd($purchases);
         return view('backend.admin.inventory.purchase.index',compact('pageTitle','purchases'));
 
-        
     }
 
     public function AdminPurchaseCreate()
@@ -207,6 +207,16 @@ class PurchaseController extends Controller
 
         return view('backend.admin.inventory.purchase.view',compact('pageTitle', 'purchase'));
     }
+
+    public function AdminPurchaseView2(Request $request)
+    {
+        $purchase = Purchase::where('id', $request->id)
+            ->with(['products', 'supplier'])
+            ->first();
+
+        return view('backend.admin.inventory.purchase.view_modal_part', compact('purchase'));
+    }
+
 
     public function Print()
     {

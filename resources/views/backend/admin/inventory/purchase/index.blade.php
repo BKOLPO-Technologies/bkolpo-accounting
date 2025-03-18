@@ -69,9 +69,12 @@
                                                 
                                                 <td class="col-2">
                                                     <!-- View Button -->
-                                                    <a href="{{ route('admin.purchase.show', $purchase->id) }}" class="btn btn-success btn-sm">
+                                                    {{-- <a href="{{ route('admin.purchase.show', $purchase->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
-                                                    </a>
+                                                    </a> --}}
+                                                    <button class="btn btn-success btn-sm view-purchase" data-id="{{ $purchase->id }}" data-toggle="modal" data-target="#purchaseDetailsModal">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>                                                    
                                                     <!-- Edit Button -->
                                                     <a href="{{ route('admin.purchase.edit', $purchase->id) }}" class="btn btn-primary btn-sm">
                                                         <i class="fas fa-edit"></i>
@@ -92,6 +95,10 @@
             </div>
         </section>
     </div>
+    
+<!-- Modal for creating a new supplier -->
+@include('backend.admin.inventory.purchase.view_modal')
+
 @endsection
 
 @push('js')
@@ -99,6 +106,23 @@
     // Initialize Select2 if necessary
     $(document).ready(function() {
         $('.select2').select2();
+    });
+
+    $(document).ready(function () {
+        $('.view-purchase').on('click', function () {
+            var purchaseId = $(this).data('id');
+            $.ajax({
+                url: "{{ route('admin.purchase.view') }}",
+                type: "GET",
+                data: { id: purchaseId },
+                success: function (response) {
+                    $('#purchaseDetailsContent').html(response);
+                },
+                error: function () {
+                    alert('Failed to load purchase details.');
+                }
+            });
+        });
     });
 </script>
 @endpush
