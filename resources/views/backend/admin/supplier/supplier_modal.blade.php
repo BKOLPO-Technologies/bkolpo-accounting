@@ -16,12 +16,12 @@
                         <div class="col-md-6">
                             <!-- Name -->
                             <div class="form-group">
-                                <label for="new_supplier_name">Name</label>
+                                <label for="new_supplier_title">Title</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_supplier_name" name="name"  placeholder="Enter Supplier Name" required>
+                                    <input type="text" class="form-control" id="new_supplier_title" name="name" placeholder="Enter Supplier Title" required>
                                 </div>
                             </div>
                             <!-- Company -->
@@ -32,6 +32,26 @@
                                         <span class="input-group-text"><i class="fas fa-building"></i></span>
                                     </div>
                                     <input type="text" class="form-control" id="new_supplier_company" placeholder="Enter Company Name" name="company">
+                                </div>
+                            </div>
+                            <!-- Contact Person -->
+                            <div class="form-group">
+                                <label for="new_supplier_contact_person">Contact Person</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new_supplier_contact_person" placeholder="Enter Contact Person" name="title">
+                                </div>
+                            </div>
+                            <!-- Designation -->
+                            <div class="form-group">
+                                <label for="new_supplier_designation">Designation</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new_supplier_designation" placeholder="Enter Designation" name="designation">
                                 </div>
                             </div>
                             <!-- Phone -->
@@ -54,6 +74,10 @@
                                     <input type="email" class="form-control" id="new_supplier_email" name="email" placeholder="Enter Client Email">
                                 </div>
                             </div>
+                            
+                        </div>
+                        
+                        <div class="col-md-6">
                             <!-- Address -->
                             <div class="form-group">
                                 <label for="new_supplier_address">Address</label>
@@ -64,9 +88,6 @@
                                     <input type="text" class="form-control" id="new_supplier_address" name="address" placeholder="Enter Address">
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="col-md-6">
                             <!-- City -->
                             <div class="form-group">
                                 <label for="new_supplier_city">City</label>
@@ -79,12 +100,12 @@
                             </div>
                             <!-- Region -->
                             <div class="form-group">
-                                <label for="new_supplier_region">Region</label>
+                                <label for="new_supplier_zip">Zip no</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-globe"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_supplier_region" name="region" placeholder="Enter Region">
+                                    <input type="text" class="form-control" id="new_supplier_zip" name="zip" placeholder="Enter Zip">
                                 </div>
                             </div>
                             <!-- Country -->
@@ -99,12 +120,12 @@
                             </div>
                             <!-- Post Box -->
                             <div class="form-group">
-                                <label for="new_supplier_postbox">Post Box</label>
+                                <label for="new_supplier_postbox">BIN Number</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-inbox"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_supplier_postbox" name="postbox" placeholder="Enter Post Box">
+                                    <input type="text" class="form-control" id="new_supplier_bin" name="bin" placeholder="Enter BIN Number">
                                 </div>
                             </div>
                             <!-- TAX ID -->

@@ -92,32 +92,33 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>City</label>
-                                    <input type="text" class="form-control" placeholder="City" name="city">
+                                    <label>Zip no</label>
+                                    <input type="text" class="form-control" placeholder="Zip no" name="zip">
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Region</label>
-                                    <input type="text" class="form-control" placeholder="Region" name="region">
-                                </div>
-                            </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Country</label>
                                     <input type="text" class="form-control" placeholder="Country" name="country">
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>City</label>
+                                    <input type="text" class="form-control" placeholder="City" name="city">
+                                </div>
+                            </div>
+                            
                         </div>
 
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>PostBox</label>
-                                    <input type="text" class="form-control" placeholder="Post Box" name="postbox">
+                                    <label>BIN Number</label>
+                                    <input type="text" class="form-control" placeholder="Enter BIN Number" name="bin">
                                 </div>
                             </div>
                             <div class="col-md-6">

@@ -91,29 +91,37 @@ class SupplierController extends Controller
     {
         $request->validate([
             'name'     => 'required|string|max:255',
+            'designation' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'company'  => 'nullable|string|max:255',
             'phone'    => 'nullable|string|max:11',
             'email'    => 'nullable|email|unique:suppliers,email',
             'address'  => 'nullable|string',
+            'zip' => 'nullable|string',
             'city'     => 'nullable|string|max:100',
             'region'   => 'nullable|string|max:100',
             'country'  => 'nullable|string|max:100',
             'postbox'  => 'nullable|string|max:20',
             'taxid'    => 'nullable|string|max:50',
+            'bin' => 'nullable|string|max:50',
             'password' => 'nullable|string|min:6',
         ]);
 
         $supplier = Supplier::create([
             'name'     => $request->name,
+            'designation' => $request->designation,
+            'title' => $request->title,
             'company'  => $request->company,
             'phone'    => $request->phone,
             'email'    => $request->email,
             'address'  => $request->address,
+            'zip' => $request->zip,
             'city'     => $request->city,
             'region'   => $request->region,
             'country'  => $request->country,
             'postbox'  => $request->postbox,
             'taxid'    => $request->taxid,
+            'bin' => $request->bin,
             'password' => $request->password ? Hash::make($request->password) : null,
             // 'status'   => $request->status ?? 1,
         ]);

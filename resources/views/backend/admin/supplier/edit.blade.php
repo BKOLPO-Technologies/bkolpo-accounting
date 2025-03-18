@@ -96,8 +96,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>City</label>
-                                        <input type="text" class="form-control" placeholder="City" name="city" value="{{ $supplier->city }}">
+                                        <label>Zip no</label>
+                                        <input type="text" class="form-control" name="zip" value="{{ $supplier->zip }}">
                                     </div>
                                 </div>
                             </div>
@@ -105,8 +105,8 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Zip</label>
-                                        <input type="text" class="form-control" name="zip" value="{{ $supplier->zip }}">
+                                        <label>City</label>
+                                        <input type="text" class="form-control" name="city" value="{{ $supplier->city }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -120,8 +120,8 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>PostBox</label>
-                                        <input type="text" class="form-control" placeholder="Post Box" name="postbox" value="{{ $supplier->postbox }}">
+                                        <label>BIN Number</label>
+                                        <input type="text" class="form-control" name="bin" value="{{ $supplier->bin }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">

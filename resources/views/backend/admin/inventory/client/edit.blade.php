@@ -50,14 +50,29 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Name</label>
-                                <input type="text" class="form-control" placeholder="Name" name="name" value="{{ $client->name }}">
+                                <label>Title</label>
+                                <input type="text" class="form-control" name="name" value="{{ $client->name }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Company</label>
                                 <input type="text" class="form-control" placeholder="Company Name" name="company" value="{{ $client->company }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Contact Person</label>
+                                <input type="text" class="form-control" name="title" value="{{ $client->title }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Designation</label>
+                                <input type="text" class="form-control" name="designation" value="{{ $client->designation }}">
                             </div>
                         </div>
                     </div>
@@ -86,32 +101,33 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>City</label>
-                                <input type="text" class="form-control" placeholder="City" name="city" value="{{ $client->city }}">
+                                <label>Zip no</label>
+                                <input type="text" class="form-control" name="zip" value="{{ $client->zip }}">
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Region</label>
-                                <input type="text" class="form-control" placeholder="Region" name="region" value="{{ $client->region }}">
-                            </div>
-                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Country</label>
                                 <input type="text" class="form-control" placeholder="Country" name="country" value="{{ $client->country }}">
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>City</label>
+                                <input type="text" class="form-control" name="city" value="{{ $client->city }}">
+                            </div>
+                        </div>
+                        
                     </div>
 
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>PostBox</label>
-                                <input type="text" class="form-control" placeholder="Post Box" name="postbox" value="{{ $client->postbox }}">
+                                <label>BIN Number</label>
+                                <input type="text" class="form-control" name="bin" value="{{ $client->bin }}">
                             </div>
                         </div>
                         <div class="col-md-6">

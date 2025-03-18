@@ -14,9 +14,9 @@
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
-                            <!-- Name -->
+                            <!-- Title -->
                             <div class="form-group">
-                                <label for="new_client_name">Name</label>
+                                <label for="new_client_name">Title</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-user"></i></span>
@@ -32,6 +32,26 @@
                                         <span class="input-group-text"><i class="fas fa-building"></i></span>
                                     </div>
                                     <input type="text" class="form-control" id="new_client_company" placeholder="Enter Company Name" name="company">
+                                </div>
+                            </div>
+                            <!-- Contact Person -->
+                            <div class="form-group">
+                                <label for="new_client_contact_person">Contact Person</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new_client_contact_person" placeholder="Contact Person Name" name="title">
+                                </div>
+                            </div>
+                            <!-- Designation -->
+                            <div class="form-group">
+                                <label for="new_client_contact_person_designation">Designation</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new_client_contact_person_designation" placeholder="Contact Person Designation" name="designation">
                                 </div>
                             </div>
                             <!-- Phone -->
@@ -54,6 +74,10 @@
                                     <input type="email" class="form-control" id="new_client_email" placeholder="Enter Client Email"  name="email">
                                 </div>
                             </div>
+                            
+                        </div>
+                        
+                        <div class="col-md-6">
                             <!-- Address -->
                             <div class="form-group">
                                 <label for="new_client_address">Address</label>
@@ -64,9 +88,6 @@
                                     <input type="text" class="form-control" id="new_client_address" placeholder="Enter Address" name="address">
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="col-md-6">
                             <!-- City -->
                             <div class="form-group">
                                 <label for="new_client_city">City</label>
@@ -77,14 +98,14 @@
                                     <input type="text" class="form-control" id="new_client_city" placeholder="Enter City" name="city">
                                 </div>
                             </div>
-                            <!-- Region -->
+                            <!-- Zip No -->
                             <div class="form-group">
-                                <label for="new_client_region">Region</label>
+                                <label for="new_client_zip">Zip no</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-globe"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_client_region" placeholder="Enter Region" name="region">
+                                    <input type="text" class="form-control" id="new_client_zip" placeholder="Enter Zip No" name="zip">
                                 </div>
                             </div>
                             <!-- Country -->
@@ -99,12 +120,12 @@
                             </div>
                             <!-- Post Box -->
                             <div class="form-group">
-                                <label for="new_client_postbox">Post Box</label>
+                                <label for="new_client_bin">BIN Number</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-inbox"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_client_postbox" placeholder="Enter Post Box" name="postbox">
+                                    <input type="text" class="form-control" id="new_client_bin" placeholder="Enter BIN Number" name="bin">
                                 </div>
                             </div>
                             <!-- TAX ID -->
@@ -117,6 +138,7 @@
                                     <input type="text" class="form-control" id="new_client_taxid" placeholder="Enter Transaction ID" name="taxid">
                                 </div>
                             </div>
+                            
                         </div>
                     </div>  
                 </div>
