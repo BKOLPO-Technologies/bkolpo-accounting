@@ -72,7 +72,15 @@
                                     </tr>
                                     <tr>
                                         <th>Status</th>
-                                        <td><span class="badge bg-info">{{ ucfirst($project->status) }}</span></td>
+                                        <td>
+                                            @if($project->status == 'pending')
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                            @elseif($project->status == 'paid')
+                                                <span class="badge bg-success">Paid</span>
+                                            @else
+                                                <span class="badge bg-info text-dark">Partially Paid</span>
+                                            @endif
+                                        </td>                                        
                                     </tr>
                                 </table>
                             </div>
@@ -110,11 +118,11 @@
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $item->items }}</td>
                                                     <td>{{ $item->order_unit }}</td>
-                                                    <td>{{ number_format($item->unit_price, 2) }}</td>
+                                                    <td>{{ bdt() }} {{ number_format($item->unit_price, 2) }}</td>
                                                     <td>{{ $item->quantity }}</td>
-                                                    <td>{{ number_format($item->subtotal, 2) }}</td>
-                                                    <td>{{ number_format($item->discount, 2) }}</td>
-                                                    <td>{{ number_format($item->total, 2) }}</td>
+                                                    <td>{{ bdt() }} {{ number_format($item->subtotal, 2) }}</td>
+                                                    <td>{{ bdt() }} {{ number_format($item->discount, 2) }}</td>
+                                                    <td>{{ bdt() }} {{ number_format($item->total, 2) }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -166,7 +174,7 @@
                                 </div>
                             </div>
 
-                            <div class="mt-4">
+                         <div class="mt-4">
                                 <div class="card-header">
                                     <h4>Project Sale Receipt List</h4>
                                 </div>
@@ -174,13 +182,17 @@
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>#</th>
+                                                <th>Sl</th>
                                                 <th>Invoice No</th>
                                                 <th>Total Amount</th>
                                                 <th>Pay Amount</th>
                                                 <th>Due Amount</th>
                                                 <th>Payment Method</th>
                                                 <th>Payment Date</th>
+                                                <!-- Additional columns for Bank payment -->
+                                                <th>Bank Account No</th>
+                                                <th>Cheque No</th>
+                                                <th>Cheque Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -188,24 +200,37 @@
                                                 $totalPaid = 0;
                                             @endphp
                                             @foreach ($project_receipts as $index => $receipt)
-                                            @php
-                                                $pay_amount = $receipt->pay_amount;
-                                                $totalPaid += $pay_amount;
-                                            @endphp
-                                            <tr>
-                                                <td>{{ $index + 1 }}</td>
-                                                <td>{{ $receipt->invoice_no }}</td>
-                                                <td>{{ $receipt->total_amount }}</td>
-                                                <td>{{ $receipt->pay_amount }}</td>
-                                                <td>{{ $receipt->due_amount }}</td>
-                                                <td>{{ $receipt->payment_method }}</td>
-                                                <td>{{ $receipt->payment_date }}</td>
-                                            </tr>
+                                                @php
+                                                    $pay_amount = $receipt->pay_amount;
+                                                    $totalPaid += $pay_amount;
+                                                @endphp
+                                                <tr>
+                                                    <td>{{ $index + 1 }}</td>
+                                                    <td>{{ $receipt->invoice_no }}</td>
+                                                    <td>{{ bdt() }} {{ number_format($receipt->total_amount, 2) }}</td>
+                                                    <td>{{ bdt() }} {{ number_format($receipt->pay_amount, 2) }}</td>
+                                                    <td>{{ bdt() }} {{ number_format($receipt->due_amount, 2) }}</td>                                                    
+                                                    <td>{{ ucfirst($receipt->payment_method) }}</td>
+                                                    <td>{{ \Carbon\Carbon::parse($receipt->payment_date)->format('d F Y') }}</td>
+                            
+                                                    <!-- Bank Account No, Cheque No, and Cheque Date only show for "Bank" payment method -->
+                                                    @if($receipt->payment_method === 'bank')
+                                                        <td>{{ $receipt->bank_account_no ?? 'N/A' }}</td>
+                                                        <td>{{ $receipt->cheque_no ?? 'N/A' }}</td>
+                                
+                                                        <td>{{ \Carbon\Carbon::parse($receipt->cheque_date)->format('d F Y') }}</td>
+                                                    @else
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    @endif
+                                                </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
+                            
 
                             <hr>
                             
