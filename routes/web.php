@@ -316,6 +316,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/delete/{id}', [SalePaymentController::class, 'destroy'])->name('sale.payment.destroy');
         Route::get('/get-ledgers-by-group', [SalePaymentController::class, 'getLedgersByGroup'])->name('sale.payment.get.ledgers.by.group');
         Route::get('/payment/get-chalans-by-supplier', [SalePaymentController::class, 'getChalansBySupplier'])->name('sale.payment.get.chalans.by.supplier');
+        Route::get('/get-purchase-details', [SalePaymentController::class, 'getPurchaseDetails'])->name('sale.payment.get.purchase.details');
 
     });
 

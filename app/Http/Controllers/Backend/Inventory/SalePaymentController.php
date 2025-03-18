@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers\Backend\Inventory;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
 use Carbon\Carbon;
-use App\Models\Purchase;
 use App\Models\Client;
+
 use App\Models\Ledger;
 use App\Models\Payment;
+use App\Models\Purchase;
 use App\Models\Supplier;
 use App\Models\LedgerGroup;
+use Illuminate\Http\Request;
 use App\Models\IncomingChalan;
-use App\Models\OutcomingChalan;
-use App\Models\LedgerGroupDetail;
 use App\Models\JournalVoucher;
-use App\Models\JournalVoucherDetail;
+use App\Models\OutcomingChalan;
+use App\Models\PurchaseProduct;
+use App\Models\LedgerGroupDetail;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\JournalVoucherDetail;
 use Illuminate\Support\Facades\Log; 
 
 class SalePaymentController extends Controller
@@ -112,16 +113,48 @@ class SalePaymentController extends Controller
             return [
                 'id' => $purchase->id,
                 'invoice_no' => $purchase->invoice_no ?? 'N/A',
-                'total_amount' => ($purchase->total ?? 0) - ($purchase->paid_amount ?? 0)
+                'total_amount' => ($purchase->total ?? 0),
+                'total_due_amount' => ($purchase->total ?? 0) - ($purchase->paid_amount ?? 0),
             ];
         });
 
         return response()->json(['purchases' => $formattedpurchases]);
     }
 
+    public function getPurchaseDetails(Request $request)
+    {
+        $invoiceId = $request->invoice_id;
 
-    
+        //Log::info($invoiceId);
 
+        // Fetch purchase details
+        $purchase = Purchase::where('invoice_no', $invoiceId)->first();
+
+        //Log::info($purchase);
+        
+        if (!$purchase) {
+            Log::info('not');
+            return response()->json(['success' => false]);
+        }
+
+        //Log::info($purchase->id);
+
+        // Fetch products related to the purchase
+        $purchaseProducts = PurchaseProduct::where('purchase_id', $purchase->id)->with('product')->get();
+
+        //Log::info($purchaseProducts);
+
+        // Fetch payment details
+        $payments = Payment::where('invoice_no', $invoiceId)->with(['ledger', 'client', 'supplier'])->get();
+
+        //Log::info($payments);
+
+        return response()->json([
+            'success' => true,
+            'purchase_products' => $purchaseProducts,
+            'payments' => $payments,
+        ]);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -285,8 +318,6 @@ class SalePaymentController extends Controller
         }
     }
     
-
-
     /**
      * Display the specified resource.
      */

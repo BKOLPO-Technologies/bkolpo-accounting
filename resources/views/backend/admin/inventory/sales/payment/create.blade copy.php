@@ -73,22 +73,13 @@
                                         </select>
                                     </div>
                                 </div>
-                                
-                                <!-- Total Amount -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="amount" class="form-label">Total Amount:</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
-                                        <input type="number" class="form-control" id="total_amount" readonly>
-                                    </div>
-                                </div>
 
-                                <!-- Total Due Amount (Display) -->
+                                <!-- Total Amount (Display) -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="total_amount" class="form-label">Total Due Amount:</label>
+                                    <label for="total_amount" class="form-label">Total Amount:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
-                                        <input type="text" name="total_amount" class="form-control" id="total_due_amount" readonly>
+                                        <input type="text" name="total_amount" class="form-control" id="total_amount" readonly>
                                     </div>
                                 </div>
 
@@ -171,9 +162,10 @@
 
                         <hr/>
 
-                        <h5>Payment Details</h5>
+                        {{-- <h5>Payment Details</h5>
                         <table class="table table-bordered">
                             <tr>
+                                <th>Sl No</th>
                                 <th>Invoice No</th>
                                 <th>Supplier</th>
                                 <th>Pay Amount</th>
@@ -181,11 +173,10 @@
                                 <th>Payment Date</th>
                             </tr>
                             <tbody id="payment-details"></tbody>
-                        </table>
+                        </table> --}}
 
-                        <hr/>
-                        {{-- <p><strong>Payment Method:</strong> <span id="payment-method"></span></p> --}}
-                        {{-- <p><strong>Total Paid:</strong> <span id="total-paid"></span></p> --}}
+                        <p><strong>Payment Method:</strong> <span id="payment-method"></span></p>
+                        <p><strong>Total Paid:</strong> <span id="total-paid"></span></p>
                     </div>
                     {{--  --}}
                 </div>
@@ -204,12 +195,11 @@
         // When customer changes, reset fields
         $('#supplier_id').on('change', function () {
             let supplierId = $(this).val();
-            //alert(supplierId);
+            alert(supplierId);
             
             // Clear Incoming Chalan and Total Amount
             $('#invoice_no').html('<option value="">Select Invoice No</option>');
             $('#total_amount').val(''); // Clear total amount field
-            $('#total_due_amount').val(''); 
             $('#pay_amount').val('');
             $('#due_amount').val('');
 
@@ -219,7 +209,6 @@
                 
                 let totalAmount = $(this).find(':selected').data('amount') || 0;
                 $('#total_amount').val(totalAmount);
-                $('#total_due_amount').val(totalAmount);
                 $('#pay_amount').val(''); // Reset pay amount
                 $('#due_amount').val(totalAmount); // Default due = total at first
 
@@ -233,7 +222,7 @@
                         let options = '<option value="">Select Invoice No</option>';
 
                         response.purchases.forEach(purchase => {
-                            options += `<option value="${purchase.invoice_no}" data-amount="${purchase.total_amount}" data-due="${purchase.total_due_amount}">${purchase.invoice_no}</option>`;
+                            options += `<option value="${purchase.invoice_no}" data-amount="${purchase.total_amount}">${purchase.invoice_no}</option>`;
                         });
 
                         $('#invoice_no').html(options);
@@ -244,18 +233,8 @@
 
         // Show Total Amount when Chalan is selected
         $('#invoice_no').on('change', function () {
-            // let totalDueAmount = $(this).find(':selected').data('amount') || '';
-            // $('#total_due_amount').val(totalDueAmount);
-            let selectedOption = $(this).find(':selected');
-        
-            let totalAmount = selectedOption.data('amount') || 0;
-            let totalDueAmount = selectedOption.data('due') || 0;
-
-            // console.log("Total Amount:", totalAmount); // Debugging
-            // console.log("Total Due Amount:", totalDueAmount); // Debugging
-
+            let totalAmount = $(this).find(':selected').data('amount') || '';
             $('#total_amount').val(totalAmount);
-            $('#total_due_amount').val(totalDueAmount);
 
             let invoiceId = $(this).val();
             if (invoiceId) {
@@ -264,7 +243,7 @@
                     type: "GET",
                     data: { invoice_id: invoiceId },
                     success: function (response) {
-                        //console.log(response);
+                        console.log(response);
 
                         if (response.success) {
                             let products = response.purchase_products;
@@ -281,7 +260,7 @@
                                         <td>${product.product?.name || 'N/A'}</td>
                                         <td>${product.quantity}</td>
                                         <td>${product.price}</td>
-                                        <td>${product.quantity * product.price}</td>
+                                        <td>${product.total}</td>
                                     </tr>
                                 `);
                             });
@@ -299,11 +278,11 @@
                                 `);
                             });
 
-                            // // Update Payment Info
-                            // if (payments.length > 0) {
-                            //     $('#payment-method').text(payments[0].payment_method || 'N/A');
-                            //     $('#total-paid').text(payments.reduce((sum, p) => sum + parseFloat(p.pay_amount || 0), 0));
-                            // }
+                            // Update Payment Info
+                            if (payments.length > 0) {
+                                $('#payment-method').text(payments[0].payment_method || 'N/A');
+                                $('#total-paid').text(payments.reduce((sum, p) => sum + parseFloat(p.pay_amount || 0), 0));
+                            }
                         } else {
                             alert(response.message || 'No data found for this invoice.');
                         }
@@ -369,44 +348,44 @@
 
     // When pay amount is entered, calculate due amount
     $('#pay_amount').on('keyup change', function () {
-        let totalDueAmount = parseFloat($('#total_due_amount').val()) || 0;
+        let totalAmount = parseFloat($('#total_amount').val()) || 0;
         let payAmount = parseFloat($(this).val()) || 0;
 
-        if (payAmount > totalDueAmount) {
+        if (payAmount > totalAmount) {
             toastr.error('Pay amount cannot be greater than Total Amount!');
-            $(this).val(totalDueAmount); // Reset pay amount to total amount
-            payAmount = totalDueAmount; // Prevent further calculation issues
+            $(this).val(totalAmount); // Reset pay amount to total amount
+            payAmount = totalAmount; // Prevent further calculation issues
         }
 
-        let dueAmount = totalDueAmount - payAmount;
+        let dueAmount = totalAmount - payAmount;
         $('#due_amount').val(dueAmount.toFixed(2));
     });
 
-    // // ledger group wise change
-    // $(document).ready(function() {
-    //     $('.select2').select2();
+    // ledger group wise change
+    $(document).ready(function() {
+        $('.select2').select2();
 
-    //     $('#ledger_group_id').on('change', function() {
-    //         let groupId = $(this).val();
-    //         $('#ledger_id').html('<option value="">Loading...</option>');
+        $('#ledger_group_id').on('change', function() {
+            let groupId = $(this).val();
+            $('#ledger_id').html('<option value="">Loading...</option>');
 
-    //         if (groupId) {
-    //             $.ajax({
-    //                 url: "{{ route('sale.payment.get.ledgers.by.group') }}",
-    //                 type: "GET",
-    //                 data: { ledger_group_id: groupId },
-    //                 success: function(response) {
-    //                     let options = '<option value="">Choose Ledger</option>';
-    //                     response.ledgers.forEach(ledger => {
-    //                         options += `<option value="${ledger.id}">${ledger.name}</option>`;
-    //                     });
-    //                     $('#ledger_id').html(options);
-    //                 }
-    //             });
-    //         } else {
-    //             $('#ledger_id').html('<option value="">Choose Ledger</option>');
-    //         }
-    //     });
-    // });
+            if (groupId) {
+                $.ajax({
+                    url: "{{ route('sale.payment.get.ledgers.by.group') }}",
+                    type: "GET",
+                    data: { ledger_group_id: groupId },
+                    success: function(response) {
+                        let options = '<option value="">Choose Ledger</option>';
+                        response.ledgers.forEach(ledger => {
+                            options += `<option value="${ledger.id}">${ledger.name}</option>`;
+                        });
+                        $('#ledger_id').html(options);
+                    }
+                });
+            } else {
+                $('#ledger_id').html('<option value="">Choose Ledger</option>');
+            }
+        });
+    });
 </script>
 @endpush
