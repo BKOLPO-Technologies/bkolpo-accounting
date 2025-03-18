@@ -267,10 +267,10 @@
                                 <div class="col-lg-12">
                                     <div class="card ">
                                         <div class="card-header py-2">
-                                            <h4 class="mb-0">Purchases List</h4>
+                                            <h4 class="mb-0">Expence</h4>
                                         </div>
                                         <div class="card-body">
-                                            <table class="table table-striped">
+                                            <table id="example12" class="table table-bordered table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>Sl</th>
@@ -436,14 +436,14 @@
                                     <div class="card ">
                                         <div class="card-header py-2">
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h4 class="mb-0">Purchases Payment Receive List</h4>
+                                                <h4 class="mb-0">Payment Receive</h4>
                                                 <a href="{{ route('project.receipt.payment.create') }}" class="btn btn-sm btn-success rounded-0">
-                                                    <i class="fas fa-plus fa-sm"></i> Add New Payment Received
+                                                    <i class="fas fa-plus fa-sm"></i> Add New Payment Receive
                                                 </a>
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            <table id="example1" class="table table-bordered table-striped">
+                                            <table id="example12" class="table table-bordered table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>Sl No</th>
