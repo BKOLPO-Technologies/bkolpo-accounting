@@ -310,7 +310,8 @@
                                                             <td>{{ $purchase->paid_amount }}</td>
                                                             <td>{{ $purchase->status }}</td>
                                                             <td>
-                                                                <button class="btn btn-success" type="button" id="purchaseDetailsBtn" data-toggle="modal" data-target="#purchaseDetailsModal" data-id="{{ $purchase->id }}">
+                                                                {{-- <button class="btn btn-success" type="button" id="purchaseDetailsBtn" data-toggle="modal" data-target="#purchaseDetailsModal" data-id="{{ $purchase->id }}"> --}}
+                                                                <button class="btn btn-success purchaseDetailsBtn" type="button" data-toggle="modal" data-target="#purchaseDetailsModal" data-id="{{ $purchase->id }}">
                                                                     <i class="fas fa-eye"></i>
                                                                 </button>
                                                             </td>
@@ -542,7 +543,9 @@
 <script>
     $(document).ready(function() {
         // When the "View" button is clicked
-        $('#purchaseDetailsBtn').on('click', function() {
+        // $('#purchaseDetailsBtn').on('click', function() {
+        $(document).on('click', '.purchaseDetailsBtn', function() {
+
             var purchaseId = $(this).data('id'); // Get the purchase ID
             var url = '/purchase-details/' + purchaseId; // Create the URL for the AJAX request
 
