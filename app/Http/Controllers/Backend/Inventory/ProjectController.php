@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers\Backend\Inventory;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Exception;
 use Carbon\Carbon;
-
 use App\Models\Client;
+
 use App\Models\Project;
+use App\Models\Purchase;
 use App\Models\ProjectItem;
+use Illuminate\Http\Request;
 use App\Models\JournalVoucher;
-use App\Models\JournalVoucherDetail;
+use App\Traits\ProjectSalesTrait;
+use App\Traits\TrialBalanceTrait;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\JournalVoucherDetail;
 use Illuminate\Support\Facades\Log; 
 use Illuminate\Database\QueryException;
-use Exception;
-use App\Traits\TrialBalanceTrait;
 
 class ProjectController extends Controller
 {
@@ -167,14 +169,15 @@ class ProjectController extends Controller
         return view('backend.admin.inventory.project.view',compact('pageTitle', 'project'));
     }
 
+    use ProjectSalesTrait; // Include the trait
     public function projectsSales(Request $request, $id)
     {
         //dd($id);
         $pageTitle = 'Project Sale Details';
 
-        $project = Project::where('id', $id)
-            ->with(['client', 'items', 'sales', 'purchases', 'receipts']) 
-            ->first();
+        // $project = Project::where('id', $id)
+        //     ->with(['client', 'items', 'sales', 'purchases', 'receipts']) 
+        //     ->first();
 
         //dd($project);
 
@@ -191,13 +194,41 @@ class ProjectController extends Controller
         // Fetch the trial balance data based on the date range
         //$trialBalances = $this->getTrialBalance($fromDate, $toDate);
 
-        // Calculate totals in backend
-        $totalAmount = $project->grand_total;
-        $paidAmount = $project->paid_amount;
-        $dueAmount = $project->grand_total-$project->paid_amount;
+        // // Calculate totals in backend
+        // $totalAmount = $project->grand_total;
+        // $paidAmount = $project->paid_amount;
+        // $dueAmount = $project->grand_total-$project->paid_amount;
 
-        return view('backend.admin.inventory.project.sale',compact('pageTitle', 'project', 'fromDate', 'toDate', 'totalAmount', 'paidAmount','dueAmount'));
+        // Get data using the trait method
+        $data = $this->getProjectSalesData($id, $fromDate, $toDate);
+
+        //dd($data);
+
+        //return view('backend.admin.inventory.project.sale',compact('pageTitle', 'project', 'fromDate', 'toDate', 'totalAmount', 'paidAmount','dueAmount'));
+
+        // Pass data to the view
+        return view('backend.admin.inventory.project.sale', array_merge($data, compact('pageTitle', 'fromDate', 'toDate')));
     }
+
+    public function showDetails($purchaseId)
+    {
+        try {
+            $purchase = Purchase::with('purchaseProducts') // Assuming 'purchaseProducts' is the relation name in your model
+                ->findOrFail($purchaseId);
+
+            //Log::info($purchase);
+
+            $html = view('backend.admin.inventory.project.purchaseDetails', compact('purchase'))->render();
+
+            return response()->json(['html' => $html]);
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('Error fetching purchase details: ' . $e->getMessage());
+            return response()->json(['error' => 'Error fetching purchase details. Please try again later.'], 500);
+        }
+    }
+
+
 
     /**
      * Show the form for editing the specified resource.
