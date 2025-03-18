@@ -182,9 +182,9 @@
                             </div>
                         </div>
 
-                        <hr/>
+                        {{-- <hr/> --}}
                         
-                        <form action="#" method="GET" class="mb-3">
+                        {{-- <form action="#" method="GET" class="mb-3">
                             <div class="row justify-content-center">
                                 <div class="col-md-3 mt-3">
                                     <label for="from_date">From Date:</label>
@@ -201,7 +201,7 @@
                                     <a href="#"  class="btn btn-danger w-100">Clear</a>
                                 </div>
                             </div>
-                        </form>
+                        </form> --}}
 
                         <hr/>
 
