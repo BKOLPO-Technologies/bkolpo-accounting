@@ -14,7 +14,7 @@ class ProductController extends Controller
     {
         $products = Product::all();
         $pageTitle = 'Admin Product';
-        return view('backend/admin/inventory/product/index',compact('pageTitle', 'products'));
+        return view('backend.admin.inventory.product.index',compact('pageTitle', 'products'));
     }
 
     public function AdminProductCreate() 
@@ -22,7 +22,7 @@ class ProductController extends Controller
         $pageTitle = 'Admin Product Create';
         $categories = Category::where('status',1)->latest()->get();
         //dd($categories);
-        return view('backend/admin/inventory/product/create',compact('pageTitle','categories'));
+        return view('backend.admin.inventory.product.create',compact('pageTitle','categories'));
     }
 
     public function AdminProductStore(Request $request)
@@ -61,14 +61,13 @@ class ProductController extends Controller
         return redirect()->route('admin.product.index')->with('success', 'Product created successfully!');
     }
 
-    
     public function AdminProductEdit($id)
     {
         $product = Product::findOrFail($id);
         $pageTitle = 'Admin Product Edit';
         $categories = Category::where('status',1)->latest()->get();
         //dd($categories);
-        return view('backend/admin/inventory/product//edit',compact('pageTitle', 'product','categories'));
+        return view('backend.admin.inventory.product.edit',compact('pageTitle', 'product','categories'));
     }
 
     // public function AdminProductUpdate(Request $request, $id)
@@ -157,8 +156,6 @@ class ProductController extends Controller
         // Redirect back to the product index with a success message
         return redirect()->route('admin.product.index')->with('success', 'Product updated successfully!');
     }
-
-
 
     public function AdminProductDestroy($id)
     {

@@ -29,7 +29,7 @@
             
             <div class="card card-primary card-outline shadow-lg">
               <div class="card-header">
-              <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Edit Product</h4>
                     <a href="{{ route('admin.product.index')}}" class="btn btn-sm btn-danger rounded-0">
                         <i class="fa-solid fa-arrow-left"></i> Back To List
@@ -55,7 +55,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-box"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" value="{{ $product->name }}" name="name">
+                                    <input type="text" class="form-control" value="{{ old('name', $product->name) }}" name="name">
                                 </div>
                             </div>
                         </div>
@@ -90,7 +90,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                     </div>
-                                    <input type="number" class="form-control" value="{{ $product->price }}" name="price">
+                                    <input type="number" class="form-control" value="{{ old('price', $product->price) }}" name="price">
                                 </div>
                             </div>
                         </div>
@@ -106,7 +106,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-cogs"></i></span>
                                     </div>
-                                    <input type="number" class="form-control" value="{{ $product->quantity }}" name="quantity">
+                                    <input type="number" class="form-control" value="{{ old('quantity', $product->quantity) }}" name="quantity">
+
                                 </div>
                             </div>
                         </div>
@@ -116,7 +117,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Description</label>
-                                <textarea name="description" class="form-control" id="">{{ $product->description }}</textarea>
+                                <textarea name="description" class="form-control">{{ old('description', $product->description) }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -130,7 +131,7 @@
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <!-- Display existing image if it exists -->
+                                
                                 @if($product->image)
                                     <img id="imagePreview" src="{{ asset('upload/inventory/products/' . $product->image) }}" alt="Image Preview" style="display:block; margin-top: 10px; height:80px; width: 80px;">
                                 @else
