@@ -37,6 +37,7 @@
                         <table id="example1" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>Sl</th>
                                     <th>Name</th>
                                     <th>Status</th>
                                     <th>Actions</th>
@@ -45,6 +46,7 @@
                             <tbody>
                                 @foreach ($categories as $category)
                                 <tr>
+                                    <td class="col-1">{{ $loop->iteration }}</td>
                                     <td>{{ $category->name }}</td>
                                     <td>
                                         @if($category->status == 1)
