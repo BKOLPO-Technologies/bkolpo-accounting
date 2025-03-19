@@ -291,8 +291,8 @@
           </li> --}}
 
           <!-- Product -->
-          <li class="nav-item {{ Route::is('admin.product*', 'admin.category*') ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ Route::is('admin.product*', 'admin.category*') ? 'active' : '' }}">
+          <li class="nav-item {{ Route::is('admin.product*') ? 'menu-open' : '' }}">
+              <a href="#" class="nav-link {{ Route::is('admin.product*') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-box"></i>
                   <p>
                       Product
@@ -300,6 +300,7 @@
                   </p>
               </a>
 
+              {{-- 
               <ul class="nav nav-treeview">
                   <li class="nav-item">
                       <a href="{{ route('admin.category.index') }}" class="nav-link {{ Route::is('admin.category.index') || Route::is('admin.category.create') || Route::is('admin.category.edit') ? 'active' : '' }}">
@@ -307,7 +308,8 @@
                           <p>Manage Category</p>
                       </a>
                   </li>
-              </ul>
+              </ul> 
+              --}}
 
               <ul class="nav nav-treeview">
                   <li class="nav-item">
@@ -627,8 +629,8 @@
           </li>
           @endcan
           @can('setting-menu')  
-          <li class="nav-item {{ Route::is('company-information.index','company-information.import','company-information.export') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('company-information.index','company-information.import','company-information.export') ? 'active' : '' }}">
+          <li class="nav-item {{ Route::is('company-information.index','company-information.import','company-information.export', 'admin.category*', 'admin.unit*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('company-information.index','company-information.import','company-information.export', 'admin.category*', 'admin.unit*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-cog"></i>
                 <p>
                 Settings
@@ -644,14 +646,15 @@
                   </a>
                 </li>
                 @endcan
+
                 <li class="nav-item">
-                  <a href="{{ route('company-information.import') }}" class="nav-link {{ Route::is('company-information.import') ? 'active' : '' }}">
+                  <a href="{{ route('admin.category.index') }}" class="nav-link {{ Route::is('admin.category.index') || Route::is('admin.category.create') || Route::is('admin.category.edit') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Products Category</p> 
+                      <p>Products Category</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ route('company-information.import') }}" class="nav-link {{ Route::is('company-information.import') ? 'active' : '' }}">
+                  <a href="{{ route('admin.unit.index') }}" class="nav-link {{ Route::is('admin.unit.index') || Route::is('admin.unit.create') || Route::is('admin.unit.edit') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
                       <p>Products Unit</p> 
                   </a>

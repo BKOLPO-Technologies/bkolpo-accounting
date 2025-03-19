@@ -19,6 +19,7 @@ use App\Http\Controllers\Backend\EmployeeController;
 use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\LedgerGroupController;
 use App\Http\Controllers\Backend\PaymentMethodController;
+use App\Http\Controllers\Backend\Inventory\UnitController;
 use App\Http\Controllers\Backend\LedgerSubGroupController;
 use App\Http\Controllers\Backend\Inventory\SalesController;
 use App\Http\Controllers\Backend\Inventory\StockController;
@@ -267,6 +268,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/edit/{id}', [CategoryController::class, 'AdminCategoryEdit'])->name('admin.category.edit');
         Route::put('/update/{id}', [CategoryController::class, 'AdminCategoryUpdate'])->name('admin.category.update');
         Route::get('/delete/{id}', [CategoryController::class, 'AdminCategoryDestroy'])->name('admin.category.destroy');
+    });
+
+    /* ==================== Unit =================== */
+    Route::prefix('unit')->group(function () {
+        Route::get('/', [UnitController::class, 'AdminUnitIndex'])->name('admin.unit.index');
+        Route::get('/create', [UnitController::class, 'AdminUnitCreate'])->name('admin.unit.create');
+        Route::post('/storeCategory', [UnitController::class, 'AdminUnitStore'])->name('admin.unit.store');
+        Route::get('/edit/{id}', [UnitController::class, 'AdminUnitEdit'])->name('admin.unit.edit');
+        Route::put('/update/{id}', [UnitController::class, 'AdminUnitUpdate'])->name('admin.unit.update');
+        Route::get('/delete/{id}', [UnitController::class, 'AdminUnitDestroy'])->name('admin.unit.destroy');
     });
 
     /* ==================== Product =================== */
