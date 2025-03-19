@@ -32,33 +32,9 @@
          </li>
          @endcan
 
-         <!-- ---Branch--- -->
-         @can('branch-menu')  
-         <li class="nav-item {{ Route::is('branch.index', 'branch.create', 'branch.edit','branch.show') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('branch.index', 'branch.create', 'branch.edit','branch.show') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-project-diagram"></i>
-              <p>
-                Branch
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-            @can('branch-list')  
-              <li class="nav-item">
-                <a href="{{ route('branch.index') }}" class="nav-link {{ Route::is('branch.index') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Branch List</p>
-                </a>
-              </li>
-              @endcan
-            </ul>
-          </li>
-          @endcan
-          <!-- --- -->
-
           <!-- ---Company--- -->
           @can('company-menu')  
-         <li class="nav-item {{ Route::is('company.index','company.create','company.edit','company.show') ? 'menu-open' : '' }}">
+          <li class="nav-item {{ Route::is('company.index','company.create','company.edit','company.show') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('company.index','company.create','company.edit','company.show') ? 'active' : '' }}">
               <i class="nav-icon fas fa-building"></i>
               <p>
@@ -78,7 +54,31 @@
             </ul>
           </li>
           @endcan
-          <!-- --- -->
+          <!-- End---Company -->
+
+          <!-- ---Branch--- -->
+          @can('branch-menu')  
+          <li class="nav-item {{ Route::is('branch.index', 'branch.create', 'branch.edit','branch.show') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('branch.index', 'branch.create', 'branch.edit','branch.show') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-project-diagram"></i>
+              <p>
+                Branch
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+            @can('branch-list')  
+              <li class="nav-item">
+                <a href="{{ route('branch.index') }}" class="nav-link {{ Route::is('branch.index') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Branch List</p>
+                </a>
+              </li>
+              @endcan
+            </ul>
+          </li>
+          @endcan
+          <!-- End---Branch -->
 
           <!-- ---Bank--- -->
           <!-- <li class="nav-item {{ Route::is('bank.index', 'bank.create', 'bank.edit','bank.show') ? 'menu-open' : '' }}">
