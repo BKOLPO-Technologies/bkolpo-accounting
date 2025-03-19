@@ -62,6 +62,7 @@ class UnitController extends Controller
         // Update the supplier data
         $unit->update([
             'name' => $request->input('name'),
+            'status' => $request->status,
         ]);
 
         // Redirect back to the supplier index with a success message
