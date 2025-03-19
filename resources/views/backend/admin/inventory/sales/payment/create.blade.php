@@ -133,6 +133,33 @@
                                     </div>
                                 </div>
 
+                                <!-- Bank Account Number (hidden initially) -->
+                                <div class="col-md-4 mb-3" id="bank_account_div" style="display:none;">
+                                    <label for="bank_account_no" class="form-label">Bank Account No:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
+                                        <input type="text" class="form-control" name="bank_account_no" placeholder="Enter Bank Account No" id="bank_account_no">
+                                    </div>
+                                </div>
+
+                                <!-- Cheque Number (hidden initially) -->
+                                <div class="col-md-4 mb-3" id="cheque_no_div" style="display:none;">
+                                    <label for="cheque_no" class="form-label">Cheque No:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-check"></i></span>
+                                        <input type="text" class="form-control" name="cheque_no" placeholder="Enter Cheque No" id="cheque_no">
+                                    </div>
+                                </div>
+
+                                <!-- Cheque Date (hidden initially) -->
+                                <div class="col-md-4 mb-3" id="cheque_date_div" style="display:none;">
+                                    <label for="cheque_date" class="form-label">Cheque Date:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                        <input type="text" class="form-control" name="cheque_date" id="to_date" >
+                                    </div>
+                                </div>
+
                                 <div class="col-lg-12 col-md-12 mb-3">
                                     <label for="description">Note</label>
                                     <div class="input-group">
@@ -156,7 +183,15 @@
                     {{--  --}}
                     <!-- Section to Display Purchase Details -->
                     <div class="card-body" id="purchase-details" class="mt-4">
+                        
+                        <!-- Invoice No and Supplier (Moved to top) -->
+                        <p><strong>Invoice No:</strong> <span id="invoice_no_display"></span></p>
+                        <p><strong>Supplier:</strong> <span id="supplier_display"></span></p>
+
+                        <hr/>
+
                         <h5>Purchase Details</h5>
+
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -167,6 +202,14 @@
                                 </tr>
                             </thead>
                             <tbody id="purchase-products"></tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="1" class="text-end">Total:</th>
+                                    <th id="total_quantity">0</th>
+                                    <th></th>
+                                    <th id="total_purchase_amount">0.00</th>
+                                </tr>
+                            </tfoot>
                         </table>
 
                         <hr/>
@@ -174,18 +217,32 @@
                         <h5>Payment Details</h5>
                         <table class="table table-bordered">
                             <tr>
-                                <th>Invoice No</th>
-                                <th>Supplier</th>
-                                <th>Pay Amount</th>
-                                <th>Payment Method</th>  
                                 <th>Payment Date</th>
+                                <th>Payment Method</th>
+                                <th>Bank Account No</th>
+                                <th>Cheque No</th>
+                                <th>Pay Amount</th>
                             </tr>
                             <tbody id="payment-details"></tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="4" class="text-end">Total Paid:</th>
+                                    <th id="total_paid_amount">0.00</th>
+                                </tr>
+                            </tfoot>
                         </table>
 
                         <hr/>
-                        {{-- <p><strong>Payment Method:</strong> <span id="payment-method"></span></p> --}}
-                        {{-- <p><strong>Total Paid:</strong> <span id="total-paid"></span></p> --}}
+                        <!-- Grand Total -->
+                        <div class="d-flex justify-content-end1">
+                            <div class="text-end1">
+                                <h5>Grand Total</h5>
+                                <p><strong>Total Purchase Amount:</strong> <span id="grand_total_purchase">0.00</span></p>
+                                <p><strong>Total Paid Amount:</strong> <span id="grand_total_paid">0.00</span></p>
+                                <p><strong>Due Amount:</strong> <span id="grand_due_amount">0.00</span></p>
+                            </div>
+                        </div>
+                        
                     </div>
                     {{--  --}}
                 </div>
@@ -274,8 +331,22 @@
                             $('#purchase-products').empty();
                             $('#payment-details').empty();
 
+                            // Set Invoice No and Supplier Name at the top
+                            $('#invoice_no_display').text(payments.length > 0 ? payments[0].invoice_no : 'N/A');
+                            $('#supplier_display').text(payments.length > 0 ? (payments[0].supplier?.name || 'N/A') : 'N/A');
+
+                            // Variables for totals
+                            let totalQuantity = 0;
+                            let totalPurchaseAmount = 0;
+                            let totalPaidAmount = 0;
+
                             // Populate purchase products
                             products.forEach(product => {
+
+                                let total = product.quantity * product.price;
+                                totalQuantity += product.quantity;
+                                totalPurchaseAmount += total;
+                                
                                 $('#purchase-products').append(`
                                     <tr>
                                         <td>${product.product?.name || 'N/A'}</td>
@@ -288,22 +359,29 @@
 
                             // Populate payment details
                             payments.forEach(payment => {
+
+                                totalPaidAmount += parseFloat(payment.pay_amount || 0);
+
                                 $('#payment-details').append(`
                                     <tr>
-                                        <td>${payment.invoice_no}</td>
-                                        <td>${payment.supplier?.name || 'N/A'}</td>
-                                        <td>${payment.pay_amount}</td>
-                                        <td>${payment.payment_method}</td>
                                         <td>${payment.payment_date}</td>
+                                        <td>${payment.payment_method}</td>
+                                        <td>${payment?.bank_account_no || ''}</td>
+                                        <td>${payment?.cheque_no || ''}</td>
+                                        <td>${payment.pay_amount}</td>
                                     </tr>
                                 `);
                             });
 
-                            // // Update Payment Info
-                            // if (payments.length > 0) {
-                            //     $('#payment-method').text(payments[0].payment_method || 'N/A');
-                            //     $('#total-paid').text(payments.reduce((sum, p) => sum + parseFloat(p.pay_amount || 0), 0));
-                            // }
+                            // Update Totals
+                            $('#total_quantity').text(totalQuantity);
+                            $('#total_purchase_amount').text(totalPurchaseAmount.toFixed(2));
+                            $('#total_paid_amount').text(totalPaidAmount.toFixed(2));
+
+                            // Update Grand Totals
+                            $('#grand_total_purchase').text(totalPurchaseAmount.toFixed(2));
+                            $('#grand_total_paid').text(totalPaidAmount.toFixed(2));
+                            $('#grand_due_amount').text((totalPurchaseAmount - totalPaidAmount).toFixed(2));
                         } else {
                             alert(response.message || 'No data found for this invoice.');
                         }
@@ -316,7 +394,17 @@
             } else {
                 $('#purchase-products').empty();
                 $('#payment-method').text('');
-                $('#total-paid').text('');
+
+                 // Reset totals
+                $('#total_quantity').text(0);
+                $('#total_purchase_amount').text('0.00');
+                $('#total_paid_amount').text('0.00');
+                $('#grand_total_purchase').text('0.00');
+                $('#grand_total_paid').text('0.00');
+                $('#grand_due_amount').text('0.00');
+
+                $('#invoice_no_display').text('N/A');
+                $('#supplier_display').text('N/A');
             }
         });
 
@@ -408,5 +496,22 @@
     //         }
     //     });
     // });
+</script>
+<script>
+    document.getElementById('payment_method').addEventListener('change', function() {
+        var paymentMethod = this.value;
+        
+        // Hide all additional fields
+        document.getElementById('bank_account_div').style.display = 'none';
+        document.getElementById('cheque_no_div').style.display = 'none';
+        document.getElementById('cheque_date_div').style.display = 'none';
+
+        // Show fields based on selected payment method
+        if (paymentMethod === 'bank') {
+            document.getElementById('bank_account_div').style.display = 'block';
+            document.getElementById('cheque_no_div').style.display = 'block';
+            document.getElementById('cheque_date_div').style.display = 'block';
+        }
+    });
 </script>
 @endpush

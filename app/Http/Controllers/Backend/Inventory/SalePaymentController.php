@@ -163,7 +163,7 @@ class SalePaymentController extends Controller
     {
         // this is ok
         // payment/sales/create
-        // dd($request->all());
+        //dd($request->all());
         // Validate the incoming form data
         $request->validate([
             'supplier_id' => 'required|exists:suppliers,id',
@@ -198,6 +198,9 @@ class SalePaymentController extends Controller
                 'due_amount' => $request->input('due_amount'),
                 'payment_method' => $request->input('payment_method'),
                 'payment_date' => $request->input('payment_date'),
+                'bank_account_no' => $request->input('bank_account_no'),
+                'cheque_no' => $request->input('cheque_no'),
+                'cheque_date' => $request->input('cheque_date'),
             ]);
 
             // dd("payment = ", $payment);
