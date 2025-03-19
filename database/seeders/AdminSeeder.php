@@ -20,10 +20,10 @@ class AdminSeeder extends Seeder
     {
         // Add the admin user
         $user = User::updateOrCreate(
-            ['email' => 'admin@bkolpo.com'],
+            ['email' => 'superadmin@bkolpo.com'],
             [
-                'name' => 'Admin',
-                'email' => 'admin@bkolpo.com',
+                'name' => 'Super Admin',
+                'email' => 'superadmin@bkolpo.com',
                 'password' => Hash::make('Admin@123#!'),
                 'show_password' => 'Admin@123#!',
                 'created_at' => Carbon::now(),
@@ -34,13 +34,14 @@ class AdminSeeder extends Seeder
         
         // Define the roles
         $roles = [
-            ['id' => 1, 'name' => 'Admin'],
-            ['id' => 2, 'name' => 'Inventory Manager'],
-            ['id' => 3, 'name' => 'Sales Team'],
-            ['id' => 4, 'name' => 'Sales Manager'],
-            ['id' => 5, 'name' => 'Business Manager'],
-            ['id' => 6, 'name' => 'Business Owner'],
-            ['id' => 7, 'name' => 'Project Manager'],
+            ['id' => 1, 'name' => 'Super Admin'],
+            ['id' => 2, 'name' => 'Admin'],
+            ['id' => 3, 'name' => 'Inventory Manager'],
+            ['id' => 4, 'name' => 'Sales Team'],
+            ['id' => 5, 'name' => 'Sales Manager'],
+            ['id' => 6, 'name' => 'Business Manager'],
+            ['id' => 7, 'name' => 'Business Owner'],
+            ['id' => 8, 'name' => 'Project Manager'],
             
         ];
 
@@ -53,7 +54,7 @@ class AdminSeeder extends Seeder
         }
 
         // Assign permissions to the Admin role
-        $adminRole = Role::findByName('Admin');
+        $adminRole = Role::findByName('Super Admin');
         $permissions = Permission::pluck('id','id')->all();
         $adminRole->syncPermissions($permissions);
 

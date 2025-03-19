@@ -72,7 +72,7 @@
                                                     <!-- Edit Button -->
                                                     @can('role-edit')
                                                     <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-primary btn-sm"
-                                                        @if($role->name == 'Admin') 
+                                                        @if($role->name == 'Super Admin') 
                                                             style="pointer-events: none; opacity: 0.5;" 
                                                             title="Admin role cannot be edited"
                                                         @endif>
@@ -82,7 +82,7 @@
                                                     @can('role-delete')
                                                     <!-- Delete Button -->
                                                     <a href="{{ route('roles.delete', $role->id) }}" id="delete" class="btn btn-danger btn-sm" 
-                                                        @if($role->name == 'Admin') 
+                                                        @if($role->name == 'Super Admin') 
                                                             style="pointer-events: none; opacity: 0.5;" 
                                                             title="Cannot delete Admin role"
                                                         @endif>
