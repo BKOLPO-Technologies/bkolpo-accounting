@@ -110,7 +110,7 @@
                                                 $subtotal += $productTotal;
                                                 
                                                 // Assume there is a 'discount' field in the pivot table or product
-                                                $productDiscount = $product->pivot->discount ?? 0; // Set discount to 0 if not available
+                                                $productDiscount = !empty($product->pivot->discount) ? $product->pivot->discount : 0; // Set discount to 0 if not available
                                                 $totalDiscount += $productDiscount;
                             
                                                 // Calculate the final total for the product after discount
@@ -147,7 +147,7 @@
                                     </tr>
                                     <tr>
                                         <th>Total Discount:</th>
-                                        <td>{{ bdt() }} {{ number_format($totalDiscount+$sale->discount, 2) }}</td>
+                                        <td>{{ bdt() }} {{ number_format($totalDiscount + (float) $sale->discount, 2) }}</td>
                                     </tr>
                                     <tr>
                                         <th>Total:</th>

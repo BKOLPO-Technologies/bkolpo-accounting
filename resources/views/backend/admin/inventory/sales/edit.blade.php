@@ -191,9 +191,9 @@
                                                             </td>
                                                             <td class="subtotal">{{ number_format($product->pivot->quantity * $product->pivot->price, 2) }}</td>
                                                             <td>
-                                                                <input type="number" class="product-discount form-control" value="{{ number_format($product->pivot->discount, 2) }}" step="0.01" oninput="updateRow(this)" />
+                                                                <input type="number" class="product-discount form-control" value="{{ number_format((!empty($product->pivot->discount) ? $product->pivot->discount : 0), 2) }}" step="0.01" oninput="updateRow(this)" />
                                                             </td>
-                                                            <td class="total">{{ number_format(($product->pivot->quantity * $product->pivot->price) - $product->pivot->discount, 2) }}
+                                                            <td class="total">{{ number_format(($product->pivot->quantity * $product->pivot->price) - (!empty($product->pivot->discount) ? $product->pivot->discount : 0), 2) }}
                                                             </td>
                                                             <td><button type="button" class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button></td>
                                                         </tr>
