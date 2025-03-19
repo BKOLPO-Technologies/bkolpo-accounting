@@ -390,6 +390,9 @@
     //         url: '/admin/product/products-by-category/' + categoryId,
     //         method: 'GET',
     //         success: function(response) {
+
+    //             console.log(response);
+
     //             // Empty the select element and add the default "Select Product" option
     //             $productSelect.empty();
     //             $productSelect.append('<option value="">Select Product</option>');
@@ -433,6 +436,9 @@
             method: 'GET',
             dataType: 'json', // Ensure proper JSON parsing
             success: function(response) {
+
+                // console.log(response);
+
                 // Empty the select element and add the default "Select Product" option
                 $productSelect.empty().append('<option value="">Select Product</option>');
 
@@ -447,7 +453,7 @@
                                     data-name="${product.name}" 
                                     data-price="${product.price}" 
                                     data-unit="${unitName}">
-                                ${product.name} (${unitName})
+                                ${product.name} 
                             </option>
                         `);
                     });
@@ -464,7 +470,6 @@
             }
         });
     }
-
 
     // Function to add selected product to hidden fields
     function addToHiddenFields(productId, quantity, price) {
@@ -490,8 +495,6 @@
         // console.log("Updated quantities:", $('#quantities').val());
         // console.log("Updated prices:", $('#prices').val());
     }
-
-
 
     // Remove product from table and hidden fields
     $('#product-table').on('click', '.remove-product', function() {
@@ -539,9 +542,6 @@
         // console.log("After Removal - quantities:", $('#quantities').val());
         // console.log("After Removal - prices:", $('#prices').val());
     }
-
-    
-
 
     // Update row subtotal when quantity changes
     function updateRow(input) {
@@ -637,8 +637,6 @@
         // console.log("Updated quantities:", $('#quantities').val());
         // console.log("Updated prices:", $('#prices').val());
     }
-
-
 
     // Calculate the subtotal, discount, and total
     function updateTotal() {

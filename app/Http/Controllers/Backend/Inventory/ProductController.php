@@ -189,7 +189,7 @@ class ProductController extends Controller
             $products = Product::all();
         } else {
             // Filter products by selected category
-            $products = Product::where('category_id', $categoryId)->get();
+            $products = Product::where('category_id', $categoryId)->with('unit')->get();
         }
 
         return response()->json($products);
