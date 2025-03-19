@@ -51,6 +51,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [BranchController::class, 'index'])->name('index')->middleware('can:branch-list');
         Route::get('/create', [BranchController::class, 'create'])->name('create')->middleware('can:branch-create');
         Route::post('/store', [BranchController::class, 'store'])->name('store');
+        Route::post('/store2', [BranchController::class, 'store2'])->name('store2');
         Route::get('/edit/{id}', [BranchController::class, 'edit'])->name('edit')->middleware('can:branch-edit');
         Route::post('/update/{id}', [BranchController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [BranchController::class, 'destroy'])->name('delete')->middleware('can:branch-delete');

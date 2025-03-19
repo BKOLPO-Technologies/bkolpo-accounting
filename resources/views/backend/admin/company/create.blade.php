@@ -366,4 +366,48 @@
         }
     });
 </script>
+
+
+<script> 
+    $('#createBranchForm').on('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        let formData = $(this).serialize(); // Get form data
+
+        $.ajax({
+            url: '{{ route('branch.store2') }}',
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                // Check if the supplier was created successfully
+                if (response.success) {
+                    // Close the modal
+                    $('#createBranchModal').modal('hide');
+                    
+                    // Clear form inputs
+                    $('#createBranchForm')[0].reset();
+
+                    // Append new supplier to the supplier select dropdown
+                    $('#branch_id').append(new Option(response.branch.name, response.branch.id));
+
+                    // Re-initialize the select2 to refresh the dropdown
+                    $('#branch_id').trigger('change');
+
+                    // Show success message
+                    toastr.success('Branch added successfully!');
+                } else {
+                    toastr.error('Something went wrong. Please try again.');
+                }
+            },
+            error: function(response) {
+                // Handle error (validation errors, etc.)
+                let errors = response.responseJSON.errors;
+                for (let field in errors) {
+                    $(`#new_branch_${field}`).addClass('is-invalid');
+                    $(`#new_branch_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
+                }
+            }
+        });
+    });
+</script>
 @endpush
