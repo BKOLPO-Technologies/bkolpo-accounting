@@ -59,6 +59,11 @@
                                                         <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                                                     @endforeach
                                                 </select>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-danger" type="button" id="addSupplierBtn" data-toggle="modal" data-target="#createSupplierModal">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                             @error('branch_id')
                                             <span class="text-danger">{{ $message }}</span>
@@ -169,6 +174,11 @@
             </div>
         </section>
     </div>
+
+    
+<!-- Modal for creating a new supplier -->
+@include('backend.admin.supplier.supplier_modal')
+
 @endsection
 @push('js')
 <script>

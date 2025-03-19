@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Company;
+use Hash;
+use Carbon\Carbon;
 use App\Models\Branch;
 use App\Models\Ledger;
-use App\Models\LedgerGroup;
-use App\Models\LedgerSubGroup;
-use App\Models\LedgerGroupSubgroupLedger;
-use App\Models\JournalVoucher;
-use App\Models\JournalVoucherDetail;
-use Spatie\Permission\Models\Role;
-use DB;
-use Hash;
-use Illuminate\Support\Arr;
+use App\Models\Company;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Validator;
-use Carbon\Carbon;
-use Auth;
+use App\Models\LedgerGroup;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\JournalVoucher;
+use App\Models\LedgerSubGroup;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
+use App\Models\JournalVoucherDetail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use App\Models\LedgerGroupSubgroupLedger;
+use Illuminate\Support\Facades\Validator;
 
 class CompanyController extends Controller
 {
