@@ -15,6 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('branch_id')->nullable(); 
+            $table->string('country')->nullable();
+            $table->string('address')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('post_code')->nullable();
+            $table->string('logo')->nullable();
             $table->string('account_no')->nullable();
             $table->decimal('initial_balance', 10, 2)->default(0)->nullable();  
             $table->text('description')->nullable();

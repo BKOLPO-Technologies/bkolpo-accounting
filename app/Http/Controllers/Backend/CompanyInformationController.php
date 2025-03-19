@@ -27,7 +27,7 @@ class CompanyInformationController extends Controller
      */
     public function index()
     {
-        $pageTitle = 'Company Information';
+        $pageTitle = 'Configuration';
         $company = CompanyInformation::first();
         return view('backend.admin.company-information.index', compact('pageTitle','company'));
     }

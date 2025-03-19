@@ -52,6 +52,8 @@ class CompanyController extends Controller
 
     public function store(Request $request)
     {
+        //  dd($request->all());
+
         DB::beginTransaction(); // 🔹 Transaction Start
 
         try {
@@ -68,27 +70,45 @@ class CompanyController extends Controller
                 'name'        => $request->name,
                 'branch_id'   => $request->branch_id,
                 'description' => $request->description,
+                'country' => $request->country,
+                'address' => $request->address,
+                'city' => $request->city,
+                'state' => $request->state,
+                'post_code' => $request->post_code,
+                'email' => $request->email,
+                'phone' => $request->phone,
                 'status'      => $request->status,
                 'account_no'  => $accountNumber,
                 'created_by'  => Auth::user()->id,
             ]);
 
-            $lastMonthLastDate = now()->subMonth()->endOfMonth()->toDateString(); // 🔹 গত মাসের শেষ তারিখ
+            if ($request->hasFile('logo')) {
+                @unlink(public_path('upload/company/' . $company->logo)); // Delete old logo
+                $file = $request->file('logo');
+                $filename = date('YmdHi') . $file->getClientOriginalName();
+                $file->move(public_path('upload/company'), $filename);
+                $company->logo = $filename;
+            }
 
-            // 🔹 Generate Transaction Code
-            $randomNumber = rand(100000, 999999);
-            $fullDate = now()->format('d/m/y');
-            $transactionCode = 'BCL-O-'.$fullDate.' - '.$randomNumber;
+            $company->save();
 
-            // 🔹 Create Journal Voucher 
-            $journalVoucher = JournalVoucher::create([
-                'transaction_code' => $transactionCode,
-                'company_id'       => $company->id,
-                'branch_id'        => $request->branch_id,
-                'transaction_date' => $lastMonthLastDate,
-            ]);
+            if ($request->has('type') && !in_array(null, $request->type) && !in_array(null, $request->group)) {
 
-            if ($request->has('type')) {
+                $lastMonthLastDate = now()->subMonth()->endOfMonth()->toDateString(); // 🔹 গত মাসের শেষ তারিখ
+
+                // 🔹 Generate Transaction Code
+                $randomNumber = rand(100000, 999999);
+                $fullDate = now()->format('d/m/y');
+                $transactionCode = 'BCL-O-'.$fullDate.' - '.$randomNumber;
+
+                // 🔹 Create Journal Voucher 
+                $journalVoucher = JournalVoucher::create([
+                    'transaction_code' => $transactionCode,
+                    'company_id'       => $company->id,
+                    'branch_id'        => $request->branch_id,
+                    'transaction_date' => $lastMonthLastDate,
+                ]);
+
                 foreach ($request->type as $key => $type) {
                     // 🔹 Ledger Group Create
                     $ledgerGroup = LedgerGroup::create([
@@ -123,22 +143,62 @@ class CompanyController extends Controller
                         'updated_at'   => now(),
                     ]);
 
-                    // 🔹 Determine Debit or Credit based on Type
-                    $openingBalance = $request->ob[$key] ?? 0;
-                    $debit  = ($type == 'Asset') ? $openingBalance : 0;
-                    $credit = ($type == 'Liability') ? $openingBalance : 0;
+                    // // 🔹 Determine Debit or Credit based on Type
+                    // $openingBalance = $request->ob[$key] ?? 0;
+                    // $debit  = ($type == 'Asset') ? $openingBalance : 0;
+                    // $credit = ($type == 'Liability') ? $openingBalance : 0;
 
-                    // 🔹 Journal Entry 
+                    // // 🔹 Journal Entry 
+                    // JournalVoucherDetail::create([
+                    //     'journal_voucher_id' => $journalVoucher->id,
+                    //     'ledger_id'          => $ledger->id,
+                    //     'reference_no'       => "REF-" . rand(100000, 999999),
+                    //     'description'        => 'Opening Balance Entry',
+                    //     'debit'              => $debit,
+                    //     'credit'             => $credit,
+                    //     'created_at'         => $lastMonthLastDate,
+                    //     'updated_at'         => $lastMonthLastDate,
+                    // ]);
+
+                    // 🔹 Determine Debit and Credit Amounts based on Type
+                    $openingBalance = $request->ob[$key] ?? 0;
+
+                    if ($type == 'Asset') {
+                        $debit = $openingBalance;   // Debit for Asset
+                        $credit = $openingBalance;  // Credit for Asset (to balance the entry)
+                    } elseif ($type == 'Liability') {
+                        $debit = $openingBalance;   // Debit for Liability (to balance the entry)
+                        $credit = $openingBalance;  // Credit for Liability
+                    } else {
+                        $debit = 0;
+                        $credit = 0;
+                    }
+
+                    // 🔹 Create Debit Journal Entry (for the same ledger)
                     JournalVoucherDetail::create([
                         'journal_voucher_id' => $journalVoucher->id,
                         'ledger_id'          => $ledger->id,
                         'reference_no'       => "REF-" . rand(100000, 999999),
-                        'description'        => 'Opening Balance Entry',
+                        'description'        => 'Opening Balance Entry - Debit',
                         'debit'              => $debit,
+                        'credit'             => 0,
+                        'created_at'         => $lastMonthLastDate,
+                        'updated_at'         => $lastMonthLastDate,
+                    ]);
+
+                    // 🔹 Create Credit Journal Entry (for the same ledger)
+                    JournalVoucherDetail::create([
+                        'journal_voucher_id' => $journalVoucher->id,
+                        'ledger_id'          => $ledger->id,
+                        'reference_no'       => "REF-" . rand(100000, 999999),
+                        'description'        => 'Opening Balance Entry - Credit',
+                        'debit'              => 0,
                         'credit'             => $credit,
                         'created_at'         => $lastMonthLastDate,
                         'updated_at'         => $lastMonthLastDate,
                     ]);
+
+
                 }
             }
 
