@@ -98,7 +98,7 @@
                                         <select name="products" id="product" class="form-control select2 @error('products') is-invalid @enderror" style="width: 100%;">
                                             <option value="">Select Product</option>
                                             @foreach($products as $product)
-                                                <option value="{{ $product->id }}" data-category="{{ $product->category_id }}" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-stock="{{ $product->quantity }}">
+                                                <option value="{{ $product->id }}" data-category="{{ $product->category_id }}" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-unit="{{ $product->unit->name }}">
                                                     {{ $product->name }}
                                                 </option>
                                             @endforeach
@@ -170,7 +170,7 @@
                                                     <th>Product</th>
                                                     <th>Sell Price</th>
                                                     <th>Quantity</th>
-                                                    <th>Current Stock</th>
+                                                    <th>Unit</th>
                                                     <th>Subtotal</th>
                                                     <th>Discount</th>
                                                     <th>Total</th>
@@ -332,7 +332,7 @@
 
         const productName = selectedOption.data('name');
         const productPrice = parseFloat(selectedOption.data('price'));
-        const productStock = parseInt(selectedOption.data('stock'));
+        const productUnit = selectedOption.data('unit');
 
         // Check if product is already in the table
         if ($('#product-table tbody tr[data-product-id="' + productId + '"]').length > 0) {
@@ -352,11 +352,9 @@
                     <input type="number" class="price-input form-control" value="${productPrice.toFixed(2)}" step="1" data-product-id="${productId}" oninput="updateRow(this)">
                 </td>
                 <td class="col-1">
-                    <input type="number" class="quantity form-control" value="1" min="1" data-price="${productPrice}" data-stock="${productStock}" oninput="updateRow(this)" />
+                    <input type="number" class="quantity form-control" value="1" min="1" data-price="${productPrice}" oninput="updateRow(this)" />
                 </td>
-                <td class="current-stock col-2">
-                    <span class="badge bg-info">${productStock}</span>
-                </td>
+                <td class="col-3">${productUnit}</td>
                 <td class="subtotal">${productPrice.toFixed(2)}</td>
                 <td class="discount-col">
                     <input type="number" class="product-discount form-control" value="0" min="0"  oninput="updateRow(this)" placeholder="Enter discount">
@@ -379,41 +377,94 @@
         addToHiddenFields(productId, 1, productPrice);
     });
 
+    // // Function to load products based on the selected category
+    // function loadProductsByCategory(categoryId) {
+    //     var $productSelect = $('#product');
+
+    //     // Clear the current product options and show loading message
+    //     $productSelect.empty();
+    //     $productSelect.append('<option value="">Loading products...</option>');
+
+    //     // Send an AJAX request to fetch the products for the selected category
+    //     $.ajax({
+    //         url: '/admin/product/products-by-category/' + categoryId,
+    //         method: 'GET',
+    //         success: function(response) {
+    //             // Empty the select element and add the default "Select Product" option
+    //             $productSelect.empty();
+    //             $productSelect.append('<option value="">Select Product</option>');
+
+    //             if (response.length > 0) {
+    //                 // Append products to the select dropdown
+    //                 response.forEach(function(product) {
+    //                     let unitName = product.unit && product.unit.name ? product.unit.name : 'N/A'; // Handle missing unit
+    //                     $productSelect.append('<option value="' + product.id + '" data-id="' + product.id + '" data-name="' + product.name + '" data-price="' + product.price + '" data-unit="' + product.unitName + '">' + product.name + '</option>');
+    //                 });
+    //             } else {
+    //                 $productSelect.append('<option value="">No products found</option>');
+    //             }
+
+    //             // Refresh select2 after updating the options
+    //             $productSelect.trigger('change');
+    //         },
+    //         error: function() {
+    //             $productSelect.empty();
+    //             $productSelect.append('<option value="">Error fetching products</option>');
+    //         }
+    //     });
+    // }
+
     // Function to load products based on the selected category
     function loadProductsByCategory(categoryId) {
         var $productSelect = $('#product');
 
-        // Clear the current product options and show loading message
-        $productSelect.empty();
-        $productSelect.append('<option value="">Loading products...</option>');
+        // Check if categoryId is valid
+        if (!categoryId) {
+            $productSelect.empty().append('<option value="">Select a category first</option>');
+            return;
+        }
+
+        // Clear current options and show loading message
+        $productSelect.empty().append('<option value="">Loading products...</option>');
 
         // Send an AJAX request to fetch the products for the selected category
         $.ajax({
-            url: '/admin/product/products-by-category/' + categoryId,
+            url: '/admin/product/products-by-category/' + encodeURIComponent(categoryId), // Prevent special character issues
             method: 'GET',
+            dataType: 'json', // Ensure proper JSON parsing
             success: function(response) {
                 // Empty the select element and add the default "Select Product" option
-                $productSelect.empty();
-                $productSelect.append('<option value="">Select Product</option>');
+                $productSelect.empty().append('<option value="">Select Product</option>');
 
-                if (response.length > 0) {
+                if (Array.isArray(response) && response.length > 0) {
                     // Append products to the select dropdown
                     response.forEach(function(product) {
-                        $productSelect.append('<option value="' + product.id + '" data-id="' + product.id + '" data-name="' + product.name + '" data-price="' + product.price + '" data-stock="' + product.quantity + '">' + product.name + '</option>');
+                        let unitName = product.unit && product.unit.name ? product.unit.name : 'N/A'; // Handle missing unit
+
+                        $productSelect.append(`
+                            <option value="${product.id}" 
+                                    data-id="${product.id}" 
+                                    data-name="${product.name}" 
+                                    data-price="${product.price}" 
+                                    data-unit="${unitName}">
+                                ${product.name} (${unitName})
+                            </option>
+                        `);
                     });
                 } else {
                     $productSelect.append('<option value="">No products found</option>');
                 }
 
-                // Refresh select2 after updating the options
+                // Refresh select2 after updating the options (if using select2)
                 $productSelect.trigger('change');
             },
-            error: function() {
-                $productSelect.empty();
-                $productSelect.append('<option value="">Error fetching products</option>');
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+                $productSelect.empty().append('<option value="">Error fetching products</option>');
             }
         });
     }
+
 
     // Function to add selected product to hidden fields
     function addToHiddenFields(productId, quantity, price) {

@@ -35,7 +35,7 @@ class PurchaseController extends Controller
     {
         $suppliers = Supplier::orderBy('id', 'desc')->get();
 
-        $products = Product::where('status',1)->latest()->get();
+        $products = Product::where('status',1)->with('unit')->latest()->get();
         $categories = Category::where('status',1)->latest()->get();
         $projects = Project::where('project_type','Running')->latest()->get();
         $pageTitle = 'Purchase';
@@ -58,7 +58,7 @@ class PurchaseController extends Controller
     // purchase store
     public function AdminPurchaseStore(Request $request)
     {
-        // dd($request->all());
+        //dd($request->all());
 
         // Validate the request data
         $validated = $request->validate([
