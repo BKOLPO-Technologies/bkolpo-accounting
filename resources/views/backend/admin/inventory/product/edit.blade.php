@@ -114,11 +114,34 @@
 
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>Description</label>
                                 <textarea name="description" class="form-control">{{ old('description', $product->description) }}</textarea>
                             </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="unit_id" class="form-label">Unit Name</label>
+
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa fa-network-wired"></i></span>
+
+                                <select name="unit_id" id="unit_id" class="form-control select2">
+                                    <option value="">Select unit</option>
+                                    @foreach($units as $unit)
+                                        <option value="{{ $unit->id }}" 
+                                            {{ old('unit_id', $product->unit_id) == $unit->id ? 'selected' : '' }}>
+                                            {{ $unit->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                
+                            </div>
+
+                            @error('unit_id')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
 

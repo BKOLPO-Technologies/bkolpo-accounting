@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             CompanyInformationSeeder::class,
             LedgerSeeder::class,
             CategorySeeder::class,
+            UnitSeeder::class,
             ProductSeeder::class,
             ClientSeeder::class,
             SupplierSeeder::class,

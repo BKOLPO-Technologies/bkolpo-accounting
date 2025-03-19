@@ -73,6 +73,12 @@
                                     @endforeach
                                 </select>
                                 
+                                <div class="input-group-append">
+                                    <button class="btn btn-danger" type="button" id="addCategoryBtn" data-toggle="modal" data-target="#createCategoryModal">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+
                             </div>
 
                             @error('category_id')
@@ -117,7 +123,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>Description
                                     @error('description')
@@ -127,6 +133,34 @@
                                 <textarea name="description" placeholder="Enter Product Description" class="form-control">{{ old('description') }}</textarea>
 
                             </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="unit_id" class="form-label">Unit Name</label>
+
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa fa-network-wired"></i></span>
+
+                                <select name="unit_id" id="unit_id" class="form-control select2">
+                                    <option value="">Select unit</option>
+                                    @foreach($units as $unit)
+                                        <option value="{{ $unit->id }}" {{ old('unit_id') == $unit->id ? 'selected' : '' }}>
+                                            {{ $unit->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                <div class="input-group-append">
+                                    <button class="btn btn-danger" type="button" id="addUnitBtn" data-toggle="modal" data-target="#createUnitModal">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+
+                            @error('unit_id')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
 
@@ -181,6 +215,9 @@
 
 </div>
 
+<!-- Modal for creating a new branch -->
+@include('backend.admin.inventory.unit.unit_modal')
+@include('backend.admin.inventory.category.category_modal')
 @endsection
 
 @push('js')
@@ -195,4 +232,92 @@
         reader.readAsDataURL(event.target.files[0]);
     });
 </script>
+
+<script> 
+    $('#createUnitForm').on('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        let formData = $(this).serialize(); // Get form data
+
+        $.ajax({
+            url: '{{ route('admin.unit.store2') }}',
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                // Check if the supplier was created successfully
+                if (response.success) {
+                    // Close the modal
+                    $('#createUnitModal').modal('hide');
+                    
+                    // Clear form inputs
+                    $('#createUnitForm')[0].reset();
+
+                    // Append new supplier to the supplier select dropdown
+                    $('#unit_id').append(new Option(response.unit.name, response.unit.id));
+
+                    // Re-initialize the select2 to refresh the dropdown
+                    $('#unit_id').trigger('change');
+
+                    // Show success message
+                    toastr.success('Unit added successfully!');
+                } else {
+                    toastr.error('Something went wrong. Please try again.');
+                }
+            },
+            error: function(response) {
+                // Handle error (validation errors, etc.)
+                let errors = response.responseJSON.errors;
+                for (let field in errors) {
+                    $(`#new_unit_${field}`).addClass('is-invalid');
+                    $(`#new_unit_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
+                }
+            }
+        });
+    });
+</script>
+
+
+<script> 
+    $('#createCategoryForm').on('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        let formData = $(this).serialize(); // Get form data
+
+        $.ajax({
+            url: '{{ route('admin.category.store2') }}',
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                // Check if the supplier was created successfully
+                if (response.success) {
+                    // Close the modal
+                    $('#createCategoryModal').modal('hide');
+                    
+                    // Clear form inputs
+                    $('#createCategoryForm')[0].reset();
+
+                    // Append new supplier to the supplier select dropdown
+                    $('#category_id').append(new Option(response.category.name, response.category.id));
+
+                    // Re-initialize the select2 to refresh the dropdown
+                    $('#category_id').trigger('change');
+
+                    // Show success message
+                    toastr.success('Category added successfully!');
+                } else {
+                    toastr.error('Something went wrong. Please try again.');
+                }
+            },
+            error: function(response) {
+                // Handle error (validation errors, etc.)
+                let errors = response.responseJSON.errors;
+                for (let field in errors) {
+                    $(`#new_category_${field}`).addClass('is-invalid');
+                    $(`#new_category_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
+                }
+            }
+        });
+    });
+</script>
+
 @endpush

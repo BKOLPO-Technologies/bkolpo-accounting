@@ -51,6 +51,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [BranchController::class, 'index'])->name('index')->middleware('can:branch-list');
         Route::get('/create', [BranchController::class, 'create'])->name('create')->middleware('can:branch-create');
         Route::post('/store', [BranchController::class, 'store'])->name('store');
+        Route::post('/store2', [BranchController::class, 'store2'])->name('store2');
         Route::get('/edit/{id}', [BranchController::class, 'edit'])->name('edit')->middleware('can:branch-edit');
         Route::post('/update/{id}', [BranchController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [BranchController::class, 'destroy'])->name('delete')->middleware('can:branch-delete');
@@ -265,6 +266,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [CategoryController::class, 'AdminCategoryIndex'])->name('admin.category.index');
         Route::get('/create', [CategoryController::class, 'AdminCategoryCreate'])->name('admin.category.create');
         Route::post('/storeCategory', [CategoryController::class, 'AdminCategoryStore'])->name('admin.category.store');
+        Route::post('/storeCategory2', [CategoryController::class, 'AdminCategoryStore2'])->name('admin.category.store2');
         Route::get('/edit/{id}', [CategoryController::class, 'AdminCategoryEdit'])->name('admin.category.edit');
         Route::put('/update/{id}', [CategoryController::class, 'AdminCategoryUpdate'])->name('admin.category.update');
         Route::get('/delete/{id}', [CategoryController::class, 'AdminCategoryDestroy'])->name('admin.category.destroy');
@@ -274,7 +276,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::prefix('unit')->group(function () {
         Route::get('/', [UnitController::class, 'AdminUnitIndex'])->name('admin.unit.index');
         Route::get('/create', [UnitController::class, 'AdminUnitCreate'])->name('admin.unit.create');
-        Route::post('/storeCategory', [UnitController::class, 'AdminUnitStore'])->name('admin.unit.store');
+        Route::post('/storeUnit', [UnitController::class, 'AdminUnitStore'])->name('admin.unit.store');
+        Route::post('/storeUnit2', [UnitController::class, 'AdminUnitStore2'])->name('admin.unit.store2');
         Route::get('/edit/{id}', [UnitController::class, 'AdminUnitEdit'])->name('admin.unit.edit');
         Route::put('/update/{id}', [UnitController::class, 'AdminUnitUpdate'])->name('admin.unit.update');
         Route::get('/delete/{id}', [UnitController::class, 'AdminUnitDestroy'])->name('admin.unit.destroy');

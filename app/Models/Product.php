@@ -8,6 +8,11 @@ class Product extends Model
 {
     protected $guarded = [];
 
+    // Relationship: A product belongs to a unit
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
     
     public function category()
     {

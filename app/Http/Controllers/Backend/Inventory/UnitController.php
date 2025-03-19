@@ -37,6 +37,26 @@ class UnitController extends Controller
 
         return redirect()->route('admin.unit.index')->with('success', 'Unit created successfully!');
     }
+
+    public function AdminUnitStore2(Request $request)
+    {
+        //dd($request->all());
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        // Store the category with the unique slug
+        $unit = Unit::create([
+            'name' => $request->name,
+            'status' => $request->status ?? 1, // Default to active if not provided
+        ]);
+
+        return response()->json([
+            'success'  => true,
+            'message'  => 'Unit added successfully.',
+            'unit' => $unit, // Send back the created supplier data
+        ]);
+    }
     
     public function AdminUnitEdit($id)
     {

@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Unit;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -21,8 +22,9 @@ class ProductController extends Controller
     {
         $pageTitle = 'Admin Product Create';
         $categories = Category::where('status',1)->latest()->get();
+        $units = Unit::where('status',1)->latest()->get();
         //dd($categories);
-        return view('backend.admin.inventory.product.create',compact('pageTitle','categories'));
+        return view('backend.admin.inventory.product.create',compact('pageTitle','categories', 'units'));
     }
 
     public function AdminProductStore(Request $request)
@@ -34,6 +36,7 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'category_id' => 'required',
             'quantity' => 'required|integer|min:1',
+            'unit_id' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -45,6 +48,7 @@ class ProductController extends Controller
             'quantity' => $request->quantity,
             'status' => $request->status ?? 1, // Default to active if not provided
             'category_id' => $request->category_id,
+            'unit_id' => $request->unit_id,
         ]);
 
         if ($request->hasFile('image')) {
@@ -66,8 +70,9 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $pageTitle = 'Admin Product Edit';
         $categories = Category::where('status',1)->latest()->get();
+        $units = Unit::where('status',1)->latest()->get();
         //dd($categories);
-        return view('backend.admin.inventory.product.edit',compact('pageTitle', 'product','categories'));
+        return view('backend.admin.inventory.product.edit',compact('pageTitle', 'product','categories', 'units'));
     }
 
     // public function AdminProductUpdate(Request $request, $id)
@@ -122,6 +127,7 @@ class ProductController extends Controller
             'status' => 'nullable|boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
             'category_id' => 'required',
+            'unit_id' => 'required',
         ]);
 
         // Find the product by ID
@@ -151,6 +157,7 @@ class ProductController extends Controller
             'quantity' => $request->input('quantity', $product->quantity), // Keep existing quantity
             'status' => $request->has('status') ? $request->input('status') : $product->status, // Keep existing status
             'category_id' => $request->input('category_id'),
+            'unit_id' => $request->input('unit_id'),
         ]);
 
         // Redirect back to the product index with a success message

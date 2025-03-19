@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Branch;
-use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
-use Illuminate\Support\Arr;
+use Carbon\Carbon;
+use App\Models\Branch;
 use Illuminate\View\View;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;
-use Carbon\Carbon;
-use Auth;
 
 class BranchController extends Controller
 {
@@ -59,6 +59,31 @@ class BranchController extends Controller
         ]);
 
         return redirect()->route('branch.index')->with('success', 'Branch created successfully.');
+    }
+
+    public function store2(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'location' => 'nullable|string',
+        ]);
+
+        // Create the branch record
+        $branch = Branch::create([
+            'name'          => $request->name,
+            'location'      => $request->location,
+            'description'   => $request->description,
+            'status'        => $request->status,
+            'created_by'    => Auth::user()->id,
+        ]);
+
+        //return redirect()->route('admin.supplier.index')->with('success', 'Supplier added successfully.');
+        return response()->json([
+            'success'  => true,
+            'message'  => 'Brunch added successfully.',
+            'branch' => $branch, // Send back the created supplier data
+        ]);
+        
     }
 
     /**
