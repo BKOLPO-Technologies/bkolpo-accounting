@@ -21,27 +21,133 @@
             Date: {{ \Carbon\Carbon::parse($purchase->invoice_date)->format('d F Y') }}
         </div>
     </div>
+
     <br>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Unit Price</th>
-                    <th>Quantity</th>
-                    <th>Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($purchase->products as $product)
+
+    <!-- Purchase Details -->
+    <div style="border: 1px solid #dbdbdb;">
+        <h4 class="text-center mt-2 mb-3" style="
+            text-decoration: underline; 
+            text-decoration-color: #3498db; /* Change underline color */
+            text-decoration-thickness: 3px; /* Adjust underline thickness */
+            text-decoration-skip-ink: auto; /* Ensures the underline doesn't go through descenders like 'g', 'j' */
+        ">
+            <strong>Purchase Details</strong>
+        </h4>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td>{{ $product->name }}</td>
-                        <td>{{ number_format($product->pivot->price, 2) }}</td>
-                        <td>{{ $product->pivot->quantity }}</td>
-                        <td>{{ number_format($product->pivot->price * $product->pivot->quantity, 2) }}</td>
+                        <th>Product</th>
+                        <th>Unit Price</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @php $total = 0; @endphp
+                    @foreach ($purchase->products as $product)
+                        @php
+                            $subtotal = $product->pivot->price * $product->pivot->quantity;
+                            $total += $subtotal;
+                        @endphp
+                        <tr>
+                            <td>{{ $product->name }}</td>
+                            <td>{{ number_format($product->pivot->price, 2) }}</td>
+                            <td>{{ $product->pivot->quantity }} ({{ $product->unit->name }})</td>
+                            <td>{{ number_format($subtotal, 2) }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3" class="text-right">Total Purchase Amount:</th>
+                        <th>{{ number_format($total, 2) }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
+
+    <br>
+
+    <!-- Payment Details -->
+    <div style="border: 1px solid #dbdbdb;">
+        <h4 class="text-center mt-2 mb-3" style="
+            text-decoration: underline; 
+            text-decoration-color: #3498db; /* Change underline color */
+            text-decoration-thickness: 3px; /* Adjust underline thickness */
+            text-decoration-skip-ink: auto; /* Ensures the underline doesn't go through descenders like 'g', 'j' */
+        ">
+            <strong>Payment Details</strong>
+        </h4>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Payment Date</th>
+                        <th>Payment Method</th>
+                        <th>Bank Account No</th>
+                        <th>Cheque No</th>
+                        <th>Pay Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php $totalPayment = 0; @endphp
+                    @foreach ($payments as $payment)
+                        @php
+                            $subtotalPayment = $payment->pay_amount;
+                            $totalPayment += $subtotalPayment;
+                        @endphp
+                        <tr>
+                            <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</td>
+                            <td>{{ $payment->payment_method }}</td>
+                            <td>{{ $payment->bank_account_no ?? '-' }}</td>
+                            <td>{{ $payment->cheque_no ?? '-' }}</td>
+                            <td>{{ number_format($payment->pay_amount, 2) }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="4" class="text-right">Total Paid Amount:</th>
+                        <th>{{ number_format($totalPayment, 2) }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <br>
+
+    <!-- Summary Calculation -->
+    <div style="border: 1px solid #dbdbdb;">
+        <h4 class="text-center mt-2 mb-3" style="
+            text-decoration: underline; 
+            text-decoration-color: #3498db; /* Change underline color */
+            text-decoration-thickness: 3px; /* Adjust underline thickness */
+            text-decoration-skip-ink: auto; /* Ensures the underline doesn't go through descenders like 'g', 'j' */
+        ">
+            <strong>Summary</strong>
+        </h4>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>Total Purchase Amount:</th>
+                        <td>{{ number_format($total, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Paid Amount:</th>
+                        <td>{{ number_format($totalPayment, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Payable Amount:</th>
+                        <td><strong>{{ number_format($total - $totalPayment, 2) }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>

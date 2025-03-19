@@ -214,7 +214,9 @@ class PurchaseController extends Controller
             ->with(['products', 'supplier'])
             ->first();
 
-        return view('backend.admin.inventory.purchase.view_modal_part', compact('purchase'));
+        $payments = Payment::where('invoice_no', $purchase->invoice_no)->get();
+
+        return view('backend.admin.inventory.purchase.view_modal_part', compact('purchase', 'payments'));
     }
 
 
