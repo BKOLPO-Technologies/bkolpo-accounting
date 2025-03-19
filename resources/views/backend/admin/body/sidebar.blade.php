@@ -640,10 +640,22 @@
                 <li class="nav-item">
                   <a href="{{ route('company-information.index') }}" class="nav-link {{ Route::is('company-information.index') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Company Information</p> 
+                      <p>Configuration</p> 
                   </a>
                 </li>
                 @endcan
+                <li class="nav-item">
+                  <a href="{{ route('company-information.import') }}" class="nav-link {{ Route::is('company-information.import') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Products Category</p> 
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('company-information.import') }}" class="nav-link {{ Route::is('company-information.import') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Products Unit</p> 
+                  </a>
+                </li>
                 <li class="nav-item">
                   <a href="{{ route('company-information.import') }}" class="nav-link {{ Route::is('company-information.import') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
