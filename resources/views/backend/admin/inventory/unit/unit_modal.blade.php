@@ -32,7 +32,7 @@
                         <i class="fas fa-times"></i> Close
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Save Branch
+                        <i class="fas fa-save"></i> Save Unit
                     </button>
                 </div>
             </form>
