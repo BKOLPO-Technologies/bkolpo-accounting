@@ -1,7 +1,7 @@
 <!-- Purchase Details Modal -->
 <div class="modal fade" id="purchaseDetailsModal" tabindex="-1" aria-labelledby="purchaseDetailsModalLabel" 
      data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="purchaseDetailsModalLabel">Purchase Details</h5>
