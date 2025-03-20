@@ -309,6 +309,8 @@ class CompanyController extends Controller
                             'created_by' => Auth::user()->id,
                         ]);
                     }
+                    
+                    // dd($first_Liabilities);
 
                     // 🔹 Update or Create Capital Account Ledger
                     $capitalLedger = Ledger::updateOrCreate(
@@ -320,22 +322,23 @@ class CompanyController extends Controller
                     );
 
                     //Log::info('Here');
-                     // 🔹 LedgerGroupSubgroupLedger Table Entry
-                     $existingEntry = LedgerGroupSubgroupLedger::where('group_id', $ledgerGroup->id)
-                        ->where('sub_group_id', $ledgerSubGroup->id)
+                    // 🔹 LedgerGroupSubgroupLedger Table Entry
+                    $existingEntry = LedgerGroupSubgroupLedger::where('group_id', $first_Liabilities->id)
+                        // ->where('sub_group_id', $ledgerSubGroup->id)
                         ->where('ledger_id', $capitalLedger->id)
                         ->first(); // First entry found with the same group_id, sub_group_id, and ledger_id
- 
-                     if (!$existingEntry) {
-                         // Only create if no existing entry found
-                         LedgerGroupSubgroupLedger::create([
-                             'group_id'     => $first_Liabilities->id,
-                             'sub_group_id' => $ledgerSubGroup->id,
-                             'ledger_id'    => $capitalLedger->id,
-                             'created_at'   => now(),
-                             'updated_at'   => now(),
-                         ]);
-                     }
+                    // dd($existingEntry);
+
+                    if (!$existingEntry) {
+                        // Only create if no existing entry found
+                        LedgerGroupSubgroupLedger::create([
+                            'group_id'     => $first_Liabilitiescreate->id,
+                            // 'sub_group_id' => $ledgerSubGroup->id,
+                            'ledger_id'    => $capitalLedger->id,
+                            'created_at'   => now(),
+                            'updated_at'   => now(),
+                        ]);
+                    }
 
                     
                     // 🔹 Journal Voucher Entry for Capital Account
