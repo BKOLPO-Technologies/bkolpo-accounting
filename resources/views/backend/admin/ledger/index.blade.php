@@ -195,10 +195,10 @@
                                                                 <th>{{ bdt() }} {{ number_format($totalCredit, 2) }}</th>
                                                             </tr>
                                                             <!-- Opening Balance -->
-                                                            <tr>
+                                                            {{-- <tr>
                                                                 <th colspan="5" class="text-right">Opening Balance:</th>
                                                                 <th colspan="2">{{ bdt() }} {{ number_format($ledger->opening_balance, 2) }}</th>
-                                                            </tr>
+                                                            </tr> --}}
 
                                                             <!-- Current Balance -->
                                                             <tr>
