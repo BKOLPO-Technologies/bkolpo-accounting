@@ -3,6 +3,7 @@
 use Rakibhstu\Banglanumber\NumberToBangla;
 
 use App\Models\JournalVoucherDetail;
+use App\Models\Company;
 use App\Models\CompanyInformation;
 
 function journalvoucher()
@@ -60,6 +61,12 @@ if (!function_exists('bdt')) {
     }
 }
 
+if (!function_exists('get_company')) {
+    function get_company()
+    {
+        return Company::first();
+    }
+}
 
 
 if (!function_exists('get_company_info')) {
@@ -68,5 +75,7 @@ if (!function_exists('get_company_info')) {
         return CompanyInformation::first();
     }
 }
+
+
 
 

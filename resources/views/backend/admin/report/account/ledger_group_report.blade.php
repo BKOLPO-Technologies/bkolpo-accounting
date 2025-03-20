@@ -55,7 +55,7 @@
 
                             <!-- Ledger Balance Table -->
                             <div class="card-header text-center mb-3">
-                                <h2 class="mb-1">{{ config('app.name') }}</h2> 
+                                <h2 class="mb-1">{{ get_company()->name }}</h2> 
                                 <p class="mb-0"><strong>Ledger Group Report</strong></p>
                                 <p class="mb-0">Date: {{ now()->format('d M, Y') }}</p>
                             </div>
