@@ -321,10 +321,21 @@ class CompanyController extends Controller
                         'created_by' => Auth::user()->id]
                     );
 
+                    // 🔹 Ledger Sub Group Create
+                    $ledgerSubGroup = LedgerSubGroup::where('subgroup_name','Current Liabilities')->first();
+                    // 🔹 Ledger Sub Group Create
+                    if(!$ledgerSubGroup){
+                        $ledgerSubGroup = LedgerSubGroup::create([
+                            'ledger_group_id' => $first_Liabilities->id,
+                            'subgroup_name'   => 'Current Liabilities',
+                            'created_by'      => Auth::user()->id,
+                        ]);
+                    }
+
                     //Log::info('Here');
                     // 🔹 LedgerGroupSubgroupLedger Table Entry
                     $existingEntry = LedgerGroupSubgroupLedger::where('group_id', $first_Liabilities->id)
-                        // ->where('sub_group_id', $ledgerSubGroup->id)
+                        ->where('sub_group_id', $ledgerSubGroup->id)
                         ->where('ledger_id', $capitalLedger->id)
                         ->first(); // First entry found with the same group_id, sub_group_id, and ledger_id
                     // dd($existingEntry);
@@ -333,7 +344,7 @@ class CompanyController extends Controller
                         // Only create if no existing entry found
                         LedgerGroupSubgroupLedger::create([
                             'group_id'     => $first_Liabilities->id,
-                            // 'sub_group_id' => $ledgerSubGroup->id,
+                            'sub_group_id' => $ledgerSubGroup->id,
                             'ledger_id'    => $capitalLedger->id,
                             'created_at'   => now(),
                             'updated_at'   => now(),
