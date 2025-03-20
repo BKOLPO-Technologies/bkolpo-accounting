@@ -18,16 +18,16 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PermissionTableSeeder::class,
             AdminSeeder::class,
-            CompanyInformationSeeder::class,
-            LedgerSeeder::class,
-            CategorySeeder::class,
-            UnitSeeder::class,
-            ProductSeeder::class,
-            ClientSeeder::class,
-            SupplierSeeder::class,
-            BranchSeeder::class,
-            CompanySeeder::class,
-            ProjectsSeeder::class,
+            //CompanyInformationSeeder::class,
+            //LedgerSeeder::class,
+            //CategorySeeder::class,
+            //UnitSeeder::class,
+            // ProductSeeder::class,
+            // ClientSeeder::class,
+            // SupplierSeeder::class,
+            // BranchSeeder::class,
+            // CompanySeeder::class,
+            // ProjectsSeeder::class,
             // Add other seeders here 
         ]);
 

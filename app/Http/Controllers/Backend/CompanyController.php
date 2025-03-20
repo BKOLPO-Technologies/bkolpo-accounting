@@ -16,6 +16,7 @@ use App\Models\JournalVoucher;
 use App\Models\LedgerSubGroup;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\JournalVoucherDetail;
 use Illuminate\Support\Facades\Auth;
@@ -160,6 +161,8 @@ class CompanyController extends Controller
                             ]
                         );
                     }
+
+                    
             
                     // 🔹 LedgerGroupSubgroupLedger Table Entry
                     $existingEntry = LedgerGroupSubgroupLedger::where('group_id', $ledgerGroup->id)
@@ -177,6 +180,8 @@ class CompanyController extends Controller
                             'updated_at'   => now(),
                         ]);
                     }
+
+                    
 
                     // // 🔹 Determine Debit or Credit based on Type
                     // $openingBalance = $request->ob[$key] ?? 0;
@@ -264,7 +269,7 @@ class CompanyController extends Controller
                             'created_by'      => Auth::user()->id,
                         ]);
                     }
-
+                    
                     // 🔹 Check if Liability Ledger Exists, Otherwise Create
                     $liabilityLedger = Ledger::where('name', $request->ledger[$key])->first();
                     if ($liabilityLedger) {
@@ -297,6 +302,13 @@ class CompanyController extends Controller
                     );
 
                     $first_Liabilities = LedgerGroup::where('group_name','Liabilities')->first();
+                    if (!$first_Liabilities) {
+                        $first_Liabilities = LedgerGroup::create([
+                            'company_id' => $company->id,
+                            'group_name' => "Liabilities",
+                            'created_by' => Auth::user()->id,
+                        ]);
+                    }
 
                     // 🔹 Update or Create Capital Account Ledger
                     $capitalLedger = Ledger::updateOrCreate(
@@ -307,16 +319,25 @@ class CompanyController extends Controller
                         'created_by' => Auth::user()->id]
                     );
 
+                    //Log::info('Here');
+                     // 🔹 LedgerGroupSubgroupLedger Table Entry
+                     $existingEntry = LedgerGroupSubgroupLedger::where('group_id', $ledgerGroup->id)
+                        ->where('sub_group_id', $ledgerSubGroup->id)
+                        ->where('ledger_id', $capitalLedger->id)
+                        ->first(); // First entry found with the same group_id, sub_group_id, and ledger_id
+ 
+                     if (!$existingEntry) {
+                         // Only create if no existing entry found
+                         LedgerGroupSubgroupLedger::create([
+                             'group_id'     => $first_Liabilities->id,
+                             'sub_group_id' => $ledgerSubGroup->id,
+                             'ledger_id'    => $capitalLedger->id,
+                             'created_at'   => now(),
+                             'updated_at'   => now(),
+                         ]);
+                     }
 
-                    // 🔹 LedgerGroupSubgroupLedger Table Entry
-                    LedgerGroupSubgroupLedger::create([
-                        'group_id'     => $first_Liabilities->id,
-                        'sub_group_id' => $ledgerSubGroup->id,
-                        'ledger_id'    => $capitalLedger->id,
-                        'created_at'   => now(),
-                        'updated_at'   => now(),
-                    ]);
-
+                    
                     // 🔹 Journal Voucher Entry for Capital Account
                     JournalVoucherDetail::updateOrCreate(
                         [
@@ -341,6 +362,7 @@ class CompanyController extends Controller
             return redirect()->route('company.index')->with('success', 'Company created successfully.');
         } catch (\Exception $e) {
             DB::rollBack(); // 🔹 কোনো সমস্যা হলে রোলব্যাক
+            
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
