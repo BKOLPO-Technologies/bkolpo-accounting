@@ -41,7 +41,7 @@
                                             <th>Date</th>
                                             <th>Name</th>
                                             <th>Group Name</th> 
-                                            {{-- <th>Opening Balance</th> --}}
+                                            <th>Opening Balance</th>
                                             <th>DR</th>
                                             <th>CR</th>
                                             <th>Current DR</th>
@@ -73,27 +73,27 @@
                                                         N/A
                                                     @endif
                                                 </td>
-                                                {{-- <td class="font-weight-bolder">
+                                                <td class="font-weight-bolder">
                                                     {{ bdt() }} {{ number_format($ledger->opening_balance, 2) }}
                                                     @php
                                                         $totalOpeningDr += $ledger->opening_balance;
                                                     @endphp
-                                                </td> --}}
+                                                </td>
                                                 <td class="font-weight-bolder">{{ bdt() }} {{ number_format($ledger->ledgerSums['debit'], 2) }}</td>  
                                                 <td class="font-weight-bolder">{{ bdt() }} {{ number_format($ledger->ledgerSums['credit'], 2) }}</td>
                                                 <!-- <td>{{ bdt() }} {{ number_format($ledger->debit + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit'], 2) }}</td> -->
                                                 <td class="font-weight-bolder">
                                                     {{ bdt() }} {{ number_format(
                                                         ($ledger->ob_type == 'debit') 
-                                                            ? ($ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit']) 
-                                                            : ($ledger->ledgerSums['credit'] + $ledger->ledgerSums['debit']),
+                                                            ? ($ledger->opening_balance + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit']) 
+                                                            : ($ledger->opening_balance - $ledger->ledgerSums['credit'] + $ledger->ledgerSums['debit']),
                                                         2
                                                     ) }}
                                                     @php
                                                         // বর্তমান ডেবিট টোটালে যোগ করা
                                                         $totalCurrentDr += ($ledger->ob_type == 'debit') 
-                                                            ? ($ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit']) 
-                                                            : ($ledger->ledgerSums['credit'] + $ledger->ledgerSums['debit']);
+                                                            ? ($ledger->opening_balance + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit']) 
+                                                            : ($ledger->opening_balance - $ledger->ledgerSums['credit'] + $ledger->ledgerSums['debit']);
                                                     @endphp
                                                 </td>
                                                 {{-- <td>
@@ -204,7 +204,7 @@
                                                             <tr>
                                                                 <th colspan="5" class="text-right">Current Balance:</th>
                                                                 <th colspan="2">
-                                                                    {{ bdt() }} {{ number_format($totalDebit - $totalCredit, 2) }}
+                                                                    {{ bdt() }} {{ number_format($openingBalance + $totalDebit - $totalCredit, 2) }}
                                                                 </th>
                                                             </tr>
                                                         </tfoot>

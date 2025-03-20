@@ -162,13 +162,21 @@ class CompanyController extends Controller
                     }
             
                     // 🔹 LedgerGroupSubgroupLedger Table Entry
-                    LedgerGroupSubgroupLedger::create([
-                        'group_id'     => $ledgerGroup->id,
-                        'sub_group_id' => $ledgerSubGroup->id,
-                        'ledger_id'    => $ledger->id,
-                        'created_at'   => now(),
-                        'updated_at'   => now(),
-                    ]);
+                    $existingEntry = LedgerGroupSubgroupLedger::where('group_id', $ledgerGroup->id)
+                    ->where('sub_group_id', $ledgerSubGroup->id)
+                    ->where('ledger_id', $ledger->id)
+                    ->first(); // First entry found with the same group_id, sub_group_id, and ledger_id
+
+                    if (!$existingEntry) {
+                        // Only create if no existing entry found
+                        LedgerGroupSubgroupLedger::create([
+                            'group_id'     => $ledgerGroup->id,
+                            'sub_group_id' => $ledgerSubGroup->id,
+                            'ledger_id'    => $ledger->id,
+                            'created_at'   => now(),
+                            'updated_at'   => now(),
+                        ]);
+                    }
 
                     // // 🔹 Determine Debit or Credit based on Type
                     // $openingBalance = $request->ob[$key] ?? 0;
@@ -288,6 +296,8 @@ class CompanyController extends Controller
                         ]
                     );
 
+                    $first_Liabilities = LedgerGroup::where('group_name','Liabilities')->first();
+
                     // 🔹 Update or Create Capital Account Ledger
                     $capitalLedger = Ledger::updateOrCreate(
                         ['name' => 'Capital Account'],
@@ -300,7 +310,7 @@ class CompanyController extends Controller
 
                     // 🔹 LedgerGroupSubgroupLedger Table Entry
                     LedgerGroupSubgroupLedger::create([
-                        'group_id'     => $ledgerGroup->id,
+                        'group_id'     => $first_Liabilities->id,
                         'sub_group_id' => $ledgerSubGroup->id,
                         'ledger_id'    => $capitalLedger->id,
                         'created_at'   => now(),
