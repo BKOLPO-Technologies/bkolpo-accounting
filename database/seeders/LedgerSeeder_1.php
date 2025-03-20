@@ -23,60 +23,46 @@ class LedgerSeeder extends Seeder
 
         // 🔹 Ledger Groups & Sub Groups
         $groups = [
-            'Asset' => [
-                'Cash In Hand' => ['Petty Cash'],
-                'Current Asset' => [
-                    'Accounts Receivable',
-                    'Office Equipment Furniture and Others',
-                    'Brac Bank A/C -2071145530001',
-                    'Al Arafah Bank A/C -',
-                ],
-            ],
-            'Liabilities' => [
-                'Current Liabilities' => [
-                    'Accounts Payable',
-                    'Taxes Payable',
-                    'Income Tax Payable',
-                    'Unearned Revenue',
-                    'Capital Account',
-                ],
+            'Assets' => [
+                'Current Assets' => ['Cash', 'Bank', 'Accounts Receivable'],
+                'Bank Accounts' => [],
+                'Cash-in-Hand' => [],
+                'Deposits (Asset)' => [],
+                'Loans & Advances (Asset)' => [],
+                'Stock-in-Hand' => [],
+                'Sundry Debtors' => [],
+                'Fixed Assets' => [],
+                'Investments' => [],
             ],
             'Income' => [
-                'Sales Account' => [
-                    'Discounts',
-                    'Sales',
-                ],
+                'Direct Incomes' => [],
+                'Indirect Incomes' => [],
+                'Sales Accounts' => ['Sales'],
             ],
-            'Expense' => [
-                'Indirect Expense' => [
-                    'Cost of Goods Sold',
-                    'Cost of Billed Expenses',
-                    'Cost of Shipping & Handling',
-                    'Advertising',
-                    'Employee Benefits',
-                    'Accident Insurance',
+            'Expenses' => [
+                'Direct Expenses' => ['Purchases', 'Salary'],
+                'Indirect Expenses' => [
+                    'Travel Allowance',
+                    'Daily Allowance',
+                    'Office Maintenance',
                     'Entertainment',
-                    'Office Expenses & Postage',
-                    'Printing',
-                    'Shipping & Couriers',
-                    'Stationery',
-                    'Other Expenses',
-                    'Bank Fees',
-                    'Business Insurance',
-                    'Commissions',
-                    'Repairs & Maintenance',
-                    'Labour Wages',
-                    'Salary',
-                    'Legal Fees',
-                    'Rent or Lease',
-                    'Taxi & Parking',
-                    'Uncategorized Expenses',
-                    'Utilities',
-                    'Mobile Phone Bill',
-                    'Sales Taxes Paid',
+                    'Repair & Maintenance',
+                    'CEO Withdraw'
                 ],
+                'Purchases Accounts' => [],
             ],
-        ];        
+            'Liabilities' => [
+                'Capital Account' => [],
+                'Current Liabilities' => ['Accounts Payable', 'Banking Payable', 'GPH Ispat Ltd'],
+                'Duties & Taxes' => [],
+                'Provisions' => ['Salaries Payable'],
+                'Sundry Creditors' => [],
+                'Loans (Liability)' => [],
+                'Secured Loans' => [],
+                'Unsecured Loans' => [],
+                'Profit & Loss A/c' => [],
+            ],
+        ];
         
 
         // 🔸 Insert Groups, Sub Groups & Ledgers
