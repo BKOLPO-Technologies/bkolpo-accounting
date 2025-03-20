@@ -120,7 +120,7 @@ class CompanyController extends Controller
                             'created_by' => Auth::user()->id,
                         ]);
                     }
-
+            
                     // 🔹 Ledger Sub Group Create
                     $ledgerSubGroup = LedgerSubGroup::where('subgroup_name', $request->sub[$key])->first();
                     // 🔹 Ledger Sub Group Create
@@ -131,7 +131,7 @@ class CompanyController extends Controller
                             'created_by'      => Auth::user()->id,
                         ]);
                     }
-
+            
                     // 🔹 Ledger  Cash Create
                     $ledger = Ledger::where('name', $request->ledger[$key]) // Match the ledger name with request
                         ->first();
@@ -162,12 +162,14 @@ class CompanyController extends Controller
                         );
                     }
 
+                    
+            
                     // 🔹 LedgerGroupSubgroupLedger Table Entry
                     $existingEntry = LedgerGroupSubgroupLedger::where('group_id', $ledgerGroup->id)
-                        ->where('sub_group_id', $ledgerSubGroup->id)
-                        ->where('ledger_id', $ledger->id)
-                        ->first(); // First entry found with the same group_id, sub_group_id, and ledger_id
- 
+                    ->where('sub_group_id', $ledgerSubGroup->id)
+                    ->where('ledger_id', $ledger->id)
+                    ->first(); // First entry found with the same group_id, sub_group_id, and ledger_id
+
                     if (!$existingEntry) {
                         // Only create if no existing entry found
                         LedgerGroupSubgroupLedger::create([
@@ -179,6 +181,26 @@ class CompanyController extends Controller
                         ]);
                     }
 
+                    
+
+                    // // 🔹 Determine Debit or Credit based on Type
+                    // $openingBalance = $request->ob[$key] ?? 0;
+                    // $debit  = ($type == 'Asset') ? $openingBalance : 0;
+                    // $credit = ($type == 'Liability') ? $openingBalance : 0;
+
+                    // // 🔹 Journal Entry 
+                    // JournalVoucherDetail::create([
+                    //     'journal_voucher_id' => $journalVoucher->id,
+                    //     'ledger_id'          => $ledger->id,
+                    //     'reference_no'       => "REF-" . rand(100000, 999999),
+                    //     'description'        => 'Opening Balance Entry',
+                    //     'debit'              => $debit,
+                    //     'credit'             => $credit,
+                    //     'created_at'         => $lastMonthLastDate,
+                    //     'updated_at'         => $lastMonthLastDate,
+                    // ]);
+
+                    // 🔹 Determine Debit and Credit Amounts based on Type
                     $openingBalance = $request->ob[$key] ?? 0;
 
                     if ($type == 'Asset') {
@@ -191,16 +213,87 @@ class CompanyController extends Controller
                         $debit = 0;
                         $credit = 0;
                     }
-                    
-                    // Type Asset/Liability //
 
-                    // 🔹 Journal Voucher Entry for Asset First Entry
+                    // 🔹 Check if Asset Group Exists, Otherwise Create
+                    $assetGroup = LedgerGroup::where('group_name',$request->group[$key])->first();
+                    if (!$assetGroup) {
+                        $assetGroup = LedgerGroup::create([
+                            'group_name' => 'Assets',
+                            'company_id' => $company->id,
+                            'created_by' => Auth::user()->id
+                        ]);
+                    }
+
+                    // 🔹 Check if Liability Group Exists, Otherwise Create
+                    $liabilityGroup = LedgerGroup::where('group_name',$request->group[$key])->first();
+                    if (!$liabilityGroup) {
+                        $liabilityGroup = LedgerGroup::create([
+                            'group_name' => 'Liabilities',
+                            'company_id' => $company->id,
+                            'created_by' => Auth::user()->id
+                        ]);
+                    }
+
+                    // 🔹 Check if Asset Ledger Cash Exists, Otherwise Create
+                    $assetLedger = Ledger::where('name', $request->ledger[$key]) // Match the ledger name with request
+                    ->first();
+                    if ($assetLedger) {
+                        $assetLedger->update([
+                            'opening_balance' => $openingBalance,
+                            'ob_type'         => 'debit',
+                        ]);
+                    }else {
+                        $assetLedger = Ledger::create([
+                            'name'            => 'Cash',
+                            'group_id'        => $assetGroup->id,
+                            'opening_balance' => $openingBalance,
+                            'ob_type'         => 'debit',
+                            'created_by'      => Auth::user()->id,
+                        ]);
+                    }
+
+                    // 🔹 Check if Asset Ledger Bank Exists, Otherwise Create
+                    $assetLedger = Ledger::where('name', $request->ledger[$key]) // Match the ledger name with request
+                    ->first();
+                    if ($assetLedger) {
+                        $assetLedger->update([
+                            'opening_balance' => $openingBalance,
+                            'ob_type'         => 'debit',
+                        ]);
+                    }else {
+                        $assetLedger = Ledger::create([
+                            'name'            => 'Bank',
+                            'group_id'        => $assetGroup->id,
+                            'opening_balance' => $openingBalance,
+                            'ob_type'         => 'debit',
+                            'created_by'      => Auth::user()->id,
+                        ]);
+                    }
+                    
+                    // 🔹 Check if Liability Ledger Exists, Otherwise Create
+                    $liabilityLedger = Ledger::where('name', $request->ledger[$key])->first();
+                    if ($liabilityLedger) {
+                        $liabilityLedger->update([
+                            'opening_balance' => $openingBalance,
+                            'ob_type'         => $request->ob_type[$key] ?? 'credit',
+                        ]);
+                    } else {
+                        $liabilityLedger = Ledger::create([
+                            'name'            => $request->ledger[$key],
+                            'group_id'        => $liabilityGroup->id,
+                            'opening_balance' => $openingBalance,
+                            'ob_type'         => $request->ob_type[$key] ?? 'credit',
+                            'created_by'      => Auth::user()->id,
+                        ]);
+                    }
+
+                    // 🔹 Journal Voucher Entry for Asset
                     JournalVoucherDetail::create(
                         [
                             'journal_voucher_id' => $journalVoucher->id,
-                            'ledger_id'          => $ledger->id,
+                            'ledger_id'          => $assetLedger->id,
                             'reference_no'       => "REF-" . rand(100000, 999999),
-                            'description'        => 'Opening Balance Entry - Asset '. $ledger->name,
+                            'description'        => 'Opening Balance Entry - Asset',
                             'debit'              => $debit,
                             'credit'             => 0,
                             'created_at'         => $lastMonthLastDate,
@@ -208,7 +301,6 @@ class CompanyController extends Controller
                         ]
                     );
 
-                    // start capital account er khetre entry //
                     $first_Liabilities = LedgerGroup::where('group_name','Liabilities')->first();
                     if (!$first_Liabilities) {
                         $first_Liabilities = LedgerGroup::create([
@@ -217,17 +309,17 @@ class CompanyController extends Controller
                             'created_by' => Auth::user()->id,
                         ]);
                     }
+                    
+                    // dd($first_Liabilities);
 
-                    $capitalLedger = Ledger::where('name','Capital Account')->first();
-                    if (!$capitalLedger) {
-                        $capitalLedger = Ledger::create([
-                            'name' => 'Capital Account',
-                            'group_id' => $first_Liabilities->id,
-                            'opening_balance' => $openingBalance,
-                            'ob_type' => 'credit',
-                            'created_by' => Auth::user()->id,
-                        ]);
-                    }
+                    // 🔹 Update or Create Capital Account Ledger
+                    $capitalLedger = Ledger::updateOrCreate(
+                        ['name' => 'Capital Account'],
+                        ['group_id' => $liabilityGroup->id,
+                        'opening_balance' => $openingBalance, 
+                        'ob_type' => 'credit',
+                        'created_by' => Auth::user()->id]
+                    );
 
                     // 🔹 Ledger Sub Group Create
                     $ledgerSubGroup = LedgerSubGroup::where('subgroup_name','Current Liabilities')->first();
@@ -240,6 +332,7 @@ class CompanyController extends Controller
                         ]);
                     }
 
+                    //Log::info('Here');
                     // 🔹 LedgerGroupSubgroupLedger Table Entry
                     $existingEntry = LedgerGroupSubgroupLedger::where('group_id', $first_Liabilities->id)
                         ->where('sub_group_id', $ledgerSubGroup->id)
@@ -258,6 +351,7 @@ class CompanyController extends Controller
                         ]);
                     }
 
+                    
                     // 🔹 Journal Voucher Entry for Capital Account
                     JournalVoucherDetail::updateOrCreate(
                         [
@@ -266,7 +360,7 @@ class CompanyController extends Controller
                             'journal_voucher_id' => $journalVoucher->id,
                             'ledger_id' => $capitalLedger->id,
                             'reference_no' => "REF-" . rand(100000, 999999),
-                            'description' => 'Opening Balance Entry - Capital Account'. $ledger->name,
+                            'description' => 'Opening Balance Entry - Capital Account',
                             'debit' => 0,
                             'credit' => $openingBalance,
                             'created_at' => $lastMonthLastDate,
@@ -274,9 +368,6 @@ class CompanyController extends Controller
                         ]
                         
                     );
-                    // end capital account er khetre entry //
-                    // 🔹 Journal Voucher Entry for Asset Second Entry
-            
                 }
             }
 
