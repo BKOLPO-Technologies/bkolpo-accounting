@@ -45,7 +45,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php $total = 0; @endphp
+                    @php 
+                        $total = 0; 
+                        // Fetch additional costs from the purchase table
+                        $transportCost = $purchase->transportCost ?? 0;
+                        $carryingCharge = $purchase->carryingCharge ?? 0;
+                        $vat = $purchase->vat ?? 0;
+                        $tax = $purchase->tax ?? 0;
+
+                        $totalVatTax = $transportCost + $carryingCharge + $vat + $tax;
+                    @endphp
                     @foreach ($purchase->products as $product)
                         @php
                             $subtotal = $product->pivot->price * $product->pivot->quantity;

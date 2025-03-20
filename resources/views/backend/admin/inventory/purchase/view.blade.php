@@ -141,6 +141,11 @@
                                         @php
                                             $subtotal = 0;
                                             $totalDiscount = 0;
+                                            // Fetch additional costs from the purchase table
+                                            $transportCost = $purchase->transportCost ?? 0;
+                                            $carryingCharge = $purchase->carryingCharge ?? 0;
+                                            $vat = $purchase->vat ?? 0;
+                                            $tax = $purchase->tax ?? 0;
                                         @endphp
                                         @foreach ($purchase->products as $product)
                                         @php
@@ -160,9 +165,9 @@
                                             <td>{{ $product->price }}</td>
                                             <td>{{ $product->pivot->price }}</td>
                                             <td>{{ $product->pivot->quantity }}</td>
-                                            <td>{{ number_format($product->pivot->price*$product->pivot->quantity, 2) }}</td> <!-- Total after discount -->
+                                            <td>{{ number_format(($product->pivot->price)*($product->pivot->quantity)+($transportCost)+($carryingCharge)+($vat)+($tax), 2) }}</td> <!-- Total after discount -->
                                         </tr>
-                                    @endforeach
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div>
