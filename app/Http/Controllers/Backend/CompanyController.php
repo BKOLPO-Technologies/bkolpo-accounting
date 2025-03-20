@@ -332,7 +332,7 @@ class CompanyController extends Controller
                     if (!$existingEntry) {
                         // Only create if no existing entry found
                         LedgerGroupSubgroupLedger::create([
-                            'group_id'     => $first_Liabilitiescreate->id,
+                            'group_id'     => $first_Liabilities->id,
                             // 'sub_group_id' => $ledgerSubGroup->id,
                             'ledger_id'    => $capitalLedger->id,
                             'created_at'   => now(),
