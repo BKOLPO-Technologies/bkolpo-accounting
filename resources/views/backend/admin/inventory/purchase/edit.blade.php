@@ -231,7 +231,8 @@
                                                         <input type="number" class="product-discount form-control" value="{{ $product->pivot->discount }}" step="1" oninput="updateRow(this)" />
                                                     </td>
 
-                                                    <td class="total">{{ number_format((($product->pivot->quantity * $product->price) - $product->pivot->discount), 2) }}</td>
+                                                    {{-- <td class="total">{{ number_format((($product->pivot->quantity * $product->price) - $product->pivot->discount), 2) }}</td> --}}
+                                                    <td class="total">{{ (($product->pivot->quantity * $product->price) - $product->pivot->discount) }}</td>
 
                                                     <td>
                                                         <button type="button" class="btn btn-danger btn-sm remove-product">
@@ -688,10 +689,12 @@
     // Calculate the subtotal, discount, and total
     function updateTotal() {
         let subtotal = 0;
+        //let subtotal = parseFloat($('#subtotal').val()) || 0;
 
         $('#product-table tbody tr').each(function() {
             //const rowSubtotal = parseFloat($(this).find('.subtotal').text());
             const rowSubtotal = parseFloat($(this).find('.total').text());
+            console.log(rowSubtotal);
             if (!isNaN(rowSubtotal)) {
                 subtotal += rowSubtotal;
             }
@@ -700,7 +703,8 @@
         // Get discount and handle invalid input
         const discount = parseFloat($('#discount').val());
         const validDiscount = isNaN(discount) ? 0 : discount;
-
+        
+        $('#subtotal').val(subtotal.toFixed(2));
         //const total = subtotal - validDiscount;
 
         let transportCost = parseFloat($('#transport_cost').val()) || 0;
@@ -711,7 +715,6 @@
         // // Calculate grand total
         let total = subtotal - validDiscount + transportCost + carryingCharge + vat + tax;
         
-        $('#subtotal').val(subtotal.toFixed(2));
         $('#total').val(total.toFixed(2));
     }
 </script>

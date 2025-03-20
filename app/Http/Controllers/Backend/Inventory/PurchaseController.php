@@ -303,6 +303,10 @@ class PurchaseController extends Controller
             $purchase->invoice_date = now()->format('Y-m-d');
             $purchase->subtotal = $validated['subtotal'];
             $purchase->discount = $validated['discount'];
+            $purchase->transport_cost = $request->transport_cost;
+            $purchase->carrying_charge = $request->carrying_charge;
+            $purchase->vat = $request->vat;
+            $purchase->tax = $request->tax;
             $purchase->total = $validated['total'];
             $purchase->description = $request->description;
             $purchase->category_id = $categoryId;
