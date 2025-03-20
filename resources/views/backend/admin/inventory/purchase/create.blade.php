@@ -189,24 +189,77 @@
                             </div>
 
                             <div class="d-flex justify-content-end flex-column align-items-end">
-                                <!-- Subtotal -->
-                                <div class="col-lg-3 col-md-6 mb-3">
+                                
+                                {{-- <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="subtotal">Subtotal</label>
                                     <input type="text" id="subtotal" name="subtotal" class="form-control" value="0" readonly />
                                 </div>
 
-                                <!-- Discount -->
+                                
                                 <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="discount">Discount</label>
                                     <input type="number" id="discount" name="discount" class="form-control" value="0" oninput="updateTotal()" />
                                 </div>
 
-                                <!-- Total -->
+                                
                                 <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="total">Total</label>
                                     <input type="number" min="0" id="total" name="total" class="form-control" value="0" readonly />
+                                </div> --}}
+
+                                <div class="col-12 col-lg-4 mb-2">
+                                    <div class="row w-100">
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="subtotal">Subtotal</label>
+                                            <input type="text" id="subtotal" name="subtotal" class="form-control" value="0" readonly />
+                                        </div>
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="total_discount">Total Discount</label>
+                                            {{-- <input type="number" id="total_discount" name="total_discount" class="form-control" placeholder="Enter Total Discount" /> --}}
+                                            <input type="number" id="discount" name="discount" class="form-control" value="0" oninput="updateTotal()" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row w-100">
+                                        <!-- Transport Cost -->
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="transport_cost">Transport Cost</label>
+                                            <input type="number" min="0" id="transport_cost" name="transport_cost" class="form-control" placeholder="Enter Transport Cost" value="0" oninput="updateTotal()"/>
+                                        </div>
+                                
+                                        <!-- Carrying/Labour Charge -->
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="carrying_charge">Carrying/Labour Charge</label>
+                                            <input type="number" min="0" id="carrying_charge" name="carrying_charge" class="form-control" placeholder="Enter Carrying Charge" value="0" oninput="updateTotal()" />
+                                        </div>
+                                
+                                        <!-- Vat -->
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="vat">Vat</label>
+                                            <input type="number" min="0" id="vat" name="vat" class="form-control" placeholder="Enter Vat" value="0" oninput="updateTotal()"/>
+                                        </div>
+                                
+                                        <!-- Tax -->
+                                        <div class="col-12 col-lg-6 mb-3">
+                                            <label for="tax">Tax</label>
+                                            <input type="number" min="0" id="tax" name="tax" class="form-control" placeholder="Enter Tax" value="0" oninput="updateTotal()"/>
+                                        </div>
+                                        
+                                        <!-- Grand Total -->
+                                        <div class="col-12 mb-2">
+                                            <label for="grand_total">Grand Total</label>
+                                            {{-- <input type="text" id="grand_total" name="grand_total" class="form-control" value="0" readonly /> --}}
+                                            <input type="number" min="0" id="total" name="total" class="form-control" value="0" readonly />
+                                        </div>
+                                    </div>
+
+
                                 </div>
-                            </div><hr>
+
+                            </div>
+                            
+                            <hr>
+
                             <!-- Description -->
                             <div class="col-lg-12 col-md-12 mb-3">
                                 <label for="description">Description</label>
@@ -376,46 +429,6 @@
         // Add the product to the hidden fields (if needed)
         addToHiddenFields(productId, 1, productPrice);
     });
-
-    // // Function to load products based on the selected category
-    // function loadProductsByCategory(categoryId) {
-    //     var $productSelect = $('#product');
-
-    //     // Clear the current product options and show loading message
-    //     $productSelect.empty();
-    //     $productSelect.append('<option value="">Loading products...</option>');
-
-    //     // Send an AJAX request to fetch the products for the selected category
-    //     $.ajax({
-    //         url: '/admin/product/products-by-category/' + categoryId,
-    //         method: 'GET',
-    //         success: function(response) {
-
-    //             console.log(response);
-
-    //             // Empty the select element and add the default "Select Product" option
-    //             $productSelect.empty();
-    //             $productSelect.append('<option value="">Select Product</option>');
-
-    //             if (response.length > 0) {
-    //                 // Append products to the select dropdown
-    //                 response.forEach(function(product) {
-    //                     let unitName = product.unit && product.unit.name ? product.unit.name : 'N/A'; // Handle missing unit
-    //                     $productSelect.append('<option value="' + product.id + '" data-id="' + product.id + '" data-name="' + product.name + '" data-price="' + product.price + '" data-unit="' + product.unitName + '">' + product.name + '</option>');
-    //                 });
-    //             } else {
-    //                 $productSelect.append('<option value="">No products found</option>');
-    //             }
-
-    //             // Refresh select2 after updating the options
-    //             $productSelect.trigger('change');
-    //         },
-    //         error: function() {
-    //             $productSelect.empty();
-    //             $productSelect.append('<option value="">Error fetching products</option>');
-    //         }
-    //     });
-    // }
 
     // Function to load products based on the selected category
     function loadProductsByCategory(categoryId) {
@@ -653,9 +666,18 @@
         const discount = parseFloat($('#discount').val());
         const validDiscount = isNaN(discount) ? 0 : discount;
 
-        const total = subtotal - validDiscount;
+        //const total = subtotal - validDiscount;
 
         $('#subtotal').val(subtotal.toFixed(2));
+
+        let transportCost = parseFloat($('#transport_cost').val()) || 0;
+        let carryingCharge = parseFloat($('#carrying_charge').val()) || 0;
+        let vat = parseFloat($('#vat').val()) || 0;
+        let tax = parseFloat($('#tax').val()) || 0;
+
+        // // Calculate grand total
+        let total = subtotal - validDiscount + transportCost + carryingCharge + vat + tax;
+
         $('#total').val(total.toFixed(2));
     }
 </script>

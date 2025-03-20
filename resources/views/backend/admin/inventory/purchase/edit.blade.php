@@ -210,9 +210,8 @@
                                                     <td class="col-3">{{ $product->name }}</td>
                                                     
                                                     <td class="col-2">
-
-                                                        <input type="number" class="price-input form-control" value="{{ number_format($product->pivot->price, 2) }}" step="1" data-product-id="{{ $product->id }}" oninput="updateRow(this)">
-
+                                                        <input type="number" class="price-input form-control" value="{{ $product->pivot->price }}" step="1" 
+                                                            data-product-id="{{ $product->id }}" oninput="updateRow(this)">
                                                     </td>
 
                                                     <td class="col-1">
@@ -227,10 +226,6 @@
                                                     <td class="subtotal">
                                                         {{ number_format($product->pivot->quantity * $product->price, 2) }}
                                                     </td>
-
-                                                    <!-- <td class="discount-col">
-                                                        <input type="number" class="product-discount form-control" value="{{ $product->pivot->discount }}" data-price="{{ $product->price }}" data-stock="{{ $product->quantity ?? 0 }}" min="1" max="100" oninput="updateRow(this)">
-                                                    </td> -->
 
                                                     <td>
                                                         <input type="number" class="product-discount form-control" value="{{ $product->pivot->discount }}" step="1" oninput="updateRow(this)" />
@@ -254,23 +249,64 @@
                             </div>
 
                             <div class="d-flex justify-content-end flex-column align-items-end">
-                                <!-- Subtotal -->
-                                <div class="col-lg-3 col-md-6 mb-3">
+                                
+                                {{-- <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="subtotal">Subtotal</label>
                                     <input type="text" id="subtotal" name="subtotal" class="form-control" value="{{ old('subtotal', $subtotal) }}" readonly />
                                 </div>
 
-                                <!-- Discount -->
                                 <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="discount">Discount</label>
                                     <input type="number" min="0" id="discount" name="discount" class="form-control" value="{{ old('discount', $purchase->discount ?? 0) }}" oninput="updateTotal()" />
                                 </div>
 
-                                <!-- Total -->
                                 <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="total">Total</label>
                                     <input type="text" id="total" name="total" class="form-control" value="{{ old('total', $subtotal - ($purchase->discount ?? 0)) }}" readonly />
+                                </div> --}}
+
+                                <div class="col-12 col-lg-4 mb-2">
+                                    <div class="row w-100">
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="subtotal">Subtotal</label>
+                                            <input type="text" id="subtotal" name="subtotal" class="form-control" value="{{ old('subtotal', $subtotal) }}" readonly />
+                                        </div>
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="total_discount">Total Discount</label>
+                                            <input type="number" id="discount" name="discount" class="form-control" value="{{ old('discount', $purchase->discount ?? 0) }}" oninput="updateTotal()" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row w-100">
+                                        
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="transport_cost">Transport Cost</label>
+                                            <input type="number" min="0" id="transport_cost" name="transport_cost" class="form-control" placeholder="Enter Transport Cost" value="{{ old('transport_cost', $purchase->transport_cost ?? 0) }}" oninput="updateTotal()"/>
+                                        </div>
+                                
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="carrying_charge">Carrying/Labour Charge</label>
+                                            <input type="number" min="0" id="carrying_charge" name="carrying_charge" class="form-control" placeholder="Enter Carrying Charge" value="{{ old('carrying_charge', $purchase->carrying_charge ?? 0) }}" oninput="updateTotal()" />
+                                        </div>
+                                
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="vat">Vat</label>
+                                            <input type="number" min="0" id="vat" name="vat" class="form-control" placeholder="Enter Vat" value="{{ old('vat', $purchase->vat ?? 0) }}" oninput="updateTotal()"/>
+                                        </div>
+                                
+                                        <div class="col-12 col-lg-6 mb-3">
+                                            <label for="tax">Tax</label>
+                                            <input type="number" min="0" id="tax" name="tax" class="form-control" placeholder="Enter Tax" value="{{ old('tax', $purchase->tax ?? 0) }}" oninput="updateTotal()"/>
+                                        </div>
+                                        
+                                        <div class="col-12 mb-2">
+                                            <label for="grand_total">Grand Total</label>
+                                            <input type="number" min="0" id="total" name="total" class="form-control" value="{{ old('total', $subtotal - ($purchase->discount ?? 0) + ($purchase->transport_cost ?? 0) + ($purchase->carrying_charge ?? 0) + ($purchase->vat ?? 0) + ($purchase->tax ?? 0)) }}" readonly />
+                                        </div>
+                                    </div>
+
                                 </div>
+
                             </div>
                             
                             <hr>
@@ -508,8 +544,6 @@
         // console.log("Updated prices:", $('#prices').val());
     }
 
-
-
     // Remove product from table and hidden fields
     $('#product-table').on('click', '.remove-product', function() {
         const row = $(this).closest('tr');
@@ -556,9 +590,6 @@
         // console.log("After Removal - quantities:", $('#quantities').val());
         // console.log("After Removal - prices:", $('#prices').val());
     }
-
-    
-
 
     // Update row subtotal when quantity changes
     function updateRow(input) {
@@ -654,8 +685,6 @@
         // console.log("Updated prices:", $('#prices').val());
     }
 
-
-
     // Calculate the subtotal, discount, and total
     function updateTotal() {
         let subtotal = 0;
@@ -672,8 +701,16 @@
         const discount = parseFloat($('#discount').val());
         const validDiscount = isNaN(discount) ? 0 : discount;
 
-        const total = subtotal - validDiscount;
+        //const total = subtotal - validDiscount;
 
+        let transportCost = parseFloat($('#transport_cost').val()) || 0;
+        let carryingCharge = parseFloat($('#carrying_charge').val()) || 0;
+        let vat = parseFloat($('#vat').val()) || 0;
+        let tax = parseFloat($('#tax').val()) || 0;
+
+        // // Calculate grand total
+        let total = subtotal - validDiscount + transportCost + carryingCharge + vat + tax;
+        
         $('#subtotal').val(subtotal.toFixed(2));
         $('#total').val(total.toFixed(2));
     }

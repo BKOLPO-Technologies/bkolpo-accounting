@@ -20,6 +20,10 @@ return new class extends Migration
             $table->date('invoice_date');
             $table->decimal('subtotal', 10, 2);
             $table->decimal('discount', 10, 2)->default(0);
+            $table->decimal('transport_cost', 10, 2)->default(0);
+            $table->decimal('carrying_charge', 10, 2)->default(0);
+            $table->decimal('vat', 10, 2)->default(0);
+            $table->decimal('tax', 10, 2)->default(0);
             $table->decimal('total', 10, 2);
 
             // $table->decimal('total_amount', 15, 2); // Total Purchases amount
