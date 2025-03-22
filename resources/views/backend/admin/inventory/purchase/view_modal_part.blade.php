@@ -48,16 +48,26 @@
                     @php 
                         $total = 0; 
                         // Fetch additional costs from the purchase table
-                        $transportCost = $purchase->transportCost ?? 0;
-                        $carryingCharge = $purchase->carryingCharge ?? 0;
+                        $transportCost = $purchase->transport_cost ?? 0;
+                        $carryingCharge = $purchase->carrying_charge ?? 0;
                         $vat = $purchase->vat ?? 0;
                         $tax = $purchase->tax ?? 0;
+                        $totalDiscount = $purchase->discount ?? 0;
 
-                        $totalVatTax = $transportCost + $carryingCharge + $vat + $tax;
+                        $totalVatTax = ($transportCost + $carryingCharge + $vat + $tax) - $totalDiscount;
+                        //Log::info("totalVatTax", $totalVatTax);
+                        \Log::info('totalVatTax:', [
+                                                    'total' => $totalVatTax, 
+                                                    'transportCost' => $transportCost,
+                                                    'carryingCharge' => $carryingCharge,
+                                                    'vat' => $vat,
+                                                    'tax' => $tax,
+                                                    'totalDiscount' => $totalDiscount,
+                                                ]);
                     @endphp
                     @foreach ($purchase->products as $product)
                         @php
-                            $subtotal = $product->pivot->price * $product->pivot->quantity;
+                            $subtotal = (($product->pivot->price * $product->pivot->quantity) - $product->pivot->discount) + $totalVatTax;
                             $total += $subtotal;
                         @endphp
                         <tr>
