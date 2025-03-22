@@ -168,7 +168,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Category</th>
-                                                    <th>Item</th>
+                                                    <th>Item Description</th>
                                                     <th>Price</th>
                                                     <th>Quantity</th>
                                                     <th>Unit</th>
@@ -380,11 +380,94 @@
 </script>
 
 <script>
-  $(document).ready(function () {
-    // Function to initialize select2 for new select elements
+$(document).ready(function () {
+    // Initialize select2 on document load
+    initializeSelect2();
+
     function initializeSelect2() {
-        $('.select2').select2(); // Initialize select2 for all select elements with 'select2' class
+        // Initialize select2 for all elements with 'select2' class
+        $('.select2').select2();
     }
+
+    // Function to load products based on the selected category
+    function loadProductsByCategory(categoryId, productSelect) {
+        productSelect.empty().append('<option value="">Loading products...</option>');
+
+        $.ajax({
+            url: '/admin/product/products-by-category/' + encodeURIComponent(categoryId), // Get products by category ID
+            method: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                productSelect.empty(); // Clear previous options
+                productSelect.append('<option value="">Select Product</option>'); // Default option
+
+                if (response && Array.isArray(response) && response.length > 0) {
+                    response.forEach(function (product) {
+                        let unitName = product.unit && product.unit.name ? product.unit.name : 'N/A'; // Handle missing unit
+
+                        productSelect.append(`
+                            <option value="${product.id}" 
+                                    data-id="${product.id}" 
+                                    data-name="${product.name}" 
+                                    data-price="${product.price}" 
+                                    data-unit="${unitName}">
+                                ${product.name}
+                            </option>
+                        `);
+                    });
+                } else {
+                    productSelect.append('<option value="">No products found</option>');
+                }
+
+                // Re-initialize select2 to reflect the updated options
+                productSelect.trigger('change');
+                initializeSelect2();  // Ensure select2 is reinitialized
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+                productSelect.empty().append('<option value="">Error fetching products</option>');
+            }
+        });
+    }
+
+    // When category is selected, load the corresponding products
+    $(document).on('change', '.category-select', function () {
+        var categoryId = $(this).val();
+        var productSelect = $(this).closest('tr').find('.product-select');
+
+        if (categoryId) {
+            loadProductsByCategory(categoryId, productSelect);
+        } else {
+            productSelect.empty().append('<option value="">Select Product</option>');
+        }
+    });
+
+    // When a product is selected, update the row fields
+    $(document).on('change', '.product-select', function () {
+        let selectedOption = $(this).find(':selected');
+        let productId = selectedOption.val();
+        let productPrice = selectedOption.data('price') || 0;
+        let productUnit = selectedOption.data('unit') || '';
+
+        if (productId) {
+            let row = $(this).closest('tr');
+
+            // Update fields in the row
+            row.find('.unit-price').val(productPrice);  // Set Sell Price
+            row.find('.quantity').val(1);  // Set default Quantity to 1
+            row.find('.subtotal').val(productPrice);  // Set Subtotal to price
+            row.find('.total').val(productPrice);  // Set Total to price
+            row.find('.unit-input').val(productUnit);  // Set Unit
+            row.find('.product-discount').val(0);  // Set default discount to 0
+
+            // Add product to hidden fields (hidden fields could be used for storing product details)
+            addToHiddenFields(productId, 1, productPrice, 0);
+        } else {
+            console.log("productId not found");
+        }
+
+        calculateTotal();  // Update overall total (you can define this function as needed)
+    });
 
     // Function to add/update selected product details in hidden fields
     function addToHiddenFields(productId, quantity, price, discount) {
@@ -415,86 +498,7 @@
         $('#discounts').val(discounts.join(','));
     }
 
-    // Function to load products based on the selected category
-    function loadProductsByCategory(categoryId, productSelect) {
-        // Clear current options and show loading message
-        productSelect.empty().append('<option value="">Loading products...</option>');
-
-        // Send an AJAX request to fetch the products for the selected category
-        $.ajax({
-            url: '/admin/product/products-by-category/' + encodeURIComponent(categoryId), // Prevent special character issues
-            method: 'GET',
-            dataType: 'json', // Ensure proper JSON parsing
-            success: function (response) {
-                // Empty the select element and add the default "Select Product" option
-                productSelect.empty().append('<option value="">Select Product</option>');
-
-                if (Array.isArray(response) && response.length > 0) {
-                    // Append products to the select dropdown
-                    response.forEach(function (product) {
-                        let unitName = product.unit && product.unit.name ? product.unit.name : 'N/A'; // Handle missing unit
-
-                        productSelect.append(`
-                            <option value="${product.id}" 
-                                    data-id="${product.id}" 
-                                    data-name="${product.name}" 
-                                    data-price="${product.price}" 
-                                    data-unit="${unitName}">
-                                ${product.name}
-                            </option>
-                        `);
-                    });
-                } else {
-                    productSelect.append('<option value="">No products found</option>');
-                }
-
-                // Refresh select2 after updating the options
-                productSelect.trigger('change');
-            },
-            error: function (xhr, status, error) {
-                console.error('AJAX Error:', status, error);
-                productSelect.empty().append('<option value="">Error fetching products</option>');
-            }
-        });
-    }
-
-    // When a category is selected, load products for that category in existing and new rows
-    $(document).on('change', '.category-select', function () {
-        var categoryId = $(this).val();
-        var productSelect = $(this).closest('tr').find('.product-select');
-        if (categoryId) {
-            loadProductsByCategory(categoryId, productSelect);  // Load products for the selected category
-        }
-    });
-
-    // Function to update row fields when product is selected
-    $(document).on('change', '.product-select', function () {
-        let selectedOption = $(this).find(':selected');
-        let productId = selectedOption.val();
-        let productPrice = selectedOption.data('price') || 0;
-        let productUnit = selectedOption.data('unit') || '';
-
-        if (productId) {
-            let row = $(this).closest('tr');
-
-            // Set values in the row
-            row.find('.unit-price').val(productPrice);  // Set Sell Price
-            row.find('.quantity').val(1);  // Set Quantity
-            row.find('.subtotal').val(productPrice);  // Subtotal initially
-            row.find('.total').val(productPrice);  // Total initially
-            row.find('.unit-input').val(productUnit);
-            row.find('.product-discount').val(0); // Set default discount to 0
-
-            // Add product to hidden fields
-            addToHiddenFields(productId, 1, productPrice, 0);
-        } else {
-            console.log("productId not found");
-        }
-
-        calculateTotal(); // Update overall total
-    });
-
-    // Function to add new row dynamically
+    // Add new row dynamically
     $(document).on('click', '.add-row', function () {
         let newRow = `
             <tr>
@@ -521,23 +525,23 @@
                     <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>`;
+
         $('#product-tbody').append(newRow);
         initializeSelect2();  // Reinitialize select2 for the new row
     });
 
-    // Initialize select2 for existing select elements
-    initializeSelect2();
-
-    // Remove row
+    // Function to remove row and update hidden fields
     $(document).on('click', '.remove-row', function () {
         let row = $(this).closest('tr');
         let productId = row.find('.product-select').val();
 
         row.remove(); // Remove row from DOM
         removeFromHiddenFields(productId); // Remove product from hidden fields
+        initializeSelect2();  // Reinitialize select2 for remaining rows
         calculateTotal(); // Update grand total
     });
 });
+
 
 </script>
 
