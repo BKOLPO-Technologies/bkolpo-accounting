@@ -47,27 +47,11 @@
                 <tbody>
                     @php 
                         $total = 0; 
-                        // Fetch additional costs from the purchase table
-                        $transportCost = $purchase->transport_cost ?? 0;
-                        $carryingCharge = $purchase->carrying_charge ?? 0;
-                        $vat = $purchase->vat ?? 0;
-                        $tax = $purchase->tax ?? 0;
-                        $totalDiscount = $purchase->discount ?? 0;
-
-                        $totalVatTax = ($transportCost + $carryingCharge + $vat + $tax) - $totalDiscount;
-                        //Log::info("totalVatTax", $totalVatTax);
-                        \Log::info('totalVatTax:', [
-                                                    'total' => $totalVatTax, 
-                                                    'transportCost' => $transportCost,
-                                                    'carryingCharge' => $carryingCharge,
-                                                    'vat' => $vat,
-                                                    'tax' => $tax,
-                                                    'totalDiscount' => $totalDiscount,
-                                                ]);
                     @endphp
+
                     @foreach ($purchase->products as $product)
                         @php
-                            $subtotal = (($product->pivot->price * $product->pivot->quantity) - $product->pivot->discount) + $totalVatTax;
+                            $subtotal = (($product->pivot->price * $product->pivot->quantity) - $product->pivot->discount);
                             $total += $subtotal;
                         @endphp
                         <tr>
@@ -77,16 +61,53 @@
                             <td>{{ number_format($subtotal, 2) }}</td>
                         </tr>
                     @endforeach
+
+                    @php
+                        // Fetch additional costs from the purchase table
+                        $transportCost = $purchase->transport_cost ?? 0;
+                        $carryingCharge = $purchase->carrying_charge ?? 0;
+                        $vat = $purchase->vat ?? 0;
+                        $tax = $purchase->tax ?? 0;
+                        $totalDiscount = $purchase->discount ?? 0;
+
+                        $totalVatTax = ($transportCost + $carryingCharge + $vat + $tax) - $totalDiscount;
+                        $totalTotal = $total + $totalVatTax;
+                    @endphp
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="3" class="text-right">Total Purchase Amount:</th>
+                        <th colspan="3" class="text-right">Subtotal:</th>
                         <th>{{ number_format($total, 2) }}</th>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="text-right">Transport Cost:</th>
+                        <th>{{ number_format($transportCost, 2) }}</th>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="text-right">Carrying Charge:</th>
+                        <th>{{ number_format($carryingCharge, 2) }}</th>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="text-right">VAT:</th>
+                        <th>{{ number_format($vat, 2) }}</th>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="text-right">Tax:</th>
+                        <th>{{ number_format($tax, 2) }}</th>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="text-right">Discount:</th>
+                        <th>-{{ number_format($totalDiscount, 2) }}</th>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="text-right">Total Purchase Amount:</th>
+                        <th>{{ number_format($totalTotal, 2) }}</th>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
+
 
     <br>
 
@@ -154,7 +175,7 @@
                 <tbody>
                     <tr>
                         <th>Total Purchase Amount:</th>
-                        <td>{{ number_format($total, 2) }}</td>
+                        <td>{{ number_format($totalTotal, 2) }}</td>
                     </tr>
                     <tr>
                         <th>Total Paid Amount:</th>
@@ -162,7 +183,7 @@
                     </tr>
                     <tr>
                         <th>Payable Amount:</th>
-                        <td><strong>{{ number_format($total - $totalPayment, 2) }}</strong></td>
+                        <td><strong>{{ number_format($totalTotal - $totalPayment, 2) }}</strong></td>
                     </tr>
                 </tbody>
             </table>
