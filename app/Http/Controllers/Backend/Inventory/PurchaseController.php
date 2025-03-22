@@ -52,52 +52,60 @@ class PurchaseController extends Controller
 
         // $invoice_no = 'BKOLPO-'. $randomNumber;
 
-        return view('backend.admin.inventory.purchase.create',compact('pageTitle', 'suppliers', 'products','categories','projects','invoice_no')); 
+        return view('backend.admin.inventory.purchase.create', compact(
+            'pageTitle', 
+            'suppliers', 
+            'products',
+            'categories',
+            'projects',
+            'invoice_no'
+        )); 
     }
 
     // purchase store
+
     public function AdminPurchaseStore(Request $request)
     {
-        //dd($request->all());
+        //Log::info('AdminPurchaseStore function started', ['request_data' => $request->all()]);
 
         // Validate the request data
         $validated = $request->validate([
             'supplier' => 'required|exists:suppliers,id',
             'invoice_no' => 'required|unique:purchases,invoice_no',
-            // 'invoice_date' => 'required|date',
             'subtotal' => 'required|numeric',
             'discount' => 'required|numeric',
             'total' => 'required|numeric',
             'product_ids' => 'required|not_in:',  // Ensure at least one product is selected
         ]);
 
-        // dd($validated);
+        //Log::info('Request validated successfully', ['validated_data' => $validated]);
 
         // Access product data from the request
-        $productIds = explode(',', $request->input('product_ids'));  // Array of product IDs
-        $quantities = explode(',', $request->input('quantities'));  // Array of quantities
-        $prices = explode(',', $request->input('prices'));  // Array of prices
-        $discounts = explode(',', $request->input('discounts'));  // Array of discounts
+        $productIds = explode(',', $request->input('product_ids')); 
+        $quantities = explode(',', $request->input('quantities')); 
+        $prices = explode(',', $request->input('prices')); 
+        $discounts = explode(',', $request->input('discounts')); 
+
+        // Log::info('Extracted product data', [
+        //     'productIds' => $productIds,
+        //     'quantities' => $quantities,
+        //     'prices' => $prices,
+        //     'discounts' => $discounts
+        // ]);
 
         // Check if at least one product is selected
         if (empty($productIds) || count($productIds) === 0 || $productIds[0] == '') {
-            // If no product is selected, return an error message
+            //Log::error('No product selected');
             return back()->with('error', 'At least one product must be selected.');
         }
 
         try {
-          
-            // Start the transaction
             DB::beginTransaction();
+            //Log::info('Transaction started');
 
-            if($request->category_id == 'all'){
-                $categoryId = null;
-            }else{
-                $categoryId = $request->category_id;
-            }
-        
+            $categoryId = $request->category_id == 'all' ? null : $request->category_id;
+            //Log::info('Category ID determined', ['categoryId' => $categoryId]);
 
-            // dd($categoryId);
             // Create a new purchase record
             $purchase = new Purchase();
             $purchase->supplier_id = $validated['supplier'];
@@ -115,89 +123,92 @@ class PurchaseController extends Controller
             $purchase->project_id = $request->project_id;
             $purchase->save();
 
-            //dd('ok');
-           
-        
+            //Log::info('Purchase record created', ['purchase_id' => $purchase->id]);
+
             // Loop through the product data and save it to the database
             foreach ($productIds as $index => $productId) {
                 $product = Product::find($productId);
+                if (!$product) {
+                    //Log::error("Product not found", ['productId' => $productId]);
+                    continue;
+                }
+
                 $quantity = $quantities[$index];
                 $price = $prices[$index];
-                $discount = $discounts[$index];
-        
+                $discount = $discounts[$index] ?? 0;
+
                 // Insert into purchase_product table
                 $purchaseProduct = new PurchaseProduct();
-                $purchaseProduct->purchase_id = $purchase->id; // Link to the purchase
-                $purchaseProduct->product_id = $productId; // Product ID
-                $purchaseProduct->quantity = $quantity; // Quantity
-                $purchaseProduct->price = $price; // Price
-                //$purchaseProduct->discount = $discount ?? 0; // Discount
-                $purchaseProduct->discount = !empty($discount) ? $discount : 0;
-                $purchaseProduct->save(); // Save the record
-            }
-            
-            // Step 2: Get purchase amount
-            $purchase_amount = $purchase->total ?? 0; // If purchase doesn't have amount, default to 0
+                $purchaseProduct->purchase_id = $purchase->id;
+                $purchaseProduct->product_id = $productId;
+                $purchaseProduct->quantity = $quantity;
+                $purchaseProduct->price = $price;
+                $purchaseProduct->discount = $discount;
+                $purchaseProduct->save();
 
-           
-            // Step 3: Retrieve Purchase ledger
+                // Log::info('Product added to purchase', [
+                //     'purchase_id' => $purchase->id,
+                //     'product_id' => $productId,
+                //     'quantity' => $quantity,
+                //     'price' => $price,
+                //     'discount' => $discount
+                // ]);
+            }
+
+            $purchase_amount = $purchase->total ?? 0;
+            //Log::info('Purchase amount calculated', ['purchase_amount' => $purchase_amount]);
+
             $purchasesLedger = Ledger::where('name', 'Purchases')->first();
             $payableLedger = Ledger::where('name', 'Accounts Payable')->first();
 
-            // dd($purchasesLedger,$payableLedger);
-
             if ($purchasesLedger && $payableLedger) {
-                // Check if a Journal Voucher exists for this purchase transaction
                 $journalVoucher = JournalVoucher::where('transaction_code', $purchase->invoice_no)->first();
 
                 if (!$journalVoucher) {
-                    // Create a new Journal Voucher for Purchase Invoice
                     $journalVoucher = JournalVoucher::create([
-                        'transaction_code'  => $purchase->invoice_no,
-                        'transaction_date'  => now()->format('Y-m-d'),
-                        'description'       => 'Purchase Invoice Recorded - Supplier',
-                        'status'            => 1, // Pending status
+                        'transaction_code' => $purchase->invoice_no,
+                        'transaction_date' => now()->format('Y-m-d'),
+                        'description' => 'Purchase Invoice Recorded - Supplier',
+                        'status' => 1, 
                     ]);
                 }
 
                 // Purchase -> Purchases Account (Debit Entry)
                 JournalVoucherDetail::create([
                     'journal_voucher_id' => $journalVoucher->id,
-                    'ledger_id'          => $purchasesLedger->id, // Purchases Ledger
-                    'reference_no'       => $purchase->invoice_no ?? '',
-                    'description'        => 'Purchased Goods from Supplier',
-                    'debit'              => $purchase_amount, // পণ্য ক্রয় ব্যয়
-                    'credit'             => 0,
-                    'created_at'         => now(),
-                    'updated_at'         => now(),
+                    'ledger_id' => $purchasesLedger->id,
+                    'reference_no' => $purchase->invoice_no ?? '',
+                    'description' => 'Purchased Goods from Supplier',
+                    'debit' => $purchase_amount,
+                    'credit' => 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
 
                 // Purchase Payable -> Accounts Payable (Credit Entry)
                 JournalVoucherDetail::create([
                     'journal_voucher_id' => $journalVoucher->id,
-                    'ledger_id'          => $payableLedger->id, // Accounts Payable Ledger
-                    'reference_no'       => $purchase->invoice_no  ?? '',
-                    'description'        => 'Supplier Payable Recorded for Purchase',
-                    'debit'              => 0,
-                    'credit'             => $purchase_amount, // দেনা বৃদ্ধি পাবে
-                    'created_at'         => now(),
-                    'updated_at'         => now(),
+                    'ledger_id' => $payableLedger->id,
+                    'reference_no' => $purchase->invoice_no ?? '',
+                    'description' => 'Supplier Payable Recorded for Purchase',
+                    'debit' => 0,
+                    'credit' => $purchase_amount,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
+
+                //Log::info('Journal Voucher details created', ['journal_voucher_id' => $journalVoucher->id]);
             }
-        
-            // Commit the transaction
+
             DB::commit();
-        
-            // Redirect back with a success message
+            //Log::info('Transaction committed successfully');
+
             return redirect()->route('admin.purchase.index')->with('success', 'Purchase created successfully!');
         } catch (\Exception $e) {
-            // Rollback transaction if anything fails
             DB::rollback();
-        
-            // Return with error message
+            Log::error('Transaction failed', ['error' => $e->getMessage()]);
             return back()->withErrors(['error' => 'Something went wrong! Please try again.']);
         }
-    
     }
 
 
@@ -222,7 +233,6 @@ class PurchaseController extends Controller
 
         return view('backend.admin.inventory.purchase.view_modal_part', compact('purchase', 'payments'));
     }
-
 
     public function Print()
     {
@@ -336,7 +346,6 @@ class PurchaseController extends Controller
         }
     }
 
-
     public function destroy(string $id)
     {
         // Find the purchase by its ID
@@ -419,6 +428,5 @@ class PurchaseController extends Controller
             'products' => $products,
         ]);
     }
-
 
 }
