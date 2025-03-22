@@ -147,16 +147,6 @@ class PurchaseController extends Controller
                 $purchaseProduct->discount = $discount ?: 0;  // If discount is empty, set it to 0
                 $purchaseProduct->save();
 
-<<<<<<< HEAD
-
-                // Log::info('Product added to purchase', [
-                //     'purchase_id' => $purchase->id,
-                //     'product_id' => $productId,
-                //     'quantity' => $quantity,
-                //     'price' => $price,
-                //     'discount' => $discount
-                // ]);
-=======
                 Log::info('Product added to purchase', [
                     'purchase_id' => $purchase->id,
                     'product_id' => $productId,
@@ -164,7 +154,6 @@ class PurchaseController extends Controller
                     'price' => $price,
                     'discount' => $discount
                 ]);
->>>>>>> 9390f27b0050ef17d5fd596d86ee0f75811367fe
             }
 
             $purchase_amount = $purchase->total ?? 0;
