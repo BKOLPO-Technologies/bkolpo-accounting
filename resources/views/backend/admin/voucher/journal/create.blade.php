@@ -122,7 +122,7 @@
                                                             <td><input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No" required></td>
                                                             <td><textarea class="form-control" name="description[]" rows="1" placeholder="Enter Description"></textarea></td>
                                                             <td>
-                                                                <input type="number" class="form-control text-end debit" name="debit[]" placeholder="Enter Debit Amount" required>
+                                                                <input type="number" class="form-control text-end debit" name="debit[]" placeholder="Enter Debit Amount" required step="0.01">
                                                             </td>
                                                             <td>
                                                                 <input type="hidden" class="form-control text-end debit" name="credit[]" value="0">
@@ -152,7 +152,7 @@
                                                             <td>
                                                                 <input type="hidden" class="form-control text-end debit" name="debit[]" value="0">
                                                             </td>
-                                                            <td><input type="number" class="form-control text-end credit" name="credit[]" placeholder="Enter Credit Amount" required></td>
+                                                            <td><input type="number" class="form-control text-end credit" name="credit[]" placeholder="Enter Credit Amount" required step="0.01"></td>
 
                                                             <td>
                                                                 <button type="button" class="btn btn-sm btn-success add-row add-credit-row"><i class="fa fa-plus"></i></button>
