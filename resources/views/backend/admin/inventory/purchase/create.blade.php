@@ -167,8 +167,9 @@
                                         <table id="product-table" class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th>Product</th>
-                                                    <th>Sell Price</th>
+                                                    <th>Category</th>
+                                                    <th>Item Description</th>
+                                                    <th>Price</th>
                                                     <th>Quantity</th>
                                                     <th>Unit</th>
                                                     <th>Subtotal</th>
@@ -179,6 +180,14 @@
                                             </thead>
                                             <tbody id="product-tbody">
                                                 <tr>
+                                                    <td>
+                                                        <select name="category_id" id="category_id" class="form-control select2 @error('category_id') is-invalid @enderror" style="width: 100%;">
+                                                            <option value="all">All Categories</option>
+                                                            @foreach($categories as $category)
+                                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
                                                     <td>
                                                         <select name="products" id="product" class="form-control select2 @error('products') is-invalid @enderror product-select" style="width: 100%;">
                                                             <option value="">Select Product</option>
@@ -423,6 +432,65 @@
             $('#prices').val(prices.join(','));
             $('#discounts').val(discounts.join(','));
         }
+
+        // Function to load products based on the selected category
+        function loadProductsByCategory(categoryId) {
+            var $productSelect = $('.product-select');
+
+            // Check if categoryId is valid
+            if (!categoryId) {
+                $productSelect.empty().append('<option value="">Select a category first</option>');
+                return;
+            }
+
+            // Clear current options and show loading message
+            $productSelect.empty().append('<option value="">Loading products...</option>');
+
+            // Send an AJAX request to fetch the products for the selected category
+            $.ajax({
+                url: '/admin/product/products-by-category/' + encodeURIComponent(categoryId), // Prevent special character issues
+                method: 'GET',
+                dataType: 'json', // Ensure proper JSON parsing
+                success: function(response) {
+
+                    // Empty the select element and add the default "Select Product" option
+                    $productSelect.empty().append('<option value="">Select Product</option>');
+
+                    if (Array.isArray(response) && response.length > 0) {
+                        // Append products to the select dropdown
+                        response.forEach(function(product) {
+                            let unitName = product.unit && product.unit.name ? product.unit.name : 'N/A'; // Handle missing unit
+
+                            $productSelect.append(`
+                                <option value="${product.id}" 
+                                        data-id="${product.id}" 
+                                        data-name="${product.name}" 
+                                        data-price="${product.price}" 
+                                        data-unit="${unitName}">
+                                    ${product.name}
+                                </option>
+                            `);
+                        });
+                    } else {
+                        $productSelect.append('<option value="">No products found</option>');
+                    }
+
+                    // Refresh select2 after updating the options (if using select2)
+                    $productSelect.trigger('change');
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                    $productSelect.empty().append('<option value="">Error fetching products</option>');
+                }
+            });
+        }
+
+        // When a category is selected, load products for that category
+        $('#category_id').on('change', function() {
+            var categoryId = $(this).val();
+            loadProductsByCategory(categoryId);  // Load products for the selected category
+        });
+
         // Function to update row fields when product is selected
         $(document).on('change', '.product-select', function () {
             let selectedOption = $(this).find(':selected');
@@ -439,7 +507,7 @@
                 row.find('.subtotal').val(productPrice);  // Subtotal initially
                 row.find('.total').val(productPrice);  // Total initially
                 row.find('.unit-input').val(productUnit);
-                row.find('.discount').val(0); // Set default discount to 0
+                row.find('.product-discount').val(0); // Set default discount to 0
 
                 // Add product to hidden fields
                 addToHiddenFields(productId, 1, productPrice, 0);
@@ -502,6 +570,14 @@
             let newRow = `
                 <tr>
                     <td>
+                        <select name="category_id[]" class="form-control select2" style="width: 100%;">
+                            <option value="all">All Categories</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
                         <select name="products[]" class="form-control select2 product-select" style="width: 100%;">
                             <option value="">Select Product</option>
                             @foreach($products as $product)
@@ -512,7 +588,7 @@
                         </select>
                     </td>
                     <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" required readonly></td>
-                    <td><input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required></td>
+                    <td><input type="number" name="quantity[]" class="form-control quantity" min="1" value="1" required></td>
                     <td><input type="text" name="order_unit[]" class="form-control unit-input" required readonly></td>
                     <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
                     <td><input type="number" name="discount[]" class="form-control product-discount" min="0" placeholder="Enter Discount"></td>

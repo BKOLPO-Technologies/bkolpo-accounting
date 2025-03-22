@@ -241,7 +241,7 @@
       <a href="#" class="nav-link {{ $isPurchaseActive ? 'active' : '' }}">
           <i class="nav-icon fas fa-shopping-bag"></i>
           <p>
-              Purchase
+              Purchases
               <i class="fas fa-angle-left right"></i>
           </p>
       </a>
@@ -250,7 +250,7 @@
           <li class="nav-item">
               <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index','admin.purchase.create', 'admin.purchase.show', 'admin.purchase.edit') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Work Order List</p>
+                  <p>Purchase</p>
               </a>
           </li>
           {{--       
