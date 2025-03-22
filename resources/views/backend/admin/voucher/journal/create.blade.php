@@ -152,7 +152,7 @@
                                                             <td>
                                                                 <input type="hidden" class="form-control text-end debit" name="debit[]" value="0">
                                                             </td>
-                                                            <td><input type="number" class="form-control text-end credit" name="credit[]" placeholder="Enter Credit Amount" required step="0.01"></td>
+                                                            <td><input type="number" class="form-control text-end credit" name="credit[]" placeholder="Enter Credit Amount" required step="0.01" min="0"></td>
 
                                                             <td>
                                                                 <button type="button" class="btn btn-sm btn-success add-row add-credit-row"><i class="fa fa-plus"></i></button>
@@ -292,6 +292,8 @@
                 totalDebit += parseFloat($(this).val()) || 0;
             });
 
+            totalDebit = parseFloat(totalDebit.toFixed(2));
+
             let creditRows = $("#creditSection tr");
 
             if (creditRows.length > 0) {
@@ -299,9 +301,12 @@
                 creditRows.each(function (index) {
                     if (index === creditRows.length - 1) {
                         // Ensure the last credit value is never negative
-                        $(this).find(".credit").val(Math.max(remainingAmount, 0));
+                        //$(this).find(".credit").val(Math.max(remainingAmount, 0));
+                        $(this).find(".credit").val(remainingAmount.toFixed(2));
                     } else {
-                        remainingAmount -= parseFloat($(this).find(".credit").val()) || 0;
+                        //remainingAmount -= parseFloat($(this).find(".credit").val()) || 0;
+                        let currentCredit = parseFloat($(this).find(".credit").val()) || 0;
+                        remainingAmount -= currentCredit;
                         remainingAmount = Math.max(remainingAmount, 0); // Prevent negative accumulation
                     }
                 });
@@ -311,6 +316,8 @@
             $(".credit").each(function () {
                 totalCredit += parseFloat($(this).val()) || 0;
             });
+
+            totalCredit = parseFloat(totalCredit.toFixed(2));
 
             $("#debitTotal").text(formatCurrency(totalDebit));
             $("#creditTotal").text(formatCurrency(totalCredit));
