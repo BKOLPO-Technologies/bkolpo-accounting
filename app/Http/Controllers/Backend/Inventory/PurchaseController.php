@@ -266,12 +266,33 @@ class PurchaseController extends Controller
             return $product->pivot->price * $product->pivot->quantity - $product->pivot->discount;
         });
 
+        $grandtotal = $subtotal + (($purchase->transport_cost) + ($purchase->carrying_charge) + ($purchase->vat) + ($purchase->tax) - ($purchase->discount));
+
         $suppliers = Supplier::orderBy('id', 'desc')->get();
-        $products = Product::where('status',1)->latest()->get();
+        $aproducts = Product::where('status',1)->latest()->get();
         $categories = Category::where('status',1)->latest()->get();
         $projects = Project::where('project_type','Running')->latest()->get();
 
-        return view('backend.admin.inventory.purchase.edit',compact('pageTitle', 'purchase', 'suppliers', 'products','categories','projects', 'subtotal'));
+        $product_ids = $purchase->products->pluck('id')->implode(',');
+        $quantities = $purchase->products->pluck('pivot.quantity')->implode(',');
+        $prices = $purchase->products->pluck('pivot.price')->implode(',');
+        $discounts = $purchase->products->pluck('pivot.discount')->implode(',');
+
+        return view('backend.admin.inventory.purchase.edit', [
+            'pageTitle' => $pageTitle, 
+            'purchase' => $purchase, 
+            'suppliers' => $suppliers, 
+            'aproducts' => $aproducts,
+            'categories' => $categories,
+            'projects' => $projects, 
+            'subtotal' => $subtotal, 
+            'grandtotal' => $grandtotal,
+            'grandtotal' => $grandtotal,
+            'product_ids' => $product_ids,
+            'quantities' => $quantities,
+            'prices' => $prices,
+            'discounts' => $discounts,
+        ]);
     }
 
     public function AdminPurchaseUpdate(Request $request, $id)

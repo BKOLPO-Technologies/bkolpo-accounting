@@ -11,7 +11,7 @@ class Product extends Model
     // Relationship: A product belongs to a unit
     public function unit()
     {
-        return $this->belongsTo(Unit::class);
+        return $this->belongsTo(Unit::class, 'unit_id');
     }
     
     public function category()

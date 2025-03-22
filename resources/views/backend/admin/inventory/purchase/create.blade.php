@@ -145,21 +145,21 @@
 
                             <!-- Supplier Details Table -->
                             <div class="row mt-3">
-                                    <div class="col-12">
-                                        <table class="table table-bordered" id="supplier-details-table" style="display: none;">
-                                            <thead class="thead-light">
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Company</th>
-                                                    <th>Phone</th>
-                                                    <th>Email</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="supplier-details-body"></tbody>
-                                        </table>
-                                    </div>
+                                <div class="col-12">
+                                    <table class="table table-bordered" id="supplier-details-table" style="display: none;">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Company</th>
+                                                <th>Phone</th>
+                                                <th>Email</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="supplier-details-body"></tbody>
+                                    </table>
                                 </div>
-                                
+                            </div>
+                            
                             <!-- Product Table -->
                             <div class="row">
                                 <div class="col-12">
