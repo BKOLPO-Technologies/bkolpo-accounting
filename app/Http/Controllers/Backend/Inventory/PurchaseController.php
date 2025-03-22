@@ -78,7 +78,7 @@ class PurchaseController extends Controller
             'product_ids' => 'required|not_in:',  // Ensure at least one product is selected
         ]);
 
-        //Log::info('Request validated successfully', ['validated_data' => $validated]);
+        Log::info('Request validated successfully', ['validated_data' => $validated]);
 
         // Access product data from the request
         $productIds = explode(',', $request->input('product_ids')); 
@@ -143,8 +143,9 @@ class PurchaseController extends Controller
                 $purchaseProduct->product_id = $productId;
                 $purchaseProduct->quantity = $quantity;
                 $purchaseProduct->price = $price;
-                $purchaseProduct->discount = $discount;
+                $purchaseProduct->discount = $discount ?: 0;  // If discount is empty, set it to 0
                 $purchaseProduct->save();
+
 
                 // Log::info('Product added to purchase', [
                 //     'purchase_id' => $purchase->id,
