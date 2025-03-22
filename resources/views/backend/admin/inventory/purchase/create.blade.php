@@ -168,7 +168,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Category</th>
-                                                    <th>Item Description</th>
+                                                    <th>Item</th>
                                                     <th>Price</th>
                                                     <th>Quantity</th>
                                                     <th>Unit</th>
@@ -180,7 +180,7 @@
                                             </thead>
                                             <tbody id="product-tbody">
                                                 <tr>
-                                                    <td>
+                                                    <td style="width:15%;">
                                                         <select name="category_id" id="category_id" class="form-control select2 @error('category_id') is-invalid @enderror" style="width: 100%;">
                                                             <option value="all">All Categories</option>
                                                             @foreach($categories as $category)
@@ -188,7 +188,7 @@
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <td>
+                                                    <td style="width:20%;">
                                                         <select name="products" id="product" class="form-control select2 @error('products') is-invalid @enderror product-select" style="width: 100%;">
                                                             <option value="">Select Product</option>
                                                             @foreach($products as $product)
@@ -201,7 +201,7 @@
                                                     <td>
                                                         <input type="number" name="unit_price[]" class="form-control unit-price" min="0" required readonly>
                                                     </td>
-                                                    <td>
+                                                    <td style="width:8%;">
                                                         <input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required>
                                                     </td>
                                                     <td>
@@ -210,7 +210,7 @@
                                                     <td>
                                                         <input type="text" name="subtotal[]" class="form-control subtotal"  readonly>
                                                     </td>
-                                                    <td>
+                                                    <td style="width:8%;">
                                                         <input type="number" name="discount[]" class="form-control product-discount" placeholder="Enter Discount" min="0">
                                                     </td>
                                                     <td>
@@ -380,237 +380,165 @@
 </script>
 
 <script>
-    $(document).ready(function () {
+  $(document).ready(function () {
+    // Function to initialize select2 for new select elements
+    function initializeSelect2() {
+        $('.select2').select2(); // Initialize select2 for all select elements with 'select2' class
+    }
 
-        // Function to add/update selected product details in hidden fields
-        function addToHiddenFields(productId, quantity, price, discount) {
-            let productIds = $('#product_ids').val() ? $('#product_ids').val().split(',') : [];
-            let quantities = $('#quantities').val() ? $('#quantities').val().split(',') : [];
-            let prices = $('#prices').val() ? $('#prices').val().split(',') : [];
-            let discounts = $('#discounts').val() ? $('#discounts').val().split(',') : [];
+    // Function to add/update selected product details in hidden fields
+    function addToHiddenFields(productId, quantity, price, discount) {
+        let productIds = $('#product_ids').val() ? $('#product_ids').val().split(',') : [];
+        let quantities = $('#quantities').val() ? $('#quantities').val().split(',') : [];
+        let prices = $('#prices').val() ? $('#prices').val().split(',') : [];
+        let discounts = $('#discounts').val() ? $('#discounts').val().split(',') : [];
 
-            let index = productIds.indexOf(productId); // Check if product already exists
+        let index = productIds.indexOf(productId); // Check if product already exists
 
-            if (index !== -1) {
-                // Update existing product details
-                quantities[index] = quantity;
-                prices[index] = price;
-                discounts[index] = discount;
-            } else {
-                // Add new product details
-                productIds.push(productId);
-                quantities.push(quantity);
-                prices.push(price);
-                discounts.push(discount);
-            }
-
-            // Update hidden input fields
-            $('#product_ids').val(productIds.join(','));
-            $('#quantities').val(quantities.join(','));
-            $('#prices').val(prices.join(','));
-            $('#discounts').val(discounts.join(','));
+        if (index !== -1) {
+            // Update existing product details
+            quantities[index] = quantity;
+            prices[index] = price;
+            discounts[index] = discount;
+        } else {
+            // Add new product details
+            productIds.push(productId);
+            quantities.push(quantity);
+            prices.push(price);
+            discounts.push(discount);
         }
 
-        // Function to remove product from hidden fields
-        function removeFromHiddenFields(productId) {
-            let productIds = $('#product_ids').val().split(',');
-            let quantities = $('#quantities').val().split(',');
-            let prices = $('#prices').val().split(',');
-            let discounts = $('#discounts').val().split(',');
+        // Update hidden input fields
+        $('#product_ids').val(productIds.join(','));
+        $('#quantities').val(quantities.join(','));
+        $('#prices').val(prices.join(','));
+        $('#discounts').val(discounts.join(','));
+    }
 
-            let index = productIds.indexOf(productId);
-            if (index !== -1) {
-                productIds.splice(index, 1);
-                quantities.splice(index, 1);
-                prices.splice(index, 1);
-                discounts.splice(index, 1);
-            }
+    // Function to load products based on the selected category
+    function loadProductsByCategory(categoryId, productSelect) {
+        // Clear current options and show loading message
+        productSelect.empty().append('<option value="">Loading products...</option>');
 
-            // Update hidden input fields
-            $('#product_ids').val(productIds.join(','));
-            $('#quantities').val(quantities.join(','));
-            $('#prices').val(prices.join(','));
-            $('#discounts').val(discounts.join(','));
-        }
+        // Send an AJAX request to fetch the products for the selected category
+        $.ajax({
+            url: '/admin/product/products-by-category/' + encodeURIComponent(categoryId), // Prevent special character issues
+            method: 'GET',
+            dataType: 'json', // Ensure proper JSON parsing
+            success: function (response) {
+                // Empty the select element and add the default "Select Product" option
+                productSelect.empty().append('<option value="">Select Product</option>');
 
-        // Function to load products based on the selected category
-        function loadProductsByCategory(categoryId) {
-            var $productSelect = $('.product-select');
+                if (Array.isArray(response) && response.length > 0) {
+                    // Append products to the select dropdown
+                    response.forEach(function (product) {
+                        let unitName = product.unit && product.unit.name ? product.unit.name : 'N/A'; // Handle missing unit
 
-            // Check if categoryId is valid
-            if (!categoryId) {
-                $productSelect.empty().append('<option value="">Select a category first</option>');
-                return;
-            }
-
-            // Clear current options and show loading message
-            $productSelect.empty().append('<option value="">Loading products...</option>');
-
-            // Send an AJAX request to fetch the products for the selected category
-            $.ajax({
-                url: '/admin/product/products-by-category/' + encodeURIComponent(categoryId), // Prevent special character issues
-                method: 'GET',
-                dataType: 'json', // Ensure proper JSON parsing
-                success: function(response) {
-
-                    // Empty the select element and add the default "Select Product" option
-                    $productSelect.empty().append('<option value="">Select Product</option>');
-
-                    if (Array.isArray(response) && response.length > 0) {
-                        // Append products to the select dropdown
-                        response.forEach(function(product) {
-                            let unitName = product.unit && product.unit.name ? product.unit.name : 'N/A'; // Handle missing unit
-
-                            $productSelect.append(`
-                                <option value="${product.id}" 
-                                        data-id="${product.id}" 
-                                        data-name="${product.name}" 
-                                        data-price="${product.price}" 
-                                        data-unit="${unitName}">
-                                    ${product.name}
-                                </option>
-                            `);
-                        });
-                    } else {
-                        $productSelect.append('<option value="">No products found</option>');
-                    }
-
-                    // Refresh select2 after updating the options (if using select2)
-                    $productSelect.trigger('change');
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX Error:', status, error);
-                    $productSelect.empty().append('<option value="">Error fetching products</option>');
+                        productSelect.append(`
+                            <option value="${product.id}" 
+                                    data-id="${product.id}" 
+                                    data-name="${product.name}" 
+                                    data-price="${product.price}" 
+                                    data-unit="${unitName}">
+                                ${product.name}
+                            </option>
+                        `);
+                    });
+                } else {
+                    productSelect.append('<option value="">No products found</option>');
                 }
-            });
-        }
 
-        // When a category is selected, load products for that category
-        $('#category_id').on('change', function() {
-            var categoryId = $(this).val();
-            loadProductsByCategory(categoryId);  // Load products for the selected category
-        });
-
-        // Function to update row fields when product is selected
-        $(document).on('change', '.product-select', function () {
-            let selectedOption = $(this).find(':selected');
-            let productId = selectedOption.val();
-            let productPrice = selectedOption.data('price') || 0;
-            let productUnit = selectedOption.data('unit') || '';
-
-            if (productId) {
-                let row = $(this).closest('tr');
-
-                // Set values in the row
-                row.find('.unit-price').val(productPrice);  // Set Sell Price
-                row.find('.quantity').val(1);  // Set Quantity
-                row.find('.subtotal').val(productPrice);  // Subtotal initially
-                row.find('.total').val(productPrice);  // Total initially
-                row.find('.unit-input').val(productUnit);
-                row.find('.product-discount').val(0); // Set default discount to 0
-
-                // Add product to hidden fields
-                addToHiddenFields(productId, 1, productPrice, 0);
-
-            } else {
-                console.log("productId not found");
+                // Refresh select2 after updating the options
+                productSelect.trigger('change');
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+                productSelect.empty().append('<option value="">Error fetching products</option>');
             }
-
-            calculateTotal(); // Update overall total
-
         });
+    }
 
-        // Function to calculate totals when quantity or discount changes
-        $(document).on('input', '.quantity, .product-discount', function () {
+    // When a category is selected, load products for that category in existing and new rows
+    $(document).on('change', '.category-select', function () {
+        var categoryId = $(this).val();
+        var productSelect = $(this).closest('tr').find('.product-select');
+        if (categoryId) {
+            loadProductsByCategory(categoryId, productSelect);  // Load products for the selected category
+        }
+    });
+
+    // Function to update row fields when product is selected
+    $(document).on('change', '.product-select', function () {
+        let selectedOption = $(this).find(':selected');
+        let productId = selectedOption.val();
+        let productPrice = selectedOption.data('price') || 0;
+        let productUnit = selectedOption.data('unit') || '';
+
+        if (productId) {
             let row = $(this).closest('tr');
-            let productId = row.find('.product-select').val();
-            let unitPrice = parseFloat(row.find('.unit-price').val()) || 0;
-            let quantity = parseFloat(row.find('.quantity').val()) || 1;
-            let discount = parseFloat(row.find('.product-discount').val()) || 0;
 
-            let subtotal = unitPrice * quantity;
-            let total = subtotal - discount;
+            // Set values in the row
+            row.find('.unit-price').val(productPrice);  // Set Sell Price
+            row.find('.quantity').val(1);  // Set Quantity
+            row.find('.subtotal').val(productPrice);  // Subtotal initially
+            row.find('.total').val(productPrice);  // Total initially
+            row.find('.unit-input').val(productUnit);
+            row.find('.product-discount').val(0); // Set default discount to 0
 
-            row.find('.subtotal').val(subtotal.toFixed(2));
-            row.find('.total').val(total.toFixed(2));
-
-            // Update hidden fields
-            addToHiddenFields(productId, quantity, unitPrice, discount);
-
-            calculateTotal(); // Update grand total
-        });
-
-        // Function to calculate total sum of all rows
-        function calculateTotal() {
-
-            let subtotal = 0;
-            let totalDiscount = parseFloat($("#discount").val()) || 0;
-            let transportCost = parseFloat($("#transport_cost").val()) || 0;
-            let carryingCharge = parseFloat($("#carrying_charge").val()) || 0;
-            let vat = parseFloat($("#vat").val()) || 0;
-            let tax = parseFloat($("#tax").val()) || 0;
-
-            $(".total").each(function () {
-                subtotal += parseFloat($(this).val()) || 0;
-            });
-
-            let grandTotal = subtotal - totalDiscount + transportCost + carryingCharge + vat + tax;
-
-            $("#subtotal").val(subtotal.toFixed(2));
-            $("#total").val(grandTotal.toFixed(2));
+            // Add product to hidden fields
+            addToHiddenFields(productId, 1, productPrice, 0);
+        } else {
+            console.log("productId not found");
         }
 
-        // Update total when additional cost fields change
-        $(document).on("input", "#discount, #transport_cost, #carrying_charge, #vat, #tax", function () {
-            calculateTotal();
-        });
-
-        // Function to add new row dynamically
-        $(document).on('click', '.add-row', function () {
-            let newRow = `
-                <tr>
-                    <td>
-                        <select name="category_id[]" class="form-control select2" style="width: 100%;">
-                            <option value="all">All Categories</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <select name="products[]" class="form-control select2 product-select" style="width: 100%;">
-                            <option value="">Select Product</option>
-                            @foreach($products as $product)
-                                <option value="{{ $product->id }}" data-price="{{ $product->price }}" data-unit="{{ $product->unit->name }}">
-                                    {{ $product->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" required readonly></td>
-                    <td><input type="number" name="quantity[]" class="form-control quantity" min="1" value="1" required></td>
-                    <td><input type="text" name="order_unit[]" class="form-control unit-input" required readonly></td>
-                    <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
-                    <td><input type="number" name="discount[]" class="form-control product-discount" min="0" placeholder="Enter Discount"></td>
-                    <td><input type="text" name="total[]" class="form-control total" readonly></td>
-                    <td class="text-center">
-                        <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>`;
-            $('#product-tbody').append(newRow);
-        });
-
-        // Remove row
-        $(document).on('click', '.remove-row', function () {
-
-            let row = $(this).closest('tr');
-            let productId = row.find('.product-select').val();
-
-            row.remove(); // Remove row from DOM
-            removeFromHiddenFields(productId); // Remove product from hidden fields
-            calculateTotal(); // Update grand total
-        });
+        calculateTotal(); // Update overall total
     });
+
+    // Function to add new row dynamically
+    $(document).on('click', '.add-row', function () {
+        let newRow = `
+            <tr>
+                <td>
+                    <select name="category_id[]" class="form-control select2 category-select" style="width: 100%;">
+                        <option value="all">All Categories</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <select name="products[]" class="form-control select2 product-select" style="width: 100%;">
+                        <option value="">Select Product</option>
+                    </select>
+                </td>
+                <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" required readonly></td>
+                <td><input type="number" name="quantity[]" class="form-control quantity" min="1" value="1" required></td>
+                <td><input type="text" name="order_unit[]" class="form-control unit-input" required readonly></td>
+                <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
+                <td><input type="number" name="discount[]" class="form-control product-discount" min="0" placeholder="Enter Discount"></td>
+                <td><input type="text" name="total[]" class="form-control total" readonly></td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>`;
+        $('#product-tbody').append(newRow);
+        initializeSelect2();  // Reinitialize select2 for the new row
+    });
+
+    // Initialize select2 for existing select elements
+    initializeSelect2();
+
+    // Remove row
+    $(document).on('click', '.remove-row', function () {
+        let row = $(this).closest('tr');
+        let productId = row.find('.product-select').val();
+
+        row.remove(); // Remove row from DOM
+        removeFromHiddenFields(productId); // Remove product from hidden fields
+        calculateTotal(); // Update grand total
+    });
+});
+
 </script>
 
 
