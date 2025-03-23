@@ -34,7 +34,7 @@
                         <div class="card-header py-2">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h4 class="mb-0">{{ $pageTitle }}</h4>
-                                <a href="{{ route('report.balance.sheet')}}" class="btn btn-sm btn-danger rounded-0">
+                                <a href="{{ route('report.index')}}" class="btn btn-sm btn-danger rounded-0">
                                     <i class="fa-solid fa-arrow-left"></i> Back To List
                                 </a>
                             </div>
@@ -50,14 +50,14 @@
                             <div class="card-body">
                                 <!-- Balance Sheet Table -->
                                 <div class="card-header text-center mb-3">
-                                    <h2 class="mb-1">{{ get_company()->name ?? '' }}</h2> 
-                                    <p class="mb-0"><strong>Profit & Loss Report</strong></p>
+                                    <h2 class="mb-1">{{ get_company()->name ?? '' }}</h2>
+                                    <p class="mb-0"><strong>Project Profit & Loss Report</strong></p>
                                     <p class="mb-0">Date: {{ now()->format('d M, Y') }}</p>
                                 </div>
                                 <div class="card-body">
                                     <!-- Date Filter Form -->
                                     <div id="filter-form">
-                                        <form action="{{ route('report.project.ledger.profit.loss') }}" method="GET" class="mb-3">
+                                        <form action="{{ route('report.project.profit.loss') }}" method="GET" class="mb-3">
                                             <div class="row justify-content-center">
                                                 <div class="col-md-3 mt-3">
                                                     <label for="from_date">From Date:</label>
@@ -78,10 +78,41 @@
                                     </div>
                                     <div class="row mb-5">
                                         <div class="col-lg-8 col-md-8 col-sm-12 mx-auto">
-                                            <!-- ProjectProfit & Loss Table -->
+                                            <!-- Project Profit & Loss Table -->
                                             <div class="table-responsive mt-4">
-                                               
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Project Name</th>
+                                                            <th class="text-right">Total Sales</th>
+                                                            <th class="text-right">Total Purchases</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($projects as $project)
+                                                            <tr class="table-secondary">
+                                                                <td><strong>{{ $project->project_name }}</strong></td>
+                                                                <td class="text-right"><strong>{{ bdt() }} {{ number_format($project->total_sales, 2) }}</strong></td>
+                                                                <td class="text-right"><strong>{{ bdt() }} {{ number_format($project->total_purchases, 2) }}</strong></td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr class="table-primary">
+                                                            <th colspan="1">Total</th>
+                                                            <th class="text-right">{{ bdt() }} {{ number_format($totalSales, 2) }}</th>
+                                                            <th class="text-right">{{ bdt() }} {{ number_format($totalPurchases, 2) }}</th>
+                                                        </tr>
+                                                        <tr class="table-success">
+                                                            <th colspan="2">Net Profit / Loss</th>
+                                                            <th class="text-right">
+                                                                {{ bdt() }} {{ number_format($netProfitLoss, 2) }}
+                                                            </th>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
                                             </div>
+                                                                                        
                                         </div>
                                     </div>
                                 </div>

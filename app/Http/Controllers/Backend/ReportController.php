@@ -13,10 +13,12 @@ use App\Models\CompanyInformation;
 use Carbon\Carbon;
 use Auth;
 use App\Traits\TrialBalanceTrait;
+use App\Traits\ProjectProfitLossTrait;
 
 class ReportController extends Controller
 {
     use TrialBalanceTrait;
+    use ProjectProfitLossTrait;
 
     /**
      * Display a listing of the resource.
@@ -193,10 +195,23 @@ class ReportController extends Controller
         // Define date range
         $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
         $toDate = $request->input('to_date', now()->format('Y-m-d'));
+    
+        // Fetch project profit/loss data using the trait method
+        $projects = $this->getProjectProfitLossData($fromDate, $toDate);
 
+    
+    
+        // Calculate total sales and purchases
+        $totalSales = $projects->sum('total_sales');
+        $totalPurchases = $projects->sum('total_purchases');
 
+        // dd($totalSales,$totalPurchases);
+        
+        // Calculate net profit or loss
+        $netProfitLoss = $totalSales - $totalPurchases;
+    
         return view('backend.admin.report.account.project_profit_loss_report', compact(
-            'pageTitle', 'fromDate', 'toDate'
+            'pageTitle', 'fromDate', 'toDate', 'projects', 'totalSales', 'totalPurchases', 'netProfitLoss'
         ));
     }
 
