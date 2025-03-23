@@ -48,6 +48,7 @@ class LedgerSeeder extends Seeder
                 ],
             ],
             'Expense' => [
+                'Direct Expenses' => ['Purchases', 'Salary'],
                 'Indirect Expense' => [
                     'Cost of Goods Sold',
                     'Cost of Billed Expenses',
@@ -75,6 +76,7 @@ class LedgerSeeder extends Seeder
                     'Mobile Phone Bill',
                     'Sales Taxes Paid',
                 ],
+                'Purchases Accounts' => [],
             ],
         ];        
         
