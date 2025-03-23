@@ -38,11 +38,11 @@
                                
                                 <!-- Client Selection -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="supplier_id" class="form-label">Supplier:</label>
+                                    <label for="supplier_id" class="form-label">Vendor:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                                         <select class="form-control select2" name="supplier_id" id="supplier_id">
-                                            <option value="">Select Supplier</option>
+                                            <option value="">Select Vendor</option>
                                             @foreach($suppliers as $supplier)
                                                 <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                                             @endforeach
@@ -324,16 +324,23 @@
                         //console.log(response);
 
                         if (response.success) {
-                            let products = response.purchase_products;
+                            let products = response.purchase.purchase_products;
+                            let purchase = response.purchase;
+                            console.log(purchase);
                             let payments = response.payments;
+
+                            let vatTax = (response.purchase.vat + response.purchase.vat + response.purchase.transport_cost + response.purchase.carrying_charge - + response.purchase.discount);
+                            console.log(vatTax);
 
                             // Clear previous data
                             $('#purchase-products').empty();
                             $('#payment-details').empty();
 
                             // Set Invoice No and Supplier Name at the top
-                            $('#invoice_no_display').text(payments.length > 0 ? payments[0].invoice_no : 'N/A');
-                            $('#supplier_display').text(payments.length > 0 ? (payments[0].supplier?.name || 'N/A') : 'N/A');
+                            // $('#invoice_no_display').text(payments.length > 0 ? payments[0].invoice_no : 'N/A');
+                            // $('#supplier_display').text(payments.length > 0 ? (payments[0].supplier?.name || 'N/A') : 'N/A');
+                            $('#invoice_no_display').text(purchase.invoice_no || 'N/A');
+                            $('#supplier_display').text(purchase.supplier?.name || 'N/A');
 
                             // Variables for totals
                             let totalQuantity = 0;

@@ -113,8 +113,10 @@ class SalePaymentController extends Controller
             return [
                 'id' => $purchase->id,
                 'invoice_no' => $purchase->invoice_no ?? 'N/A',
-                'total_amount' => ($purchase->total ?? 0),
-                'total_due_amount' => ($purchase->total ?? 0) - ($purchase->paid_amount ?? 0),
+                // 'total_amount' => ($purchase->total ?? 0),
+                // 'total_due_amount' => ($purchase->total ?? 0) - ($purchase->paid_amount ?? 0),
+                'total_amount' => number_format(($purchase->total ?? 0), 2, '.', ''),
+                'total_due_amount' => number_format(($purchase->total ?? 0) - ($purchase->paid_amount ?? 0), 2, '.', ''),
             ];
         });
 
@@ -128,7 +130,7 @@ class SalePaymentController extends Controller
         //Log::info($invoiceId);
 
         // Fetch purchase details
-        $purchase = Purchase::where('invoice_no', $invoiceId)->first();
+        $purchase = Purchase::where('invoice_no', $invoiceId)->with(['purchaseProducts.product', 'supplier'])->first();
 
         //Log::info($purchase);
         
@@ -140,7 +142,7 @@ class SalePaymentController extends Controller
         //Log::info($purchase->id);
 
         // Fetch products related to the purchase
-        $purchaseProducts = PurchaseProduct::where('purchase_id', $purchase->id)->with('product')->get();
+        // $purchaseProducts = PurchaseProduct::where('purchase_id', $purchase->id)->with('product')->get();
 
         //Log::info($purchaseProducts);
 
@@ -151,7 +153,8 @@ class SalePaymentController extends Controller
 
         return response()->json([
             'success' => true,
-            'purchase_products' => $purchaseProducts,
+            // 'purchase_products' => $purchaseProducts,
+            'purchase' => $purchase,
             'payments' => $payments,
         ]);
     }
