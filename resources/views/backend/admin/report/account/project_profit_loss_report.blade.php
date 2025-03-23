@@ -84,8 +84,8 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Project Name</th>
-                                                            <th class="text-right">Total Sales</th>
-                                                            <th class="text-right">Total Purchases</th>
+                                                            <th class="text-right">Total Orders</th>
+                                                            <th class="text-right">Total Expense</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>

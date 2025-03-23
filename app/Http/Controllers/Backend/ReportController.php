@@ -196,23 +196,18 @@ class ReportController extends Controller
         $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
         $toDate = $request->input('to_date', now()->format('Y-m-d'));
     
-        // Fetch project profit/loss data using the trait method
-        $projects = $this->getProjectProfitLossData($fromDate, $toDate);
-
+        // Use the trait method to get the profit and loss data
+        $data = $this->getProjectProfitLossData($fromDate, $toDate);
     
-    
-        // Calculate total sales and purchases
-        $totalSales = $projects->sum('total_sales');
-        $totalPurchases = $projects->sum('total_purchases');
-
-        // dd($totalSales,$totalPurchases);
-        
-        // Calculate net profit or loss
-        $netProfitLoss = $totalSales - $totalPurchases;
-    
-        return view('backend.admin.report.account.project_profit_loss_report', compact(
-            'pageTitle', 'fromDate', 'toDate', 'projects', 'totalSales', 'totalPurchases', 'netProfitLoss'
-        ));
+        return view('backend.admin.report.account.project_profit_loss_report', [
+            'pageTitle' => $pageTitle,
+            'projects' => $data['projects'],
+            'totalSales' => $data['totalSales'],
+            'totalPurchases' => $data['totalPurchases'],
+            'netProfitLoss' => $data['netProfitLoss'],
+            'fromDate' => $fromDate,
+            'toDate' => $toDate
+        ]);
     }
 
     /**
