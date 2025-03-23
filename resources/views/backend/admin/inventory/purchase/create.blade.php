@@ -45,7 +45,7 @@
                                 <div class="col-lg-4 col-md-6 mb-3">
                                     <label for="supplier">Vendor</label>
                                     <div class="input-group">
-                                        <select name="supplier" id="supplier" class="form-control select2 @error('supplier') is-invalid @enderror">
+                                        <select name="supplier" id="supplier" class="form-control select2 @error('supplier') is-invalid @enderror" required>
                                             <option value="" disabled>Select Vendor</option>
                                             @foreach($suppliers as $supplier)
                                                 <!-- <option value="{{ $supplier->id }}" {{ old('supplier') == $supplier->id ? 'selected' : '' }}>{{ $supplier->name }}</option> -->
@@ -115,7 +115,7 @@
                                 <div class="col-lg-4 col-md-6 mb-3">
                                     <label for="project_id">Project</label>
                                     <div class="input-group">
-                                        <select name="project_id" id="project_id" class="form-control select2 @error('project_id') is-invalid @enderror" style="width: 100%;">
+                                        <select name="project_id" id="project_id" class="form-control select2 @error('project_id') is-invalid @enderror" style="width: 100%;" required>
                                             <option value="">Select Project</option>
                                             @foreach($projects as $project)
                                                 <option value="{{ $project->id }}">

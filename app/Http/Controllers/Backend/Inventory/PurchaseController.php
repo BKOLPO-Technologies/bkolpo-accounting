@@ -67,7 +67,7 @@ class PurchaseController extends Controller
     public function AdminPurchaseStore(Request $request)
     {
         //dd($request->all());
-        Log::info('AdminPurchaseStore function started', ['request_data' => $request->all()]);
+        //Log::info('AdminPurchaseStore function started', ['request_data' => $request->all()]);
 
         // Validate the request data
         $validated = $request->validate([
@@ -77,9 +77,10 @@ class PurchaseController extends Controller
             'discount' => 'required|numeric',
             'total' => 'required|numeric',
             'product_ids' => 'required|not_in:',  // Ensure at least one product is selected
+            'project_id' => 'required|exists:projects,id',
         ]);
 
-        Log::info('Request validated successfully', ['validated_data' => $validated]);
+        //Log::info('Request validated successfully', ['validated_data' => $validated]);
 
         // Access product data from the request
         $productIds = explode(',', $request->input('product_ids')); 
@@ -87,12 +88,12 @@ class PurchaseController extends Controller
         $prices = explode(',', $request->input('prices')); 
         $discounts = explode(',', $request->input('discounts')); 
 
-        Log::info('Extracted product data', [
-            'productIds' => $productIds,
-            'quantities' => $quantities,
-            'prices' => $prices,
-            'discounts' => $discounts
-        ]);
+        // Log::info('Extracted product data', [
+        //     'productIds' => $productIds,
+        //     'quantities' => $quantities,
+        //     'prices' => $prices,
+        //     'discounts' => $discounts
+        // ]);
 
         // Check if at least one product is selected
         if (empty($productIds) || count($productIds) === 0 || $productIds[0] == '') {
@@ -102,10 +103,10 @@ class PurchaseController extends Controller
 
         try {
             DB::beginTransaction();
-            Log::info('Transaction started');
+            //Log::info('Transaction started');
 
             $categoryId = $request->category_id == 'all' ? null : $request->category_id;
-            Log::info('Category ID determined', ['categoryId' => $categoryId]);
+            //Log::info('Category ID determined', ['categoryId' => $categoryId]);
 
             // Create a new purchase record
             $purchase = new Purchase();
@@ -124,13 +125,13 @@ class PurchaseController extends Controller
             $purchase->project_id = $request->project_id;
             $purchase->save();
 
-            Log::info('Purchase record created', ['purchase_id' => $purchase->id]);
+            //Log::info('Purchase record created', ['purchase_id' => $purchase->id]);
 
             // Loop through the product data and save it to the database
             foreach ($productIds as $index => $productId) {
                 $product = Product::find($productId);
                 if (!$product) {
-                    Log::error("Product not found", ['productId' => $productId]);
+                    //Log::error("Product not found", ['productId' => $productId]);
                     continue;
                 }
 
@@ -147,17 +148,17 @@ class PurchaseController extends Controller
                 $purchaseProduct->discount = $discount ?: 0;  // If discount is empty, set it to 0
                 $purchaseProduct->save();
 
-                Log::info('Product added to purchase', [
-                    'purchase_id' => $purchase->id,
-                    'product_id' => $productId,
-                    'quantity' => $quantity,
-                    'price' => $price,
-                    'discount' => $discount
-                ]);
+                // Log::info('Product added to purchase', [
+                //     'purchase_id' => $purchase->id,
+                //     'product_id' => $productId,
+                //     'quantity' => $quantity,
+                //     'price' => $price,
+                //     'discount' => $discount
+                // ]);
             }
 
             $purchase_amount = $purchase->total ?? 0;
-            Log::info('Purchase amount calculated', ['purchase_amount' => $purchase_amount]);
+            //Log::info('Purchase amount calculated', ['purchase_amount' => $purchase_amount]);
 
             $purchasesLedger = Ledger::where('name', 'Purchases')->first();
             $payableLedger = Ledger::where('name', 'Accounts Payable')->first();
@@ -198,16 +199,16 @@ class PurchaseController extends Controller
                     'updated_at' => now(),
                 ]);
 
-                Log::info('Journal Voucher details created', ['journal_voucher_id' => $journalVoucher->id]);
+                //Log::info('Journal Voucher details created', ['journal_voucher_id' => $journalVoucher->id]);
             }
 
             DB::commit();
-            Log::info('Transaction committed successfully');
+            //Log::info('Transaction committed successfully');
 
             return redirect()->route('admin.purchase.index')->with('success', 'Purchase created successfully!');
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Transaction failed', ['error' => $e->getMessage()]);
+            //Log::error('Transaction failed', ['error' => $e->getMessage()]);
             return back()->withErrors(['error' => 'Something went wrong! Please try again.']);
         }
     }
