@@ -329,9 +329,29 @@
                             // console.log(purchase);
                             let payments = response.payments;
 
-                            let vatTax = (response.purchase.vat + response.purchase.tax + response.purchase.transport_cost + response.purchase.carrying_charge - response.purchase.discount);
+                            let vat = parseFloat(response.purchase.vat) || 0;
+                            let tax = parseFloat(response.purchase.tax) || 0;
+                            let transportCost = parseFloat(response.purchase.transport_cost) || 0;
+                            let carryingCharge = parseFloat(response.purchase.carrying_charge) || 0;
+                            let discount = parseFloat(response.purchase.discount) || 0;
+
+                            let vatTax = (vat + tax + transportCost + carryingCharge - discount).toFixed(2);
+                            vatTax = parseFloat(vatTax);
+
                             //console.log(vatTax);
-                            vatTax = parseFloat(vatTax.toFixed(2));
+
+
+                            // let vatTax = ((response.purchase.vat) + (response.purchase.tax) + (response.purchase.transport_cost) + (response.purchase.carrying_charge) - (response.purchase.discount));
+
+                            // console.log(response.purchase.vat);
+                            // console.log(response.purchase.tax);
+                            // console.log(response.purchase.transport_cost);
+                            // console.log(response.purchase.carrying_charge);
+                            // console.log(response.purchase.discount);
+                            // console.log(vatTax);
+
+                            // vatTax = parseFloat(vatTax.toFixed(2));
+                            //console.log(vatTax);
 
                             // Clear previous data
                             $('#purchase-products').empty();
@@ -366,6 +386,7 @@
                             });
 
                             finalTotalPurchaseAmount = totalPurchaseAmount + vatTax;
+                            //console.log(finalTotalPurchaseAmount);
 
                             // Populate payment details
                             payments.forEach(payment => {
