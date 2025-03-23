@@ -191,16 +191,16 @@
                                                             <input type="text" name="order_unit[]" class="form-control" placeholder="Ener Unit" required>
                                                         </td>
                                                         <td>
-                                                            <input type="number" name="unit_price[]" class="form-control unit-price" placeholder="Enter Unit Price" min="0" required>
+                                                            <input type="number" name="unit_price[]" class="form-control unit-price" placeholder="Enter Unit Price" min="0" step="0.01" required>
                                                         </td>
                                                         <td>
-                                                            <input type="number" name="quantity[]" class="form-control quantity" placeholder="Enter Quantity" min="1" required>
+                                                            <input type="number" name="quantity[]" class="form-control quantity" placeholder="Enter Quantity" min="1" step="0.01" required>
                                                         </td>
                                                         <td>
                                                             <input type="text" name="subtotal[]" class="form-control subtotal"  readonly>
                                                         </td>
                                                         <td>
-                                                            <input type="number" name="discount[]" class="form-control discount" placeholder="Enter Discount" min="0">
+                                                            <input type="number" name="discount[]" class="form-control discount" placeholder="Enter Discount" min="0" step="0.01">
                                                         </td>
                                                         <td>
                                                             <input type="text" name="total[]" class="form-control total" readonly>
@@ -234,7 +234,7 @@
                                             </div>
                                             <div class="col-12 col-lg-6 mb-2">
                                                 <label for="total_discount">Total Discount</label>
-                                                <input type="number" id="total_discount" name="total_discount" class="form-control" placeholder="Enter Total Discount" />
+                                                <input type="number" id="total_discount" name="total_discount" class="form-control" step="0.01" placeholder="Enter Total Discount" />
                                             </div>
                                         </div>
 
@@ -243,25 +243,25 @@
                                             <!-- Transport Cost -->
                                             <div class="col-12 col-lg-6 mb-2">
                                                 <label for="transport_cost">Transport Cost</label>
-                                                <input type="number" min="0" id="transport_cost" name="transport_cost" class="form-control" placeholder="Enter Transport Cost" />
+                                                <input type="number" min="0" id="transport_cost" name="transport_cost" step="0.01" class="form-control" placeholder="Enter Transport Cost" />
                                             </div>
                                     
                                             <!-- Carrying/Labour Charge -->
                                             <div class="col-12 col-lg-6 mb-2">
                                                 <label for="carrying_charge">Carrying/Labour Charge</label>
-                                                <input type="number" min="0" id="carrying_charge" name="carrying_charge" class="form-control" placeholder="Enter Carrying Charge"   />
+                                                <input type="number" min="0" id="carrying_charge" name="carrying_charge" step="0.01" class="form-control" placeholder="Enter Carrying Charge"   />
                                             </div>
                                     
                                             <!-- Vat -->
                                             <div class="col-12 col-lg-6 mb-2">
                                                 <label for="vat">Vat</label>
-                                                <input type="number" min="0" id="vat" name="vat" class="form-control" placeholder="Enter Vat" />
+                                                <input type="number" min="0" id="vat" name="vat" class="form-control" step="0.01" placeholder="Enter Vat" />
                                             </div>
                                     
                                             <!-- Tax -->
                                             <div class="col-12 col-lg-6 mb-3">
                                                 <label for="tax">Tax</label>
-                                                <input type="number" min="0" id="tax" name="tax" class="form-control" placeholder="Enter Tax" />
+                                                <input type="number" min="0" id="tax" name="tax" class="form-control" step="0.01" placeholder="Enter Tax" />
                                             </div>
                                             
                                             {{-- <div class="col-6 mb-2">

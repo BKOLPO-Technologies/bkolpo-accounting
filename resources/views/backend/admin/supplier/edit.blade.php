@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['pageTitle' => 'Supplier Edit'])
+@extends('layouts.admin', ['pageTitle' => 'Vendor Edit'])
 
 @section('admin')
 
@@ -137,7 +137,7 @@
                         <div class="row mt-3">
                             <div class="col-lg-12">
                                 <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;">
-                                    <i class="fas fa-paper-plane"></i> Update Supplier
+                                    <i class="fas fa-paper-plane"></i> Update Vendor
                                 </button>
                             </div>
                         </div>

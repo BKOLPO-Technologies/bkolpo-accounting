@@ -14,13 +14,13 @@ class SupplierController extends Controller
     public function AdminSupplierIndex() 
     {
         $suppliers = Supplier::all();
-        $pageTitle = 'Supplier List';
+        $pageTitle = 'Vendor List';
         return view('backend.admin.supplier.index',compact('pageTitle', 'suppliers'));
     }
 
     public function AdminSupplierCreate() {
 
-        $pageTitle = 'Supplier Create';
+        $pageTitle = 'Vendor Create';
         return view('backend.admin.supplier.create',compact('pageTitle'));
 
     }
@@ -28,7 +28,7 @@ class SupplierController extends Controller
     public function AdminSupplierView($id)
     {
         $supplier = Supplier::findOrFail($id);
-        $pageTitle = 'Supplier View';
+        $pageTitle = 'Vendor View';
 
         $totalPurchaseAmount = $supplier->totalPurchaseAmount();
         $totalPaidAmount = $supplier->totalPaidAmount();
@@ -41,7 +41,7 @@ class SupplierController extends Controller
     public function AdminSupplierEdit($id)
     {
         $supplier = Supplier::findOrFail($id);
-        $pageTitle = 'Supplier Edit';
+        $pageTitle = 'Vendor Edit';
         return view('backend.admin.supplier.edit',compact('pageTitle', 'supplier'));
     }
 

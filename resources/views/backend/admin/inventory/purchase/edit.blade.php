@@ -45,10 +45,10 @@
                             <div class="row">
                                
                                 <div class="col-lg-4 col-md-6 mb-3">
-                                    <label for="supplier">Supplier</label>
+                                    <label for="supplier">Vendor</label>
                                     <div class="input-group">
                                         <select name="supplier" id="supplier" class="form-control select2 @error('supplier') is-invalid @enderror">
-                                            <option value="" disabled>Select Supplier</option>
+                                            <option value="" disabled>Select Vendor</option>
                                             @foreach($suppliers as $supplier)
                                                 <option value="{{ $supplier->id }}" 
                                                     data-name="{{ $supplier->name }}" 
@@ -140,7 +140,7 @@
                                             <tbody id="product-tbody">
                                                 @foreach ($purchase->purchaseProducts as $product)
                                                 <tr>
-                                                    <td>
+                                                    <td style="width:15% !important;">
                                                         <select name="category_id" id="category_id" class="form-control select2 category-select @error('category_id') is-invalid @enderror" style="width: 100%;">
                                                             <option value="all">All Categories</option>
                                                             @foreach($categories as $category)
@@ -151,7 +151,7 @@
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <td>
+                                                    <td style="width:17% !important;">
                                                         <select name="products" id="product" class="form-control select2 @error('products') is-invalid @enderror product-select" style="width: 100%;">
                                                             <option value="">Select Product</option>
                                                             @foreach($aproducts as $aproduct)
@@ -165,7 +165,7 @@
                                                     <td>
                                                         <input type="number" name="unit_price[]" class="form-control unit-price" readonly value="{{ $product->price }}">
                                                     </td>
-                                                    <td>
+                                                    <td style="width:5% !important;">
                                                         <input type="number" name="quantity[]" class="form-control quantity" min="1" value="{{ $product->quantity }}" required>
                                                     </td>
                                                     <td>
@@ -174,8 +174,8 @@
                                                     <td>
                                                         <input type="text" name="subtotal[]" class="form-control subtotal" value="{{ $product->price * $product->quantity }}" readonly>
                                                     </td>
-                                                    <td>
-                                                        <input type="number" name="discount[]" class="form-control product-discount" min="0" value="{{ $product->discount }}">
+                                                    <td style="width:5% !important;">
+                                                        <input type="number" name="discount[]" class="form-control product-discount" min="0" step="0.01" value="{{ $product->discount }}">
                                                     </td>
                                                     <td>
                                                         <input type="text" name="total[]" class="form-control total" readonly value="{{ ((($product->price) * ($product->quantity)) - ($product->discount)) }}">
@@ -205,7 +205,7 @@
                                         </div>
                                         <div class="col-12 col-lg-6 mb-2">
                                             <label for="total_discount">Total Discount</label>
-                                            <input type="number" id="discount" name="discount" class="form-control" value="{{ $purchase->discount }}" oninput="updateTotal()" />
+                                            <input type="number" id="discount" name="discount" class="form-control" value="{{ $purchase->discount }}" step="0.01" oninput="updateTotal()" />
                                         </div>
                                     </div>
 
@@ -213,22 +213,22 @@
                                         
                                         <div class="col-12 col-lg-6 mb-2">
                                             <label for="transport_cost">Transport Cost</label>
-                                            <input type="number" min="0" id="transport_cost" name="transport_cost" class="form-control" value="{{ $purchase->transport_cost }}" oninput="updateTotal()"/>
+                                            <input type="number" min="0" id="transport_cost" name="transport_cost" class="form-control" step="0.01" value="{{ $purchase->transport_cost }}" oninput="updateTotal()"/>
                                         </div>
                                 
                                         <div class="col-12 col-lg-6 mb-2">
                                             <label for="carrying_charge">Carrying Charge</label>
-                                            <input type="number" min="0" id="carrying_charge" name="carrying_charge" class="form-control"  value="{{ $purchase->carrying_charge }}" oninput="updateTotal()" />
+                                            <input type="number" min="0" id="carrying_charge" name="carrying_charge" class="form-control" step="0.01"  value="{{ $purchase->carrying_charge }}" oninput="updateTotal()" />
                                         </div>
                                 
                                         <div class="col-12 col-lg-6 mb-2">
                                             <label for="vat">VAT</label>
-                                            <input type="number" min="0" id="vat" name="vat" class="form-control" value="{{ $purchase->vat }}" oninput="updateTotal()"/>
+                                            <input type="number" min="0" id="vat" name="vat" class="form-control" value="{{ $purchase->vat }}" step="0.01" oninput="updateTotal()"/>
                                         </div>
                                 
                                         <div class="col-12 col-lg-6 mb-3">
                                             <label for="tax">Tax</label>
-                                            <input type="number" min="0" id="tax" name="tax" class="form-control" value="{{ $purchase->tax }}" oninput="updateTotal()"/>
+                                            <input type="number" min="0" id="tax" name="tax" class="form-control" value="{{ $purchase->tax }}" step="0.01" oninput="updateTotal()"/>
                                         </div>
                                         
                                         <div class="col-12 mb-2">

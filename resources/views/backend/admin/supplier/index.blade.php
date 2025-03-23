@@ -27,7 +27,7 @@
                             <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
                             @can('ledger-group-create')
                             <a href="{{ route('admin.supplier.create') }}" class="btn btn-sm btn-success rounded-0">
-                                <i class="fas fa-plus fa-sm"></i> Add New Supplier
+                                <i class="fas fa-plus fa-sm"></i> Add New Vendor
                             </a>
                             @endcan
                         </div>

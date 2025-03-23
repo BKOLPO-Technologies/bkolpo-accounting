@@ -249,7 +249,7 @@
                                                             <td>
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">BDT</span>
-                                                                    <input type="number" class="form-control" name="ob[]" placeholder="Enter O.B.">
+                                                                    <input type="number" class="form-control" name="ob[]" step="0.01" placeholder="Enter O.B.">
                                                                 </div>
                                                             </td>
                                                             <td class="text-center">
