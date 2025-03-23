@@ -128,6 +128,22 @@ class JournalController extends Controller
         return view('backend.admin.voucher.journal.manually_create',compact('pageTitle','branches','ledgers','transactionCode','companies'));
     }
 
+    public function manuallyCapitalCreate(){
+        $pageTitle = 'Journal Entry';
+        $branches = Branch::where('status',1)->latest()->get();
+        $companies = Company::where('status',1)->latest()->get();
+        $ledgers = Ledger::where('status',1)->latest()->get();
+
+        // Get current timestamp in 'dmyHis' format (day, month, year)
+        $randomNumber = rand(100000, 999999);
+        $fullDate = now()->format('d/m/y');
+
+        // Combine the timestamp, random number, and full date
+        $transactionCode = 'BCL-V-'.$fullDate.' - '.$randomNumber;
+
+        return view('backend.admin.voucher.journal.manually_capital_create',compact('pageTitle','branches','ledgers','transactionCode','companies'));
+    }
+
     public function getBranchesByCompany($companyId)
     {
         // Find the company and load its related branch
