@@ -38,7 +38,7 @@
                                             <th>SL</th>
                                             <th>Invoice No</th>
                                             <th>Invoice Date</th>
-                                            <th>Supplier Name</th>
+                                            <th>Vendor</th>
                                             <th>Total Amount</th>
                                             <th>Paid Amount</th>
                                             <th>Due Amount</th>

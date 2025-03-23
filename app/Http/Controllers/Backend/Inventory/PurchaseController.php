@@ -23,7 +23,7 @@ class PurchaseController extends Controller
 
     public function index(Request $request)
     {
-        $pageTitle = 'Purchase List';
+        $pageTitle = 'Purchase';
 
         $purchases = Purchase::with('products')->OrderBy('id','desc')->get(); 
         //dd($purchases);
