@@ -96,13 +96,10 @@
                                                     <thead class="table-light">
                                                         <tr style="background:#dcdcdc; text-align:center;">
                                                             <th style="background:#dcdcdc;">Sl</th>
-                                                            <th>Account</th>
                                                             <th>Type</th>
                                                             <th>Group</th>
                                                             <th>Sub Group</th>
                                                             <th>Ledger</th>
-                                                            <th>Reference No</th>
-                                                            <th>Description</th>
                                                             <th>Debit</th>
                                                             <th>Credit</th>
                                                         </tr>
@@ -112,18 +109,7 @@
                                                         @for ($i = 0; $i < 10; $i++)
                                                             <tr>
                                                                 <td class="text-center">{{ $i + 1 }}</td>
-                                                                <td style="width: 11% !important;">
-                                                                    <select class="form-control" name="ledger_id[]">
-                                                                        <option value="">Select Account</option>
-                                                                        @foreach($ledgers as $ledger)
-                                                                            <option value="{{ $ledger->id }}" 
-                                                                                {{ old("ledger_id.$i") == $ledger->id ? 'selected' : '' }}>
-                                                                                {{ $ledger->name }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </td>
-                                                                <td style="width: 10% !important;">
+                                                                <td style="width: 15% !important;">
                                                                     <div class="input-group">
                                                                         <select class="form-control" name="type[]">
                                                                             <option value="">Select Type</option>
@@ -145,14 +131,6 @@
                                                                         placeholder="Enter Ledger No" value="{{ old("reference_no.$i") }}">
                                                                 </td>
                                                                 <td>
-                                                                    <input type="text" class="form-control" name="reference_no[]" 
-                                                                        placeholder="Enter Reference No" value="{{ old("reference_no.$i") }}">
-                                                                </td>
-                                                                <td>
-                                                                    <textarea class="form-control" name="description[]" rows="1"  
-                                                                        placeholder="Enter Description">{{ old("description.$i") }}</textarea>
-                                                                </td>
-                                                                <td>
                                                                     <input type="number" class="form-control text-end debit" name="debit[]" 
                                                                         value="{{ old("debit.$i", '') }}" placeholder="Enter Debit Amount">
                                                                 </td>
@@ -165,7 +143,7 @@
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
-                                                            <td colspan="8" style="text-align: right; padding-right: 1rem;"><strong>Total:</strong></td>
+                                                            <td colspan="5" style="text-align: right; padding-right: 1rem;"><strong>Total:</strong></td>
                                                             <td style="text-align: right;"><strong id="debitTotal">৳0.00</strong></td>
                                                             <td style="text-align: right;"><strong id="creditTotal">৳0.00</strong></td>
                                                         </tr>
