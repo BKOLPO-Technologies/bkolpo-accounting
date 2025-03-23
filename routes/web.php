@@ -162,6 +162,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/ledger/group/report/{id}', [ReportController::class, 'ledgerGroupReport'])->name('ledger.group.single.report');
         Route::get('/ledger/pay-slip/{id}', [ReportController::class, 'getLedgerPaySlip'])->name('ledger.pay.slip');
         Route::get('/ledger/profit/loss', [ReportController::class, 'ledgerProfitLoss'])->name('ledger.profit.loss');
+        Route::get('/project/trial/balance', [ReportController::class, 'ProjectTrialBalance'])->name('project.trial.balance');
+        Route::get('/project/profit/loss', [ReportController::class, 'ProjectProfitLoss'])->name('project.profit.loss');
 
     });
 

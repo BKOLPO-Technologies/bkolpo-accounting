@@ -73,6 +73,12 @@
                                                 This report categorizes ledger accounts into various groups, such as assets, liabilities, and equity, providing a comprehensive summary of their balances and financial movements over a specific period.
                                             </p>
                                         </div>
+                                        <div class="col-lg-6 mt-2">
+                                            <a href="{{ route('report.project.profit.loss') }}" class="fw-bold text-primary">Project Profit & Loss Report</a>
+                                            <p class="mb-0">
+                                                A report detailing the project’s income and expenses, showing the net profit or loss for a specific period.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

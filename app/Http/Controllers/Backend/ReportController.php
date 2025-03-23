@@ -185,6 +185,21 @@ class ReportController extends Controller
         ));
     }
 
+    // project profit & loss report
+    public function ProjectProfitLoss(Request $request)
+    {
+        $pageTitle = 'Project Profit & Loss Report';
+
+        // Define date range
+        $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
+        $toDate = $request->input('to_date', now()->format('Y-m-d'));
+
+
+        return view('backend.admin.report.account.project_profit_loss_report', compact(
+            'pageTitle', 'fromDate', 'toDate'
+        ));
+    }
+
     /**
      * Display a listing of the resource.
      */
