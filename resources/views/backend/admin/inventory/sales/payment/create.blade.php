@@ -326,11 +326,12 @@
                         if (response.success) {
                             let products = response.purchase.purchase_products;
                             let purchase = response.purchase;
-                            console.log(purchase);
+                            // console.log(purchase);
                             let payments = response.payments;
 
-                            let vatTax = (response.purchase.vat + response.purchase.vat + response.purchase.transport_cost + response.purchase.carrying_charge - + response.purchase.discount);
-                            console.log(vatTax);
+                            let vatTax = (response.purchase.vat + response.purchase.tax + response.purchase.transport_cost + response.purchase.carrying_charge - response.purchase.discount);
+                            //console.log(vatTax);
+                            vatTax = parseFloat(vatTax.toFixed(2));
 
                             // Clear previous data
                             $('#purchase-products').empty();
@@ -350,7 +351,7 @@
                             // Populate purchase products
                             products.forEach(product => {
 
-                                let total = product.quantity * product.price;
+                                let total = ( (product.quantity * product.price) - product.discount );
                                 totalQuantity += product.quantity;
                                 totalPurchaseAmount += total;
                                 
@@ -363,6 +364,8 @@
                                     </tr>
                                 `);
                             });
+
+                            finalTotalPurchaseAmount = totalPurchaseAmount + vatTax;
 
                             // Populate payment details
                             payments.forEach(payment => {
@@ -382,13 +385,13 @@
 
                             // Update Totals
                             $('#total_quantity').text(totalQuantity);
-                            $('#total_purchase_amount').text(totalPurchaseAmount.toFixed(2));
+                            $('#total_purchase_amount').text(finalTotalPurchaseAmount.toFixed(2));
                             $('#total_paid_amount').text(totalPaidAmount.toFixed(2));
 
                             // Update Grand Totals
-                            $('#grand_total_purchase').text(totalPurchaseAmount.toFixed(2));
+                            $('#grand_total_purchase').text(finalTotalPurchaseAmount.toFixed(2));
                             $('#grand_total_paid').text(totalPaidAmount.toFixed(2));
-                            $('#grand_due_amount').text((totalPurchaseAmount - totalPaidAmount).toFixed(2));
+                            $('#grand_due_amount').text((finalTotalPurchaseAmount - totalPaidAmount).toFixed(2));
                         } else {
                             alert(response.message || 'No data found for this invoice.');
                         }
