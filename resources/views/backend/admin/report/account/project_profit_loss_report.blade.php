@@ -99,7 +99,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Sl</th>
-                                                            <th>Project Name</th>
+                                                            <th>Project</th>
                                                             <th class="text-right">Total Orders</th>
                                                             <th class="text-right">Total Expense</th>
                                                         </tr>
