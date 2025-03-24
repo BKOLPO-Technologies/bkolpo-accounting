@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <form method="POST" action="{{ route('journal-voucher.store') }}" enctype="multipart/form-data">
+                            <form method="POST" action="{{ route('journal-voucher.capital.store') }}" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
                                     <!-- Transaction Code (Auto Generated) -->

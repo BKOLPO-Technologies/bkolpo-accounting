@@ -11,6 +11,8 @@ use App\Models\Company;
 use App\Models\Journal;
 use Illuminate\View\View;
 use App\Models\LedgerGroup;
+use App\Models\LedgerSubGroup;
+use App\Models\LedgerGroupSubgroupLedger;
 use App\Models\Transaction;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -271,6 +273,231 @@ class JournalController extends Controller
             return back()->withErrors(['error' => 'An error occurred while saving the journal voucher.']);
         }
     }
+
+    public function capitalstore(Request $request)
+    {
+        // dd($request->all());
+        // Validate the request
+        $request->validate([
+            'transaction_code' => 'required|unique:journal_vouchers',
+            'company_id' => 'required',
+            'branch_id' => 'required',
+            'transaction_date' => 'required|date',
+            'type' => 'required|array',
+        ]);
+    
+        // First, check if there is any valid data (at least one valid 'type')
+        $hasValidData = false;
+    
+        foreach ($request->type as $i => $type) {
+            if (!empty($type) && (!empty($request->debit[$i]) || !empty($request->credit[$i]))) {
+                $hasValidData = true;
+                break; // If there's at least one valid row, we don't need to check further
+            }
+        }
+    
+        // If no valid data is found, return an error response
+        if (!$hasValidData) {
+            return redirect()->back()->with('error', 'No valid data found. Please ensure at least one entry is valid.');
+        }
+        $lastMonthLastDate = now()->subMonth()->endOfMonth()->toDateString();
+        // Create the JournalVoucher record
+        $journalVoucher = JournalVoucher::create([
+            'transaction_code' => $request->transaction_code,
+            'company_id' => $request->company_id,
+            'branch_id' => $request->branch_id,
+            'transaction_date' => $lastMonthLastDate,
+        ]);
+
+        $ledger_name = $request->ledger[$i]; // Ledger name (e.g., "Petty Cash")
+        $ledger_group = $request->group[$i];
+        $ledger_subgroup = $request->sub_group[$i];
+
+        // start capital account er khetre entry //
+        $first_Liabilities = LedgerGroup::where('group_name',$ledger_group)->first();
+        if (!$first_Liabilities) {
+            $first_Liabilities = LedgerGroup::create([
+                'company_id' => $request->company_id,
+                'group_name' => "Liabilities",
+                'created_by' => Auth::user()->id,
+            ]);
+        }
+
+        $capitalLedger = Ledger::where('name',$ledger_name)->first();
+        if (!$capitalLedger) {
+            $capitalLedger = Ledger::create([
+                'name' => 'Capital Account',
+                'group_id' => $first_Liabilities->id,
+                'opening_balance' => $openingBalance,
+                'ob_type' => 'credit',
+                'created_by' => Auth::user()->id,
+            ]);
+        }
+
+        // 🔹 Ledger Sub Group Create
+        $ledgerSubGroup = LedgerSubGroup::where('subgroup_name',$ledger_subgroup)->first();
+        // 🔹 Ledger Sub Group Create
+        if(!$ledgerSubGroup){
+            $ledgerSubGroup = LedgerSubGroup::create([
+                'ledger_group_id' => $first_Liabilities->id,
+                'subgroup_name'   => 'Current Liabilities',
+                'created_by'      => Auth::user()->id,
+            ]);
+        }
+
+        // 🔹 LedgerGroupSubgroupLedger Table Entry
+        $existingEntry = LedgerGroupSubgroupLedger::where('group_id', $first_Liabilities->id)
+            ->where('sub_group_id', $ledgerSubGroup->id)
+            ->where('ledger_id', $capitalLedger->id)
+            ->first(); // First entry found with the same group_id, sub_group_id, and ledger_id
+        // dd($existingEntry);
+
+        if (!$existingEntry) {
+            // Only create if no existing entry found
+            LedgerGroupSubgroupLedger::create([
+                'group_id'     => $first_Liabilities->id,
+                'sub_group_id' => $ledgerSubGroup->id,
+                'ledger_id'    => $capitalLedger->id,
+                'created_at'   => now(),
+                'updated_at'   => now(),
+            ]);
+        }
+
+        $capital_account_ledger_id = $capitalLedger->id;
+    
+        // Iterate through each row in the table and create journal voucher details
+        foreach ($request->type as $i => $type) {
+            // Skip if the row has empty type or both debit and credit are empty
+            if (empty($type) || (empty($request->debit[$i]) && empty($request->credit[$i]))) {
+                continue; // Skip this iteration
+            }
+    
+            // Get the debit and credit values for the current row
+            $debit = $request->debit[$i];
+            $credit = $request->credit[$i];
+            $ledger_name = $request->ledger[$i]; // Ledger name (e.g., "Petty Cash")
+            $ledger_group = $request->group[$i];
+            $ledger_subgroup = $request->sub_group[$i];
+
+            // 🔹 Ledger Group Create
+            $ledgerGroup = LedgerGroup::where('group_name',$ledger_group)->first();
+            if (!$ledgerGroup) {
+                $ledgerGroup = LedgerGroup::create([
+                    'company_id' => $request->company_id,
+                    'group_name' => $request->group[$i],
+                    'created_by' => Auth::user()->id,
+                ]);
+            }
+
+            // 🔹 Ledger Sub Group Create
+            $ledgerSubGroup = LedgerSubGroup::where('subgroup_name', $ledger_subgroup)->first();
+            // 🔹 Ledger Sub Group Create
+            if(!$ledgerSubGroup){
+                $ledgerSubGroup = LedgerSubGroup::create([
+                    'ledger_group_id' => $ledgerGroup->id,
+                    'subgroup_name'   => $request->sub_group[$i],
+                    'created_by'      => Auth::user()->id,
+                ]);
+            }
+            
+            
+            // 🔹 Ledger  Cash Create
+            $ledger = Ledger::where('name', $request->ledger[$i]) // Match the ledger name with request
+            ->first();
+            if(!$ledger){
+                // 🔹 Ledger Entry Create (Check if already exists)
+                $ledger = Ledger::firstOrCreate(
+                    ['name' => $request->ledger[$i]],
+                    [
+                        'opening_balance' => $request->ob[$i] ?? 0, // ✅ ওপেনিং ব্যালেন্স
+                        'ob_type'         => $request->type[$i] ?? 'debit', // ✅ ob_type (debit/credit) 
+                        'created_by' => Auth::user()->id,
+                    ]
+                );
+            }
+
+            // 🔹 LedgerGroupSubgroupLedger Table Entry
+            $existingEntry = LedgerGroupSubgroupLedger::where('group_id', $ledgerGroup->id)
+            ->where('sub_group_id', $ledgerSubGroup->id)
+            ->where('ledger_id', $ledger->id)
+            ->first(); // First entry found with the same group_id, sub_group_id, and ledger_id
+
+            if (!$existingEntry) {
+                // Only create if no existing entry found
+                LedgerGroupSubgroupLedger::create([
+                    'group_id'     => $ledgerGroup->id,
+                    'sub_group_id' => $ledgerSubGroup->id,
+                    'ledger_id'    => $ledger->id,
+                    'created_at'   => now(),
+                    'updated_at'   => now(),
+                ]);
+            }
+    
+            // Retrieve the ledger ID from the ledger name (assuming the ledger name is unique)
+            $ledger = Ledger::where('name', $ledger_name)->first();
+    
+            if (!$ledger) {
+                // If the ledger doesn't exist, skip this row and continue
+                continue;
+            }
+    
+            $ledger_id = $ledger->id; // Get the ledger's ID
+          
+            if ($type == 'Asset') {
+                // Debit the selected ledger (Asset Entry)
+                JournalVoucherDetail::create([
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id' => $ledger_id,
+                    'reference_no' => "REF-" . rand(100000, 999999),
+                    'description' => 'Opening Balance Entry - Asset ' . $ledger_name,
+                    'debit' => $debit,
+                    'credit' => 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+    
+                // Credit the capital account (for Asset entry)
+                JournalVoucherDetail::create([
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id' => $capital_account_ledger_id, // Capital Account
+                    'reference_no' => "REF-" . rand(100000, 999999),
+                    'description' => 'Capital Account Credit for Asset ' . $ledger_name,
+                    'debit' => 0,
+                    'credit' => $debit,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } elseif ($type == 'Liability') {
+                // Credit the selected ledger (Liability Entry)
+                JournalVoucherDetail::create([
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id' => $ledger_id,
+                    'reference_no' => "REF-" . rand(100000, 999999),
+                    'description' => 'Opening Balance Entry - Liability ' . $ledger_name,
+                    'debit' => 0,
+                    'credit' => $credit,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+    
+                // Debit the capital account (for Liability entry)
+                JournalVoucherDetail::create([
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id' => $capital_account_ledger_id, // Capital Account
+                    'reference_no' => "REF-" . rand(100000, 999999),
+                    'description' => 'Capital Account Debit for Liability ' . $ledger_name,
+                    'debit' => $credit,
+                    'credit' => 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
+    
+        // Commit the transaction and return success message
+        return redirect()->back()->with('success', 'Journal Voucher saved successfully!');
+    }
+    
     
 
     /**

@@ -84,8 +84,8 @@
 
      <!----- Start Voucher Area ----->
      @can('journal-menu')  
-     <li class="nav-item {{ Route::is('journal-voucher.index','journal-voucher.excel', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create') ? 'menu-open' : '' }}">
-       <a href="#" class="nav-link {{ Route::is('journal-voucher.index','journal-voucher.excel', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create') ? 'active' : '' }}">
+     <li class="nav-item {{ Route::is('journal-voucher.index','journal-voucher.excel', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create','journal-voucher.manually.capital.create') ? 'menu-open' : '' }}">
+       <a href="#" class="nav-link {{ Route::is('journal-voucher.index','journal-voucher.excel', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create','journal-voucher.manually.capital.create') ? 'active' : '' }}">
          <i class="nav-icon fas fa-book"></i>
          <p>
          Journal
@@ -95,7 +95,7 @@
        <ul class="nav nav-treeview">
        @can('journal-list')  
          <li class="nav-item">
-           <a href="{{ route('journal-voucher.index') }}" class="nav-link {{ Route::is('journal-voucher.index','journal-voucher.create') ? 'active' : '' }}">
+           <a href="{{ route('journal-voucher.index') }}" class="nav-link {{ Route::is('journal-voucher.index','journal-voucher.create','journal-voucher.manually.capital.create') ? 'active' : '' }}">
              <i class="far fa-circle nav-icon"></i>
              <p>Journal List</p>
            </a>

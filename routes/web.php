@@ -141,6 +141,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/create-manual', [JournalController::class, 'manuallyCreate'])->name('manually.create');
         Route::get('/create-manual-capital', [JournalController::class, 'manuallyCapitalCreate'])->name('manually.capital.create');
         Route::post('/store', [JournalController::class, 'store'])->name('store');
+        Route::post('/capital/store', [JournalController::class, 'capitalstore'])->name('capital.store');
         Route::get('/edit/{id}', [JournalController::class, 'edit'])->name('edit')->middleware('can:journal-edit');
         Route::post('/update/{id}', [JournalController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [JournalController::class, 'destroy'])->name('delete')->middleware('can:journal-delete');
