@@ -238,12 +238,36 @@
             let row = rows[i];
             let rowData = data[i + 1] || []; // Skip header row in data
 
-            row.querySelector('[name="type[]"]').value = rowData[0] || '';
-            row.querySelector('[name="group[]"]').value = rowData[1] || '';
-            row.querySelector('[name="sub_group[]"]').value = rowData[2] || '';
-            row.querySelector('[name="ledger[]"]').value = rowData[3] || '';
-            row.querySelector('[name="debit[]"]').value = rowData[4] || '';
-            row.querySelector('[name="credit[]"]').value = rowData[5] || '';
+            let type = rowData[0] || '';
+            let group = rowData[1] || '';
+            let subGroup = rowData[2] || '';
+            let ledger = rowData[3] || '';
+            let openingBalance = parseFloat(rowData[4]) || 0; // Convert to number
+
+            // Assign values to inputs
+            row.querySelector('[name="type[]"]').value = type;
+            row.querySelector('[name="group[]"]').value = group;
+            row.querySelector('[name="sub_group[]"]').value = subGroup;
+            row.querySelector('[name="ledger[]"]').value = ledger;
+
+            // Conditionally assign openingBalance to debit or credit
+            if (type.toLowerCase() === "asset") {
+                row.querySelector('[name="debit[]"]').value = openingBalance;
+                row.querySelector('[name="credit[]"]').value = ''; // Clear credit
+            } else if (type.toLowerCase() === "liability") {
+                row.querySelector('[name="credit[]"]').value = openingBalance;
+                row.querySelector('[name="debit[]"]').value = ''; // Clear debit
+            } else {
+                row.querySelector('[name="debit[]"]').value = '';
+                row.querySelector('[name="credit[]"]').value = '';
+            }
+
+            // row.querySelector('[name="type[]"]').value = rowData[0] || '';
+            // row.querySelector('[name="group[]"]').value = rowData[1] || '';
+            // row.querySelector('[name="sub_group[]"]').value = rowData[2] || '';
+            // row.querySelector('[name="ledger[]"]').value = rowData[3] || '';
+            // row.querySelector('[name="debit[]"]').value = rowData[4] || '';
+            // row.querySelector('[name="credit[]"]').value = rowData[5] || '';
         }
 
         calculateTotals();
