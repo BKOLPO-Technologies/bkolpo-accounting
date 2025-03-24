@@ -332,7 +332,6 @@ class JournalController extends Controller
                 'name' => 'Capital Account',
                 'group_id' => $first_Liabilities->id,
                 'opening_balance' => $openingBalance,
-                'ob_type' => 'credit',
                 'created_by' => Auth::user()->id,
             ]);
         }
@@ -413,7 +412,6 @@ class JournalController extends Controller
                     ['name' => $request->ledger[$i]],
                     [
                         'opening_balance' => $request->ob[$i] ?? 0, // ✅ ওপেনিং ব্যালেন্স
-                        'ob_type'         => $request->type[$i] ?? 'debit', // ✅ ob_type (debit/credit) 
                         'created_by' => Auth::user()->id,
                     ]
                 );
