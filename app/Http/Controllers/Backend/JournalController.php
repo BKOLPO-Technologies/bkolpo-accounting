@@ -323,6 +323,9 @@ class JournalController extends Controller
             ]);
         }
 
+
+        $openingBalance = 0;
+
         $capitalLedger = Ledger::where('name',$ledger_name)->first();
         if (!$capitalLedger) {
             $capitalLedger = Ledger::create([
