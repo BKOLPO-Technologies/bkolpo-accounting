@@ -292,15 +292,8 @@
 
 <!-- Bootstrap Datepicker JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-<script>
-    function comingSoon() {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Working!',
-            text: 'Comming Soon.',
-        });
-    }
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 <script>
   $(function () {
     // Summernote with placeholder

@@ -26,6 +26,8 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
 
+                                {{-- <a onclick="comingSoon()" class="btn btn-success"> <i class="fa-solid fa-download"></i> Click to Import</a> --}}
+
                                 <a data-toggle="modal" data-target="#importModal" class="btn btn-success">
                                     <i class="fa-solid fa-download"></i> Click to Import
                                 </a>
@@ -95,66 +97,71 @@
 
                                 <div class="row p-1">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered border-secondary" id="capital-table">
-                                            <thead class="table-light">
-                                                <tr style="background:#dcdcdc; text-align:center;">
-                                                    <th style="background:#dcdcdc;">Sl</th>
-                                                    <th>Type</th>
-                                                    <th>Group</th>
-                                                    <th>Sub Group</th>
-                                                    <th>Ledger</th>
-                                                    <th>Debit</th>
-                                                    <th>Credit</th>
-                                                </tr>
-                                            </thead>
+                                        <table class="table table-bordered border-secondary">
                                             <tbody>
-                                                <!-- Manually added 10 rows -->
-                                                @for ($i = 0; $i < 10; $i++)
-                                                    <tr>
-                                                        <td class="text-center">{{ $i + 1 }}</td>
-                                                        <td style="width: 15% !important;">
-                                                            <div class="input-group">
-                                                                <select class="form-control" name="type[]">
-                                                                    <option value="">Select Type</option>
-                                                                    <option value="Asset">Asset</option>
-                                                                    <option value="Liability">Liability</option>
-                                                                </select>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="group[]" 
-                                                                placeholder="Enter Group No" value="{{ old("group.$i") }}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="sub_group[]" 
-                                                                placeholder="Enter Sub-Group No" value="{{ old("sub_group.$i") }}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="ledger[]" 
-                                                                placeholder="Enter Ledger No" value="{{ old("ledger.$i") }}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control text-end debit" name="debit[]" 
-                                                                value="{{ old("debit.$i", '') }}" placeholder="Enter Debit Amount">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control text-end credit" name="credit[]" 
-                                                                value="{{ old("credit.$i", '') }}" placeholder="Enter Credit Amount">
-                                                        </td>
+                                            <table class="table table-bordered border-secondary" id="capital-table">
+                                                <thead class="table-light">
+                                                    <tr style="background:#dcdcdc; text-align:center;">
+                                                        <th style="background:#dcdcdc;">Sl</th>
+                                                        <th>Type</th>
+                                                        <th>Group</th>
+                                                        <th>Sub Group</th>
+                                                        <th>Ledger</th>
+                                                        <th>Debit</th>
+                                                        <th>Credit</th>
                                                     </tr>
-                                                @endfor
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Manually added 10 rows -->
+                                                    @for ($i = 0; $i < 10; $i++)
+                                                        <tr>
+                                                            <td class="text-center">{{ $i + 1 }}</td>
+                                                            <td style="width: 15% !important;">
+                                                                <div class="input-group">
+                                                                    <select class="form-control" name="type[]">
+                                                                        <option value="">Select Type</option>
+                                                                        <option value="Asset">Asset</option>
+                                                                        <option value="Liability">Liability</option>
+                                                                    </select>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="reference_no[]" 
+                                                                    placeholder="Enter Group No" value="{{ old("reference_no.$i") }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="reference_no[]" 
+                                                                    placeholder="Enter Sub-Group No" value="{{ old("reference_no.$i") }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="reference_no[]" 
+                                                                    placeholder="Enter Ledger No" value="{{ old("reference_no.$i") }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control text-end debit" name="debit[]" 
+                                                                    value="{{ old("debit.$i", '') }}" placeholder="Enter Debit Amount">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control text-end credit" name="credit[]" 
+                                                                    value="{{ old("credit.$i", '') }}" placeholder="Enter Credit Amount">
+                                                            </td>
+                                                        </tr>
+                                                    @endfor
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="5" style="text-align: right; padding-right: 1rem;"><strong>Total:</strong></td>
+                                                        <td style="text-align: right;"><strong id="debitTotal">৳0.00</strong></td>
+                                                        <td style="text-align: right;"><strong id="creditTotal">৳0.00</strong></td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
                                             </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <td colspan="5" style="text-align: right; padding-right: 1rem;"><strong>Total:</strong></td>
-                                                    <td style="text-align: right;"><strong id="debitTotal">৳0.00</strong></td>
-                                                    <td style="text-align: right;"><strong id="creditTotal">৳0.00</strong></td>
-                                                </tr>
-                                            </tfoot>
+                                            
                                         </table>
                                     </div>
                                 </div>
-
+                                
                                 <div class="row mt-3">
                                     <div class="col-lg-12">
                                         <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;">
@@ -186,95 +193,142 @@
                 <form id="importForm" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="excelFile">Select Excel File</label>
-                        <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xls,.xlsx" required>
+                        <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xls,.xlsx" required onchange="handleFile(event)">
                     </div>
-                    <button type="button" class="btn btn-primary" id="submitImport">Submit</button>
                 </form>
             </div>
+            
         </div>
     </div>
 </div>
 
-
 @endsection
 
 @push('js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+    function handleFile(event) {
+    let file = event.target.files[0];
+    console.log("File selected:", file);
+
+    if (!file) return;
+
+    let reader = new FileReader();
+    reader.onload = function (e) {
+
+        console.log("File loaded, processing..."); // Debugging line
+
+        let data = new Uint8Array(e.target.result);
+        let workbook = XLSX.read(data, { type: 'array' });
+
+        // Assuming first sheet
+        let sheetName = workbook.SheetNames[0];
+        let sheet = workbook.Sheets[sheetName];
+
+        // Convert sheet to JSON
+        let jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+        // Populate table with the extracted data
+        populateTable(jsonData);
+    };
+
+    reader.readAsArrayBuffer(file);
+}
+
+function populateTable(data) {
+    let tableBody = document.querySelector("#capital-table tbody");
+
+    console.log("Populating Table with Data:", data);
+
+    // Clear existing rows (except header)
+    tableBody.innerHTML = "";
+
+    // Loop through data (Skipping first row if it's a header)
+    for (let i = 1; i < data.length; i++) {
+        let row = data[i];
+
+        // Ensure row has at least 7 columns (Sl, Type, Group, Sub Group, Ledger, Debit, Credit)
+        if (row.length < 7) {
+            console.warn("Skipping incomplete row:", row);
+            continue;
+        }
+
+        let newRow = `
+            <tr>
+                <td class="text-center">${i}</td>
+                <td><input type="text" class="form-control" name="type[]" value="${row[1] || ''}"></td>
+                <td><input type="text" class="form-control" name="group[]" value="${row[2] || ''}"></td>
+                <td><input type="text" class="form-control" name="sub_group[]" value="${row[3] || ''}"></td>
+                <td><input type="text" class="form-control" name="ledger[]" value="${row[4] || ''}"></td>
+                <td><input type="number" class="form-control text-end debit" name="debit[]" value="${row[5] || 0}"></td>
+                <td><input type="number" class="form-control text-end credit" name="credit[]" value="${row[6] || 0}"></td>
+            </tr>
+        `;
+
+        tableBody.innerHTML += newRow;
+    }
+
+    // Recalculate totals after filling data
+    calculateTotals();
+}
+
+
+function calculateTotals() {
+    let totalDebit = 0, totalCredit = 0;
+
+    document.querySelectorAll(".debit").forEach((input) => {
+        totalDebit += parseFloat(input.value) || 0;
+    });
+
+    document.querySelectorAll(".credit").forEach((input) => {
+        totalCredit += parseFloat(input.value) || 0;
+    });
+
+    document.getElementById("debitTotal").textContent = `৳${totalDebit.toFixed(2)}`;
+    document.getElementById("creditTotal").textContent = `৳${totalCredit.toFixed(2)}`;
+}
+
+// Recalculate totals if values change
+document.addEventListener("input", function (event) {
+    if (event.target.classList.contains("debit") || event.target.classList.contains("credit")) {
+        calculateTotals();
+    }
+});
+</script>
 
 <script>
-
-    document.getElementById("submitImport").addEventListener("click", function() {
-        let fileInput = document.getElementById("excelFile");
-        if (fileInput.files.length === 0) {
-            alert("Please select an Excel file before submitting.");
-            return;
+    $(document).ready(function () {
+        function formatCurrency(amount) {
+            return '৳' + new Intl.NumberFormat('en-BD', { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            }).format(amount);
         }
 
-        let file = fileInput.files[0];
-        let reader = new FileReader();
+        function calculateTotals() {
+            let totalDebit = 0, totalCredit = 0;
 
-        reader.onload = function(e) {
-            let data = new Uint8Array(e.target.result);
-            let workbook = XLSX.read(data, { type: "array" });
+            $(".debit").each(function () {
+                totalDebit += parseFloat($(this).val()) || 0;
+            });
 
-            let sheetName = workbook.SheetNames[0]; // Get the first sheet
-            let sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+            $(".credit").each(function () {
+                totalCredit += parseFloat($(this).val()) || 0;
+            });
 
-            console.log("Excel Data:", sheetData); // Debugging: Log the sheet data
-
-            populateTable(sheetData); // Call function to populate table
-            $("#importModal").modal("hide"); // Hide modal after processing
-        };
-
-        reader.readAsArrayBuffer(file);
-    });
-
-    function populateTable(data) {
-        let tableBody = document.querySelector("#capital-table tbody");
-        console.log("Populating Table with Data:", data);
-
-        let rows = tableBody.querySelectorAll("tr"); // Get all existing rows
-
-        for (let i = 0; i < rows.length; i++) {
-            let row = rows[i];
-            let rowData = data[i + 1] || []; // Skip header row in data
-
-            row.querySelector('[name="type[]"]').value = rowData[0] || '';
-            row.querySelector('[name="group[]"]').value = rowData[1] || '';
-            row.querySelector('[name="sub_group[]"]').value = rowData[2] || '';
-            row.querySelector('[name="ledger[]"]').value = rowData[3] || '';
-            row.querySelector('[name="debit[]"]').value = rowData[4] || '';
-            row.querySelector('[name="credit[]"]').value = rowData[5] || '';
+            $("#debitTotal").text(formatCurrency(totalDebit));
+            $("#creditTotal").text(formatCurrency(totalCredit));
         }
 
-        calculateTotals();
-    }
-
-    function formatCurrency(amount) {
-        return '৳' + new Intl.NumberFormat('en-BD', { 
-            minimumFractionDigits: 2, 
-            maximumFractionDigits: 2 
-        }).format(amount);
-    }
-
-    function calculateTotals() {
-        let totalDebit = 0, totalCredit = 0;
-
-        $(".debit").each(function () {
-            totalDebit += parseFloat($(this).val()) || 0;
+        $(document).on("keyup", ".debit, .credit", function () {
+            calculateTotals();
         });
 
-        $(".credit").each(function () {
-            totalCredit += parseFloat($(this).val()) || 0;
-        });
-
-        $("#debitTotal").text(formatCurrency(totalDebit));
-        $("#creditTotal").text(formatCurrency(totalCredit));
-    }
-
-    $(document).on("keyup", ".debit, .credit", function () {
+        // Call once to update if there are pre-filled values
         calculateTotals();
     });
 
+    // company to branch show
     $(document).ready(function () {
         $('#company_id').on('change', function () {
             let companyId = $(this).val();
@@ -289,7 +343,7 @@
                     url: '/admin/journal-voucher/get-branches/' + companyId, // Backend route
                     type: 'GET',
                     success: function (response) {
-                        //console.log(response); // Debug: Check the response in the console
+                        console.log(response); // Debug: Check the response in the console
                         
                         // Clear existing options in the branch dropdown
                         branchSelect.empty();
@@ -318,5 +372,15 @@
             }
         });
     });
+</script>
+
+<script>
+    function comingSoon() {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Working!',
+            text: 'Comming Soon.',
+        });
+    }
 </script>
 @endpush
