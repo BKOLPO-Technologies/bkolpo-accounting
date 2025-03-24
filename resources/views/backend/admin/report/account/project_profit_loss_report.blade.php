@@ -59,19 +59,34 @@
                                     <div id="filter-form">
                                         <form action="{{ route('report.project.profit.loss') }}" method="GET" class="mb-3">
                                             <div class="row justify-content-center">
-                                                <div class="col-md-3 mt-3">
+                                                <div class="col-md-2 mt-3">
                                                     <label for="from_date">From Date:</label>
                                                     <input type="text" name="from_date" id="from_date" class="form-control" value="{{ request('from_date', $fromDate) }}">
                                                 </div>
-                                                <div class="col-md-3 mt-3">
+                                                <div class="col-md-2 mt-3">
                                                     <label for="to_date">To Date:</label>
                                                     <input type="text" name="to_date" id="to_date" class="form-control" value="{{ request('to_date', $toDate) }}">
                                                 </div>
+                                                <!-- Project Selection -->
+                                                <div class="col-md-2 mt-3">
+                                                    <label for="project_id">Select Project:</label>
+                                                    <select name="project_id" id="project_id" class="form-control">
+                                                        <option value="">Select a Project</option>
+                                                        @foreach ($allProjects as $project)
+                                                            <option value="{{ $project->id }}" {{ request('project_id') == $project->id ? 'selected' : '' }}>
+                                                                {{ $project->project_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>                                                    
+                                                </div>
+                                                <!-- Filter Button -->
                                                 <div class="col-md-1 mt-3 d-flex align-items-end">
                                                     <button type="submit" class="btn btn-primary w-100">Filter</button>
                                                 </div>
+
+                                                <!-- Clear Button -->
                                                 <div class="col-md-1 mt-3 d-flex align-items-end">
-                                                    <a href="{{ route('report.project.profit.loss') }}"  class="btn btn-danger w-100">Clear</a>
+                                                    <a href="{{ route('report.project.profit.loss') }}" class="btn btn-danger w-100">Clear</a>
                                                 </div>
                                             </div>
                                         </form>
@@ -83,28 +98,41 @@
                                                 <table class="table table-bordered">
                                                     <thead>
                                                         <tr>
+                                                            <th>Sl</th>
                                                             <th>Project Name</th>
                                                             <th class="text-right">Total Orders</th>
                                                             <th class="text-right">Total Expense</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
-                                                        @foreach ($projects as $project)
+                                                    <tbody id="projectTableBody">
+                                                        @forelse ($projects as $key => $project)
+                                                            @php
+                                                                $totalPurchase = $project->purchases->sum('total');
+                                                                $profitLoss = $project->grand_total - $totalPurchase;
+                                                            @endphp
                                                             <tr class="table-secondary">
+                                                                <td><strong>{{ $key + 1 }}</strong></td>
                                                                 <td><strong>{{ $project->project_name }}</strong></td>
-                                                                <td class="text-right"><strong>{{ bdt() }} {{ number_format($project->total_sales, 2) }}</strong></td>
-                                                                <td class="text-right"><strong>{{ bdt() }} {{ number_format($project->total_purchases, 2) }}</strong></td>
+                                                                <td class="text-right"><strong>{{ bdt() }} {{ number_format($project->grand_total, 2) }}</strong></td>
+                                                                <td class="text-right"><strong>{{ bdt() }} {{ number_format($totalPurchase, 2) }}</strong></td>
                                                             </tr>
-                                                        @endforeach
+                                                        @empty
+                                                            @if(request('project_id')) 
+                                                                <tr>
+                                                                    <td colspan="4" class="text-center">No data available for this project</td>
+                                                                </tr>
+                                                            @endif
+                                                        @endforelse
                                                     </tbody>
+                                                    
                                                     <tfoot>
                                                         <tr class="table-primary">
-                                                            <th colspan="1">Total</th>
+                                                            <th colspan="2">Total</th>
                                                             <th class="text-right">{{ bdt() }} {{ number_format($totalSales, 2) }}</th>
                                                             <th class="text-right">{{ bdt() }} {{ number_format($totalPurchases, 2) }}</th>
                                                         </tr>
                                                         <tr class="table-success">
-                                                            <th colspan="2">Net Profit / Loss</th>
+                                                            <th colspan="3">Net Profit / Loss</th>
                                                             <th class="text-right">
                                                                 {{ bdt() }} {{ number_format($netProfitLoss, 2) }}
                                                             </th>
@@ -130,11 +158,25 @@
 <!-- JavaScript for Printing -->
 <script>
     function printProfitLoss() {
+        // Get the content to print
         var printContent = document.getElementById("printable-area").innerHTML;
+        
+        // Get the section to hide (Select Project dropdown)
+        var projectSelectSection = document.getElementById("project_id");
+
+        // Save the current state of the document body
         var originalContent = document.body.innerHTML;
 
+        // Hide the select project section
+        projectSelectSection.style.display = "none";
+
+        // Replace the body content with the printable content
         document.body.innerHTML = printContent;
+
+        // Trigger the print dialog
         window.print();
+
+        // Restore the original content of the page
         document.body.innerHTML = originalContent;
     }
 </script>

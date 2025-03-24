@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ledger;
+use App\Models\Project;
 use App\Models\Journal;
 use App\Models\JournalVoucher;
 use App\Models\LedgerGroup;
@@ -188,27 +189,47 @@ class ReportController extends Controller
     }
 
     // project profit & loss report
-    public function ProjectProfitLoss(Request $request)
-    {
-        $pageTitle = 'Project Profit & Loss Report';
 
-        // Define date range
-        $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
-        $toDate = $request->input('to_date', now()->format('Y-m-d'));
-    
-        // Use the trait method to get the profit and loss data
-        $data = $this->getProjectProfitLossData($fromDate, $toDate);
-    
-        return view('backend.admin.report.account.project_profit_loss_report', [
-            'pageTitle' => $pageTitle,
-            'projects' => $data['projects'],
-            'totalSales' => $data['totalSales'],
-            'totalPurchases' => $data['totalPurchases'],
-            'netProfitLoss' => $data['netProfitLoss'],
-            'fromDate' => $fromDate,
-            'toDate' => $toDate
-        ]);
+    public function projectProfitLoss(Request $request)
+{
+    $pageTitle = 'Project Profit & Loss Report';
+    $allProjects = Project::all();
+
+    // Date Range
+    $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
+    $toDate = $request->input('to_date', now()->format('Y-m-d'));
+    $projectId = $request->input('project_id');
+
+    // Projects Query (Initially Empty)
+    $projects = collect();
+    $totalSales = 0;
+    $totalPurchases = 0;
+    $netProfitLoss = 0;
+
+    if ($projectId) {
+        // Fetch only when project is selected
+        $projects = Project::with(['purchases' => function ($query) use ($fromDate, $toDate) {
+            if ($fromDate && $toDate) {
+                // If both fromDate and toDate are provided, filter purchases within that range
+                $query->whereBetween('created_at', [$fromDate, $toDate]);
+            } elseif (!$fromDate || !$toDate || $toDate == now()->format('Y-m-d')) {
+                // If either fromDate or toDate is missing, or toDate is today, get purchases after toDate
+                $query->orWhere('created_at', '>', $toDate);
+            }
+        }])->where('id', $projectId)->get();
+        
+
+        // Calculate total sales & purchases
+        $totalSales = $projects->sum('grand_total');
+        $totalPurchases = $projects->sum(fn ($project) => $project->purchases->sum('total'));
+        $netProfitLoss = $totalSales - $totalPurchases;
     }
+
+    return view('backend.admin.report.account.project_profit_loss_report', compact(
+        'pageTitle', 'fromDate', 'toDate', 'projects', 'totalSales', 'totalPurchases','allProjects', 'netProfitLoss'
+    ));
+}
+
 
     /**
      * Display a listing of the resource.
