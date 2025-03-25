@@ -181,7 +181,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // PIE CHART SETUP
+        // PIE CHART SETUP /////////////////////////////////////////////////////////////////////////////////
         var pieChartCanvas = document.getElementById('pieChart');
 
         if (!pieChartCanvas) {
@@ -191,13 +191,20 @@
 
         var pieChartContext = pieChartCanvas.getContext('2d');
 
+        // Dynamic data passed from Laravel Blade
+        var projectTotalAmount = {{ $projectTotalAmount }};
+        var projectTotalAmountPaid = {{ $projectTotalAmountPaid }};
+        var projectTotalAmountDue = {{ $projectTotalAmountDue }};
+        var purchaseTotalAmount = {{ $purchaseTotalAmount }};
+
         var pieData = {
-            labels: ['Chrome', 'IE', 'Firefox', 'Safari', 'Opera'],
+            labels: ['Total Project Amount', 'Total Paid', 'Total Due', 'Total Purchase'],
             datasets: [{
-                data: [700, 500, 400, 600, 300],
-                backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc'],
+                data: [projectTotalAmount, projectTotalAmountPaid, projectTotalAmountDue, purchaseTotalAmount],
+                backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef'],
             }]
         };
+
 
         var pieOptions = {
             responsive: true,
@@ -210,7 +217,7 @@
             options: pieOptions
         });
 
-        // BAR CHART SETUP
+        // BAR CHART SETUP /////////////////////////////////////////////////////////////////////////////////////
         var barChartCanvas = document.getElementById('barChart');
 
         if (!barChartCanvas) {
