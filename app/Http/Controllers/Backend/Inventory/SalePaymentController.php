@@ -52,7 +52,10 @@ class SalePaymentController extends Controller
         $suppliers = Supplier::latest()->get();
         $ledgerGroups = LedgerGroup::with('ledgers')->latest()->get();
 
-        return view('backend.admin.inventory.sales.payment.create',compact('pageTitle','incomingChalans','suppliers','ledgerGroups')); 
+        // Retrieve Ledgers where the type is either 'Bank' or 'Cash'
+        $ledgers = Ledger::whereIn('type', ['Bank', 'Cash'])->get();
+
+        return view('backend.admin.inventory.sales.payment.create',compact('pageTitle','incomingChalans','suppliers','ledgerGroups','ledgers')); 
     }
 
     public function getLedgersByGroup(Request $request)
@@ -166,7 +169,7 @@ class SalePaymentController extends Controller
     {
         // this is ok
         // payment/sales/create
-        //dd($request->all());
+        // dd($request->all());
         // Validate the incoming form data
         $request->validate([
             'supplier_id' => 'required|exists:suppliers,id',
@@ -175,7 +178,6 @@ class SalePaymentController extends Controller
             'total_amount' => 'required|numeric|min:0',
             'pay_amount' => 'required|numeric|min:0',
             'due_amount' => 'required|numeric|min:0',
-            'payment_method' => 'required|in:cash,bank',
             'payment_date' => 'required|date',
         ]);
     
@@ -189,6 +191,16 @@ class SalePaymentController extends Controller
             //                   ->first();
 
             //dd("payment = ", $payment);
+
+            $ledger = Ledger::findOrFail($request->payment_method);
+
+            if($ledger->type == 'Cash'){
+                $paymentDescription = 'Bank Payment Made to Supplier';
+                $payment_method = 'Cash';
+            }elseif($ledger->type == 'Bank'){
+                $paymentDescription = 'Bank Payment Made to Supplier'; 
+                $payment_method = 'Bank';
+            }
     
             // Create a new payment
             $payment = Payment::create([
@@ -232,19 +244,20 @@ class SalePaymentController extends Controller
             $ledger = null;
 
             // Step 4: Based on payment method, get the corresponding ledger
-            if ($payment_method == 'cash') {
-                $ledger = Ledger::where('name', 'Cash')->first(); // Find Cash ledger
-                $paymentDescription = 'Cash Paid to Supplier'; 
-            } elseif ($payment_method == 'bank') {
-                $ledger = Ledger::where('name', 'Bank')->first(); // Find Bank ledger
-                $paymentDescription = 'Bank Payment Made to Supplier';
-            }
+            // if ($payment_method == 'cash') {
+            //     $ledger = Ledger::where('type', 'Cash')->first();
+            //     $paymentDescription = 'Cash Paid to Supplier'; 
+            // } elseif ($payment_method == 'bank') {
+            //     $ledger = Ledger::where('type', 'Bank')->first(); // Find Bank ledger
+            //     $paymentDescription = 'Bank Payment Made to Supplier';
+            // }
 
-            $cashBankLedger = $ledger;
-            $payableLedger = Ledger::where('name', 'Accounts Payable')->first();
+
+            $payment_ledger = $ledger;
+            $payableLedger = Ledger::where('type', 'Payable')->first();
             $paymentAmount = $request->input('pay_amount', 0);
 
-            if ($cashBankLedger && $payableLedger) {
+            if ($payment_ledger && $payableLedger) {
                 // Check if a Journal Voucher exists for this payment transaction
                 $journalVoucher = JournalVoucher::where('transaction_code', $purchase->invoice_no . '-PAY')->first();
             
@@ -273,7 +286,7 @@ class SalePaymentController extends Controller
                 // Payment -> Cash & Bank (Credit Entry)
                 JournalVoucherDetail::create([
                     'journal_voucher_id' => $journalVoucher->id,
-                    'ledger_id'          => $cashBankLedger->id, // Cash & Bank
+                    'ledger_id'          => $payment_ledger->id, // Cash & Bank
                     'reference_no'       => $purchase->invoice_no ?? '',
                     'description'        => ucfirst($paymentDescription), 
                     'debit'              => 0,

@@ -83,19 +83,17 @@
                                                 <td class="font-weight-bolder">{{ bdt() }} {{ number_format($ledger->ledgerSums['credit'], 2) }}</td>
                                                 <!-- <td>{{ bdt() }} {{ number_format($ledger->debit + $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit'], 2) }}</td> -->
                                                 <td class="font-weight-bolder">
-                                                    {{ bdt() }} {{ number_format(
-                                                        ($ledger->ob_type == 'debit') 
-                                                            ? ($ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit']) 
-                                                            : ($ledger->ledgerSums['credit'] + $ledger->ledgerSums['debit']),
+                                                    {{ bdt() }} 
+                                                    {{ number_format(
+                                                        $ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit'],
                                                         2
                                                     ) }}
                                                     @php
-                                                        // বর্তমান ডেবিট টোটালে যোগ করা
-                                                        $totalCurrentDr += ($ledger->ob_type == 'debit') 
-                                                            ? ($ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit']) 
-                                                            : ($ledger->ledgerSums['credit'] + $ledger->ledgerSums['debit']);
+                                                        // Update the total by adding the difference of debit and credit
+                                                        $totalCurrentDr += ($ledger->ledgerSums['debit'] - $ledger->ledgerSums['credit']);
                                                     @endphp
                                                 </td>
+                                                
                                                 {{-- <td>
                                                     @if($ledger->status == 1)
                                                         <a href="#" class="badge badge-success">

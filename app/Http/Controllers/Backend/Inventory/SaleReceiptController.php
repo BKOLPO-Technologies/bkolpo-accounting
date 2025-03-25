@@ -169,14 +169,14 @@ class SaleReceiptController extends Controller
             //     $ledger = Ledger::where('name', 'Bank')->first(); 
             // }
 
-            if ($paymentMethod == 'cash') {
+             if ($paymentMethod == 'cash') {
                 $ledger = Ledger::where('type', 'Cash')->first();
             } elseif ($paymentMethod == 'bank') {
                 $ledger = Ledger::where('type', 'Bank')->first(); 
             }
 
             $cashBankLedger  = $ledger;
-            $receivableLedger = Ledger::where('type', 'Bank')->first();
+            $receivableLedger = Ledger::where('name', 'Accounts Receivable')->first();
         
             $paymentAmount = $request->input('pay_amount', 0); 
 

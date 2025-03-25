@@ -117,8 +117,9 @@
                                         <span class="input-group-text"><i class="fas fa-book"></i></span>
                                         <select class="form-control" name="payment_method" id="payment_method" required>
                                             <option value="">Choose Payment Method</option>
-                                            <option value="cash" {{ old('payment_method', $payment->payment_method ?? '') === 'cash' ? 'selected' : '' }}>Cash</option>
-                                            <option value="bank" {{ old('payment_method', $payment->payment_method ?? '') === 'bank' ? 'selected' : '' }}>Bank</option>
+                                            @foreach($ledgers as $ledger)
+                                                <option value="{{ $ledger->id }}">{{ $ledger->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -529,20 +530,35 @@
     // });
 </script>
 <script>
-    document.getElementById('payment_method').addEventListener('change', function() {
-        var paymentMethod = this.value;
-        
-        // Hide all additional fields
-        document.getElementById('bank_account_div').style.display = 'none';
-        document.getElementById('cheque_no_div').style.display = 'none';
-        document.getElementById('cheque_date_div').style.display = 'none';
+    document.addEventListener("DOMContentLoaded", function () {
+        // Select payment method dropdown
+        var paymentMethodSelect = document.getElementById('payment_method');
 
-        // Show fields based on selected payment method
-        if (paymentMethod === 'bank') {
-            document.getElementById('bank_account_div').style.display = 'block';
-            document.getElementById('cheque_no_div').style.display = 'block';
-            document.getElementById('cheque_date_div').style.display = 'block';
-        }
+        // Div elements that will be toggled
+        var bankAccountDiv = document.getElementById('bank_account_div');
+        var chequeNoDiv = document.getElementById('cheque_no_div');
+        var chequeDateDiv = document.getElementById('cheque_date_div');
+
+        // Event listener for payment method selection
+        paymentMethodSelect.addEventListener('change', function () {
+            // Get selected payment method type
+            var selectedMethod = paymentMethodSelect.value;
+
+            // Hide all fields initially
+            bankAccountDiv.style.display = 'none';
+            chequeNoDiv.style.display = 'none';
+            chequeDateDiv.style.display = 'none';
+
+            // Show the relevant fields based on the selected payment method
+            if (selectedMethod === 'Bank') {
+                bankAccountDiv.style.display = 'block'; // Show Bank Account Number field
+                chequeNoDiv.style.display = 'block'; // Show Cheque Number field
+                chequeDateDiv.style.display = 'block'; // Show Cheque Date field
+            } else if (selectedMethod === 'Cheque') {
+                chequeNoDiv.style.display = 'block'; // Show Cheque Number field
+                chequeDateDiv.style.display = 'block'; // Show Cheque Date field
+            }
+        });
     });
 </script>
 @endpush
