@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\LedgerGroup;
 use App\Models\LedgerSubGroup;
@@ -10,7 +9,6 @@ use App\Models\Ledger;
 use App\Models\LedgerGroupSubgroupLedger;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use DB;
 
 class LedgerSeeder extends Seeder
 {
@@ -21,7 +19,16 @@ class LedgerSeeder extends Seeder
     {
         $userId = Auth::id() ?? 1;
 
-        // 🔹 Ledger Groups & Sub Groups
+        // Define a mapping for ledgers and their corresponding types
+        $ledgerTypes = [
+            'Accounts Receivable' => 'Receivable',
+            'Accounts Payable' => 'Payable',
+            'Brac Bank A/C -2071145530001' => 'Bank',
+            'Al Arafah Bank A/C -' => 'Bank',
+            // Add more specific mappings as necessary
+        ];
+
+        // Define Ledger Groups, Sub Groups, and Ledgers
         $groups = [
             'Asset' => [
                 'Cash In Hand' => [
@@ -35,7 +42,7 @@ class LedgerSeeder extends Seeder
                         'Brac Bank A/C -2071145530001',
                         'Al Arafah Bank A/C -',
                     ],
-                    'type' => 'Bank',  // Default to bank type for accounts
+                    'type' => null,  // Default to bank type for accounts
                 ],
             ],
             'Liabilities' => [
@@ -99,8 +106,8 @@ class LedgerSeeder extends Seeder
                     'type' => null,  // No specific type (if no ledgers, it remains null)
                 ],
             ],
-        ];        
-        
+        ];
+
         // 🔸 Insert Groups, Sub Groups & Ledgers
         foreach ($groups as $groupName => $subGroups) {
             // 🔹 Insert Group
@@ -117,30 +124,20 @@ class LedgerSeeder extends Seeder
                     'created_by'      => $userId,
                 ]);
 
-                // 🔹 Get type for this sub-group
-                $type = $data['type'] ?? null;
+                // 🔹 Get the type for the sub-group
+                $defaultType = $data['type'] ?? null;
 
                 foreach ($data['ledgers'] as $ledgerName) {
                     // Default values for opening balance and ob_type
                     $openingBalance = 0;
                     $obType = null;
 
-                    // Assign specific types based on the ledger name
-                    if ($ledgerName === 'Accounts Receivable') {
-                        $type = 'Receivable'; // Set type to 'Receivable' for 'Accounts Receivable'
-                    } elseif ($ledgerName === 'Accounts Payable') {
-                        $type = 'Payable'; // Set type to 'Payable' for 'Accounts Payable'
-                    } elseif (in_array($ledgerName, ['Office Equipment Furniture and Others', 'Brac Bank A/C -2071145530001', 'Al Arafah Bank A/C -'])) {
-                        $type = 'Bank'; // Set type to 'Bank' for specific bank-related ledgers
-                    } elseif ($type === 'Cash') {
-                        $obType = 'debit'; // Typically debit for cash
-                    } elseif ($type === 'Bank') {
-                        $obType = 'debit'; // Typically debit for bank accounts
-                    }
+                    // Assign specific type based on the mapping, fallback to default type if not mapped
+                    $type = $ledgerTypes[$ledgerName] ?? $defaultType;
 
-                    // For 'Liabilities' specific case, ensure other ledgers stay with null type
-                    if ($groupName === 'Liabilities' && !in_array($ledgerName, ['Accounts Payable'])) {
-                        $type = null; // Set type to null for all liabilities except 'Accounts Payable'
+                    // For 'Liabilities', ensure that all other ledgers except 'Accounts Payable' have null type
+                    if ($groupName === 'Liabilities' && $ledgerName !== 'Accounts Payable') {
+                        $type = null;
                     }
 
                     // 🔹 Insert Ledger
@@ -148,7 +145,7 @@ class LedgerSeeder extends Seeder
                         'name'            => $ledgerName,
                         'opening_balance' => $openingBalance,
                         'ob_type'         => $obType,
-                        'type'            => $type, // Assign the type from the array
+                        'type'            => $type, // Assign the type from the mapping or default
                         'created_by'      => $userId,
                     ]);
 
@@ -161,6 +158,5 @@ class LedgerSeeder extends Seeder
                 }
             }
         }
-
     }
 }
