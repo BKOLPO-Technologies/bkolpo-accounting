@@ -74,9 +74,9 @@
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
-                        <h3>1</h3>
+                        <h3>{{ $projectTotalAmount }}</h3>
         
-                        <p>Total Amount</p>
+                        <p>Project Total Order</p>
                         </div>
                         <div class="icon">
                         <i class="ion ion-bag"></i>
@@ -89,9 +89,9 @@
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-success">
                         <div class="inner">
-                        <h3>1</h3>
+                        <h3>{{ $projectTotalAmountPaid }}</h3>
         
-                        <p>Paid Amount</p>
+                        <p>Project Total Amount Paid</p>
                         </div>
                         <div class="icon">
                         <i class="ion ion-stats-bars"></i>
@@ -102,9 +102,9 @@
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-danger">
                         <div class="inner">
-                        <h3>1</h3>
+                        <h3>{{ $projectTotalAmountDue }}</h3>
         
-                        <p>Project Type</p>
+                        <p>Project Total Amount Due</p>
                         </div>
                         <div class="icon">
                         <i class="ion ion-pie-graph"></i>
@@ -115,10 +115,8 @@
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-warning">
                         <div class="inner">
-                            <h3>
-                                p
-                            </h3>
-                            <p>{{ ucwords('Project Status') }}</p>
+                            <h3>{{ $purchaseTotalAmount }}</h3>
+                            <p>Purchase Total</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-tasks"></i>
