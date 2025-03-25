@@ -48,33 +48,206 @@
     }
 </style>
 
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1 class="m-0">{{ $pageTitle ?? 'N/A' }}</h1>
-                </div><!-- /.col -->
+                </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A' }}</li>
                     </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
-    <!-- <div class="content">
-        <div class="welcome-message">
-            <h2>Welcome to the Admin Dashboard</h2>
+                </div>
+            </div>
         </div>
-    </div> -->
-    <!-- /.content -->
+    </div>
+
+    <div class="content">
+        {{-- <div class="welcome-message">
+            <h2>Welcome to the Admin Dashboard</h2>
+        </div> --}}
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                        <h3>1</h3>
+        
+                        <p>Total Amount</p>
+                        </div>
+                        <div class="icon">
+                        <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">
+                            More info <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                        <h3>1</h3>
+        
+                        <p>Paid Amount</p>
+                        </div>
+                        <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                        <h3>1</h3>
+        
+                        <p>Project Type</p>
+                        </div>
+                        <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3>
+                                p
+                            </h3>
+                            <p>{{ ucwords('Project Status') }}</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 col-6">
+                    <!-- PIE CHART -->
+                    <div class="card card-danger">
+                        <div class="card-header">
+                        <h3 class="card-title">Pie Chart</h3>
+        
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                            </button>
+                            {{-- <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button> --}}
+                        </div>
+                        </div>
+                        <div class="card-body">
+                        <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                        </div>
+                    </div>
+                    <!-- ----- -->
+                </div>
+
+                <div class="col-lg-6 col-6">
+                    <!-- BAR CHART -->
+                    <div class="card card-success">
+                        <div class="card-header">
+                            <h3 class="card-title">Bar Chart</h3>
+        
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                                </button>
+                                {{-- <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button> --}}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart">
+                                <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 
 @endsection
+
+@push('js')
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // PIE CHART SETUP
+        var pieChartCanvas = document.getElementById('pieChart');
+
+        if (!pieChartCanvas) {
+            console.error("Pie chart canvas element not found!");
+            return;
+        }
+
+        var pieChartContext = pieChartCanvas.getContext('2d');
+
+        var pieData = {
+            labels: ['Chrome', 'IE', 'Firefox', 'Safari', 'Opera'],
+            datasets: [{
+                data: [700, 500, 400, 600, 300],
+                backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc'],
+            }]
+        };
+
+        var pieOptions = {
+            responsive: true,
+            maintainAspectRatio: false
+        };
+
+        new Chart(pieChartContext, {
+            type: 'pie',
+            data: pieData,
+            options: pieOptions
+        });
+
+        // BAR CHART SETUP
+        var barChartCanvas = document.getElementById('barChart');
+
+        if (!barChartCanvas) {
+            console.error("Bar chart canvas element not found!");
+            return;
+        }
+
+        var barChartContext = barChartCanvas.getContext('2d');
+
+        var barData = {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+            datasets: [{
+                label: 'Revenue',
+                data: [650, 590, 800, 810, 560, 550],
+                backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+                borderColor: '#fff',
+                borderWidth: 1
+            }]
+        };
+
+        var barOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        };
+
+        new Chart(barChartContext, {
+            type: 'bar',
+            data: barData,
+            options: barOptions
+        });
+    });
+</script>
+@endpush
