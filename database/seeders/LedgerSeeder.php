@@ -24,63 +24,83 @@ class LedgerSeeder extends Seeder
         // 🔹 Ledger Groups & Sub Groups
         $groups = [
             'Asset' => [
-                'Cash In Hand' => ['Petty Cash'],
+                'Cash In Hand' => [
+                    'ledgers' => ['Petty Cash'],
+                    'type' => 'cash',  // Specify that this is a cash type
+                ],
                 'Current Asset' => [
-                    'Accounts Receivable',
-                    'Office Equipment Furniture and Others',
-                    'Brac Bank A/C -2071145530001',
-                    'Al Arafah Bank A/C -',
+                    'ledgers' => [
+                        'Accounts Receivable',
+                        'Office Equipment Furniture and Others',
+                        'Brac Bank A/C -2071145530001',
+                        'Al Arafah Bank A/C -',
+                    ],
+                    'type' => 'bank',  // Default to bank type for accounts
                 ],
             ],
             'Liabilities' => [
                 'Current Liabilities' => [
-                    'Accounts Payable',
-                    'Taxes Payable',
-                    'Income Tax Payable',
-                    'Unearned Revenue',
-                    'Capital Account',
+                    'ledgers' => [
+                        'Accounts Payable',
+                        'Taxes Payable',
+                        'Income Tax Payable',
+                        'Unearned Revenue',
+                        'Capital Account',
+                    ],
+                    'type' => null,  // No specific type (leave null for liabilities)
                 ],
             ],
             'Income' => [
                 'Sales Account' => [
-                    'Discounts',
-                    'Sales',
+                    'ledgers' => [
+                        'Discounts',
+                        'Sales',
+                    ],
+                    'type' => null,  // No specific type (income can be either)
                 ],
             ],
             'Expense' => [
-                'Direct Expenses' => ['Purchases', 'Salary'],
-                'Indirect Expense' => [
-                    'Cost of Goods Sold',
-                    'Cost of Billed Expenses',
-                    'Cost of Shipping & Handling',
-                    'Advertising',
-                    'Employee Benefits',
-                    'Accident Insurance',
-                    'Entertainment',
-                    'Office Expenses & Postage',
-                    'Printing',
-                    'Shipping & Couriers',
-                    'Stationery',
-                    'Other Expenses',
-                    'Bank Fees',
-                    'Business Insurance',
-                    'Commissions',
-                    'Repairs & Maintenance',
-                    'Labour Wages',
-                    'Salary',
-                    'Legal Fees',
-                    'Rent or Lease',
-                    'Taxi & Parking',
-                    'Uncategorized Expenses',
-                    'Utilities',
-                    'Mobile Phone Bill',
-                    'Sales Taxes Paid',
+                'Direct Expenses' => [
+                    'ledgers' => ['Purchases', 'Salary'],
+                    'type' => null,  // No specific type (expenses don't need to specify type)
                 ],
-                'Purchases Accounts' => [],
+                'Indirect Expense' => [
+                    'ledgers' => [
+                        'Cost of Goods Sold',
+                        'Cost of Billed Expenses',
+                        'Cost of Shipping & Handling',
+                        'Advertising',
+                        'Employee Benefits',
+                        'Accident Insurance',
+                        'Entertainment',
+                        'Office Expenses & Postage',
+                        'Printing',
+                        'Shipping & Couriers',
+                        'Stationery',
+                        'Other Expenses',
+                        'Bank Fees',
+                        'Business Insurance',
+                        'Commissions',
+                        'Repairs & Maintenance',
+                        'Labour Wages',
+                        'Salary',
+                        'Legal Fees',
+                        'Rent or Lease',
+                        'Taxi & Parking',
+                        'Uncategorized Expenses',
+                        'Utilities',
+                        'Mobile Phone Bill',
+                        'Sales Taxes Paid',
+                    ],
+                    'type' => null,  // No specific type (expenses don't need to specify type)
+                ],
+                'Purchases Accounts' => [
+                    'ledgers' => [],
+                    'type' => null,  // No specific type (if no ledgers, it remains null)
+                ],
             ],
         ];        
         
-
         // 🔸 Insert Groups, Sub Groups & Ledgers
         foreach ($groups as $groupName => $subGroups) {
             // 🔹 Insert Group
@@ -89,41 +109,35 @@ class LedgerSeeder extends Seeder
                 'created_by' => $userId,
             ]);
 
-            // 🔹 Insert Sub Groups
-            foreach ($subGroups as $subGroupName => $ledgers) {
+            foreach ($subGroups as $subGroupName => $data) {
+                // 🔹 Insert Sub Group
                 $subGroup = LedgerSubGroup::create([
                     'subgroup_name'   => $subGroupName,
                     'ledger_group_id' => $group->id,
                     'created_by'      => $userId,
                 ]);
 
-                // 🔹 Insert Ledgers
-                foreach ($ledgers as $ledgerName) {
-                    // // Add opening_balance and ob_type to each ledger
-                    // $openingBalance = 200000; // Default value
-                    // $obType = 'debit'; // Default type
-                    // if ($groupName == 'Income' || $groupName == 'Liabilities') {
-                    //     $obType = 'credit'; // For Income and Liabilities, opening balance type will be credit
-                    // }
+                // 🔹 Get type for this sub-group
+                $type = $data['type'] ?? null;
 
-                    // Default values (only for Cash & Bank)
-                    $openingBalance = 0; 
-                    $obType = null;  
+                foreach ($data['ledgers'] as $ledgerName) {
+                    // Default values for opening balance and ob_type
+                    $openingBalance = 0;
+                    $obType = null;
 
-                    // Only apply opening balance to Cash and Bank
-                    if (in_array($ledgerName, ['Cash', 'Bank'])) {
-                        $openingBalance = 0; // Default opening balance
-                        $obType = 'debit'; // Default type for assets
+                    // Assign the type for Cash and Bank ledgers
+                    if ($type === 'cash') {
+                        $obType = 'debit'; // Typically debit for cash
+                    } elseif ($type === 'bank') {
+                        $obType = 'debit'; // Typically debit for bank accounts
                     }
 
-                    if ($groupName == 'Income' || $groupName == 'Liabilities') {
-                        $obType = 'credit'; // For Income and Liabilities, ob_type will be credit
-                    }
-
+                    // 🔹 Insert Ledger
                     $ledger = Ledger::create([
                         'name'            => $ledgerName,
                         'opening_balance' => $openingBalance,
                         'ob_type'         => $obType,
+                        'type'            => $type, // Assign the type from the array
                         'created_by'      => $userId,
                     ]);
 
