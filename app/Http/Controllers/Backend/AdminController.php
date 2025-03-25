@@ -19,22 +19,22 @@ class AdminController extends Controller
         $projectTotalAmount = Project::sum('grand_total');
         $projectTotalAmountPaid = Project::sum('paid_amount');
         $projectTotalAmountDue = $projectTotalAmount - $projectTotalAmountPaid;
-        $purchaseTotalAmount = Purchase::sum('total');
+        $purchaseTotalAmount = Project::sum('grand_total');
 
-        // Get purchase data month-wise
-        $purchases = Purchase::select(
-            DB::raw('SUM(total) as total'),
+        // Get projects data month-wise
+        $projects = Project::select(
+            DB::raw('SUM(grand_total) as grand_total'),
             DB::raw('MONTH(created_at) as month')
         )
         ->groupBy('month')
         ->orderBy('month', 'ASC')
-        ->pluck('total', 'month')
+        ->pluck('grand_total', 'month')
         ->toArray();
 
         // Ensure all 12 months are present
         $allMonths = [];
         for ($i = 1; $i <= 12; $i++) {
-            $allMonths[Carbon::create()->month($i)->format('F')] = $purchases[$i] ?? 0;
+            $allMonths[Carbon::create()->month($i)->format('F')] = $projects[$i] ?? 0;
         }
 
         return view('dashboard', compact(
