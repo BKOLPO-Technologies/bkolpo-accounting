@@ -26,7 +26,7 @@ class LedgerSeeder extends Seeder
             'Asset' => [
                 'Cash In Hand' => [
                     'ledgers' => ['Petty Cash'],
-                    'type' => 'cash',  // Specify that this is a cash type
+                    'type' => 'Cash',  // Specify that this is a cash type
                 ],
                 'Current Asset' => [
                     'ledgers' => [
@@ -35,7 +35,7 @@ class LedgerSeeder extends Seeder
                         'Brac Bank A/C -2071145530001',
                         'Al Arafah Bank A/C -',
                     ],
-                    'type' => 'bank',  // Default to bank type for accounts
+                    'type' => 'Bank',  // Default to bank type for accounts
                 ],
             ],
             'Liabilities' => [
@@ -126,9 +126,9 @@ class LedgerSeeder extends Seeder
                     $obType = null;
 
                     // Assign the type for Cash and Bank ledgers
-                    if ($type === 'cash') {
+                    if ($type === 'Cash') {
                         $obType = 'debit'; // Typically debit for cash
-                    } elseif ($type === 'bank') {
+                    } elseif ($type === 'Bank') {
                         $obType = 'debit'; // Typically debit for bank accounts
                     }
 

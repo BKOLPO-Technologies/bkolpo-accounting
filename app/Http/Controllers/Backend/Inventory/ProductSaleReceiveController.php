@@ -98,13 +98,13 @@ class ProductSaleReceiveController extends Controller
 
             // Step 4: Based on payment method, get the corresponding ledger
             if ($paymentMethod == 'cash') {
-                $ledger = Ledger::where('name', 'Cash')->first();
+                $ledger = Ledger::where('type', 'Cash')->first();
             } elseif ($paymentMethod == 'bank') {
-                $ledger = Ledger::where('name', 'Bank')->first(); 
+                $ledger = Ledger::where('type', 'Bank')->first(); 
             }
 
             $cashBankLedger  = $ledger;
-            $receivableLedger = Ledger::where('name', 'Accounts Receivable')->first();
+            $receivableLedger = Ledger::where('type', 'Bank')->first();
         
             $paymentAmount = $request->input('pay_amount', 0); 
 
