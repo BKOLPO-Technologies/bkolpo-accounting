@@ -181,7 +181,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // PIE CHART SETUP /////////////////////////////////////////////////////////////////////////////////
+        // PIE CHART
         var pieChartCanvas = document.getElementById('pieChart');
 
         if (!pieChartCanvas) {
@@ -191,7 +191,6 @@
 
         var pieChartContext = pieChartCanvas.getContext('2d');
 
-        // Dynamic data passed from Laravel Blade
         var projectTotalAmount = {{ $projectTotalAmount }};
         var projectTotalAmountPaid = {{ $projectTotalAmountPaid }};
         var projectTotalAmountDue = {{ $projectTotalAmountDue }};
@@ -205,7 +204,6 @@
             }]
         };
 
-
         var pieOptions = {
             responsive: true,
             maintainAspectRatio: false
@@ -217,7 +215,7 @@
             options: pieOptions
         });
 
-        // BAR CHART SETUP /////////////////////////////////////////////////////////////////////////////////////
+        // BAR CHART - Purchases Month-wise
         var barChartCanvas = document.getElementById('barChart');
 
         if (!barChartCanvas) {
@@ -227,11 +225,15 @@
 
         var barChartContext = barChartCanvas.getContext('2d');
 
+        // Convert PHP array to JavaScript
+        var monthlyPurchaseAmounts = {!! json_encode(array_values($monthlyPurchases)) !!};
+        var monthLabels = {!! json_encode(array_keys($monthlyPurchases)) !!};
+
         var barData = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+            labels: monthLabels,
             datasets: [{
-                label: 'Revenue',
-                data: [650, 590, 800, 810, 560, 550],
+                label: 'Monthly Purchases',
+                data: monthlyPurchaseAmounts,
                 backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
                 borderColor: '#fff',
                 borderWidth: 1
@@ -255,4 +257,5 @@
         });
     });
 </script>
+
 @endpush

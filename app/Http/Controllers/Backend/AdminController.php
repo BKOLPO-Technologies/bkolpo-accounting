@@ -7,6 +7,7 @@ use App\Models\Purchase;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -14,12 +15,41 @@ class AdminController extends Controller
 
         $pageTitle = 'Admin Dashboard';
 
+        // Project Calculations
         $projectTotalAmount = Project::sum('grand_total');
         $projectTotalAmountPaid = Project::sum('paid_amount');
         $projectTotalAmountDue = $projectTotalAmount - $projectTotalAmountPaid;
         $purchaseTotalAmount = Purchase::sum('total');
 
-        return view('dashboard',compact('pageTitle', 'projectTotalAmount', 'projectTotalAmountPaid', 'projectTotalAmountDue', 'purchaseTotalAmount'));
+        // Month-wise Purchases
+        // $monthlyPurchases = Purchase::select(
+        //         DB::raw('SUM(total) as total'),
+        //         DB::raw('DATE_FORMAT(created_at, "%M") as month')
+        //     )
+        //     ->groupBy('month')
+        //     ->orderBy(DB::raw('MIN(created_at)'), 'ASC')
+        //     ->pluck('total', 'month'); // Get as key-value pair (Month => Total)
+
+        $monthlyPurchases = Purchase::select(
+            DB::raw('SUM(total) as total'),
+            DB::raw('DATE_FORMAT(created_at, "%M") as month')
+        )
+        ->groupBy('month')
+        ->orderBy(DB::raw('MIN(created_at)'), 'ASC')
+        ->pluck('total', 'month')
+        ->toArray();  // Convert Collection to array
+    
+
+            // dd($monthlyPurchases);
+
+        return view('dashboard', compact(
+            'pageTitle', 
+            'projectTotalAmount', 
+            'projectTotalAmountPaid', 
+            'projectTotalAmountDue', 
+            'purchaseTotalAmount', 
+            'monthlyPurchases'
+        ));
 
     }
 
