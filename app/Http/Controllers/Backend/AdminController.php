@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -15,40 +16,34 @@ class AdminController extends Controller
 
         $pageTitle = 'Admin Dashboard';
 
-        // Project Calculations
         $projectTotalAmount = Project::sum('grand_total');
         $projectTotalAmountPaid = Project::sum('paid_amount');
         $projectTotalAmountDue = $projectTotalAmount - $projectTotalAmountPaid;
         $purchaseTotalAmount = Purchase::sum('total');
 
-        // Month-wise Purchases
-        // $monthlyPurchases = Purchase::select(
-        //         DB::raw('SUM(total) as total'),
-        //         DB::raw('DATE_FORMAT(created_at, "%M") as month')
-        //     )
-        //     ->groupBy('month')
-        //     ->orderBy(DB::raw('MIN(created_at)'), 'ASC')
-        //     ->pluck('total', 'month'); // Get as key-value pair (Month => Total)
-
-        $monthlyPurchases = Purchase::select(
+        // Get purchase data month-wise
+        $purchases = Purchase::select(
             DB::raw('SUM(total) as total'),
-            DB::raw('DATE_FORMAT(created_at, "%M") as month')
+            DB::raw('MONTH(created_at) as month')
         )
         ->groupBy('month')
-        ->orderBy(DB::raw('MIN(created_at)'), 'ASC')
+        ->orderBy('month', 'ASC')
         ->pluck('total', 'month')
-        ->toArray();  // Convert Collection to array
-    
+        ->toArray();
 
-            // dd($monthlyPurchases);
+        // Ensure all 12 months are present
+        $allMonths = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $allMonths[Carbon::create()->month($i)->format('F')] = $purchases[$i] ?? 0;
+        }
 
         return view('dashboard', compact(
-            'pageTitle', 
-            'projectTotalAmount', 
-            'projectTotalAmountPaid', 
-            'projectTotalAmountDue', 
-            'purchaseTotalAmount', 
-            'monthlyPurchases'
+            'pageTitle',
+            'projectTotalAmount',
+            'projectTotalAmountPaid',
+            'projectTotalAmountDue',
+            'purchaseTotalAmount',
+            'allMonths'
         ));
 
     }

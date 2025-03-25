@@ -226,8 +226,8 @@
         var barChartContext = barChartCanvas.getContext('2d');
 
         // Convert PHP array to JavaScript
-        var monthlyPurchaseAmounts = {!! json_encode(array_values($monthlyPurchases)) !!};
-        var monthLabels = {!! json_encode(array_keys($monthlyPurchases)) !!};
+        var monthLabels = {!! json_encode(array_keys($allMonths)) !!};
+        var monthlyPurchaseAmounts = {!! json_encode(array_values($allMonths)) !!};
 
         var barData = {
             labels: monthLabels,
