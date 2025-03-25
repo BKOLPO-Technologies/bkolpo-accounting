@@ -125,11 +125,22 @@ class LedgerSeeder extends Seeder
                     $openingBalance = 0;
                     $obType = null;
 
-                    // Assign the type for Cash and Bank ledgers
-                    if ($type === 'Cash') {
+                    // Assign specific types based on the ledger name
+                    if ($ledgerName === 'Accounts Receivable') {
+                        $type = 'Receivable'; // Set type to 'Receivable' for 'Accounts Receivable'
+                    } elseif ($ledgerName === 'Accounts Payable') {
+                        $type = 'Payable'; // Set type to 'Payable' for 'Accounts Payable'
+                    } elseif (in_array($ledgerName, ['Office Equipment Furniture and Others', 'Brac Bank A/C -2071145530001', 'Al Arafah Bank A/C -'])) {
+                        $type = 'Bank'; // Set type to 'Bank' for specific bank-related ledgers
+                    } elseif ($type === 'Cash') {
                         $obType = 'debit'; // Typically debit for cash
                     } elseif ($type === 'Bank') {
                         $obType = 'debit'; // Typically debit for bank accounts
+                    }
+
+                    // For 'Liabilities' specific case, ensure other ledgers stay with null type
+                    if ($groupName === 'Liabilities' && !in_array($ledgerName, ['Accounts Payable'])) {
+                        $type = null; // Set type to null for all liabilities except 'Accounts Payable'
                     }
 
                     // 🔹 Insert Ledger
@@ -150,5 +161,6 @@ class LedgerSeeder extends Seeder
                 }
             }
         }
+
     }
 }
