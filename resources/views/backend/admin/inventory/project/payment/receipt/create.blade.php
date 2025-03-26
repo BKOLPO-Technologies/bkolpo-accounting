@@ -84,8 +84,9 @@
                                         <span class="input-group-text"><i class="fas fa-book"></i></span>
                                         <select class="form-control" name="payment_method" id="payment_method" required>
                                             <option value="">Choose Payment Method</option>
-                                            <option value="cash" {{ old('payment_method', $payment->payment_method ?? '') === 'cash' ? 'selected' : '' }}>Cash</option>
-                                            <option value="bank" {{ old('payment_method', $payment->payment_method ?? '') === 'bank' ? 'selected' : '' }}>Bank</option>
+                                            @foreach($ledgers as $ledger)
+                                                <option value="{{ $ledger->id }}" data-type="{{ $ledger->type }}">{{ $ledger->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -99,8 +100,8 @@
                                     </div>
                                 </div>
 
-                                <!-- Bank Account Number (hidden initially) -->
-                                <div class="col-md-4 mb-3" id="bank_account_div" style="display:none;">
+                                 <!-- Bank Account Number (hidden initially) -->
+                                 <div class="col-md-4 mb-3" id="bank_account_div" style="display:none;">
                                     <label for="bank_account_no" class="form-label">Bank Account No:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
@@ -122,7 +123,7 @@
                                     <label for="cheque_date" class="form-label">Cheque Date:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                                        <input type="text" class="form-control" name="cheque_date" id="to_date" value="{{ date('Y-m-d') }}" >
+                                        <input type="text" class="form-control" name="cheque_date" id="to_date">
                                     </div>
                                 </div>
 
@@ -192,20 +193,26 @@
 
  <!-- JS to toggle visibility -->
  <script>
-    document.getElementById('payment_method').addEventListener('change', function() {
-        var paymentMethod = this.value;
-        
-        // Hide all additional fields
-        document.getElementById('bank_account_div').style.display = 'none';
-        document.getElementById('cheque_no_div').style.display = 'none';
-        document.getElementById('cheque_date_div').style.display = 'none';
+    document.addEventListener("DOMContentLoaded", function () {
+        const paymentMethodSelect = document.getElementById('payment_method');
+        const bankAccountDiv = document.getElementById('bank_account_div');
+        const chequeNoDiv = document.getElementById('cheque_no_div');
+        const chequeDateDiv = document.getElementById('cheque_date_div');
 
-        // Show fields based on selected payment method
-        if (paymentMethod === 'bank') {
-            document.getElementById('bank_account_div').style.display = 'block';
-            document.getElementById('cheque_no_div').style.display = 'block';
-            document.getElementById('cheque_date_div').style.display = 'block';
-        }
+        paymentMethodSelect.addEventListener('change', function () {
+            let selectedOption = this.options[this.selectedIndex];
+            let paymentType = selectedOption.getAttribute('data-type');
+
+            if (paymentType === 'Bank') {
+                bankAccountDiv.style.display = 'block';
+                chequeNoDiv.style.display = 'block';
+                chequeDateDiv.style.display = 'block';
+            } else {
+                bankAccountDiv.style.display = 'none';
+                chequeNoDiv.style.display = 'none';
+                chequeDateDiv.style.display = 'none';
+            }
+        });
     });
 </script>
 @endpush

@@ -45,9 +45,10 @@ class ProductSaleReceiveController extends Controller
             ->whereColumn('paid_amount', '<', 'grand_total')
             ->latest()
             ->get();
+        $ledgers = Ledger::whereIn('type', ['Bank', 'Cash'])->get();
 
 
-        return view('backend.admin.inventory.project.payment.receipt.create',compact('pageTitle', 'customers', 'ledgerGroups', 'projects'));
+        return view('backend.admin.inventory.project.payment.receipt.create',compact('pageTitle', 'customers', 'ledgerGroups', 'projects','ledgers'));
     }
 
     public function store(Request $request)
@@ -60,7 +61,6 @@ class ProductSaleReceiveController extends Controller
             'total_amount' => 'required|numeric|min:0',
             'pay_amount' => 'required|numeric|min:0',
             'due_amount' => 'required|numeric|min:0',
-            'payment_method' => 'required|in:cash,bank',
             'payment_date' => 'required|date',
         ]);
 
@@ -72,6 +72,16 @@ class ProductSaleReceiveController extends Controller
         try {
 
             $project = Project::where('id', $request->input('project_id'))->first();
+
+            $ledger = Ledger::findOrFail($request->payment_method);
+
+            if($ledger->type == 'Cash'){
+                $paymentDescription = "{$ledger->name}";
+                $payment_method = 'Cash';
+            }elseif($ledger->type == 'Bank'){
+                $paymentDescription = "{$ledger->name}";
+                $payment_method = 'Bank';
+            }
   
             // Create a new project receipt
             $receipt = ProjectReceipt::create([
@@ -80,7 +90,7 @@ class ProductSaleReceiveController extends Controller
                 'total_amount' => $request->input('total_amount'),
                 'pay_amount' => $request->input('pay_amount'),
                 'due_amount' => $request->input('due_amount'),
-                'payment_method' => $request->input('payment_method'),
+                'payment_method' => $payment_method,
                 'payment_date' => $request->input('payment_date'),
                 'bank_account_no' => $request->input('bank_account_no'),
                 'cheque_no' => $request->input('cheque_no'),
@@ -93,18 +103,8 @@ class ProductSaleReceiveController extends Controller
             // journal payment project receipt add amount
             $project_amount = $project->grand_total ?? 0; // Get the total project amount
 
-
-            $paymentMethod = $request->input('payment_method');
-
-            // Step 4: Based on payment method, get the corresponding ledger
-            if ($paymentMethod == 'cash') {
-                $ledger = Ledger::where('type', 'Cash')->first();
-            } elseif ($paymentMethod == 'bank') {
-                $ledger = Ledger::where('type', 'Bank')->first(); 
-            }
-
             $cashBankLedger  = $ledger;
-            $receivableLedger = Ledger::where('type', 'Bank')->first();
+            $receivableLedger = Ledger::where('type', 'Receivable')->first();
         
             $paymentAmount = $request->input('pay_amount', 0); 
 
@@ -127,7 +127,7 @@ class ProductSaleReceiveController extends Controller
                     'journal_voucher_id' => $journalVoucher->id,
                     'ledger_id'          => $cashBankLedger->id, // নগদ ও ব্যাংক হিসাব
                     'reference_no'       => $project->reference_no,
-                    'description'        => 'Payment of ' . number_format($paymentAmount, 2) . ' Taka Received from Customer for Invoice ' . $project->invoice_no,
+                    'description'        => $paymentDescription . ' of ' . number_format($paymentAmount, 2) . ' Taka Received from Customer for Invoice ' . $project->reference_no,
                     'debit'              => $paymentAmount, // টাকা জমা হচ্ছে
                     'credit'             => 0,
                     'created_at'         => now(),
@@ -139,7 +139,7 @@ class ProductSaleReceiveController extends Controller
                     'journal_voucher_id' => $journalVoucher->id,
                     'ledger_id'          => $receivableLedger->id, 
                     'reference_no'       => $project->reference_no,
-                    'description'        => 'Accounts Receivable Reduced by '.$paymentAmount.' Taka',
+                    'description'        => $paymentDescription . ' Accounts Receivable Reduced by '.$paymentAmount.' Taka',
                     'debit'              => 0,
                     'credit'             => $paymentAmount,  // পাওনা টাকা কমবে
                     'created_at'         => now(),

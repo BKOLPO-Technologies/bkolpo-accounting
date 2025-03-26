@@ -195,12 +195,15 @@ class SalePaymentController extends Controller
             $ledger = Ledger::findOrFail($request->payment_method);
 
             if($ledger->type == 'Cash'){
-                $paymentDescription = 'Bank Payment Made to Supplier';
+                $paymentDescription = "{$ledger->name} Payment Made to Supplier";
                 $payment_method = 'Cash';
             }elseif($ledger->type == 'Bank'){
-                $paymentDescription = 'Bank Payment Made to Supplier'; 
+                $paymentDescription = "{$ledger->name} Payment Made to Supplier";
                 $payment_method = 'Bank';
             }
+
+
+            // dd($ledger.$payment_method);
     
             // Create a new payment
             $payment = Payment::create([
@@ -211,7 +214,7 @@ class SalePaymentController extends Controller
                 'total_amount' => $request->input('total_amount'),
                 'pay_amount' => $request->input('pay_amount'),
                 'due_amount' => $request->input('due_amount'),
-                'payment_method' => $request->input('payment_method'),
+                'payment_method' => $payment_method,
                 'payment_date' => $request->input('payment_date'),
                 'bank_account_no' => $request->input('bank_account_no'),
                 'cheque_no' => $request->input('cheque_no'),
@@ -240,8 +243,7 @@ class SalePaymentController extends Controller
             //dd("purchases = ", $purchases);
 
             // Step 3: Get payment method from request (Cash, Bank, etc.)
-            $payment_method = $request->input('payment_method'); // Get payment method from request
-            $ledger = null;
+            // $payment_method = $request->input('payment_method'); // Get payment method from request
 
             // Step 4: Based on payment method, get the corresponding ledger
             // if ($payment_method == 'cash') {
@@ -266,7 +268,7 @@ class SalePaymentController extends Controller
                     $journalVoucher = JournalVoucher::create([
                         'transaction_code'  => $purchase->invoice_no . '-PAY',
                         'transaction_date'  => $request->payment_date,
-                        'description'       => 'Payment Made to Supplier',
+                        'description'       => ucfirst($paymentDescription), 
                         'status'            => 1, // Pending status
                     ]);
                 }

@@ -160,8 +160,11 @@ class PurchaseController extends Controller
             $purchase_amount = $purchase->total ?? 0;
             //Log::info('Purchase amount calculated', ['purchase_amount' => $purchase_amount]);
 
-            $purchasesLedger = Ledger::where('name', 'Purchases')->first();
-            $payableLedger = Ledger::where('name', 'Accounts Payable')->first();
+            // $purchasesLedger = Ledger::where('name', 'Purchases')->first();
+            // $payableLedger = Ledger::where('name', 'Accounts Payable')->first();
+
+            $purchasesLedger = Ledger::where('type', 'Purchases')->first();
+            $payableLedger = Ledger::where('type', 'Payable')->first();
 
             if ($purchasesLedger && $payableLedger) {
                 $journalVoucher = JournalVoucher::where('transaction_code', $purchase->invoice_no)->first();
