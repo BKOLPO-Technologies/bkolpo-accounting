@@ -128,8 +128,8 @@ class SalesController extends Controller
             $sale_amount = $sale->total ?? 0; // If sale doesn't have amount, default to 0
 
 
-            $salesLedger = Ledger::where('name', 'Sales')->first();
-            $receivableLedger = Ledger::where('name', 'Accounts Receivable')->first();
+            $salesLedger = Ledger::where('type', 'Sales')->first();
+            $receivableLedger = Ledger::where('type', 'Receivable')->first();
 
             if ($salesLedger && $receivableLedger) {
                 // Check if a Journal Voucher already exists for the given invoice
