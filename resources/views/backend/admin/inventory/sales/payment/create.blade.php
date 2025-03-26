@@ -65,11 +65,11 @@
 
                                 <!-- Purchase Invoice No -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="invoice_no" class="form-label">Purchase Invoice No:</label>
+                                    <label for="invoice_no" class="form-label">PO No:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
                                         <select class="form-control select2" name="invoice_no" id="invoice_no">
-                                            <option value="">Select Invoice No</option>
+                                            <option value="">Select PO No</option>
                                         </select>
                                     </div>
                                 </div>
@@ -186,7 +186,7 @@
                     <div class="card-body" id="purchase-details" class="mt-4">
                         
                         <!-- Invoice No and Supplier (Moved to top) -->
-                        <p><strong>Invoice No:</strong> <span id="invoice_no_display"></span></p>
+                        <p><strong>PO No:</strong> <span id="invoice_no_display"></span></p>
                         <p><strong>Supplier:</strong> <span id="supplier_display"></span></p>
 
                         <hr/>
@@ -265,7 +265,7 @@
             //alert(supplierId);
             
             // Clear Incoming Chalan and Total Amount
-            $('#invoice_no').html('<option value="">Select Invoice No</option>');
+            $('#invoice_no').html('<option value="">Select PO No</option>');
             $('#total_amount').val(''); // Clear total amount field
             $('#total_due_amount').val(''); 
             $('#pay_amount').val('');
@@ -288,7 +288,7 @@
                     success: function (response) {
                         //console.log(response); // Log the response to the console
 
-                        let options = '<option value="">Select Invoice No</option>';
+                        let options = '<option value="">Select PO No</option>';
 
                         response.purchases.forEach(purchase => {
                             options += `<option value="${purchase.invoice_no}" data-amount="${purchase.total_amount}" data-due="${purchase.total_due_amount}">${purchase.invoice_no}</option>`;

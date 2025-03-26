@@ -47,7 +47,7 @@
                                         <td>{{ $project->project_coordinator }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Client</th>
+                                        <th>Customer</th>
                                         <td>{{ $project->client->name ?? 'N/A' }}</td>
                                     </tr>
                                     <tr>
@@ -93,7 +93,7 @@
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>#</th>
+                                                <th>Sl</th>
                                                 <th>Item Name</th>
                                                 <th>Order Unit</th>
                                                 <th>Unit Price</th>
@@ -117,7 +117,7 @@
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $item->items }}</td>
-                                                    <td>{{ $item->order_unit }}</td>
+                                                    <td>{{ $item->unit->name ?? '' }}</td>
                                                     <td>{{ bdt() }} {{ number_format($item->unit_price, 2) }}</td>
                                                     <td>{{ $item->quantity }}</td>
                                                     <td>{{ bdt() }} {{ number_format($item->subtotal, 2) }}</td>
@@ -176,14 +176,14 @@
 
                          <div class="mt-4">
                                 <div class="card-header">
-                                    <h4>Project Sale Receipt List</h4>
+                                    <h4>Project Receive </h4>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Sl</th>
-                                                <th>Invoice No</th>
+                                                <th>Reference No</th>
                                                 <th>Total Amount</th>
                                                 <th>Pay Amount</th>
                                                 <th>Due Amount</th>

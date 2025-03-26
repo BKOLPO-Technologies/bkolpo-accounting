@@ -3,7 +3,7 @@
   $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet','report.ledger.report','report.ledger.single.report','report.ledger.group.report','report.ledger.group.single.report','report.ledger.profit.loss','report.project.profit.loss');
   $isSupplierActive = Route::is('admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit','admin.supplier.products','admin.supplier.transactions');
   $isClientActive = Route::is('admin.client.index','admin.client.create','admin.client.view','admin.client.edit');
-  $isProjectActive = Route::is('projects.index', 'projects.create', 'projects.show', 'projects.edit', 'project.receipt.payment.index', 'project.receipt.payment.create', 'projects.sales','project.receipt.payment.show');
+  $isProjectActive = Route::is('projects.index', 'projects.create', 'projects.show', 'projects.edit', 'project.receipt.payment.index', 'project.receipt.payment.create', 'projects.sales','project.receipt.payment.show','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit');
   $isSalesActive = Route::is('admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit','quotations.index','quotations.create','quotations.edit','quotations.show','outcoming.chalan.index','outcoming.chalan.create','outcoming.chalan.show','outcoming.chalan.edit','receipt.payment.index','receipt.payment.create','stock.out','stock.out.view');
   $isPurchaseActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.show','admin.purchase.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create','stock.in','stock.in.view');
 @endphp
@@ -80,95 +80,93 @@
         </ul>
     </li>
 
-    
+    <!-- =================== Start Accounts Main Menu =================== -->
+    <li class="nav-item {{ Route::is('journal-voucher.*', 'chart_of_accounts.*', 'ledger.*', 'ledger.group.*', 'ledger.sub.group.*') ? 'menu-open' : '' }}">
+      <a href="#" class="nav-link {{ Route::is('journal-voucher.*', 'chart_of_accounts.*', 'ledger.*', 'ledger.group.*', 'ledger.sub.group.*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-university"></i>
+        <p>
+          Accounts
+          <i class="fas fa-angle-left right"></i>
+        </p>
+      </a>
 
-     <!----- Start Voucher Area ----->
-     @can('journal-menu')  
-     <li class="nav-item {{ Route::is('journal-voucher.index','journal-voucher.excel', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create','journal-voucher.manually.capital.create') ? 'menu-open' : '' }}">
-       <a href="#" class="nav-link {{ Route::is('journal-voucher.index','journal-voucher.excel', 'journal-voucher.create', 'journal-voucher.edit', 'journal-voucher.show', 'chart_of_accounts.index', 'chart_of_accounts.create','journal-voucher.manually.capital.create') ? 'active' : '' }}">
-         <i class="nav-icon fas fa-book"></i>
-         <p>
-         Journal
-           <i class="fas fa-angle-left right"></i>
-         </p>
-       </a>
-       <ul class="nav nav-treeview">
-       @can('journal-list')  
-         <li class="nav-item">
-           <a href="{{ route('journal-voucher.index') }}" class="nav-link {{ Route::is('journal-voucher.index','journal-voucher.create','journal-voucher.manually.capital.create') ? 'active' : '' }}">
-             <i class="far fa-circle nav-icon"></i>
-             <p>Journal List</p>
-           </a>
-         </li>
-         @endcan
-         <li class="nav-item">
-           <a href="{{ route('journal-voucher.excel') }}" class="nav-link {{ Route::is('journal-voucher.excel') ? 'active' : '' }}">
-             <i class="far fa-circle nav-icon"></i>
-             <p>Journal Excel Entry List</p>
-           </a>
-         </li>
-       </ul>
-       <!-- <ul class="nav nav-treeview" style="{{ Route::is('chart_of_accounts.index', 'chart_of_accounts.create') ? 'display: block;' : 'display: none;' }}">
-         <li class="nav-item {{ Route::is('chart_of_accounts.index', 'chart_of_accounts.create') ? 'menu-open' : '' }}">
-           <a href="#" class="nav-link {{ Route::is('chart_of_accounts.index', 'chart_of_accounts.create') ? 'active' : '' }}">
-             <i class="far fa-circle nav-icon"></i>
-             <p>
-               Chart of account
-               <i class="fas fa-angle-left right"></i>
-             </p>
-           </a>
+      <!-- === Journal Submenu === -->
+      @can('journal-menu')  
+      <ul class="nav nav-treeview shadow-lg">
+        <li class="nav-item {{ Route::is('journal-voucher.*') ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ Route::is('journal-voucher.*') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-book"></i>
+            <p>
+              Journal
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            @can('journal-list')  
+            <li class="nav-item">
+              <a href="{{ route('journal-voucher.index') }}" class="nav-link {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.manually.capital.create') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Journal List</p>
+              </a>
+            </li>
+            @endcan
+            {{-- <li class="nav-item">
+              <a href="{{ route('journal-voucher.excel') }}" class="nav-link {{ Route::is('journal-voucher.excel') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Journal Excel Entry List</p>
+              </a>
+            </li> --}}
+          </ul>
+        </li>
+      </ul>
+      @endcan
+      <!-- === End Journal Submenu === -->
 
-           <ul class="nav nav-treeview" style="{{ Route::is('chart_of_accounts.index', 'chart_of_accounts.create') ? 'display: block;' : 'display: none;' }}">
-             <li class="nav-item">
-               <a href="{{ route('chart_of_accounts.index') }}" class="nav-link {{ Route::is('chart_of_accounts.index') ? 'active' : '' }}">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>Chart of account</p>
-               </a>
-             </li>
-           </ul>
-
-         </li>
-       </ul> -->
-
-     </li>
-     @endcan
-     <!----- End Voucher Area ----->
-
-      <!-- --- Ledger Category --- -->
+      <!-- === Chart of Accounts Submenu === -->
       @can('ledger-menu')  
-      <li class="nav-item {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show','ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show','ledger.group.import', 'ledger.sub.group.index', 'ledger.sub.group.create', 'ledger.sub.group.edit','ledger.sub.group.show','ledger.sub.group.import') ? 'menu-open' : '' }}">
-        <a href="#" class="nav-link {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show','ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show','ledger.group.import', 'ledger.sub.group.index', 'ledger.sub.group.create', 'ledger.sub.group.edit','ledger.sub.group.show','ledger.sub.group.import') ? 'active' : '' }}">
-          <i class="nav-icon fas fa-university"></i>
-          <p>
-            Chart Of Accounts 
-            <i class="fas fa-angle-left right"></i>
-          </p>
-        </a>
-        <ul class="nav nav-treeview">
-          <li class="nav-item">
-          @can('ledger-group-menu')  
-            <a href="{{ route('ledger.group.index') }}" class="nav-link {{ Route::is('ledger.group.index', 'ledger.group.create', 'ledger.group.edit','ledger.group.show','ledger.group.import') ? 'active' : '' }}">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Group List</p>
-            </a>
-            <a href="{{ route('ledger.sub.group.index') }}" class="nav-link {{ Route::is('ledger.sub.group.index', 'ledger.sub.group.create', 'ledger.sub.group.edit','ledger.sub.group.show','ledger.sub.group.import') ? 'active' : '' }}">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Sub Group List</p>
-            </a>
+      <ul class="nav nav-treeview shadow-lg">
+        <li class="nav-item {{ Route::is('ledger.*', 'ledger.group.*', 'ledger.sub.group.*') ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ Route::is('ledger.*', 'ledger.group.*', 'ledger.sub.group.*') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-chart-line"></i>
+            <p>
+              Chart of Accounts
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            @can('ledger-group-menu')  
+            <li class="nav-item">
+              <a href="{{ route('ledger.group.index') }}" class="nav-link {{ Route::is('ledger.group.*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Group List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('ledger.sub.group.index') }}" class="nav-link {{ Route::is('ledger.sub.group.*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Sub Group List</p>
+              </a>
+            </li>
             @endcan
             @can('ledger-menu')  
-            <a href="{{ route('ledger.index') }}" class="nav-link {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit','ledger.show','ledger.group.import') ? 'active' : '' }}">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Ledger List</p>
-            </a>
+            <li class="nav-item">
+              <a href="{{ route('ledger.index') }}" class="nav-link {{ Route::is('ledger.index', 'ledger.create', 'ledger.edit', 'ledger.show') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Ledger List</p>
+              </a>
+            </li>
             @endcan
-          </li>
-        </ul>
-      </li>
+          </ul>
+        </li>
+      </ul>
       @endcan
-      <!-- ---------------- -->
+      <!-- === End Chart of Accounts Submenu === -->
 
-      <!-- Projects -->
+    </li>
+    <!-- =================== End Accounts Main Menu =================== -->
+
+
+    <!-- Projects -->
     <li class="nav-item {{ $isProjectActive ? 'menu-open' : '' }}">
       <a href="#" class="nav-link {{ $isProjectActive ? 'active' : '' }}">
           <i class="nav-icon fas fa-folder"></i> <!-- Updated Icon -->
@@ -193,6 +191,12 @@
                 <p>Payment Receive List</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('admin.sale.index') }}" class="nav-link {{ Route::is('admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Invoice</p>
+            </a>
+        </li>
       </ul>
     </li>
     <!-- Sales -->
@@ -212,27 +216,6 @@
                 <p>Order Invoice List</p>
             </a>
         </li>
-        <li class="nav-item">
-          <a href="{{ route('receipt.payment.index') }}"
-            class="nav-link {{ Route::is('receipt.payment.index', 'receipt.payment.create') ? 'active' : '' }}">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Payment Receive List</p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ route('stock.out') }}" 
-            class="nav-link {{ Route::is('stock.out', 'stock.out.view') ? 'active' : '' }}">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Stock Out List</p>
-          </a>
-        </li>
-        <li class="nav-item">
-            <a href="{{ route('quotations.index') }}" 
-              class="nav-link {{ Route::is('quotations.index', 'quotations.create', 'quotations.show', 'quotations.edit') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Quotation List</p>
-            </a>
-        </li>
       </ul>
   </li> --}}
 
@@ -241,7 +224,7 @@
       <a href="#" class="nav-link {{ $isPurchaseActive ? 'active' : '' }}">
           <i class="nav-icon fas fa-shopping-bag"></i>
           <p>
-              Purchases
+              Purchase
               <i class="fas fa-angle-left right"></i>
           </p>
       </a>
@@ -250,7 +233,7 @@
           <li class="nav-item">
               <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index','admin.purchase.create', 'admin.purchase.show', 'admin.purchase.edit') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Purchase</p>
+                  <p>Purchase Order</p>
               </a>
           </li>
           {{--       

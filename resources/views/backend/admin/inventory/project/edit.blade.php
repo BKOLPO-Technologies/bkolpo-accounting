@@ -195,10 +195,16 @@
                                                                     placeholder="Enter Item Description" required>
                                                             </td>
                                                             <td>
-                                                                <input type="text" name="order_unit[]" class="form-control" 
-                                                                    value="{{ old('order_unit.' . $loop->index, $item->order_unit) }}" 
-                                                                    placeholder="Enter Unit" required>
-                                                            </td>
+                                                                <select name="order_unit[]" class="form-control" required>
+                                                                    <option value="" disabled selected>Select Unit</option>
+                                                                    @foreach($units as $unit)
+                                                                        <option value="{{ $unit->id }}" 
+                                                                            {{ old('order_unit.' . $loop->index, $item->unit_id) == $unit->id ? 'selected' : '' }}>
+                                                                            {{ $unit->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </td>                                                            
                                                             <td>
                                                                 <input type="number" name="unit_price[]" class="form-control unit-price" 
                                                                     value="{{ old('unit_price.' . $loop->index, $item->unit_price) }}" 
@@ -428,7 +434,14 @@
         let newRow = `
             <tr>
                 <td><input type="text" name="items[]" class="form-control" placeholder="Enter Item Description" required></td>
-                <td><input type="text" name="order_unit[]" class="form-control" placeholder="Enter Unit" required></td>
+                <td>
+                    <select name="order_unit[]" class="form-control" required>
+                        <option value="" disabled selected>Select Unit</option>
+                        @foreach($units as $unit)
+                            <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                        @endforeach
+                    </select>
+                </td>
                 <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" required></td>
                 <td><input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required></td>
                 <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>

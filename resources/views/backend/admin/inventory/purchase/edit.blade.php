@@ -165,16 +165,16 @@
                                                     <td>
                                                         <input type="number" name="unit_price[]" class="form-control unit-price" readonly value="{{ $product->price }}">
                                                     </td>
-                                                    <td style="width:5% !important;">
+                                                    <td style="width:11% !important;">
                                                         <input type="number" name="quantity[]" class="form-control quantity" min="1" value="{{ $product->quantity }}" required>
                                                     </td>
-                                                    <td>
+                                                    <td style="width:7% !important;">
                                                         <input type="text" name="order_unit[]" class="form-control unit-input" value="{{ $product->product->unit->name }}" required readonly>
                                                     </td>
-                                                    <td>
+                                                    <td style="width:8% !important;"> 
                                                         <input type="text" name="subtotal[]" class="form-control subtotal" value="{{ $product->price * $product->quantity }}" readonly>
                                                     </td>
-                                                    <td style="width:5% !important;">
+                                                    <td style="width:11% !important;">
                                                         <input type="number" name="discount[]" class="form-control product-discount" min="0" step="0.01" value="{{ $product->discount }}">
                                                     </td>
                                                     <td>

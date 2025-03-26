@@ -188,8 +188,13 @@
                                                             <input type="text" name="items[]" class="form-control" placeholder="Enter Item Description" required>
                                                         </td>
                                                         <td>
-                                                            <input type="text" name="order_unit[]" class="form-control" placeholder="Ener Unit" required>
-                                                        </td>
+                                                            <select name="order_unit[]" class="form-control" required>
+                                                                <option value="" disabled selected>Select Unit</option>
+                                                                @foreach($units as $unit)
+                                                                    <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>                                                        
                                                         <td>
                                                             <input type="number" name="unit_price[]" class="form-control unit-price" placeholder="Enter Unit Price" min="0" step="0.01" required>
                                                         </td>
@@ -396,7 +401,14 @@
         let newRow = `
             <tr>
                 <td><input type="text" name="items[]" class="form-control" placeholder="Enter Item Description" required></td>
-                <td><input type="text" name="order_unit[]" class="form-control" placeholder="Enter Unit" required></td>
+               <td>
+                    <select name="order_unit[]" class="form-control" required>
+                        <option value="" disabled selected>Select Unit</option>
+                        @foreach($units as $unit)
+                            <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                        @endforeach
+                    </select>
+                </td>
                 <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" required></td>
                 <td><input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required></td>
                 <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
@@ -419,6 +431,48 @@
     calculateTotal();
 });
 
+</script>
+<script> 
+    $('#createClientForm').on('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        let formData = $(this).serialize(); // Get form data
+
+        $.ajax({
+            url: '{{ route('admin.client2.store') }}',
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                // Check if the supplier was created successfully
+                if (response.success) {
+                    // Close the modal
+                    $('#createClientModal').modal('hide');
+                    
+                    // Clear form inputs
+                    $('#createClientForm')[0].reset();
+
+                    // Append new supplier to the supplier select dropdown
+                    $('#client').append(new Option(response.client.name, response.client.id));
+
+                    // Re-initialize the select2 to refresh the dropdown
+                    $('#client').trigger('change');
+
+                    // Show success message
+                    toastr.success('Client added successfully!');
+                } else {
+                    toastr.error('Something went wrong. Please try again.');
+                }
+            },
+            error: function(response) {
+                // Handle error (validation errors, etc.)
+                let errors = response.responseJSON.errors;
+                for (let field in errors) {
+                    $(`#new_client_${field}`).addClass('is-invalid');
+                    $(`#new_client_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
+                }
+            }
+        });
+    });
 </script>
 
 @endpush

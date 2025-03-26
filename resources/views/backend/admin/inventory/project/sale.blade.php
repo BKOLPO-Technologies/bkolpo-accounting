@@ -204,7 +204,7 @@
                                         <td>{{ $project->project_coordinator }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Client</th>
+                                        <th>Customer</th>
                                         <td>{{ $project->client->name ?? 'N/A' }}</td>
                                     </tr>
                                     <tr>
@@ -270,15 +270,15 @@
                                 <div class="col-lg-12">
                                     <div class="card ">
                                         <div class="card-header py-2">
-                                            <h4 class="mb-0">Expence</h4>
+                                            <h4 class="mb-0">Expense</h4>
                                         </div>
                                         <div class="card-body">
                                             <table id="example12" class="table table-bordered table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>Sl</th>
-                                                        <th>Invoice No</th>
-                                                        <th>Invoice Date</th>
+                                                        <th>Reference No</th>
+                                                        <th>Reference Date</th>
                                                         <th>Subtotal</th>
                                                         <th>Discount</th>
                                                         <th>Total</th>

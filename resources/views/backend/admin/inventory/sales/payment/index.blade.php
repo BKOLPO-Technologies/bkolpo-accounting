@@ -36,8 +36,8 @@
                                     <thead>
                                         <tr>
                                             <th>Sl No</th>
-                                            <th>Invoice No</th>
-                                            <th>Supplier</th>
+                                            <th>PO No</th>
+                                            <th>Vendor</th>
                                             {{-- <th>Total Amount</th> --}}
                                             <th>Pay Amount</th>
                                             {{-- <th>Due Amount</th> --}}

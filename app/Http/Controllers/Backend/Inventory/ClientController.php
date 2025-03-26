@@ -85,12 +85,12 @@ class ClientController extends Controller
     {
         //dd($request->all());
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'designation' => 'required|string|max:255',
+            'name'     => 'nullable|string|max:255',
+            'designation' => 'nullable|string|max:255',
             'title' => 'required|string|max:255',
             'company'  => 'nullable|string|max:255',
             'phone'    => 'nullable|string|max:11',
-            'email'    => 'nullable|email|unique:suppliers,email',
+            'email'    => 'nullable|email|unique:clients,email',
             'address'  => 'nullable|string',
             'zip' => 'nullable|string',
             'city'     => 'nullable|string|max:100',

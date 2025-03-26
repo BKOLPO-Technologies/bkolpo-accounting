@@ -6,6 +6,7 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\Client;
 
+use App\Models\Unit;
 use App\Models\Project;
 use App\Models\Purchase;
 use App\Models\ProjectItem;
@@ -53,8 +54,9 @@ class ProjectController extends Controller
 
         // Combine the timestamp, random number, and full date
         $referance_no = 'BCL-PR-'.$fullDate.' - '.$randomNumber;
+        $units = Unit::where('status',1)->latest()->get();
 
-        return view('backend.admin.inventory.project.create',compact('pageTitle','clients','referance_no')); 
+        return view('backend.admin.inventory.project.create',compact('pageTitle','clients','referance_no','units')); 
     }
 
     /**
@@ -89,7 +91,7 @@ class ProjectController extends Controller
                 'items' => 'required|array',
                 'items.*' => 'required|string|max:255',
                 'order_unit' => 'required|array',
-                'order_unit.*' => 'required|string|max:255',
+                'order_unit.*' => 'required|max:255',
                 'unit_price' => 'required|array',
                 'unit_price.*' => 'required|numeric|min:0',
                 'quantity' => 'required|array',
@@ -131,7 +133,7 @@ class ProjectController extends Controller
                 ProjectItem::create([
                     'project_id' => $project->id,
                     'items' => $item,
-                    'order_unit' => $request->order_unit[$index],
+                    'unit_id' => $request->order_unit[$index],
                     'unit_price' => $request->unit_price[$index],
                     'quantity' => $request->quantity[$index],
                     'subtotal' => $request->subtotal[$index],
@@ -235,7 +237,7 @@ class ProjectController extends Controller
      */
     public function edit(string $id)
     {
-        $pageTitle = 'Project Create';
+        $pageTitle = 'Project Edit';
 
         $clients = Client::latest()->get();
 
@@ -243,7 +245,9 @@ class ProjectController extends Controller
             ->with(['client', 'items']) 
             ->first();
 
-        return view('backend.admin.inventory.project.edit',compact('pageTitle', 'clients', 'project'));
+        $units = Unit::where('status',1)->latest()->get();
+
+        return view('backend.admin.inventory.project.edit',compact('pageTitle', 'clients', 'project','units'));
     }
 
     /**
@@ -278,7 +282,7 @@ class ProjectController extends Controller
                 'items' => 'required|array',
                 'items.*' => 'required|string|max:255',
                 'order_unit' => 'required|array',
-                'order_unit.*' => 'required|string|max:255',
+                'order_unit.*' => 'required|max:255',
                 'unit_price' => 'required|array',
                 'unit_price.*' => 'required|numeric|min:0',
                 'quantity' => 'required|array',
@@ -328,7 +332,7 @@ class ProjectController extends Controller
                     // Update existing item
                     ProjectItem::where('id', $incomingItemIds[$index])->update([
                         'items' => $item,
-                        'order_unit' => $request->order_unit[$index],
+                        'unit_id' => $request->order_unit[$index],
                         'unit_price' => $request->unit_price[$index],
                         'quantity' => $request->quantity[$index],
                         'subtotal' => $request->subtotal[$index],
@@ -340,7 +344,7 @@ class ProjectController extends Controller
                     ProjectItem::create([
                         'project_id' => $project->id,
                         'items' => $item,
-                        'order_unit' => $request->order_unit[$index],
+                        'unit_id' => $request->order_unit[$index],
                         'unit_price' => $request->unit_price[$index],
                         'quantity' => $request->quantity[$index],
                         'subtotal' => $request->subtotal[$index],

@@ -12,4 +12,9 @@ class ProjectItem extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'unit_id');
+    }
 }

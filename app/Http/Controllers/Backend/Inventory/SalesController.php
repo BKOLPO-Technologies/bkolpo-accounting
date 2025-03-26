@@ -25,7 +25,7 @@ class SalesController extends Controller
      */
     public function index()
     {
-        $pageTitle = 'Sales List';
+        $pageTitle = 'Invoice';
 
         $sales = Sale::with('products')->OrderBy('id','desc')->get(); 
         return view('backend.admin.inventory.sales.index',compact('pageTitle','sales'));
@@ -40,7 +40,7 @@ class SalesController extends Controller
 
         $products = Product::where('status',1)->latest()->get();
         $projects = Project::where('project_type','Running')->latest()->get();
-        $pageTitle = 'Sales';
+        $pageTitle = 'Invoice';
 
         // Get current timestamp in 'dmyHis' format (day, month, year)
         $randomNumber = rand(100000, 999999);
@@ -197,7 +197,7 @@ class SalesController extends Controller
      */
     public function view($id)
     {
-        $pageTitle = 'Sales View';
+        $pageTitle = 'Invoice View';
 
         $sale = Sale::where('id', $id)
             ->with(['products', 'client']) // Include supplier details
@@ -211,7 +211,7 @@ class SalesController extends Controller
      */
     public function edit($id)
     {
-        $pageTitle = 'Sale Edit';
+        $pageTitle = 'Invoice Edit';
 
         // $purchase = Purchase::where('id', $id)->with('products')->first();
         // Fetch purchase details with supplier and products

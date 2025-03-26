@@ -23,7 +23,7 @@ class PurchaseController extends Controller
 
     public function index(Request $request)
     {
-        $pageTitle = 'Purchase';
+        $pageTitle = 'Purchase Order';
 
         $purchases = Purchase::with('products')->OrderBy('id','desc')->get(); 
         //dd($purchases);
@@ -173,7 +173,7 @@ class PurchaseController extends Controller
                     $journalVoucher = JournalVoucher::create([
                         'transaction_code' => $purchase->invoice_no,
                         'transaction_date' => now()->format('Y-m-d'),
-                        'description' => 'Purchase Invoice Recorded - Supplier',
+                        'description' => 'Purchase PO No Recorded - Supplier',
                         'status' => 1, 
                     ]);
                 }

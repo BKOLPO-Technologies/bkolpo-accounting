@@ -201,16 +201,16 @@
                                                     <td>
                                                         <input type="number" name="unit_price[]" class="form-control unit-price" min="0" required readonly>
                                                     </td>
-                                                    <td style="width:5% !important;">
+                                                    <td style="width:11% !important;">
                                                         <input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required>
                                                     </td>
-                                                    <td>
+                                                    <td style="width:7% !important;">
                                                         <input type="text" name="order_unit[]" class="form-control unit-input" required readonly>
                                                     </td>
-                                                    <td>
+                                                    <td style="width:8% !important;">
                                                         <input type="text" name="subtotal[]" class="form-control subtotal"  readonly>
                                                     </td>
-                                                    <td style="width:5% !important;">
+                                                    <td style="width:11% !important;">
                                                         <input type="number" name="discount[]" class="form-control product-discount" placeholder="Enter Discount" step="0.01" min="0">
                                                     </td>
                                                     <td>

@@ -172,7 +172,7 @@
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $item->items }}</td>
-                                                    <td>{{ $item->order_unit }}</td>
+                                                    <td>{{ $item->unit->name ?? '' }}</td>
                                                     <td>{{ number_format($item->unit_price, 2) }}</td>
                                                     <td>{{ $item->quantity }}</td>
                                                     <td>{{ number_format($item->subtotal, 2) }}</td>

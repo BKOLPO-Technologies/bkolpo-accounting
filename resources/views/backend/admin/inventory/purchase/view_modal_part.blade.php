@@ -17,7 +17,7 @@
             Email: {{ $purchase->supplier->email }}
         </div>
         <div class="col-sm-4 invoice-col">
-            <b>Invoice #{{ $purchase->invoice_no }}</b><br>
+            <b>PO No: {{ $purchase->invoice_no }}</b><br>
             Date: {{ \Carbon\Carbon::parse($purchase->invoice_date)->format('d F Y') }}
         </div>
     </div>

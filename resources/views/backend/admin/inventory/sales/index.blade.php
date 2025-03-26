@@ -27,7 +27,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
                                     <a href="{{ route('admin.sale.create') }}" class="btn btn-sm btn-success rounded-0">
-                                        <i class="fas fa-plus fa-sm"></i> Add New Sale
+                                        <i class="fas fa-plus fa-sm"></i> Add New Invoice
                                     </a>
                                 </div>
                             </div>

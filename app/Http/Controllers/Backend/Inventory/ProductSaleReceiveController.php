@@ -200,7 +200,7 @@ class ProductSaleReceiveController extends Controller
 
         // dd($invoice_no);
 
-        $pageTitle = 'Project Sale Receipt Details';
+        $pageTitle = 'Project Receive Details';
 
         $project = Project::where('reference_no', $invoice_no)
             ->with(['client', 'items']) 

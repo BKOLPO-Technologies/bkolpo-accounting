@@ -36,8 +36,8 @@
                                     <thead>
                                         <tr>
                                             <th>SL</th>
-                                            <th>Invoice No</th>
-                                            <th>Invoice Date</th>
+                                            <th>PO No</th>
+                                            <th>PO Date</th>
                                             <th>Vendor</th>
                                             <th>Total Amount</th>
                                             <th>Paid Amount</th>
