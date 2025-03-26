@@ -13,12 +13,17 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained()->onDelete('cascade'); 
+            $table->foreignId('client_id')->constrained()->onDelete('cascade');
+            $table->integer('category_id')->nullable();
             $table->integer('project_id')->nullable(); 
             $table->string('invoice_no')->unique(); 
             $table->date('invoice_date'); 
             $table->decimal('subtotal', 10, 2); 
-            $table->decimal('discount', 10, 2); 
+            $table->decimal('discount', 10, 2);
+            $table->decimal('transport_cost', 10, 2)->default(0);
+            $table->decimal('carrying_charge', 10, 2)->default(0);
+            $table->decimal('vat', 10, 2)->default(0);
+            $table->decimal('tax', 10, 2)->default(0);
             $table->decimal('total', 10, 2); 
 
             // $table->decimal('total_amount', 15, 2); // Total sale amount

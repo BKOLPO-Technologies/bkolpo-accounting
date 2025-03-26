@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\Project;
 use App\Models\Category;
 use App\Models\Purchase;
+use App\Models\Supplier;
 use App\Models\SaleProduct;
 use Illuminate\Http\Request;
 use App\Models\JournalVoucher;
@@ -82,6 +83,8 @@ class SalesController extends Controller
             'discount' => 'required|numeric',
             'total' => 'required|numeric',
             //'product_ids' => 'required|not_in:',  // Ensure at least one product is selected
+            'product_ids' => 'required|not_in:',
+            'project_id' => 'required|exists:projects,id',
         ]);
 
 
@@ -111,8 +114,13 @@ class SalesController extends Controller
             $sale->invoice_date = now()->format('Y-m-d');
             $sale->subtotal = $validated['subtotal'];
             $sale->discount = $validated['discount'];
+            $sale->transport_cost = $request->transport_cost;
+            $sale->carrying_charge = $request->carrying_charge;
+            $sale->vat = $request->vat;
+            $sale->tax = $request->tax;
             $sale->total = $validated['total'];
             $sale->description = $request->description;
+            $sale->category_id = $request->category_id;
             $sale->project_id = $request->project_id;
             $sale->save();
 
@@ -222,32 +230,71 @@ class SalesController extends Controller
     {
         $pageTitle = 'Invoice Edit';
 
-        // $purchase = Purchase::where('id', $id)->with('products')->first();
         // Fetch purchase details with supplier and products
         $sale = Sale::where('id', $id)
             ->with(['products', 'client']) // Include supplier details
             ->first();
 
-        // $sale = Sale::where('id', $id)
-        //     ->with(['saleProducts', 'client']) // Include supplier details
-        //     ->first();
+        // Fetch purchase details with supplier and products
+        $purchase = Purchase::where('id', $id)
+            ->with(['products', 'supplier', 'project']) // Include supplier details
+            ->first();
+
+        //dd($purchase);
         
+        // if ($purchase->invoice_date) {
+        //     $purchase->invoice_date = Carbon::parse($purchase->invoice_date);
+        // }
+
         if ($sale->invoice_date) {
             $sale->invoice_date = Carbon::parse($sale->invoice_date);
         }
 
+        // $subtotal = $purchase->products->sum(function ($product) {
+        //     return $product->pivot->price * $product->pivot->quantity - $product->pivot->discount;
+        // });
+
         $subtotal = $sale->products->sum(function ($product) {
             return ($product->pivot->price * $product->pivot->quantity) - (!empty($product->pivot->discount) ? $product->pivot->discount : 0);
         });
-        
-        // dd($subtotal);
 
+        //$grandtotal = $subtotal + (($purchase->transport_cost) + ($purchase->carrying_charge) + ($purchase->vat) + ($purchase->tax) - ($purchase->discount));
+        $grandtotal = $subtotal + (($sale->transport_cost) + ($sale->carrying_charge) + ($sale->vat) + ($sale->tax) - ($sale->discount));
+
+        $suppliers = Supplier::orderBy('id', 'desc')->get();
         $clients = Client::orderBy('id', 'desc')->get();
-        $products = Product::where('status',1)->latest()->get();
-
+        $aproducts = Product::where('status',1)->latest()->get();
+        $categories = Category::where('status',1)->latest()->get();
         $projects = Project::where('project_type','Running')->latest()->get();
 
-        return view('backend.admin.inventory.sales.edit',compact('pageTitle', 'sale', 'clients', 'products', 'subtotal', 'projects')); 
+        //$product_ids = $purchase->products->pluck('id')->implode(',');
+        $product_ids = $sale->products->pluck('id')->implode(',');
+        //$quantities = $purchase->products->pluck('pivot.quantity')->implode(',');
+        $quantities = $sale->products->pluck('pivot.quantity')->implode(',');
+        //$prices = $purchase->products->pluck('pivot.price')->implode(',');
+        $prices = $sale->products->pluck('pivot.price')->implode(',');
+        //$discounts = $purchase->products->pluck('pivot.discount')->implode(',');
+        $discounts = $sale->products->pluck('pivot.discount')->implode(',');
+
+        //return view('backend.admin.inventory.sales.edit',compact('pageTitle', 'sale', 'clients', 'products', 'subtotal', 'projects'));
+
+        return view('backend.admin.inventory.sales.edit', [
+            'pageTitle' => $pageTitle, 
+            'purchase' => $purchase, 
+            'suppliers' => $suppliers, 
+            'aproducts' => $aproducts,
+            'categories' => $categories,
+            'projects' => $projects, 
+            'subtotal' => $subtotal, 
+            'grandtotal' => $grandtotal,
+            'grandtotal' => $grandtotal,
+            'product_ids' => $product_ids,
+            'quantities' => $quantities,
+            'prices' => $prices,
+            'discounts' => $discounts,
+            'sale' => $sale,
+            'clients' => $clients,
+        ]);
     }
 
     /**
@@ -302,6 +349,13 @@ class SalesController extends Controller
             $sale->invoice_date = now()->format('Y-m-d');
             $sale->subtotal = $validated['subtotal'];
             $sale->discount = $validated['discount'];
+
+            $sale->transport_cost = $request->transport_cost;
+            $sale->carrying_charge = $request->carrying_charge;
+            $sale->vat = $request->vat;
+            $sale->tax = $request->tax;
+            $sale->category_id = $request->category_id;
+
             $sale->total = $validated['total'];
             $sale->description = $request->description;
             $sale->project_id = $request->project_id;
