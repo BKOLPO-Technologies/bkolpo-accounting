@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Unit;
 use App\Models\Project; // Ensure you import the Project model
 use App\Models\ProjectItem; // Ensure you import the ProjectItem model
 use Illuminate\Database\Seeder;
@@ -99,10 +100,13 @@ class ProjectsSeeder extends Seeder
      */
     private function createProjectItems(Project $project)
     {
+        // Get unit IDs indexed by name
+        $units = Unit::pluck('id', 'name')->toArray();
+    
         $itemsData = [
             [
                 'items' => 'Item 1',
-                'order_unit' => 'Unit 1',
+                'unit_id' => 1, // Get the unit ID or null if not found
                 'unit_price' => 100,
                 'quantity' => 10,
                 'subtotal' => 1000,
@@ -112,7 +116,7 @@ class ProjectsSeeder extends Seeder
             ],
             [
                 'items' => 'Item 2',
-                'order_unit' => 'Unit 2',
+                'unit_id' => 2,
                 'unit_price' => 200,
                 'quantity' => 5,
                 'subtotal' => 1000,
@@ -122,7 +126,7 @@ class ProjectsSeeder extends Seeder
             ],
             [
                 'items' => 'Item 3',
-                'order_unit' => 'Unit 3',
+                'unit_id' => 3,
                 'unit_price' => 300,
                 'quantity' => 3,
                 'subtotal' => 900,
@@ -131,7 +135,7 @@ class ProjectsSeeder extends Seeder
                 'project_id' => $project->id,
             ]
         ];
-
+    
         foreach ($itemsData as $itemData) {
             ProjectItem::updateOrCreate(
                 ['items' => $itemData['items'], 'project_id' => $project->id],
@@ -139,4 +143,5 @@ class ProjectsSeeder extends Seeder
             );
         }
     }
+    
 }
