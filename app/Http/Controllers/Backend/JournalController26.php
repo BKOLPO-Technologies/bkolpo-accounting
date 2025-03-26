@@ -313,7 +313,61 @@ class JournalController extends Controller
         $ledger_group = $request->group[$i];
         $ledger_subgroup = $request->sub_group[$i];
 
+        // start capital account er khetre entry //
+        $first_Liabilities = LedgerGroup::where('group_name',$ledger_group)->first();
+        if (!$first_Liabilities) {
+            $first_Liabilities = LedgerGroup::create([
+                'company_id' => $request->company_id,
+                'group_name' => "Liabilities",
+                'created_by' => Auth::user()->id,
+            ]);
+        }
+
+
+        $openingBalance = 0;
+
         $capitalLedger = Ledger::where('name','Capital Account')->first();
+
+        // dd($capitalLedger);
+        if (!$capitalLedger) {
+            $capitalLedger = Ledger::create([
+                'name' => 'Capital Account',
+                'group_id' => $first_Liabilities->id,
+                'opening_balance' => $openingBalance,
+                'created_by' => Auth::user()->id,
+            ]);
+        }
+
+        // 🔹 Ledger Sub Group Create
+        $ledgerSubGroup = LedgerSubGroup::where('subgroup_name',$ledger_subgroup)->first();
+        // 🔹 Ledger Sub Group Create
+        if(!$ledgerSubGroup){
+            $ledgerSubGroup = LedgerSubGroup::create([
+                'ledger_group_id' => $first_Liabilities->id,
+                'subgroup_name'   => 'Current Liabilities',
+                'created_by'      => Auth::user()->id,
+            ]);
+        }
+
+        // 🔹 LedgerGroupSubgroupLedger Table Entry
+        $existingEntry = LedgerGroupSubgroupLedger::where('group_id', $first_Liabilities->id)
+            ->where('sub_group_id', $ledgerSubGroup->id)
+            ->where('ledger_id', $capitalLedger->id)
+            ->first(); // First entry found with the same group_id, sub_group_id, and ledger_id
+        // dd($existingEntry);
+
+        if (!$existingEntry) {
+            // Only create if no existing entry found
+            LedgerGroupSubgroupLedger::create([
+                'group_id'     => $first_Liabilities->id,
+                'sub_group_id' => $ledgerSubGroup->id,
+                'ledger_id'    => $capitalLedger->id,
+                'created_at'   => now(),
+                'updated_at'   => now(),
+            ]);
+        }
+
+        $capital_account_ledger_id = $capitalLedger->id;
     
         // Iterate through each row in the table and create journal voucher details
         foreach ($request->type as $i => $type) {
@@ -329,6 +383,58 @@ class JournalController extends Controller
             $ledger_group = $request->group[$i];
             $ledger_subgroup = $request->sub_group[$i];
 
+            // 🔹 Ledger Group Create
+            $ledgerGroup = LedgerGroup::where('group_name',$ledger_group)->first();
+            if (!$ledgerGroup) {
+                $ledgerGroup = LedgerGroup::create([
+                    'company_id' => $request->company_id,
+                    'group_name' => $request->group[$i],
+                    'created_by' => Auth::user()->id,
+                ]);
+            }
+
+            // 🔹 Ledger Sub Group Create
+            $ledgerSubGroup = LedgerSubGroup::where('subgroup_name', $ledger_subgroup)->first();
+            // 🔹 Ledger Sub Group Create
+            if(!$ledgerSubGroup){
+                $ledgerSubGroup = LedgerSubGroup::create([
+                    'ledger_group_id' => $ledgerGroup->id,
+                    'subgroup_name'   => $request->sub_group[$i],
+                    'created_by'      => Auth::user()->id,
+                ]);
+            }
+            
+            
+            // 🔹 Ledger  Cash Create
+            $ledger = Ledger::where('name', $request->ledger[$i]) // Match the ledger name with request
+            ->first();
+            if(!$ledger){
+                // 🔹 Ledger Entry Create (Check if already exists)
+                $ledger = Ledger::firstOrCreate(
+                    ['name' => $request->ledger[$i]],
+                    [
+                        'opening_balance' => $request->ob[$i] ?? 0, // ✅ ওপেনিং ব্যালেন্স
+                        'created_by' => Auth::user()->id,
+                    ]
+                );
+            }
+
+            // 🔹 LedgerGroupSubgroupLedger Table Entry
+            $existingEntry = LedgerGroupSubgroupLedger::where('group_id', $ledgerGroup->id)
+            ->where('sub_group_id', $ledgerSubGroup->id)
+            ->where('ledger_id', $ledger->id)
+            ->first(); // First entry found with the same group_id, sub_group_id, and ledger_id
+
+            if (!$existingEntry) {
+                // Only create if no existing entry found
+                LedgerGroupSubgroupLedger::create([
+                    'group_id'     => $ledgerGroup->id,
+                    'sub_group_id' => $ledgerSubGroup->id,
+                    'ledger_id'    => $ledger->id,
+                    'created_at'   => now(),
+                    'updated_at'   => now(),
+                ]);
+            }
     
             // Retrieve the ledger ID from the ledger name (assuming the ledger name is unique)
             $ledger = Ledger::where('name', $ledger_name)->first();
@@ -356,7 +462,7 @@ class JournalController extends Controller
                 // Credit the capital account (for Asset entry)
                 JournalVoucherDetail::create([
                     'journal_voucher_id' => $journalVoucher->id,
-                    'ledger_id' => $capitalLedger->id, // Capital Account
+                    'ledger_id' => $capital_account_ledger_id, // Capital Account
                     'reference_no' => "REF-" . rand(100000, 999999),
                     'description' => 'Capital Account Credit for Asset ' . $ledger_name,
                     'debit' => 0,
@@ -380,7 +486,7 @@ class JournalController extends Controller
                 // Debit the capital account (for Liability entry)
                 JournalVoucherDetail::create([
                     'journal_voucher_id' => $journalVoucher->id,
-                    'ledger_id' => $capitalLedger->id, // Capital Account
+                    'ledger_id' => $capital_account_ledger_id, // Capital Account
                     'reference_no' => "REF-" . rand(100000, 999999),
                     'description' => 'Capital Account Debit for Liability ' . $ledger_name,
                     'debit' => $credit,
