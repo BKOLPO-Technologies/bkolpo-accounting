@@ -7,8 +7,9 @@ use App\Models\Sale;
 use App\Models\Client;
 use App\Models\Ledger;
 use App\Models\Product;
-use App\Models\Purchase;
 use App\Models\Project;
+use App\Models\Category;
+use App\Models\Purchase;
 use App\Models\SaleProduct;
 use Illuminate\Http\Request;
 use App\Models\JournalVoucher;
@@ -39,6 +40,7 @@ class SalesController extends Controller
         $clients = Client::orderBy('id', 'desc')->get();
 
         $products = Product::where('status',1)->latest()->get();
+        $categories = Category::where('status',1)->latest()->get();
         $projects = Project::where('project_type','Running')->latest()->get();
         $pageTitle = 'Invoice';
 
@@ -54,7 +56,14 @@ class SalesController extends Controller
 
         // $invoice_no = 'BKOLPO-'. $randomNumber;
 
-        return view('backend.admin.inventory.sales.create',compact('pageTitle', 'clients', 'products','invoice_no','projects')); 
+        return view('backend.admin.inventory.sales.create', compact(
+            'pageTitle', 
+            'clients', 
+            'products',
+            'categories',
+            'projects',
+            'invoice_no'
+        )); 
     }
 
     /**
@@ -62,7 +71,7 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+        //dd($request->all());
 
         // Validate the request data
         $validated = $request->validate([
