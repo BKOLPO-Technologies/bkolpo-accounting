@@ -22,7 +22,7 @@ class ProductSaleReceiveController extends Controller
      */
     public function index()
     {
-        $pageTitle = 'Project Sale Receive List';
+        $pageTitle = 'Project Receive List';
     
         $receipts = ProjectReceipt::with(['client'])
             ->orderBy('id', 'desc')
