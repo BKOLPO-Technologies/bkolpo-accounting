@@ -40,7 +40,7 @@
                                             <th>Customer Name</th>
                                             <th>Project Coordinator Name</th>
                                             <th>Total Amount</th>
-                                            <th>Status</th>
+                                            {{-- <th>Status</th> --}}
                                             <th>Project Type</th>
                                             <th>Actions</th>
                                         </tr>
@@ -53,7 +53,7 @@
                                                 <td>{{ $project->client->name ?? 'N/A' }}</td>
                                                 <td>{{ $project->project_coordinator ?? 'N/A' }}</td>
                                                 <td>{{ bdt() }} {{ number_format($project->grand_total, 2) }}</td>
-                                                <td>
+                                                {{-- <td>
                                                     @if($project->status == 'pending')
                                                         <span class="badge bg-danger">Pending</span>
                                                     @elseif($project->status == 'paid')
@@ -61,7 +61,7 @@
                                                     @else
                                                         <span class="badge bg-warning">Partially Paid</span>
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                                 <td>
                                                     @if($project->project_type == 'ongoing')
                                                         <span class="badge bg-danger">Ongoing</span>
