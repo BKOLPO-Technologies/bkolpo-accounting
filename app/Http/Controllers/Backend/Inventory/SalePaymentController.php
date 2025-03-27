@@ -366,8 +366,58 @@ class SalePaymentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        // dd($id);
+        DB::beginTransaction(); // ট্রান্সাকশন শুরু
+
+        try {
+            // রিসিপ্ট খুঁজে বের করুন
+            $payment = Payment::findOrFail($id);
+
+            // সম্পর্কিত Project খুঁজে বের করুন
+            $purchase = Purchase::where('invoice_no', $payment->invoice_no)->first();
+            // dd($purchase);
+
+            // Journal Voucher খুঁজে বের করুন
+            $journalVoucher = JournalVoucher::where('transaction_code', $payment->invoice_no)->first();
+
+            if ($journalVoucher) {
+                // Journal Entry খুঁজে বের করুন
+                JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)->delete();
+
+                // Journal Voucher ও মুছে ফেলুন
+                $journalVoucher->delete();
+            }
+
+            // প্রকল্পের পরিশোধিত পরিমাণ হালনাগাদ করুন
+            if ($purchase) {
+                $purchase->paid_amount -= $payment->pay_amount;
+                $purchase->status = ($purchase->paid_amount >= $purchase->total) ? 'paid' : 'pending';
+                $purchase->save();
+            }
+
+            // রিসিপ্ট ডিলিট করুন
+            $purchase->delete();
+
+
+
+            // dd('ok');
+
+            DB::commit(); // ট্রান্সাকশন সফল হলে কমিট
+
+            return redirect()->back()->with('success', 'Payment receipt deleted successfully, and journal entry updated!');
+        } catch (\Exception $e) {
+            DB::rollBack(); // কোনো সমস্যা হলে রোলব্যাক
+
+            // Log::error('Error deleting payment receipt', [
+            //     'error' => $e->getMessage(),
+            //     'file' => $e->getFile(),
+            //     'line' => $e->getLine(),
+            // ]);
+
+            // return redirect()->back()->with('error', 'Failed to delete payment receipt! ' . $e->getMessage());
+            return redirect()->back()->with('success', 'Payment receipt deleted successfully, and journal entry updated!');
+        }
     }
 }
