@@ -368,12 +368,14 @@ class SalePaymentController extends Controller
      */
     public function destroy($id)
     {
-        // dd($id);
+        //dd($id);
         DB::beginTransaction(); // ট্রান্সাকশন শুরু
 
         try {
             // রিসিপ্ট খুঁজে বের করুন
             $payment = Payment::findOrFail($id);
+
+            //dd($payment);
 
             // সম্পর্কিত Project খুঁজে বের করুন
             $purchase = Purchase::where('invoice_no', $payment->invoice_no)->first();
@@ -398,7 +400,7 @@ class SalePaymentController extends Controller
             }
 
             // রিসিপ্ট ডিলিট করুন
-            $purchase->delete();
+            $payment->delete();
 
 
 
