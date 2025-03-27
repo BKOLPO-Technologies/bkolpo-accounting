@@ -122,7 +122,7 @@
 
                                 <div class="col-md-8">
                                     <div class="card card-block p-3">
-                                        <h4>Supplier Details</h4>
+                                        <h4>Vendor Details</h4>
                                         <hr>
                                         <div class="row m-t-lg">
                                             <div class="col-md-2">

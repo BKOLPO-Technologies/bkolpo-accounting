@@ -39,7 +39,7 @@
                             <div class="row wrapper white-bg page-heading">
                                 <div class="col-md-4">
                                     <div class="card card-block p-3">
-                                        <h4 class="text-xs-center">GPH Ispat Ltd.</h4>
+                                        <h4 class="text-xs-center">{{ $client->name }}</h4>
                                         <div class="ibox-content mt-2">
                                             <img alt="image" id="dpic" class="img-responsive"
                                                 src="https://accounts.bkolpo.com/userfiles/customers/example.png">
