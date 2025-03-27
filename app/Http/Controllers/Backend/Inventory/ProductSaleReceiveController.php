@@ -41,10 +41,14 @@ class ProductSaleReceiveController extends Controller
         $customers = Client::latest()->get();
         $ledgerGroups = LedgerGroup::with('ledgers')->latest()->get();
         // $projects = Project::where('project_type','Running')->latest()->get();
-        $projects = Project::where('project_type', 'Running')
-            ->whereColumn('paid_amount', '<', 'grand_total')
-            ->latest()
-            ->get();
+        // $projects = Project::where('project_type', 'Running')
+        //     ->whereColumn('paid_amount', '<', 'grand_total')
+        //     ->latest()
+        //     ->get();
+
+        // Only fetch projects that have invoices in the 'sales' table
+        $projects = Project::whereHas('sales')->where('project_type', 'Running')->latest()->get();
+        
         $ledgers = Ledger::whereIn('type', ['Bank', 'Cash'])->get();
 
 
@@ -72,16 +76,20 @@ class ProductSaleReceiveController extends Controller
         try {
 
             $project = Project::where('id', $request->input('project_id'))->first();
-
+            $invoice = Sale::where('invoice_no', $request->input('invoice_no'))->firstOrFail();
             $ledger = Ledger::findOrFail($request->payment_method);
 
-            if($ledger->type == 'Cash'){
-                $paymentDescription = "{$ledger->name}";
-                $payment_method = 'Cash';
-            }elseif($ledger->type == 'Bank'){
-                $paymentDescription = "{$ledger->name}";
-                $payment_method = 'Bank';
-            }
+            // if($ledger->type == 'Cash'){
+            //     $paymentDescription = "{$ledger->name}";
+            //     $payment_method = 'Cash';
+            // }elseif($ledger->type == 'Bank'){
+            //     $paymentDescription = "{$ledger->name}";
+            //     $payment_method = 'Bank';
+            // }
+
+            // Determine payment method
+            $paymentDescription = "{$ledger->name}";
+            $payment_method = $ledger->type == 'Cash' ? 'Cash' : 'Bank';
   
             // Create a new project receipt
             $receipt = ProjectReceipt::create([

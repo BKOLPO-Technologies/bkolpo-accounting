@@ -50,12 +50,32 @@
                                     </div>
                                 </div>
 
+                                <!-- Sales Invoice No -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="invoice_no" class="form-label">Invoice No:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
+                                        <select class="form-control select2" name="invoice_no" id="invoice_no">
+                                            <option value="">Select Invoice No</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <!-- Total Amount (Display) -->
                                 <div class="col-md-6 mb-3">
                                     <label for="total_amount" class="form-label">Total Amount:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
                                         <input type="text" name="total_amount" class="form-control" id="total_amount" readonly>
+                                    </div>
+                                </div>
+
+                                <!-- Total Due Amount (Display) -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="total_due_amount" class="form-label">Total Due Amount:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
+                                        <input type="text" name="total_due_amount" class="form-control" id="total_due_amount" readonly>
                                     </div>
                                 </div>
 
@@ -152,43 +172,65 @@
 
 @push('js')
 <script>
-    $(document).ready(function () {
-        $('.select2').select2();
-        $('#project_id').change(function () {
-            let projectId = $(this).val();
+  $(document).ready(function () {
+    $('.select2').select2();
 
-            if (projectId) {
-                $.ajax({
-                    url: "{{ route('project.get.details') }}",
-                    type: "GET",
-                    data: { project_id: projectId },
-                    success: function (response) {
-                        if (response.success) {
-                            $('#total_amount').val(response.total_amount);
-                            $('#due_amount').val(response.due_amount);
-                        } else {
-                            toastr.error('Project details not found.');
-                        }
-                    },
-                    error: function () {
-                        toastr.error('Error fetching project details.');
+    $('#project_id').change(function () {
+        let projectId = $(this).val();
+
+        // Reset Fields
+        $('#invoice_no').html('<option value="">Select Invoice No</option>');
+        $('#total_amount').val('');
+        $('#pay_amount').val('');
+        $('#due_amount').val('');
+        $('#total_due_amount').val('');
+
+        if (projectId) {
+            $('#invoice_no').html('<option value="">Loading...</option>');
+
+            $.ajax({
+                url: "{{ route('project.get.details') }}",
+                type: "GET",
+                data: { project_id: projectId },
+                success: function (response) {
+                    if (response.success) {
+                        let options = '<option value="">Select Invoice No</option>';
+                        response.sales.forEach(sale => {
+                            options += `<option value="${sale.invoice_no}" data-total="${sale.total}" data-due="${sale.total - sale.paid_amount}">${sale.invoice_no}</option>`;
+                        });
+
+                        $('#invoice_no').html(options);
+                    } else {
+                        toastr.error('No invoices found for this project.');
                     }
-                });
-            } else {
-                $('#total_amount').val('');
-                $('#due_amount').val('');
-            }
-        });
-
-        // Auto calculate Due Amount on Pay Amount input
-        $('#pay_amount').on('input', function () {
-            let totalAmount = parseFloat($('#total_amount').val()) || 0;
-            let payAmount = parseFloat($(this).val()) || 0;
-            let dueAmount = totalAmount - payAmount;
-
-            $('#due_amount').val(dueAmount.toFixed(2));
-        });
+                },
+                error: function () {
+                    toastr.error('Error fetching project details.');
+                }
+            });
+        }
     });
+
+    // When selecting an invoice, update total_amount and due_amount
+    $('#invoice_no').change(function () {
+        let selectedOption = $(this).find(':selected');
+        let totalAmount = selectedOption.data('total') || 0;
+        let dueAmount = selectedOption.data('due') || 0;
+
+        $('#total_amount').val(totalAmount);
+        $('#total_due_amount').val(dueAmount);
+    });
+
+    // Auto calculate Due Amount on Pay Amount input
+    $('#pay_amount').on('input', function () {
+        let totalAmount = parseFloat($('#total_due_amount').val()) || 0;
+        let payAmount = parseFloat($(this).val()) || 0;
+        let dueAmount = totalAmount - payAmount;
+
+        $('#due_amount').val(dueAmount.toFixed(2));
+    });
+});
+
 </script>
 
  <!-- JS to toggle visibility -->

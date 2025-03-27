@@ -84,7 +84,7 @@ class SalesController extends Controller
             'total' => 'required|numeric',
             //'product_ids' => 'required|not_in:',  // Ensure at least one product is selected
             'product_ids' => 'required|not_in:',
-            'project_id' => 'required|exists:projects,id',
+            // 'project_id' => 'required|exists:projects,id',
         ]);
 
 

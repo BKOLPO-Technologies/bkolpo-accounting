@@ -66,6 +66,9 @@
                                                     <a href="{{ route('project.receipt.payment.show', ['invoice_no' => $receipt->invoice_no]) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
+                                                    <a href="#" class="btn btn-danger btn-sm">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         @endforeach

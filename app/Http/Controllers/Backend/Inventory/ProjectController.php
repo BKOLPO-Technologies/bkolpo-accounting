@@ -6,6 +6,7 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\Client;
 
+use App\Models\Sale;
 use App\Models\Unit;
 use App\Models\Project;
 use App\Models\Purchase;
@@ -398,20 +399,39 @@ class ProjectController extends Controller
     }
 
     // get project details
+    // public function getProjectDetails(Request $request)
+    // {
+    //     $project = Project::find($request->project_id);
+
+    //     if ($project) {
+    //         return response()->json([
+    //             'success' => true,
+    //             'total_amount' => $project->grand_total-$project->paid_amount,
+    //             'due_amount' => $project->due_amount
+    //         ]);
+    //     }
+
+    //     return response()->json(['success' => false]);
+    // }
+
     public function getProjectDetails(Request $request)
     {
-        $project = Project::find($request->project_id);
-
-        if ($project) {
+        $sales = Sale::where('project_id', $request->project_id)->where('status', '!=', 'paid')->get();
+    
+        if ($sales->isNotEmpty()) {
+            $total_amount = $sales->sum('total');
+            $paid_amount = $sales->sum('paid_amount');
+            $due_amount = $total_amount - $paid_amount;
+    
             return response()->json([
                 'success' => true,
-                'total_amount' => $project->grand_total-$project->paid_amount,
-                'due_amount' => $project->due_amount
+                'total_amount' => $total_amount,
+                'due_amount' => $due_amount,
+                'sales' => $sales // Sending sales data
             ]);
         }
-
+    
         return response()->json(['success' => false]);
-    }
-
+    }    
 
 }
