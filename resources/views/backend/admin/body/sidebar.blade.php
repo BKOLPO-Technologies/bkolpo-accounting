@@ -209,7 +209,7 @@
     <a href="#" class="nav-link {{ $isInvoiceActive ? 'active' : '' }}">
         <i class="nav-icon fas fa-folder"></i> <!-- Updated Icon -->
         <p>
-            INVOICE
+            Invoice
             <i class="fas fa-angle-left right"></i>
         </p>
     </a>
