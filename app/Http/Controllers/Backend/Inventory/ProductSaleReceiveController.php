@@ -75,8 +75,8 @@ class ProductSaleReceiveController extends Controller
     
         try {
 
-            $project = Project::where('id', $request->input('project_id'))->first();
-            $invoice = Sale::where('invoice_no', $request->input('invoice_no'))->firstOrFail();
+            // $project = Project::where('id', $request->input('project_id'))->first();
+            $project = Sale::where('invoice_no', $request->input('invoice_no'))->where('project_id', $request->input('project_id'))->firstOrFail();
             $ledger = Ledger::findOrFail($request->payment_method);
 
             // if($ledger->type == 'Cash'){
@@ -94,7 +94,7 @@ class ProductSaleReceiveController extends Controller
             // Create a new project receipt
             $receipt = ProjectReceipt::create([
                 'client_id' => $project->client_id,
-                'invoice_no' => $project->reference_no ,
+                'invoice_no' => $project->invoice_no ,
                 'total_amount' => $request->input('total_amount'),
                 'pay_amount' => $request->input('pay_amount'),
                 'due_amount' => $request->input('due_amount'),
@@ -109,7 +109,7 @@ class ProductSaleReceiveController extends Controller
           
 
             // journal payment project receipt add amount
-            $project_amount = $project->grand_total ?? 0; // Get the total project amount
+            $project_amount = $project->total ?? 0; // Get the total project amount
 
             $cashBankLedger  = $ledger;
             $receivableLedger = Ledger::where('type', 'Receivable')->first();
@@ -123,7 +123,7 @@ class ProductSaleReceiveController extends Controller
                 if (!$journalVoucher) {
                     // Create a new Journal Voucher for Payment Received
                     $journalVoucher = JournalVoucher::create([
-                        'transaction_code'  => $project->reference_no,
+                        'transaction_code'  => $project->invoice_no,
                         'transaction_date'  => $request->payment_date,
                         'description'       => 'Invoice Payment Received - First Installment', // ম্যানুয়াল বর্ণনা
                         'status'            => 1, // Pending status
@@ -134,8 +134,8 @@ class ProductSaleReceiveController extends Controller
                 JournalVoucherDetail::create([
                     'journal_voucher_id' => $journalVoucher->id,
                     'ledger_id'          => $cashBankLedger->id, // নগদ ও ব্যাংক হিসাব
-                    'reference_no'       => $project->reference_no,
-                    'description'        => $paymentDescription . ' of ' . number_format($paymentAmount, 2) . ' Taka Received from Customer for Invoice ' . $project->reference_no,
+                    'reference_no'       => $project->invoice_no,
+                    'description'        => $paymentDescription . ' of ' . number_format($paymentAmount, 2) . ' Taka Received from Customer for Invoice ' . $project->invoice_no,
                     'debit'              => $paymentAmount, // টাকা জমা হচ্ছে
                     'credit'             => 0,
                     'created_at'         => now(),
@@ -146,7 +146,7 @@ class ProductSaleReceiveController extends Controller
                 JournalVoucherDetail::create([
                     'journal_voucher_id' => $journalVoucher->id,
                     'ledger_id'          => $receivableLedger->id, 
-                    'reference_no'       => $project->reference_no,
+                    'reference_no'       => $project->invoice_no,
                     'description'        => $paymentDescription . ' Accounts Receivable Reduced by '.$paymentAmount.' Taka',
                     'debit'              => 0,
                     'credit'             => $paymentAmount,  // পাওনা টাকা কমবে
@@ -223,6 +223,59 @@ class ProductSaleReceiveController extends Controller
         //dd($project_receipts);
 
         return view('backend.admin.inventory.project.payment.receipt.view', compact('pageTitle', 'project', 'project_receipts'));
+    }
+
+    public function destroy($id)
+    {
+        DB::beginTransaction(); // ট্রান্সাকশন শুরু
+
+        try {
+            // রিসিপ্ট খুঁজে বের করুন
+            $receipt = ProjectReceipt::findOrFail($id);
+
+            // সম্পর্কিত Project খুঁজে বের করুন
+            $project = Sale::where('invoice_no', $receipt->invoice_no)->first();
+            // dd($project);
+
+            // Journal Voucher খুঁজে বের করুন
+            $journalVoucher = JournalVoucher::where('transaction_code', $receipt->invoice_no)->first();
+
+            if ($journalVoucher) {
+                // Journal Entry খুঁজে বের করুন
+                JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)->delete();
+
+                // Journal Voucher ও মুছে ফেলুন
+                $journalVoucher->delete();
+            }
+
+            // প্রকল্পের পরিশোধিত পরিমাণ হালনাগাদ করুন
+            if ($project) {
+                $project->paid_amount -= $receipt->pay_amount;
+                $project->status = ($project->paid_amount >= $project->total) ? 'paid' : 'pending';
+                $project->save();
+            }
+
+            // রিসিপ্ট ডিলিট করুন
+            $receipt->delete();
+
+
+
+            // dd('ok');
+
+            DB::commit(); // ট্রান্সাকশন সফল হলে কমিট
+
+            return redirect()->back()->with('success', 'Payment receipt deleted successfully, and journal entry updated!');
+        } catch (\Exception $e) {
+            DB::rollBack(); // কোনো সমস্যা হলে রোলব্যাক
+
+            Log::error('Error deleting payment receipt', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
+            return redirect()->back()->with('error', 'Failed to delete payment receipt! ' . $e->getMessage());
+        }
     }
 
 }

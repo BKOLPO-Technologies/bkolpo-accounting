@@ -50,13 +50,13 @@
                                     </div>
                                 </div>
 
-                                <!-- Sales Invoice No -->
+                                <!-- Sales Reference No -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="invoice_no" class="form-label">Invoice No:</label>
+                                    <label for="invoice_no" class="form-label">Reference No:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
                                         <select class="form-control select2" name="invoice_no" id="invoice_no">
-                                            <option value="">Select Invoice No</option>
+                                            <option value="">Select Reference No</option>
                                         </select>
                                     </div>
                                 </div>
@@ -179,7 +179,7 @@
         let projectId = $(this).val();
 
         // Reset Fields
-        $('#invoice_no').html('<option value="">Select Invoice No</option>');
+        $('#invoice_no').html('<option value="">Select Reference No</option>');
         $('#total_amount').val('');
         $('#pay_amount').val('');
         $('#due_amount').val('');
@@ -194,7 +194,7 @@
                 data: { project_id: projectId },
                 success: function (response) {
                     if (response.success) {
-                        let options = '<option value="">Select Invoice No</option>';
+                        let options = '<option value="">Select Reference No</option>';
                         response.sales.forEach(sale => {
                             options += `<option value="${sale.invoice_no}" data-total="${sale.total}" data-due="${sale.total - sale.paid_amount}">${sale.invoice_no}</option>`;
                         });

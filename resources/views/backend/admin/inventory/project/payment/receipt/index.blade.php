@@ -36,7 +36,7 @@
                                     <thead>
                                         <tr>
                                             <th>Sl No</th>
-                                            <th>Invoice No/Reference No</th>
+                                            <th>Reference No</th>
                                             <th>Customer Name</th>
                                             <th>Pay Amount</th>
                                             <th>Payment Method</th>  
@@ -66,7 +66,7 @@
                                                     <a href="{{ route('project.receipt.payment.show', ['invoice_no' => $receipt->invoice_no]) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a href="#" class="btn btn-danger btn-sm">
+                                                    <a href="{{ route('project.receipt.payment.destroy', $receipt->id) }}" id="delete" class="btn btn-danger btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </td>

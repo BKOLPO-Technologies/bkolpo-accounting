@@ -416,7 +416,7 @@ class ProjectController extends Controller
 
     public function getProjectDetails(Request $request)
     {
-        $sales = Sale::where('project_id', $request->project_id)->where('status', '!=', 'paid')->get();
+        $sales = Sale::where('project_id', $request->project_id)->whereColumn('total', '>', 'paid_amount')->get();
     
         if ($sales->isNotEmpty()) {
             $total_amount = $sales->sum('total');
