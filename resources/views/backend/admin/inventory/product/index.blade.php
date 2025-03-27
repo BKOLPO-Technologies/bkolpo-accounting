@@ -41,7 +41,7 @@
                                     <th>Product Name</th>
                                     <th>Category Name</th>
                                     <th>Price</th>
-                                    <th>Quantity</th>
+                                    {{-- <th>Quantity</th> --}}
                                     <th>Image</th>
                                     <th>Actions</th>
                                 </tr>
@@ -53,7 +53,7 @@
                                     <td>{{ $product->name }}</td>
                                     <td>{{ $product->category->name ?? 'N/A' }}</td>
                                     <td>{{ $product->price }}</td>
-                                    <td>{{ $product->quantity }}</td>
+                                    {{-- <td>{{ $product->quantity }}</td> --}}
                                     <td>
                                         @if($product->image)
                                             <img src="{{ (!empty($product->image)) ? url('upload/inventory/products/'.$product->image):url('https://via.placeholder.com/70x60') }}" width="50">
