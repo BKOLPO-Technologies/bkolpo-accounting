@@ -259,13 +259,13 @@
                                     
                                             <!-- Vat -->
                                             <div class="col-12 col-lg-6 mb-2">
-                                                <label for="vat">Vat</label>
+                                                <label for="vat">VAT</label>
                                                 <input type="number" min="0" id="vat" name="vat" class="form-control" step="0.01" placeholder="Enter Vat" />
                                             </div>
                                     
                                             <!-- Tax -->
                                             <div class="col-12 col-lg-6 mb-3">
-                                                <label for="tax">Tax</label>
+                                                <label for="tax">TAX</label>
                                                 <input type="number" min="0" id="tax" name="tax" class="form-control" step="0.01" placeholder="Enter Tax" />
                                             </div>
                                             

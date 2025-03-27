@@ -227,7 +227,7 @@
                                         </div>
                                 
                                         <div class="col-12 col-lg-6 mb-3">
-                                            <label for="tax">Tax</label>
+                                            <label for="tax">TAX</label>
                                             <input type="number" min="0" id="tax" name="tax" class="form-control" value="{{ $purchase->tax }}" step="0.01" oninput="updateTotal()"/>
                                         </div>
                                         
