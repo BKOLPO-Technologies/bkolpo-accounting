@@ -36,7 +36,7 @@
                                     <thead>
                                         <tr>
                                             <th>SL</th>
-                                            <th>Invoice No/Reference No</th>
+                                            <th>Invoice No</th>
                                             <th>Invoice Date</th>
                                             <th>Customer Name</th>
                                             <th>Total Amount</th>
@@ -51,6 +51,7 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $sale->invoice_no }}</td>
+                                                    <td>{{ $sale->project->reference_no ?? '' }}</td>
                                                     <td>{{ \Carbon\Carbon::parse($sale->invoice_date)->format('d F Y') }}</td>
                                                     <td>{{ $sale->client->name ?? 'N/A' }}</td> 
                                                     <td>{{ bdt() }} {{ number_format($sale->total, 2) }}</td> 

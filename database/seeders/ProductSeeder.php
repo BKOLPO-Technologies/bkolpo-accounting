@@ -31,14 +31,14 @@ class ProductSeeder extends Seeder
 
         // Define products with respective categories and units
         $products = [
-            ['name' => 'IT Equipment', 'category' => 'civil-construction', 'unit' => 'Piece', 'price' => 5000, 'quantity' => 15, 'status' => 1, 'image' => null],
-            ['name' => 'Bali', 'category' => 'civil-construction', 'unit' => 'Kilogram', 'price' => 200, 'quantity' => 100, 'status' => 1, 'image' => null],
-            ['name' => 'Khoya', 'category' => 'civil-construction', 'unit' => 'Kilogram', 'price' => 150, 'quantity' => 50, 'status' => 1, 'image' => null],
-            ['name' => 'Cement Bags', 'category' => 'still-structure', 'unit' => 'Bag', 'price' => 350, 'quantity' => 200, 'status' => 1, 'image' => null],
-            ['name' => 'Steel Rods', 'category' => 'still-structure', 'unit' => 'Meter', 'price' => 1200, 'quantity' => 50, 'status' => 1, 'image' => null],
-            ['name' => 'Brick', 'category' => 'still-structure', 'unit' => 'Piece', 'price' => 25, 'quantity' => 1000, 'status' => 1, 'image' => null],
-            ['name' => 'Wood Planks', 'category' => 'interior-design', 'unit' => 'Meter', 'price' => 300, 'quantity' => 80, 'status' => 1, 'image' => null],
-            ['name' => 'Paint', 'category' => 'interior-design', 'unit' => 'Liter', 'price' => 500, 'quantity' => 60, 'status' => 1, 'image' => null],
+            ['name' => 'IT Equipment', 'category' => 'civil-construction', 'unit_id' => '1', 'price' => 5000, 'quantity' => 15, 'status' => 1, 'image' => null],
+            ['name' => 'Bali', 'category' => 'civil-construction', 'unit_id' => '2', 'price' => 200, 'quantity' => 100, 'status' => 1, 'image' => null],
+            ['name' => 'Khoya', 'category' => 'civil-construction', 'unit_id' => '3', 'price' => 150, 'quantity' => 50, 'status' => 1, 'image' => null],
+            ['name' => 'Cement Bags', 'category' => 'still-structure', 'unit_id' => '4', 'price' => 350, 'quantity' => 200, 'status' => 1, 'image' => null],
+            ['name' => 'Steel Rods', 'category' => 'still-structure', 'unit_id' => '5', 'price' => 1200, 'quantity' => 50, 'status' => 1, 'image' => null],
+            ['name' => 'Brick', 'category' => 'still-structure', 'unit_id' => '6', 'price' => 25, 'quantity' => 1000, 'status' => 1, 'image' => null],
+            ['name' => 'Wood Planks', 'category' => 'interior-design', 'unit_id' => '7', 'price' => 300, 'quantity' => 80, 'status' => 1, 'image' => null],
+            ['name' => 'Paint', 'category' => 'interior-design', 'unit_id' => '8', 'price' => 500, 'quantity' => 60, 'status' => 1, 'image' => null],
         ];
 
         // Insert products
@@ -48,8 +48,8 @@ class ProductSeeder extends Seeder
                 continue;
             }
 
-            if (!isset($units[$product['unit']])) {
-                $this->command->warn("Unit '{$product['unit']}' not found. Skipping product: {$product['name']}");
+            if (!isset($units[$product['unit_id']])) {
+                $this->command->warn("Unit '{$product['unit_id']}' not found. Skipping product: {$product['name']}");
                 continue;
             }
 
@@ -57,7 +57,7 @@ class ProductSeeder extends Seeder
                 ['name' => $product['name']], // Prevent duplicate products
                 [
                     'category_id' => $categories[$product['category']],
-                    'unit_id' => $units[$product['unit']],
+                    'unit_id' => $units[$product['unit_id']],
                     'price' => $product['price'],
                     'quantity' => $product['quantity'],
                     'status' => $product['status'],

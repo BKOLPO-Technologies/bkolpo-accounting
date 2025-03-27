@@ -41,4 +41,9 @@ class Sale extends Model
     {
         return $this->hasMany(Receipt::class, 'invoice_no', 'invoice_no');
     }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }
