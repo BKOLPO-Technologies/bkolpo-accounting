@@ -90,7 +90,7 @@
 
                                 <div class="col-md-8">
                                     <div class="card card-block p-3">
-                                        <h4>Supplier Details</h4>
+                                        <h4>Client Details</h4>
                                         <hr>
                                         <div class="row m-t-lg">
                                             <div class="col-md-2">
@@ -227,9 +227,9 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Customer Name Input -->
+                                            <!-- Client Name Input -->
                                             <div class="form-group">
-                                                <label for="customername">Customer Name</label>
+                                                <label for="customername">Client Name</label>
                                                 <input type="text" class="form-control" id="customername" name="customername" value="GPH Ispat Ltd.">
                                             </div>
 

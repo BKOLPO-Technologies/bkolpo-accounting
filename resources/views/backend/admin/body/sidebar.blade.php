@@ -41,12 +41,12 @@
            </a>
          </li>
          @endcan
-         <!-- Customers -->
+         <!-- Clients -->
          <li class="nav-item {{ $isClientActive ? 'menu-open' : '' }}">
           <a href="#" class="nav-link {{ $isClientActive ? 'active' : '' }}">
               <i class="nav-icon fas fa-user"></i>
               <p>
-              Customers
+              Clients
                   <i class="fas fa-angle-left right"></i>
               </p>
           </a>
@@ -55,7 +55,7 @@
               <li class="nav-item">
                   <a href="{{ route('admin.client.index') }}" class="nav-link {{ Route::is('admin.client.index') || Route::is('admin.client.create') || Route::is('admin.client.view') || Route::is('admin.client.edit') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Manage Customers</p>
+                      <p>Manage Clients</p>
                   </a>
               </li>
           </ul>
