@@ -261,12 +261,12 @@ class SalePaymentController extends Controller
 
             if ($payment_ledger && $payableLedger) {
                 // Check if a Journal Voucher exists for this payment transaction
-                $journalVoucher = JournalVoucher::where('transaction_code', $purchase->invoice_no . '-PAY')->first();
+                $journalVoucher = JournalVoucher::where('transaction_code', $purchase->invoice_no)->first();
             
                 if (!$journalVoucher) {
                     // Create a new Journal Voucher for Payment
                     $journalVoucher = JournalVoucher::create([
-                        'transaction_code'  => $purchase->invoice_no . '-PAY',
+                        'transaction_code'  => $purchase->invoice_no,
                         'transaction_date'  => $request->payment_date,
                         'description'       => ucfirst($paymentDescription), 
                         'status'            => 1, // Pending status
@@ -380,9 +380,9 @@ class SalePaymentController extends Controller
             // সম্পর্কিত Project খুঁজে বের করুন
             $purchase = Purchase::where('invoice_no', $payment->invoice_no)->first();
             // dd($purchase);
-
             // Journal Voucher খুঁজে বের করুন
             $journalVoucher = JournalVoucher::where('transaction_code', $payment->invoice_no)->first();
+            dd($journalVoucher);
 
             if ($journalVoucher) {
                 // Journal Entry খুঁজে বের করুন

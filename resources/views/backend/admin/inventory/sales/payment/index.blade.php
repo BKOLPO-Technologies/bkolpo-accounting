@@ -43,7 +43,7 @@
                                             {{-- <th>Due Amount</th> --}}
                                             <th>Payment Method</th>  
                                             <th>Payment Date</th>
-                                            <th>Actions</th>
+                                            {{-- <th>Actions</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -67,12 +67,12 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $payment->payment_date }}</td>
-                                                <td>
+                                                {{-- <td>
                                                     <!-- Delete Button -->
                                                     <a href="{{ route('sale.payment.destroy', $payment->id) }}" id="delete" class="btn btn-danger btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
-                                                </td>
+                                                </td> --}}
                                             </tr>
                                         @endforeach
                                     </tbody>
