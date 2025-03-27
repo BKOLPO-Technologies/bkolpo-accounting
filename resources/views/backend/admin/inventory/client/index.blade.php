@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['pageTitle' => 'Client List'])
+@extends('layouts.admin', ['pageTitle' => 'Customer List'])
 @section('admin')
 
 <div class="content-wrapper">
@@ -27,8 +27,8 @@
             <div class="col-12">
             <div class="card card-primary card-outline shadow-lg">
                     <div class="card-header">
-                        <h3 class="card-title">All Clients</h3>
-                        <a href="{{ route('admin.client.create') }}" class="btn btn-success float-right"><i class="fas fa-plus fa-sm"></i> Add Client</a>
+                        <h3 class="card-title">All Customer</h3>
+                        <a href="{{ route('admin.client.create') }}" class="btn btn-success float-right"><i class="fas fa-plus fa-sm"></i> Add Customer</a>
                     </div>
 
                     <div class="card-body">

@@ -3,7 +3,8 @@
   $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet','report.ledger.report','report.ledger.single.report','report.ledger.group.report','report.ledger.group.single.report','report.ledger.profit.loss','report.project.profit.loss');
   $isSupplierActive = Route::is('admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit','admin.supplier.products','admin.supplier.transactions');
   $isClientActive = Route::is('admin.client.index','admin.client.create','admin.client.view','admin.client.edit');
-  $isProjectActive = Route::is('projects.index', 'projects.create', 'projects.show', 'projects.edit', 'project.receipt.payment.index', 'project.receipt.payment.create', 'projects.sales','project.receipt.payment.show','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit');
+  $isProjectActive = Route::is('projects.index', 'projects.create', 'projects.show', 'projects.edit');
+  $isInvoiceActive = Route::is('project.receipt.payment.index', 'project.receipt.payment.create', 'projects.sales','project.receipt.payment.show','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit');
   $isSalesActive = Route::is('admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit','quotations.index','quotations.create','quotations.edit','quotations.show','outcoming.chalan.index','outcoming.chalan.create','outcoming.chalan.show','outcoming.chalan.edit','receipt.payment.index','receipt.payment.create','stock.out','stock.out.view');
   $isPurchaseActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.show','admin.purchase.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create','stock.in','stock.in.view');
 @endphp
@@ -40,12 +41,12 @@
            </a>
          </li>
          @endcan
-         <!-- Clients -->
+         <!-- Customers -->
          <li class="nav-item {{ $isClientActive ? 'menu-open' : '' }}">
           <a href="#" class="nav-link {{ $isClientActive ? 'active' : '' }}">
               <i class="nav-icon fas fa-user"></i>
               <p>
-              Clients
+              Customers
                   <i class="fas fa-angle-left right"></i>
               </p>
           </a>
@@ -54,7 +55,7 @@
               <li class="nav-item">
                   <a href="{{ route('admin.client.index') }}" class="nav-link {{ Route::is('admin.client.index') || Route::is('admin.client.create') || Route::is('admin.client.view') || Route::is('admin.client.edit') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Manage Clients</p>
+                      <p>Manage Customers</p>
                   </a>
               </li>
           </ul>
@@ -165,7 +166,6 @@
     </li>
     <!-- =================== End Accounts Main Menu =================== -->
 
-
     <!-- Projects -->
     <li class="nav-item {{ $isProjectActive ? 'menu-open' : '' }}">
       <a href="#" class="nav-link {{ $isProjectActive ? 'active' : '' }}">
@@ -183,20 +183,6 @@
                   <p>Manage Projects</p>
               </a>
           </li>
-
-          <li class="nav-item">
-            <a href="{{ route('project.receipt.payment.index') }}"
-              class="nav-link {{ Route::is('project.receipt.payment.index', 'project.receipt.payment.create') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Payment Receive List</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{ route('admin.sale.index') }}" class="nav-link {{ Route::is('admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Invoice</p>
-            </a>
-        </li>
       </ul>
     </li>
     <!-- Sales -->
@@ -218,6 +204,33 @@
         </li>
       </ul>
   </li> --}}
+
+  <li class="nav-item {{ $isInvoiceActive ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ $isInvoiceActive ? 'active' : '' }}">
+        <i class="nav-icon fas fa-folder"></i> <!-- Updated Icon -->
+        <p>
+            INVOICE
+            <i class="fas fa-angle-left right"></i>
+        </p>
+    </a>
+    
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('admin.sale.index') }}" class="nav-link {{ Route::is('admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Bill</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{{ route('project.receipt.payment.index') }}"
+            class="nav-link {{ Route::is('project.receipt.payment.index', 'project.receipt.payment.create') ? 'active' : '' }}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Bill Received</p>
+          </a>
+        </li>
+    </ul>
+  </li>
 
   <!-- Purchase -->
   <li class="nav-item {{ $isPurchaseActive ? 'menu-open' : '' }}">

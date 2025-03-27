@@ -1,4 +1,4 @@
-@extends('layouts.admin', [$pageTitle => 'Client View'])
+@extends('layouts.admin', [$pageTitle => 'Customer View'])
 
 @section('admin')
 

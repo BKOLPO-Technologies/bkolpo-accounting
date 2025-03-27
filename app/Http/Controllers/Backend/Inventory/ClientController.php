@@ -13,20 +13,20 @@ class ClientController extends Controller
     {
         $clients = Client::all();
 
-        $pageTitle = 'Client List';
+        $pageTitle = 'Customer List';
         return view('backend.admin.inventory.client.index',compact('pageTitle', 'clients'));
     }
 
     public function AdminClientCreate()
     {
-        $pageTitle = 'Client Create';
+        $pageTitle = 'Customer Create';
         return view('backend.admin.inventory.client.create',compact('pageTitle'));
     }
 
     public function AdminClientView($id)
     {
         $client = Client::findOrFail($id);
-        $pageTitle = 'Client View';
+        $pageTitle = 'Customer View';
         return view('backend.admin.inventory.client.view',compact('pageTitle', 'client'));
 
     }
@@ -34,7 +34,7 @@ class ClientController extends Controller
     public function AdminClientEdit($id)
     {
         $client = Client::findOrFail($id);
-        $pageTitle = 'Client Edit';
+        $pageTitle = 'Customer Edit';
         return view('backend.admin.inventory.client.edit',compact('pageTitle', 'client'));
     }
 

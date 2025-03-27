@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['pageTitle' => 'Client Create'])
+@extends('layouts.admin', ['pageTitle' => 'Customer Create'])
 
 @section('admin')
 
@@ -130,7 +130,7 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-lg-12">
-                                <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;"><i class="fas fa-plus"></i> Add Client</button>
+                                <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;"><i class="fas fa-plus"></i> Add Customer</button>
                             </div>
                         </div> 
 

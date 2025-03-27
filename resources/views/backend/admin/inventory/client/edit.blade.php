@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['pageTitle' => 'Client Edit'])
+@extends('layouts.admin', ['pageTitle' => 'Customer Edit'])
 
 @section('admin')
 
@@ -139,7 +139,7 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-lg-12">
-                            <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;"><i class="fas fa-paper-plane"></i> Update Client</button>
+                            <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;"><i class="fas fa-paper-plane"></i> Update Customer</button>
                         </div>
                     </div> 
                 </div>
