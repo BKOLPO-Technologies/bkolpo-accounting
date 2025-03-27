@@ -93,17 +93,16 @@
                                     @enderror
                                 </div>
 
-                                <!-- Customer Select -->
+                                <!-- Client Select -->
                                 <div class="col-lg-4 col-md-6 mb-3">
-                                    <label for="customer">Customer</label>
+                                    <label for="customer">Client</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                         </div>
                                         <select name="client_id" id="client_id" 
                                             class="form-control select2 @error('client_id') is-invalid @enderror">
-                                            {{-- <option value="" disabled>Select Customer</option> --}}
-                                            <option value="" disabled {{ old('client') ? '' : 'selected' }}>Select Customer</option>
+                                            <option value="" disabled {{ old('client') ? '' : 'selected' }}>Select Client</option>
                                             @foreach($clients as $client)
                                                 <option value="{{ $client->id }}" 
                                                     data-name="{{ $client->name }}" 

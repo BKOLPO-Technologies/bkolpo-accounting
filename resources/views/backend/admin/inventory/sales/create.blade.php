@@ -41,13 +41,12 @@
                             <input type="hidden" name="discounts" id="discounts">
 
                             <div class="row">
-                                <!-- Customer Select -->
+                                <!-- Client Select -->
                                 <div class="col-lg-4 col-md-6 mb-3">
-                                    <label for="supplier">Customer</label>
+                                    <label for="supplier">Client</label>
                                     <div class="input-group">
                                         <select name="client" id="client" class="form-control select2 @error('client') is-invalid @enderror">
-                                            {{-- <option value="" disabled>Select Customer</option> --}}
-                                            <option value="" disabled {{ old('client') ? '' : 'selected' }}>Select Customer</option>
+                                            <option value="" disabled {{ old('client') ? '' : 'selected' }}>Select Client</option>
                                             @foreach($clients as $client)
                                                 <option value="{{ $client->id }}" 
                                                     data-name="{{ $client->name }}" 

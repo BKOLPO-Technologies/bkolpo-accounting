@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header bg-success">
                 <h5 class="modal-title" id="createClientModalLabel">
-                    <i class="fas fa-user-plus"></i> Add New Customer
+                    <i class="fas fa-user-plus"></i> Add New Client
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" style="color:white;">&times;</span>
