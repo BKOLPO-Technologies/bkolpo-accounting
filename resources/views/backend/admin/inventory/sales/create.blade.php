@@ -46,7 +46,8 @@
                                     <label for="supplier">Customer</label>
                                     <div class="input-group">
                                         <select name="client" id="client" class="form-control select2 @error('client') is-invalid @enderror">
-                                            <option value="" disabled>Select Customer</option>
+                                            {{-- <option value="" disabled>Select Customer</option> --}}
+                                            <option value="" disabled {{ old('client') ? '' : 'selected' }}>Select Customer</option>
                                             @foreach($clients as $client)
                                                 <option value="{{ $client->id }}" 
                                                     data-name="{{ $client->name }}" 
@@ -274,66 +275,81 @@
 
             if (clientId) {
                 $('#client-details-table').show();
-                $('#client-details-body').empty(); // Clear previous selection
+                //$('#client-details-body').empty(); // Clear previous selection
 
-                const supplierRow = `
+                //const supplierRow = `
+                $('#client-details-body').html(`
                     <tr id="supplier-row">
                         <td>${supplierName}</td>
                         <td>${supplierCompany}</td>
                         <td>${supplierPhone}</td>
                         <td>${supplierEmail}</td>
                     </tr>
-                `;
+                `);
 
-                $('#client-details-body').append(supplierRow);
+                //$('#client-details-body').append(supplierRow);
             } else {
                 $('#client-details-table').hide();
             }
         });
         
-    });
-</script>
+    
+        $('#createClientForm').on('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
 
-<script> 
-    $('#createClientForm').on('submit', function(e) {
-        e.preventDefault(); // Prevent default form submission
+            let formData = $(this).serialize(); // Get form data
 
-        let formData = $(this).serialize(); // Get form data
+            $.ajax({
+                url: '{{ route('admin.client2.store') }}',
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    //console.log(response);
+                    // Check if the supplier was created successfully
+                    if (response.success) {
+                        // Close the modal
+                        $('#createClientModal').modal('hide');
+                        
+                        // Clear form inputs
+                        $('#createClientForm')[0].reset();
 
-        $.ajax({
-            url: '{{ route('admin.client2.store') }}',
-            type: 'POST',
-            data: formData,
-            success: function(response) {
-                //console.log(response);
-                // Check if the supplier was created successfully
-                if (response.success) {
-                    // Close the modal
-                    $('#createClientModal').modal('hide');
-                    
-                    // Clear form inputs
-                    $('#createClientForm')[0].reset();
+                        // // Append new supplier to the supplier select dropdown
+                        // $('#client').append(new Option(response.client.name, response.client.id));
 
-                    // Append new supplier to the supplier select dropdown
-                    $('#client').append(new Option(response.client.name, response.client.id));
+                        // // Re-initialize the select2 to refresh the dropdown
+                        // $('#client').trigger('change');
 
-                    // Re-initialize the select2 to refresh the dropdown
-                    $('#client').trigger('change');
+                        // Create a new option with data attributes
+                        let newOption = $('<option>', {
+                            value: response.client.id,
+                            text: response.client.name,
+                            'data-name': response.client.name,
+                            'data-company': response.client.company,
+                            'data-phone': response.client.phone,
+                            'data-email': response.client.email
+                        });
 
-                    // Show success message
-                    toastr.success('Client added successfully!');
-                } else {
-                    toastr.error('Something went wrong. Please try again.');
+                        // Insert new supplier AFTER "Select Vendor" option
+                        $('#client option:first').after(newOption);
+
+                        // Select the newly added supplier
+                        $('#client').val(response.client.id).trigger('change');
+
+                        // Show success message
+                        toastr.success('Client added successfully!');
+                    } else {
+                        toastr.error('Something went wrong. Please try again.');
+                    }
+                },
+                error: function(response) {
+                    // Handle error (validation errors, etc.)
+                    let errors = response.responseJSON.errors;
+                    for (let field in errors) {
+                        $(`#new_client_${field}`).addClass('is-invalid');
+                        $(`#new_client_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
+                    }
                 }
-            },
-            error: function(response) {
-                // Handle error (validation errors, etc.)
-                let errors = response.responseJSON.errors;
-                for (let field in errors) {
-                    $(`#new_client_${field}`).addClass('is-invalid');
-                    $(`#new_client_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
-                }
-            }
+            });
         });
     });
 </script>

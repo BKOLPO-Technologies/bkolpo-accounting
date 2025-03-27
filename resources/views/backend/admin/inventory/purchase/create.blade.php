@@ -46,7 +46,8 @@
                                     <label for="supplier">Vendor</label>
                                     <div class="input-group">
                                         <select name="supplier" id="supplier" class="form-control select2 @error('supplier') is-invalid @enderror" required>
-                                            <option value="" disabled>Select Vendor</option>
+                                            {{-- <option value="" disabled>Select Vendor</option> --}}
+                                            <option value="" disabled {{ old('supplier') ? '' : 'selected' }}>Select Vendor</option>
                                             @foreach($suppliers as $supplier)
                                                 <!-- <option value="{{ $supplier->id }}" {{ old('supplier') == $supplier->id ? 'selected' : '' }}>{{ $supplier->name }}</option> -->
 
@@ -300,7 +301,6 @@
 @push('js')
 {{-- Supplier selection event --}}
 <script>
-    // Initialize Select2 if necessary
     $(document).ready(function() {
         $('.select2').select2();
 
@@ -315,72 +315,70 @@
 
             if (supplierId) {
                 $('#supplier-details-table').show();
-                $('#supplier-details-body').empty(); // Clear previous selection
-
-                const supplierRow = `
+                $('#supplier-details-body').html(`  
                     <tr id="supplier-row">
                         <td>${supplierName}</td>
                         <td>${supplierCompany}</td>
                         <td>${supplierPhone}</td>
                         <td>${supplierEmail}</td>
                     </tr>
-                `;
-
-                $('#supplier-details-body').append(supplierRow);
+                `);
             } else {
                 $('#supplier-details-table').hide();
             }
         });
-        
-    });
-</script>
 
-{{-- Supplier selection event --}}
-<script> 
-    $('#createSupplierForm').on('submit', function(e) {
-        e.preventDefault(); // Prevent default form submission
+        // Supplier creation event
+        $('#createSupplierForm').on('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
 
-        let formData = $(this).serialize(); // Get form data
+            let formData = $(this).serialize(); // Get form data
 
-        $.ajax({
-            url: '{{ route('admin.supplier2.store') }}',
-            type: 'POST',
-            data: formData,
-            success: function(response) {
-                // console.log(response);
-                // Check if the supplier was created successfully
-                if (response.success) {
-                    // Close the modal
-                    $('#createSupplierModal').modal('hide');
-                    
-                    // Clear form inputs
-                    $('#createSupplierForm')[0].reset();
+            $.ajax({
+                url: '{{ route('admin.supplier2.store') }}',
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    if (response.success) {
+                        // Close the modal
+                        $('#createSupplierModal').modal('hide');
+                        
+                        // Clear form inputs
+                        $('#createSupplierForm')[0].reset();
 
-                    // Append new supplier to the supplier select dropdown
-                    $('#supplier').append(new Option(response.supplier.name, response.supplier.id));
+                        // Create a new option with data attributes
+                        let newOption = $('<option>', {
+                            value: response.supplier.id,
+                            text: response.supplier.name,
+                            'data-name': response.supplier.name,
+                            'data-company': response.supplier.company,
+                            'data-phone': response.supplier.phone,
+                            'data-email': response.supplier.email
+                        });
 
-                    // console.log(response.supplier.name);
-                    // console.log(response.supplier.id);
+                        // Insert new supplier AFTER "Select Vendor" option
+                        $('#supplier option:first').after(newOption);
 
-                    // Re-initialize the select2 to refresh the dropdown
-                    $('#supplier').trigger('change');
+                        // Select the newly added supplier
+                        $('#supplier').val(response.supplier.id).trigger('change');
 
-                    // Show success message
-                    toastr.success('Supplier added successfully!');
-                } else {
-                    toastr.error('Something went wrong. Please try again.');
+                        // Show success message
+                        toastr.success('Supplier added successfully!');
+                    } else {
+                        toastr.error('Something went wrong. Please try again.');
+                    }
+                },
+                error: function(response) {
+                    let errors = response.responseJSON.errors;
+                    for (let field in errors) {
+                        $(`#new_supplier_${field}`).addClass('is-invalid');
+                        $(`#new_supplier_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
+                    }
                 }
-            },
-            error: function(response) {
-                // Handle error (validation errors, etc.)
-                let errors = response.responseJSON.errors;
-                for (let field in errors) {
-                    $(`#new_supplier_${field}`).addClass('is-invalid');
-                    $(`#new_supplier_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
-                }
-            }
+            });
         });
     });
+
 </script>
 
 <script>

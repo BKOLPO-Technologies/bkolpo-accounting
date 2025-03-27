@@ -102,7 +102,8 @@
                                         </div>
                                         <select name="client_id" id="client_id" 
                                             class="form-control select2 @error('client_id') is-invalid @enderror">
-                                            <option value="" disabled>Select Customer</option>
+                                            {{-- <option value="" disabled>Select Customer</option> --}}
+                                            <option value="" disabled {{ old('client') ? '' : 'selected' }}>Select Customer</option>
                                             @foreach($clients as $client)
                                                 <option value="{{ $client->id }}" 
                                                     data-name="{{ $client->name }}" 
@@ -454,11 +455,27 @@
                     // console.log(response.client.id);
                     // console.log(response.client.name);
 
-                    // Append new supplier to the supplier select dropdown
-                    $('#client_id').append(new Option(response.client.name, response.client.id));
+                    // // Append new supplier to the supplier select dropdown
+                    // $('#client_id').append(new Option(response.client.name, response.client.id));
 
-                    // Re-initialize the select2 to refresh the dropdown
-                    $('#client_id').trigger('change');
+                    // // Re-initialize the select2 to refresh the dropdown
+                    // $('#client_id').trigger('change');
+
+                    // Create a new option with data attributes
+                    let newOption = $('<option>', {
+                        value: response.client.id,
+                        text: response.client.name,
+                        'data-name': response.client.name,
+                        'data-company': response.client.company,
+                        'data-phone': response.client.phone,
+                        'data-email': response.client.email
+                    });
+
+                    // Insert new supplier AFTER "Select Vendor" option
+                    $('#client_id option:first').after(newOption);
+
+                    // Select the newly added supplier
+                    $('#client_id').val(response.client.id).trigger('change');
 
                     // Show success message
                     toastr.success('Client added successfully!');
