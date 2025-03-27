@@ -37,7 +37,7 @@
                                         <tr>
                                             <th>SL</th>
                                             <th>Project Name</th>
-                                            <th>Customer Name</th>
+                                            <th>Client Name</th>
                                             <th>Project Coordinator Name</th>
                                             <th>Total Amount</th>
                                             {{-- <th>Status</th> --}}
