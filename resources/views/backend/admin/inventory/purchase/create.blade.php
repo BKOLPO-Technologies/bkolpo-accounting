@@ -347,6 +347,7 @@
             type: 'POST',
             data: formData,
             success: function(response) {
+                // console.log(response);
                 // Check if the supplier was created successfully
                 if (response.success) {
                     // Close the modal
@@ -357,6 +358,9 @@
 
                     // Append new supplier to the supplier select dropdown
                     $('#supplier').append(new Option(response.supplier.name, response.supplier.id));
+
+                    // console.log(response.supplier.name);
+                    // console.log(response.supplier.id);
 
                     // Re-initialize the select2 to refresh the dropdown
                     $('#supplier').trigger('change');

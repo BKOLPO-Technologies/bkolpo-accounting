@@ -341,95 +341,95 @@
     
     // All Functionality Calculations
     $(document).ready(function () {
-    // Function to calculate totals
-    function calculateTotal() {
-        let subtotal = 0;
-        let totalDiscount = 0;
+        // Function to calculate totals
+        function calculateTotal() {
+            let subtotal = 0;
+            let totalDiscount = 0;
 
-        // Loop through all product rows
-        $('#product-tbody tr').each(function () {
-            let price = parseFloat($(this).find('.unit-price').val()) || 0;
-            let quantity = parseFloat($(this).find('.quantity').val()) || 0;
-            let discount = parseFloat($(this).find('.discount').val()) || 0;
+            // Loop through all product rows
+            $('#product-tbody tr').each(function () {
+                let price = parseFloat($(this).find('.unit-price').val()) || 0;
+                let quantity = parseFloat($(this).find('.quantity').val()) || 0;
+                let discount = parseFloat($(this).find('.discount').val()) || 0;
 
-            // Initialize rowSubtotal to 0
-            let rowSubtotal = 0;
+                // Initialize rowSubtotal to 0
+                let rowSubtotal = 0;
 
-            // Calculate rowSubtotal based on quantity and price
-            if (price && quantity) {
-                rowSubtotal = price * quantity; // When both price and quantity are valid
-            } else {
-                rowSubtotal = price; // When quantity is 0 or invalid, use only price
-            }
+                // Calculate rowSubtotal based on quantity and price
+                if (price && quantity) {
+                    rowSubtotal = price * quantity; // When both price and quantity are valid
+                } else {
+                    rowSubtotal = price; // When quantity is 0 or invalid, use only price
+                }
 
-            let rowTotal = rowSubtotal - discount;
+                let rowTotal = rowSubtotal - discount;
 
-            subtotal += rowTotal;
-            totalDiscount += discount; // Accumulate row-level discounts
+                subtotal += rowTotal;
+                totalDiscount += discount; // Accumulate row-level discounts
 
-            $(this).find('.subtotal').val(rowSubtotal.toFixed(2));
-            $(this).find('.total').val(rowTotal.toFixed(2));
+                $(this).find('.subtotal').val(rowSubtotal.toFixed(2));
+                $(this).find('.total').val(rowTotal.toFixed(2));
+            });
+
+            // Update subtotal and discount values
+            $('#subtotal').val(subtotal.toFixed(2));
+
+            // Manually update total discount in the input field and reflect it in the calculation
+            // Get the manually entered discount from the total_discount field
+            let manualTotalDiscount = parseFloat($('#total_discount').val()) || 0;
+
+            // Update total discount with the sum of product-level discounts and manual discount
+            //$('#total_discount').val(manualTotalDiscount.toFixed(2));
+
+            let transportCost = parseFloat($('#transport_cost').val()) || 0;
+            let carryingCharge = parseFloat($('#carrying_charge').val()) || 0;
+            let vat = parseFloat($('#vat').val()) || 0;
+            let tax = parseFloat($('#tax').val()) || 0;
+
+            // Calculate grand total
+            let grandTotal = subtotal - manualTotalDiscount + transportCost + carryingCharge + vat + tax;
+            $('#grand_total').val(grandTotal.toFixed(2));
+        }
+
+        // Trigger calculation on unit price, quantity, discount, and total_discount fields
+        $(document).on('input keyup', '.unit-price, .quantity, .discount, #transport_cost, #carrying_charge, #vat, #tax, #total_discount', function () {
+            calculateTotal();
         });
 
-        // Update subtotal and discount values
-        $('#subtotal').val(subtotal.toFixed(2));
+        // Add new row dynamically
+        $(document).on('click', '.add-row', function () {
+            let newRow = `
+                <tr>
+                    <td><input type="text" name="items[]" class="form-control" placeholder="Enter Item Description" required></td>
+                <td>
+                        <select name="order_unit[]" class="form-control" required>
+                            <option value="" disabled selected>Select Unit</option>
+                            @foreach($units as $unit)
+                                <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" required></td>
+                    <td><input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required></td>
+                    <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
+                    <td><input type="number" name="discount[]" class="form-control discount" min="0" step="0.01" placeholder="Enter Discount"></td>
+                    <td><input type="text" name="total[]" class="form-control total" readonly></td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            $('#product-tbody').append(newRow);
+        });
 
-        // Manually update total discount in the input field and reflect it in the calculation
-        // Get the manually entered discount from the total_discount field
-        let manualTotalDiscount = parseFloat($('#total_discount').val()) || 0;
+        // Remove row and recalculate total
+        $(document).on('click', '.remove-row', function () {
+            $(this).closest('tr').remove();
+            calculateTotal();
+        });
 
-        // Update total discount with the sum of product-level discounts and manual discount
-        //$('#total_discount').val(manualTotalDiscount.toFixed(2));
-
-        let transportCost = parseFloat($('#transport_cost').val()) || 0;
-        let carryingCharge = parseFloat($('#carrying_charge').val()) || 0;
-        let vat = parseFloat($('#vat').val()) || 0;
-        let tax = parseFloat($('#tax').val()) || 0;
-
-        // Calculate grand total
-        let grandTotal = subtotal - manualTotalDiscount + transportCost + carryingCharge + vat + tax;
-        $('#grand_total').val(grandTotal.toFixed(2));
-    }
-
-    // Trigger calculation on unit price, quantity, discount, and total_discount fields
-    $(document).on('input keyup', '.unit-price, .quantity, .discount, #transport_cost, #carrying_charge, #vat, #tax, #total_discount', function () {
+        // Initial calculation when the page loads
         calculateTotal();
     });
-
-    // Add new row dynamically
-    $(document).on('click', '.add-row', function () {
-        let newRow = `
-            <tr>
-                <td><input type="text" name="items[]" class="form-control" placeholder="Enter Item Description" required></td>
-               <td>
-                    <select name="order_unit[]" class="form-control" required>
-                        <option value="" disabled selected>Select Unit</option>
-                        @foreach($units as $unit)
-                            <option value="{{ $unit->id }}">{{ $unit->name }}</option>
-                        @endforeach
-                    </select>
-                </td>
-                <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" required></td>
-                <td><input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required></td>
-                <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
-                <td><input type="number" name="discount[]" class="form-control discount" min="0" step="0.01" placeholder="Enter Discount"></td>
-                <td><input type="text" name="total[]" class="form-control total" readonly></td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
-                </td>
-            </tr>`;
-        $('#product-tbody').append(newRow);
-    });
-
-    // Remove row and recalculate total
-    $(document).on('click', '.remove-row', function () {
-        $(this).closest('tr').remove();
-        calculateTotal();
-    });
-
-    // Initial calculation when the page loads
-    calculateTotal();
-});
 
 </script>
 <script> 
@@ -451,11 +451,14 @@
                     // Clear form inputs
                     $('#createClientForm')[0].reset();
 
+                    // console.log(response.client.id);
+                    // console.log(response.client.name);
+
                     // Append new supplier to the supplier select dropdown
-                    $('#client').append(new Option(response.client.name, response.client.id));
+                    $('#client_id').append(new Option(response.client.name, response.client.id));
 
                     // Re-initialize the select2 to refresh the dropdown
-                    $('#client').trigger('change');
+                    $('#client_id').trigger('change');
 
                     // Show success message
                     toastr.success('Client added successfully!');

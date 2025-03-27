@@ -53,7 +53,7 @@
                                                     data-company="{{ $client->company }}" 
                                                     data-phone="{{ $client->phone }}" 
                                                     data-email="{{ $client->email }}"
-                                                    {{ old('supplier') == $client->id ? 'selected' : '' }}>
+                                                    {{ old('client') == $client->id ? 'selected' : '' }}>
                                                     {{ $client->name }}
                                                 </option>
                                             @endforeach
@@ -305,6 +305,7 @@
             type: 'POST',
             data: formData,
             success: function(response) {
+                //console.log(response);
                 // Check if the supplier was created successfully
                 if (response.success) {
                     // Close the modal
