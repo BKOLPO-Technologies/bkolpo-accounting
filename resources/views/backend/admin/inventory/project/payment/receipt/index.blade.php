@@ -36,7 +36,7 @@
                                     <thead>
                                         <tr>
                                             <th>Sl No</th>
-                                            <th>Reference No</th>
+                                            <th>Invoice No/Reference No</th>
                                             <th>Customer Name</th>
                                             <th>Pay Amount</th>
                                             <th>Payment Method</th>  

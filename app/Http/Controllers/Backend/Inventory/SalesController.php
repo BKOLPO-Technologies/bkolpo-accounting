@@ -72,7 +72,7 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
 
         // Validate the request data
         $validated = $request->validate([
@@ -107,10 +107,17 @@ class SalesController extends Controller
             // Start the transaction
             DB::beginTransaction();
 
+            if($request->project_id == Null){
+                $invoice_no = $validated['invoice_no'];
+            }else{
+                $project = Project::findOrfail($request->project_id);
+                $invoice_no = $project->reference_no;
+            }
+
             // Create a new sale record
             $sale = new Sale();
             $sale->client_id = $validated['client'];
-            $sale->invoice_no = $validated['invoice_no'];
+            $sale->invoice_no = $invoice_no;
             $sale->invoice_date = now()->format('Y-m-d');
             $sale->subtotal = $validated['subtotal'];
             $sale->discount = $validated['discount'];
@@ -343,9 +350,16 @@ class SalesController extends Controller
         try {
             DB::beginTransaction();
 
+            if($request->project_id == Null){
+                $invoice_no = $validated['invoice_no'];
+            }else{
+                $project = Project::findOrfail($request->project_id);
+                $invoice_no = $project->reference_no;
+            }
+
             // Update Sale
             $sale->client_id = $validated['client'];  // Ensure this field exists in DB
-            $sale->invoice_no = $validated['invoice_no'];
+            $sale->invoice_no = $invoice_no;
             $sale->invoice_date = now()->format('Y-m-d');
             $sale->subtotal = $validated['subtotal'];
             $sale->discount = $validated['discount'];

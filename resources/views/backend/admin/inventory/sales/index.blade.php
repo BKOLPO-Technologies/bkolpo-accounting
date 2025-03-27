@@ -36,7 +36,7 @@
                                     <thead>
                                         <tr>
                                             <th>SL</th>
-                                            <th>Invoice No</th>
+                                            <th>Invoice No/Reference No</th>
                                             <th>Invoice Date</th>
                                             <th>Customer Name</th>
                                             <th>Total Amount</th>
