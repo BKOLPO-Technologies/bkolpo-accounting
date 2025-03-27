@@ -45,7 +45,7 @@
                                 <div class="col-lg-4 col-md-6 mb-3">
                                     <label for="supplier">Client</label>
                                     <div class="input-group">
-                                        <select name="client" id="client" class="form-control select2 @error('client') is-invalid @enderror">
+                                        <select name="client" id="client" class="form-control select2 @error('client') is-invalid @enderror" required>
                                             <option value="" disabled {{ old('client') ? '' : 'selected' }}>Select Client</option>
                                             @foreach($clients as $client)
                                                 <option value="{{ $client->id }}" 
@@ -150,7 +150,7 @@
                                                         </select>
                                                     </td>
                                                     <td style="width:17% !important;">
-                                                        <select name="products" id="product" class="form-control select2 @error('products') is-invalid @enderror product-select" style="width: 100%;">
+                                                        <select name="products" id="product" class="form-control select2 @error('products') is-invalid @enderror product-select" style="width: 100%;" required>
                                                             <option value="">Select Product</option>
                                                             @foreach($products as $product)
                                                                 <option value="{{ $product->id }}" data-category="{{ $product->category_id }}" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-unit="{{ $product->unit->name }}">
@@ -512,7 +512,7 @@
                 addToHiddenFields(productId, 1, productPrice, 0);
 
             } else {
-                console.log("productId not found");
+                //console.log("productId not found");
             }
 
             calculateTotal(); // Update overall total
