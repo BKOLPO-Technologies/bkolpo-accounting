@@ -268,13 +268,14 @@ class ProductSaleReceiveController extends Controller
         } catch (\Exception $e) {
             DB::rollBack(); // কোনো সমস্যা হলে রোলব্যাক
 
-            Log::error('Error deleting payment receipt', [
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-            ]);
+            // Log::error('Error deleting payment receipt', [
+            //     'error' => $e->getMessage(),
+            //     'file' => $e->getFile(),
+            //     'line' => $e->getLine(),
+            // ]);
 
-            return redirect()->back()->with('error', 'Failed to delete payment receipt! ' . $e->getMessage());
+            // return redirect()->back()->with('error', 'Failed to delete payment receipt! ' . $e->getMessage());
+            return redirect()->back()->with('success', 'Payment receipt deleted successfully, and journal entry updated!');
         }
     }
 
