@@ -293,7 +293,7 @@
 
                             <div class="row text-right">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i>Update Sale</button>
+                                    <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i>Update Invoice</button>
                                 </div>
                             </div>
                         </form>
