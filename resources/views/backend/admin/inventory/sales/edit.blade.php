@@ -36,10 +36,15 @@
                             @csrf
                             @method('PUT')
 
-                            <input type="hidden" name="product_ids" id="product_ids">
+                            <input type="hidden" name="product_ids" id="product_ids" value="{{ $product_ids }}">
+                            <input type="hidden" name="quantities" id="quantities" value="{{ $quantities }}">
+                            <input type="hidden" name="prices" id="prices" value="{{ $prices }}">
+                            <input type="hidden" name="discounts" id="discounts" value="{{ $discounts }}">
+
+                            {{-- <input type="hidden" name="product_ids" id="product_ids">
                             <input type="hidden" name="quantities" id="quantities">
                             <input type="hidden" name="prices" id="prices">
-                            <input type="hidden" name="discounts" id="discounts">
+                            <input type="hidden" name="discounts" id="discounts"> --}}
 
                             <div class="row">
                                 <!-- Supplier Select -->

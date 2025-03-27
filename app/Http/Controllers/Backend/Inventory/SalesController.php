@@ -302,7 +302,7 @@ class SalesController extends Controller
      */
     public function update(Request $request, $id)
     {   
-        // dd($request->all());
+        //dd($request->all());
         // // Debug Request Data
         // Log::info('Request Data:', $request->all());
 
