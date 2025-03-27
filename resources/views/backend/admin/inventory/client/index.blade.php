@@ -27,8 +27,8 @@
             <div class="col-12">
             <div class="card card-primary card-outline shadow-lg">
                     <div class="card-header">
-                        <h3 class="card-title">All Customer</h3>
-                        <a href="{{ route('admin.client.create') }}" class="btn btn-success float-right"><i class="fas fa-plus fa-sm"></i> Add Customer</a>
+                        <h3 class="card-title">All Client</h3>
+                        <a href="{{ route('admin.client.create') }}" class="btn btn-success float-right"><i class="fas fa-plus fa-sm"></i> Add Client</a>
                     </div>
 
                     <div class="card-body">
