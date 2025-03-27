@@ -86,7 +86,7 @@
                             @enderror
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label>Price
                                     @error('price')
@@ -103,7 +103,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <div class="form-group">
                                 <label>Quantity
                                     @error('quantity')
@@ -118,7 +118,7 @@
 
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                     </div>
 

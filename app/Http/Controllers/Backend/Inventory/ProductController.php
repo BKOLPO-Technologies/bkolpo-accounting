@@ -35,7 +35,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'category_id' => 'required',
-            'quantity' => 'required|integer|min:1',
+            //'quantity' => 'required|integer|min:1',
             'unit_id' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -45,7 +45,7 @@ class ProductController extends Controller
             'name' => $request->name,
             'price' => $request->price ?? 0, // Store null if not provided
             'description' => $request->description ?? null, // Store null if not provided
-            'quantity' => $request->quantity,
+            //'quantity' => $request->quantity,
             'status' => $request->status ?? 1, // Default to active if not provided
             'category_id' => $request->category_id,
             'unit_id' => $request->unit_id,
@@ -123,7 +123,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'price' => 'nullable|numeric|min:0',
             'description' => 'nullable|string',
-            'quantity' => 'required|integer|min:1',
+            //'quantity' => 'required|integer|min:1',
             'status' => 'nullable|boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
             'category_id' => 'required',
@@ -154,7 +154,7 @@ class ProductController extends Controller
             'name' => $request->input('name'),
             'price' => $request->input('price', $product->price), // Keep existing price if not provided
             'description' => $request->input('description', $product->description), // Keep existing description
-            'quantity' => $request->input('quantity', $product->quantity), // Keep existing quantity
+            //'quantity' => $request->input('quantity', $product->quantity), // Keep existing quantity
             'status' => $request->has('status') ? $request->input('status') : $product->status, // Keep existing status
             'category_id' => $request->input('category_id'),
             'unit_id' => $request->input('unit_id'),

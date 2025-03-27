@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('unit_id')->nullable();
             $table->decimal('price', 8, 2)->nullable();
             $table->text('description')->nullable();
-            $table->integer('quantity');
+            $table->integer('quantity')->nullable();
             $table->tinyInteger('status')->default(1)->comment('1=>Active, 0=>Inactive');
             $table->string('image')->nullable();
             $table->timestamps();
