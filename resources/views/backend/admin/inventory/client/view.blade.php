@@ -44,20 +44,24 @@
                                             <img alt="image" id="dpic" class="img-responsive"
                                                 src="https://accounts.bkolpo.com/userfiles/customers/example.png">
                                         </div>
+
                                         <hr>
+
                                         <div class="user-button">
                                             <div class="row mt-3">
                                                 <div class="col-md-6">
 
-                                                    <a href="#sendMail" data-toggle="modal" data-remote="false" class="btn btn-primary btn-md " data-type="reminder">
-                                                        <i class="icon-envelope"></i> Send Message
+                                                    <a href="{{ route('admin.client.edit', ['id' => $client->id ]) }}" class="btn btn-warning btn-sm">
+                                                        <i class="icon-pencil"></i> Edit Profile
                                                     </a>
 
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <a href="{{ route('admin.client.edit', ['id' => $client->id ]) }}" class="btn btn-warning btn-md">
-                                                        <i class="icon-pencil"></i> Edit Profile
+                                                    
+                                                    <a href="#sendMail" data-toggle="modal" data-remote="false" class="btn btn-primary btn-sm " data-type="reminder">
+                                                        <i class="icon-envelope"></i> Send Message
                                                     </a>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -69,20 +73,51 @@
                                                 <h5>Balance Summary</h5>
                                                 <hr>
                                                 <ul class="list-group list-group-flush">
-                                                    <!-- Income Row -->
+
+                                                    <!-- Total Purchases Products -->
                                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                        <span class="ml-2">Income</span>
-                                                        <span class="tag tag-default tag-pill bg-primary">৳ 0.00</span>
+                                                        <span class="ml-2">Total Purchases Products</span>
+                                                        <span class="tag tag-default tag-pill bg-success p-1">
+                                                            {{ bdt() }} {{ number_format($totalPurchaseAmount, 2) }}
+                                                        </span>
                                                     </li>
-                                                    <!-- Expenses Row -->
+
+                                                    <!-- Amount Paid -->
                                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                        <span class="ml-2">Expenses</span>
-                                                        <span class="tag tag-default tag-pill bg-danger">৳ 1,350,000.00</span>
+                                                        <span class="ml-2">Total Paid Amount</span>
+                                                        <span class="tag tag-default tag-pill bg-info p-1">
+                                                            {{ bdt() }} {{ number_format($totalPaidAmount, 2) }}
+                                                        </span>
                                                     </li>
+                                            
+                                                    <!-- Amount Due -->
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <span class="ml-2">Total Due Amount</span>
+                                                        <span class="tag tag-default tag-pill bg-warning p-1">
+                                                            {{ bdt() }} {{ number_format($totalDueAmount, 2) }}
+                                                        </span>
+                                                    </li>
+
                                                 </ul>
                                             </div>
                                         </div>
 
+                                        <hr>
+                                        
+                                        <div class="row mt-3">
+                                            
+                                            <div class="col-md-6">
+                                                <a href="#" class="btn btn-primary btn-sm">
+                                                   View Products Purchased
+                                                </a>
+                                            </div>
+                                        
+                                            <div class="col-md-6 text-right">
+                                                <a href="#" class="btn btn-success btn-sm">
+                                                    View Transactions
+                                                </a>
+                                            </div>
+                                        </div>
 
                                     </div>
 
@@ -181,7 +216,7 @@
 
                                         </div>
                                         <hr>
-                                        <div class="row mt-3">
+                                        {{-- <div class="row mt-3">
                                             <div class="col-md-6">
 
                                                 <a href="#" class="btn btn-primary btn-lg">
@@ -196,7 +231,7 @@
                                                 </a>
                                             </div>
 
-                                        </div>
+                                        </div> --}}
 
 
                                     </div>

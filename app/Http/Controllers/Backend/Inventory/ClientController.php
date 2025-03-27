@@ -27,7 +27,12 @@ class ClientController extends Controller
     {
         $client = Client::findOrFail($id);
         $pageTitle = 'Client View';
-        return view('backend.admin.inventory.client.view',compact('pageTitle', 'client'));
+
+        $totalPurchaseAmount = $client->totalPurchaseAmount();
+        $totalPaidAmount = $client->totalPaidAmount();
+        $totalDueAmount = $client->totalDueAmount();
+
+        return view('backend.admin.inventory.client.view',compact('pageTitle', 'client','totalPurchaseAmount','totalPaidAmount','totalDueAmount'));
 
     }
 

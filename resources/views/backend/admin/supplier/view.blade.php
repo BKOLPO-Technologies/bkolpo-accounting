@@ -48,7 +48,9 @@
                                             <img alt="image" id="dpic" class="img-responsive"
                                                 src="https://accounts.bkolpo.com/userfiles/customers/example.png">
                                         </div>
+
                                         <hr>
+
                                         <div class="user-button">
                                             <div class="row mt-3">
                                                 <div class="col-md-6">
@@ -101,14 +103,13 @@
                                         <hr>
                                         
                                         <div class="row mt-3">
-                                            <!-- Button to View Purchase History -->
+                                            
                                             <div class="col-md-6">
                                                 <a href="{{ route('admin.supplier.products', $supplier->id) }}" class="btn btn-primary btn-sm">
                                                    View Products Purchased
                                                 </a>
                                             </div>
                                         
-                                            <!-- Button to View Transaction History -->
                                             <div class="col-md-6 text-right">
                                                 <a href="{{ route('admin.supplier.transactions', $supplier->id) }}" class="btn btn-success btn-sm">
                                                     View Transactions
