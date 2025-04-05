@@ -80,6 +80,9 @@ class SupplierController extends Controller
             'postbox' => $request->postbox,
             'taxid' => $request->taxid,
             'bin' => $request->bin,
+            'bank_account_name' => $request->bank_account_name,
+            'bank_account_number' => $request->bank_account_number,
+            'bank_routing_number' => $request->bank_routing_number,
             'password' => $request->password ? Hash::make($request->password) : null,
             // 'status'   => $request->status ?? 1,
         ]);
@@ -122,6 +125,9 @@ class SupplierController extends Controller
             'postbox'  => $request->postbox,
             'taxid'    => $request->taxid,
             'bin' => $request->bin,
+            'bank_account_name' => $request->bank_account_name,
+            'bank_account_number' => $request->bank_account_number,
+            'bank_routing_number' => $request->bank_routing_number,
             'password' => $request->password ? Hash::make($request->password) : null,
             // 'status'   => $request->status ?? 1,
         ]);
@@ -179,6 +185,9 @@ class SupplierController extends Controller
             'postbox' => $request->input('postbox'),
             'taxid' => $request->input('taxid'),
             'bin' => $request->input('bin'),
+            'bank_account_name' => $request->input('bank_account_name'),
+            'bank_account_number' => $request->input('bank_account_number'),
+            'bank_routing_number' => $request->input('bank_routing_number'),
             'password' => $request->input('password') ? bcrypt($request->input('password')) : $supplier->password, // Only update password if provided
             // 'active' => $request->input('active') ?? $supplier->active, // Set default active value if not provided
         ]);

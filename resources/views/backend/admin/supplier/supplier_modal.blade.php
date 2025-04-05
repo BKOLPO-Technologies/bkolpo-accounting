@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header bg-success">
                 <h5 class="modal-title" id="createSupplierModalLabel">
-                    <i class="fas fa-user-plus"></i> Add New Supplier
+                    <i class="fas fa-user-plus"></i> Add New Vendor
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" style="color:white;">&times;</span>
@@ -16,17 +16,17 @@
                         <div class="col-md-6">
                             <!-- Name -->
                             <div class="form-group">
-                                <label for="new_supplier_title">Title</label>
+                                <label for="new_supplier_title">Company Name</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_supplier_title" name="name" placeholder="Enter Supplier Title" required>
+                                    <input type="text" class="form-control" id="new_supplier_title" name="name" placeholder="Enter Company Name" required>
                                 </div>
                             </div>
                             <!-- Company -->
                             <div class="form-group">
-                                <label for="new_supplier_company">Company</label>
+                                <label for="new_supplier_company">Group Name</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-building"></i></span>
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                             <!-- City -->
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="new_supplier_city">City</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -97,9 +97,9 @@
                                     </div>
                                     <input type="text" class="form-control" id="new_supplier_city" name="city" placeholder="Enter Address">
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- Region -->
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="new_supplier_zip">Zip no</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -107,15 +107,42 @@
                                     </div>
                                     <input type="text" class="form-control" id="new_supplier_zip" name="zip" placeholder="Enter Zip">
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- Country -->
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="new_supplier_country">Country</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-flag"></i></span>
                                     </div>
                                     <input type="text" class="form-control" id="new_supplier_country" name="country" placeholder="Enter Country">
+                                </div>
+                            </div> --}}
+                            <div class="form-group">
+                                <label>Bank Account Name</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" id="bank_account_name" name="bank_account_name" placeholder="Enter Bank Account Name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Bank Account Number</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" id="bank_account_number" name="bank_account_number" placeholder="Enter Bank Account Number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Routing Number</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" id="bank_routing_number" name="bank_routing_number" placeholder="Enter Roting Number">
                                 </div>
                             </div>
                             <!-- Post Box -->
@@ -147,7 +174,7 @@
                         <i class="fas fa-times"></i> Close
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Save Supplier
+                        <i class="fas fa-save"></i> Save Vendor
                     </button>
                 </div>
             </form>

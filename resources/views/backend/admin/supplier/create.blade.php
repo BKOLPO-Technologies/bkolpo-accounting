@@ -43,7 +43,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Title
+                                        <label>Company Name
                                             @error('name')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
@@ -52,13 +52,13 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-heading"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Enter Title" name="name" required>
+                                            <input type="text" class="form-control" placeholder="Enter Company Name" name="name" required>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Company
+                                        <label>Group Name
                                             @error('company')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
@@ -67,7 +67,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Enter Company Name" name="company" required>
+                                            <input type="text" class="form-control" placeholder="Enter Group Name" name="company" required>
                                         </div>
                                     </div>
                                 </div>
@@ -143,7 +143,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Zip no</label>
                                         <div class="input-group">
@@ -153,10 +153,45 @@
                                             <input type="text" class="form-control" placeholder="Zip no" name="zip">
                                         </div>
                                     </div>
+                                </div> --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Bank Account Name</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" name="bank_account_name" placeholder="Enter Bank Account Name">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Bank Account Number</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" name="bank_account_number" placeholder="Enter Bank Account Number">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Routing Number</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" name="bank_routing_number" placeholder="Enter Roting Number">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Country</label>
@@ -179,7 +214,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -205,7 +240,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                         <div class="row mt-3">
                             <div class="col-lg-12">

@@ -219,6 +219,11 @@ class SalePaymentController extends Controller
                 'bank_account_no' => $request->input('bank_account_no'),
                 'cheque_no' => $request->input('cheque_no'),
                 'cheque_date' => $request->input('cheque_date'),
+                'bank_batch_no' => $request->input('bank_batch_no'),
+                'bank_date' => $request->input('bank_date'),
+                'bkash_number' => $request->input('bkash_number'),
+                'reference_no' => $request->input('reference_no'),
+                'bkash_date' => $request->input('bkash_date'),
             ]);
 
             // dd("payment = ", $payment);

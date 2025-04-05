@@ -166,12 +166,19 @@ class PurchaseController extends Controller
             $purchasesLedger = Ledger::where('type', 'Purchases')->first();
             $payableLedger = Ledger::where('type', 'Payable')->first();
 
+            // Get current timestamp in 'dmyHis' format (day, month, year)
+            $randomNumber = rand(100000, 999999);
+            $fullDate = now()->format('d/m/y');
+
+            // Combine the timestamp, random number, and full date
+            $transactionCode = 'BCL-V-'.$fullDate.' - '.$randomNumber;
+
             if ($purchasesLedger && $payableLedger) {
                 $journalVoucher = JournalVoucher::where('transaction_code', $purchase->invoice_no)->first();
 
                 if (!$journalVoucher) {
                     $journalVoucher = JournalVoucher::create([
-                        'transaction_code' => $purchase->invoice_no,
+                        'transaction_code' => $transactionCode,
                         'transaction_date' => now()->format('Y-m-d'),
                         'description' => 'Purchase PO No Recorded - Supplier',
                         'status' => 1, 

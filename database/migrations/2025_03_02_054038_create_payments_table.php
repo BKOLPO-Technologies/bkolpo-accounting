@@ -29,6 +29,11 @@ return new class extends Migration
             $table->string('bank_account_no')->nullable();
             $table->string('cheque_no')->nullable();
             $table->string('cheque_date')->nullable();
+            $table->string('bank_batch_no')->nullable();
+            $table->string('bank_date')->nullable();
+            $table->string('bkash_number')->nullable();
+            $table->string('reference_no')->nullable();
+            $table->string('bkash_date')->nullable();
             $table->text('description')->nullable();
             $table->date('payment_date');
             

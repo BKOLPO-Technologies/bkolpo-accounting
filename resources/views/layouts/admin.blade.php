@@ -201,6 +201,12 @@
             autoclose: true,
             todayHighlight: true
         });
+
+        $('#bksh_date').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true
+        });
         
     });
 </script>

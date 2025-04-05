@@ -45,14 +45,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Title</label>
+                                        <label>Company Name</label>
                                         <input type="text" class="form-control" name="name" value="{{ $supplier->name }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Company</label>
-                                        <input type="text" class="form-control" placeholder="Company Name" name="company" value="{{ $supplier->company }}">
+                                        <label>Group Name</label>
+                                        <input type="text" class="form-control" placeholder="Group Name" name="company" value="{{ $supplier->company }}">
                                     </div>
                                 </div>
                             </div>
@@ -96,8 +96,43 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label>Bank Account Name</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" name="bank_account_name" value="{{ $supplier->bank_account_name }}" placeholder="Enter Bank Account Name">
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- <div class="col-md-6">
+                                    <div class="form-group">
                                         <label>Zip no</label>
                                         <input type="text" class="form-control" name="zip" value="{{ $supplier->zip }}">
+                                    </div>
+                                </div> --}}
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Bank Account Number</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" name="bank_account_number" value="{{ $supplier->bank_account_number }}" placeholder="Enter Bank Account Number">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Routing Number</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" name="bank_routing_number" value="{{ $supplier->bank_routing_number }}" placeholder="Enter Roting Number">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
