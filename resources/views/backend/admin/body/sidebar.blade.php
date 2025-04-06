@@ -6,7 +6,7 @@
   $isProjectActive = Route::is('projects.index', 'projects.create', 'projects.show', 'projects.edit');
   $isInvoiceActive = Route::is('project.receipt.payment.index', 'project.receipt.payment.create', 'projects.sales','project.receipt.payment.show','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit');
   $isSalesActive = Route::is('admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit','quotations.index','quotations.create','quotations.edit','quotations.show','outcoming.chalan.index','outcoming.chalan.create','outcoming.chalan.show','outcoming.chalan.edit','receipt.payment.index','receipt.payment.create','stock.out','stock.out.view');
-  $isPurchaseActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.show','admin.purchase.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create','stock.in','stock.in.view');
+  $isPurchaseActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.show','admin.purchase.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create','stock.in','stock.in.view', 'sale.payment.show');
 @endphp
  <!-- Main Sidebar Container -->
  <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -259,7 +259,7 @@
           --}}
           <li class="nav-item">
             <a href="{{ route('sale.payment.index') }}" 
-              class="nav-link {{ Route::is('sale.payment.index', 'sale.payment.create') ? 'active' : '' }}">
+              class="nav-link {{ Route::is('sale.payment.index', 'sale.payment.create', 'sale.payment.show') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Make Payment List</p>
             </a>

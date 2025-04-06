@@ -212,7 +212,9 @@ class ProductSaleReceiveController extends Controller
 
         $pageTitle = 'Project Receive Details';
 
-        $project = Project::where('reference_no', $invoice_no)
+        $projectId = Sale::where('invoice_no', $invoice_no)->first();
+
+        $project = Project::where('id', $projectId->project_id)
             ->with(['client', 'items']) 
             ->first();
 
