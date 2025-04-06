@@ -245,32 +245,45 @@
 
                                         <!-- Second Row: Remaining fields (Transport Cost, Carrying Charge, Vat, Tax, Grand Total) -->
                                         <div class="row w-100">
-                                            <!-- Transport Cost -->
-                                            <div class="col-12 col-lg-6 mb-2">
-                                                <label for="transport_cost">Transport Cost</label>
-                                                <input type="number" min="0" id="transport_cost" name="transport_cost" step="0.01" class="form-control" placeholder="Enter Transport Cost" />
+                                            <!-- Include VAT Checkbox -->
+                                            <div class="col-md-6 mb-2">
+                                                <div class="form-group">
+                                                    <div class="form-group clearfix mt-3">
+                                                        <div class="icheck-success d-inline">
+                                                            <input type="checkbox" name="include_vat" id="include_vat">
+                                                            <label for="include_vat">
+                                                                Include VAT
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                    
-                                            <!-- Carrying/Labour Charge -->
-                                            <div class="col-12 col-lg-6 mb-2">
-                                                <label for="carrying_charge">Carrying/Labour Charge</label>
-                                                <input type="number" min="0" id="carrying_charge" name="carrying_charge" step="0.01" class="form-control" placeholder="Enter Carrying Charge"   />
+                                            <!-- Include Tax Checkbox -->
+                                            <div class="col-md-6 mb-2">
+                                                <div class="form-group">
+                                                    <div class="form-group clearfix mt-3">
+                                                        <div class="icheck-success d-inline">
+                                                            <input type="checkbox" name="include_tax" id="include_tax">
+                                                            <label for="include_tax">
+                                                                Include TAX
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                    
-                                            <!-- Vat -->
-                                            <div class="col-12 col-lg-6 mb-2">
+                                        
+                                            <!-- VAT -->
+                                            <div class="col-12 col-lg-6 mb-2 vat-fields" style="display:none;">
                                                 <label for="vat">VAT</label>
-                                                <input type="number" min="0" id="vat" name="vat" class="form-control" step="0.01" placeholder="Enter Vat" />
+                                                <input type="number" min="0" id="vat" name="vat" class="form-control" step="0.01" readonly placeholder="Enter VAT" />
                                             </div>
-                                    
+                                        
                                             <!-- Tax -->
-                                            <div class="col-12 col-lg-6 mb-3">
+                                            <div class="col-12 col-lg-6 mb-3 tax-fields" style="display:none;">
                                                 <label for="tax">TAX</label>
-                                                <input type="number" min="0" id="tax" name="tax" class="form-control" step="0.01" placeholder="Enter Tax" />
+                                                <input type="number" min="0" id="tax" name="tax" class="form-control" step="0.01" readonly placeholder="Enter Tax" />
                                             </div>
-                                            
-                                            {{-- <div class="col-6 mb-2">
-                                            </div> --}}
+                                        
                                             <!-- Grand Total -->
                                             <div class="col-12 mb-2">
                                                 <label for="grand_total">Grand Total</label>
@@ -492,6 +505,57 @@
             }
         });
     });
+</script>
+
+<script>
+    // Listen for change events on the Include VAT and Include Tax checkboxes
+    document.getElementById('include_vat').addEventListener('change', updateFields);
+    document.getElementById('include_tax').addEventListener('change', updateFields);
+
+    function updateFields() {
+        // Get the checkbox states
+        var includeVat = document.getElementById('include_vat').checked;
+        var includeTax = document.getElementById('include_tax').checked;
+
+        // Show or hide the VAT field based on the checkbox
+        document.querySelector('.vat-fields').style.display = includeVat ? 'block' : 'none';
+
+        // Show or hide the Tax field based on the checkbox
+        document.querySelector('.tax-fields').style.display = includeTax ? 'block' : 'none';
+
+        // Call the function to recalculate the grand total
+        calculateGrandTotal();
+    }
+
+    function calculateGrandTotal() {
+        var subtotal = 5000; // Example subtotal (replace with actual value)
+        var vat = 0;
+        var tax = 0;
+
+        // If VAT is included, get the VAT value and calculate
+        if (document.getElementById('include_vat').checked) {
+            vat = parseFloat(document.getElementById('vat').value) || 0;
+        }
+
+        // If Tax is included, get the Tax value and calculate
+        if (document.getElementById('include_tax').checked) {
+            tax = parseFloat(document.getElementById('tax').value) || 0;
+        }
+
+        // Calculate the grand total
+        var grandTotal = subtotal;
+
+        if (vat > 0) {
+            grandTotal += (subtotal * vat / 100); // Add VAT
+        }
+
+        if (tax > 0) {
+            grandTotal += (subtotal * tax / 100); // Add Tax
+        }
+
+        // Update the grand total input field
+        document.getElementById('grand_total').value = grandTotal.toFixed(2);
+    }
 </script>
 
 @endpush

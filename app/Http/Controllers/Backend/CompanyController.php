@@ -80,6 +80,10 @@ class CompanyController extends Controller
                 'phone' => $request->phone,
                 'status'      => $request->status,
                 'account_no'  => $accountNumber,
+                'currency_symbol' => $request->currency_symbol,
+                'fiscal_year' => $request->fiscal_year,
+                'vat' => $request->vat,
+                'tax' => $request->tax,
                 'created_by'  => Auth::user()->id,
             ]);
 
@@ -329,6 +333,10 @@ class CompanyController extends Controller
         $company->name = $request->input('name');
         $company->branch_id = $request->branch_id;
         $company->status = $request->input('status');
+        $company->currency_symbol = $request->input('currency_symbol');
+        $company->fiscal_year = $request->input('fiscal_year');
+        $company->vat = $request->input('vat');
+        $company->tax = $request->input('tax');
         $company->description = $request->input('description', ''); 
         $company->save();
 

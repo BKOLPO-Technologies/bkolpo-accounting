@@ -82,6 +82,10 @@ class CompanyInformationController extends Controller
         $company->post_code     = $request->post_code;
         $company->phone         = $request->phone;
         $company->email         = $request->email;
+        $company->currency_symbol= $request->currency_symbol;
+        $company->vat           = $request->vat;
+        $company->tax           = $request->tax;
+        $company->fiscal_year   = $request->fiscal_year;
         $company->updated_by    = Auth::user()->name;
         $company->save();
 
@@ -95,7 +99,7 @@ class CompanyInformationController extends Controller
 
         $company->save();
 
-        return redirect()->back()->with('success', 'Company information Updated Successfully!');
+        return redirect()->back()->with('success', 'Configuration Updated Successfully!');
     }
 
     /**

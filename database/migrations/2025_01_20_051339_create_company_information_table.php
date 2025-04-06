@@ -35,6 +35,9 @@ return new class extends Migration
             $table->string('sms_sender_id')->nullable();
             $table->string('sms_provider')->nullable();
             $table->string('sms_setting')->nullable();
+            $table->string('fiscal_year')->nullable();
+            $table->decimal('vat', 10, 2)->default(0)->nullable();
+            $table->decimal('tax', 10, 2)->default(0)->nullable();
 
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();

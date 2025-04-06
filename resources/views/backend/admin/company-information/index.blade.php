@@ -23,13 +23,61 @@
                         <div class="card card-outline card-primary shadow">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <!-- Conversations Title -->
-                                <h3 class="card-title">Company Information</h3>
+                                <h3 class="card-title">Configuration</h3>
                             </div>
                             <div class="card-body">
                                 <form method="POST" action="{{ route('company-information.update', $company->id) }}" enctype="multipart/form-data">
                                     @csrf
                                     <div class="row">
                                         <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="currency_symbol">Currency Symbol</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                                    <input type="text" name="currency_symbol" value="{{ old('currency_symbol', $company->currency_symbol ?? '') }}" id="currency_symbol" class="form-control" placeholder="Enter Currency Symbol">
+                                                </div>
+                                                @error('currency_symbol')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="fiscal_year">Fiscal Year</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                                    <input type="text" name="fiscal_year" value="{{ old('fiscal_year', $company->fiscal_year ?? '') }}" id="fiscal_year" class="form-control" placeholder="Enter Fiscal Year">
+                                                </div>
+                                                @error('fiscal_year')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="vat">VAT</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                                    <input type="number" min="0" name="vat" value="{{ old('vat', $company->vat ?? '') }}" id="vat" class="form-control" placeholder="Enter VAT">
+                                                </div>
+                                                @error('vat')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="tax">TAX</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                                    <input type="number" min="0" name="tax" value="{{ old('tax', $company->tax ?? '') }}" id="tax" class="form-control" placeholder="Enter TAX">
+                                                </div>
+                                                @error('tax')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        {{-- <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="company_name">Company Name</label>
                                                 <div class="input-group">
@@ -40,9 +88,9 @@
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
-                                        </div>
+                                        </div> --}}
 
-                                        <div class="col-lg-6">
+                                        {{-- <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="address">Address</label>
                                                 <div class="input-group">
@@ -158,13 +206,13 @@
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
 
                                     <div class="row mt-3">
                                         <div class="col-lg-12">
                                             <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;">
-                                                <i class="fas fa-plus"></i> Update Company Information
+                                                <i class="fas fa-plus"></i> Update Configuration
                                             </button>
                                         </div>
                                     </div>

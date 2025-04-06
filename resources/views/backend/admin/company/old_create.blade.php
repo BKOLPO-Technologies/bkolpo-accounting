@@ -176,56 +176,6 @@
                                             @enderror
                                         </div>
 
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label for="currency_symbol">Currency Symbol</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
-                                                    <input type="text" name="currency_symbol" value="{{ old('currency_symbol') }}" id="currency_symbol" class="form-control" placeholder="Enter Currency Symbol">
-                                                </div>
-                                                @error('currency_symbol')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label for="fiscal_year">Fiscal Year</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
-                                                    <input type="text" name="fiscal_year" value="{{ old('fiscal_year') }}" id="fiscal_year" class="form-control" placeholder="Enter Fiscal Year">
-                                                </div>
-                                                @error('fiscal_year')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label for="vat">VAT</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
-                                                    <input type="number" min="0" name="vat" value="{{ old('vat') }}" id="vat" class="form-control" placeholder="Enter VAT">
-                                                </div>
-                                                @error('vat')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label for="tax">TAX</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
-                                                    <input type="number" min="0" name="tax" value="{{ old('tax') }}" id="tax" class="form-control" placeholder="Enter TAX">
-                                                </div>
-                                                @error('tax')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
                                         <!-- Description -->
                                         <div class="col-12 mb-2">
                                             <label for="description" class="form-label">Description</label>
@@ -251,6 +201,64 @@
                                                     alt="Logo"
                                                     style="width: 100%; height: 60px; border: 1px solid #ddd; border-radius: 5px;">
                                             </div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <div class="table-responsive mt-3">
+                                                <table class="table table-bordered table-striped" id="dynamicTable">
+                                                    <thead class="table-secondary">
+                                                        <tr>
+                                                            <th class="text-center">Type</th>
+                                                            <th class="text-center">Group</th>
+                                                            <th class="text-center">Sub Group</th>
+                                                            <th class="text-center">Ledger</th>
+                                                            <th class="text-center">O.B.</th>
+                                                            <th class="text-center">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {{-- First Row (Input Fields) --}}
+                                                        <tr>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"><i class="fa fa-folder"></i></span>
+                                                                    <select class="form-control" name="type[]">
+                                                                        <option value="">Select Type</option>
+                                                                        <option value="Asset">Asset</option>
+                                                                        <option value="Liability">Liability</option>
+                                                                    </select>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"><i class="fa fa-folder"></i></span>
+                                                                    <input type="text" class="form-control" name="group[]" placeholder="Enter Group">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"><i class="fa fa-sitemap"></i></span>
+                                                                    <input type="text" class="form-control" name="sub[]" placeholder="Enter Sub Group">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"><i class="fa fa-book"></i></span>
+                                                                    <input type="text" class="form-control" name="ledger[]" placeholder="Enter Ledger">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text">BDT</span>
+                                                                    <input type="number" class="form-control" name="ob[]" step="0.01" placeholder="Enter O.B.">
+                                                                </div>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <button type="button" class="btn btn-sm btn-success addRow"><i class="fa fa-plus"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>                                                                      
                                         </div>
                                     </div>
 

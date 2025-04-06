@@ -433,14 +433,14 @@
                 </p>
             </a>
             <ul class="nav nav-treeview">
-              @can('setting-information')  
+              {{-- @can('setting-information')  
                 <li class="nav-item">
                   <a href="{{ route('company-information.index') }}" class="nav-link {{ Route::is('company-information.index') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
                       <p>Configuration</p> 
                   </a>
                 </li>
-                @endcan
+                @endcan --}}
 
                 <li class="nav-item">
                   <a href="{{ route('admin.category.index') }}" class="nav-link {{ Route::is('admin.category.index') || Route::is('admin.category.create') || Route::is('admin.category.edit') ? 'active' : '' }}">

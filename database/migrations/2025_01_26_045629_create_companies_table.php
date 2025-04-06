@@ -25,6 +25,10 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->string('account_no')->nullable();
             $table->decimal('initial_balance', 10, 2)->default(0)->nullable();  
+            $table->string('currency_symbol')->nullable();
+            $table->string('fiscal_year')->nullable();
+            $table->decimal('vat', 10, 2)->default(0)->nullable();
+            $table->decimal('tax', 10, 2)->default(0)->nullable();
             $table->text('description')->nullable();
             $table->tinyInteger('status')->nullable()->default(1)->comment('1=>Active, 0=>Inactive');
             $table->string('created_by')->nullable();

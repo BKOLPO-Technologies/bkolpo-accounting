@@ -54,12 +54,24 @@ function en2bn($number)
 }
 
 
+// if (!function_exists('bdt')) {
+//     function bdt()
+//     {
+//         // return 'BDT'; // Taka symbol
+//         $companyInfo = get_company_info();
+//         return $companyInfo && $companyInfo->currency_symbol ? $companyInfo->currency_symbol : 'BDT'; 
+//     }
+// }
+
 if (!function_exists('bdt')) {
     function bdt()
     {
-        return 'BDT'; // Taka symbol
+        // return 'BDT'; // Taka symbol
+        $companyInfo = get_company();
+        return $companyInfo && $companyInfo->currency_symbol ? $companyInfo->currency_symbol : 'BDT'; 
     }
 }
+
 
 if (!function_exists('get_company')) {
     function get_company()

@@ -50,14 +50,48 @@ class ProjectController extends Controller
         // $referance_no = 'BKOLPO-'. $randomNumber;
 
         // Get current timestamp in 'dmyHis' format (day, month, year)
-        $randomNumber = rand(100000, 999999);
-        $fullDate = now()->format('d/m/y');
+        // $randomNumber = rand(100000, 999999);
+        // $fullDate = now()->format('d/m/y');
 
-        // Combine the timestamp, random number, and full date
-        $referance_no = 'BCL-PR-'.$fullDate.' - '.$randomNumber;
+        // // Combine the timestamp, random number, and full date
+        // $referance_no = 'BCL-PR-'.$fullDate.' - '.$randomNumber;
         $units = Unit::where('status',1)->latest()->get();
 
-        return view('backend.admin.inventory.project.create',compact('pageTitle','clients','referance_no','units')); 
+        $companyInfo = get_company(); // Fetch company info
+
+        // Get the current date and month
+        $currentMonth = now()->format('m'); // Current month (01-12)
+        $currentYear = now()->format('y'); // Current year (yy)
+
+        // Generate a random number for the current insert
+        $randomNumber = rand(100000, 999999);
+
+        // Get the last reference number for the current month
+        $lastReference = Project::whereRaw('MONTH(created_at) = ?', [$currentMonth]) // Filter by the current month
+        ->orderBy('created_at', 'desc') // Order by the latest created entry
+        ->first(); // Get the latest entry
+
+        // Increment the reference number for this month
+        if ($lastReference) {
+            // Extract the incremental part from the last reference number
+            preg_match('/(\d{3})$/', $lastReference->reference_no, $matches); // Assuming the last part is always 3 digits (001, 002, etc.)
+            $increment = (int)$matches[0] + 1; // Increment the number
+        } else {
+            // If no reference exists for the current month, start from 001
+            $increment = 1;
+        }
+
+        // Format the increment to be always 3 digits (e.g., 001, 002, 003)
+        $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
+
+
+        // Combine fiscal year, current month, and the incremental number to generate the reference number
+        $referance_no = 'BCL-PR-' . $companyInfo->fiscal_year . $currentMonth . $formattedIncrement;
+      
+        $vat = $companyInfo->vat;
+        $tax = $companyInfo->tax;
+
+        return view('backend.admin.inventory.project.create',compact('pageTitle','clients','referance_no','units','vat','tax')); 
     }
 
     /**

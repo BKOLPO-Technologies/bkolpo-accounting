@@ -88,6 +88,56 @@
                                             @enderror
                                         </div>
 
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="currency_symbol">Currency Symbol</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                                    <input type="text" name="currency_symbol" value="{{ old('currency_symbol', $company->currency_symbol) }}" id="currency_symbol" class="form-control" placeholder="Enter Currency Symbol">
+                                                </div>
+                                                @error('currency_symbol')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="fiscal_year">Fiscal Year</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                                    <input type="text" name="fiscal_year" value="{{ old('fiscal_year', $company->fiscal_year) }}" id="fiscal_year" class="form-control" placeholder="Enter Fiscal Year">
+                                                </div>
+                                                @error('fiscal_year')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="vat">VAT</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                                    <input type="number" min="0" name="vat" value="{{ old('vat', $company->vat) }}" id="vat" class="form-control" placeholder="Enter VAT">
+                                                </div>
+                                                @error('vat')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="tax">TAX</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                                    <input type="number" min="0" name="tax" value="{{ old('tax', $company->tax) }}" id="tax" class="form-control" placeholder="Enter TAX">
+                                                </div>
+                                                @error('tax')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
                                         <!-- Description -->
                                         <div class="col-12 mb-3">
                                             <label for="description" class="form-label">Description</label>
