@@ -2,7 +2,7 @@
   // Determine active state for menu items
   $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet','report.ledger.report','report.ledger.single.report','report.ledger.group.report','report.ledger.group.single.report','report.ledger.profit.loss','report.project.profit.loss');
   $isSupplierActive = Route::is('admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit','admin.supplier.products','admin.supplier.transactions');
-  $isClientActive = Route::is('admin.client.index','admin.client.create','admin.client.view','admin.client.edit');
+  $isClientActive = Route::is('admin.client.index','admin.client.create','admin.client.view','admin.client.edit','admin.client.products','admin.client.transactions');
   $isProjectActive = Route::is('projects.index', 'projects.create', 'projects.show', 'projects.edit');
   $isInvoiceActive = Route::is('project.receipt.payment.index', 'project.receipt.payment.create', 'projects.sales','project.receipt.payment.show','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit');
   $isSalesActive = Route::is('admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit','quotations.index','quotations.create','quotations.edit','quotations.show','outcoming.chalan.index','outcoming.chalan.create','outcoming.chalan.show','outcoming.chalan.edit','receipt.payment.index','receipt.payment.create','stock.out','stock.out.view');
@@ -53,7 +53,7 @@
           
           <ul class="nav nav-treeview">
               <li class="nav-item">
-                  <a href="{{ route('admin.client.index') }}" class="nav-link {{ Route::is('admin.client.index') || Route::is('admin.client.create') || Route::is('admin.client.view') || Route::is('admin.client.edit') ? 'active' : '' }}">
+                  <a href="{{ route('admin.client.index') }}" class="nav-link {{ Route::is('admin.client.index') || Route::is('admin.client.create') || Route::is('admin.client.view') || Route::is('admin.client.edit') || Route::is('admin.client.products')  || Route::is('admin.client.transactions') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
                       <p>Manage Clients</p>
                   </a>

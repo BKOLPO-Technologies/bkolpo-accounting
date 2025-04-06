@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\Inventory;
 
+use App\Models\Sale;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -197,5 +198,46 @@ class ClientController extends Controller
 
         // Redirect back to the client index with a success message
         return redirect()->route('admin.client.index')->with('success', 'Client deleted successfully!');
+    }
+
+    public function viewProducts($clientId)
+    {
+        // Fetch the client
+        $client = Client::findOrFail($clientId);
+
+        // Fetch the purchased products for this supplier
+        $purchasedProducts = Sale::where('client_id', $clientId)
+                                    ->with('products') // Assuming Purchase has a relation with products
+                                    ->get();
+
+        //dd($purchasedProducts);
+
+        $pageTitle = 'Saled Products History';
+
+        $totalPurchaseAmount = $client->totalPurchaseAmount();
+        //dd($totalPurchaseAmount);
+        $totalPaidAmount = $client->totalPaidAmount();
+        // dd($totalPaidAmount);
+        $totalDueAmount = $client->totalDueAmount();
+        //dd($totalDueAmount);
+        $totalDiscounta = $client->totalDiscount();
+        //dd($totalDiscounta);
+
+        // Return the view for purchased products
+        return view('backend.admin.inventory.client.products', compact('pageTitle','client', 'purchasedProducts','totalPurchaseAmount','totalDiscounta','totalPaidAmount','totalDueAmount'));
+    }
+
+    public function viewTransactions($clientId)
+    {
+        // Fetch the client
+        $client = client::findOrFail($clientId);
+
+        // Fetch the transactions/payments related to this supplier
+        $transactions = Sale::where('client_id', $clientId)->get();
+
+        $pageTitle = 'client Transactions';
+
+        // Return the view for transactions
+        return view('backend.admin.inventory.client.transactions', compact('pageTitle','client', 'transactions'));
     }
 }
