@@ -69,9 +69,9 @@
                                                 
                                                 <td class="col-2">
                                                     <!-- View Button -->
-                                                    {{-- <a href="{{ route('admin.purchase.show', $purchase->id) }}" class="btn btn-success btn-sm">
+                                                    <a href="{{ route('admin.purchase.show', $purchase->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
-                                                    </a> --}}
+                                                    </a>
                                                     <button class="btn btn-success btn-sm view-purchase" data-id="{{ $purchase->id }}" data-toggle="modal" data-target="#purchaseDetailsModal">
                                                         <i class="fas fa-eye"></i>
                                                     </button>                                                    
