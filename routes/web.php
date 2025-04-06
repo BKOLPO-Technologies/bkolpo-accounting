@@ -298,7 +298,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/products-by-category/{categoryId}', [ProductController::class, 'getProductsByCategory'])->name('products.by.category');
     });
 
-    /* ==================== supplier =================== */
+    /* ==================== client =================== */
     Route::prefix('client')->group(function () {
         Route::get('/', [ClientController::class, 'AdminClientIndex'])->name('admin.client.index');
         Route::get('/create', [ClientController::class, 'AdminClientCreate'])->name('admin.client.create');
@@ -308,6 +308,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/edit/{id}', [ClientController::class, 'AdminClientEdit'])->name('admin.client.edit');
         Route::put('/update/{id}', [ClientController::class, 'AdminClientUpdate'])->name('admin.client.update');
         Route::get('/delete/{id}', [ClientController::class, 'AdminClientDestroy'])->name('admin.client.destroy');
+
+        Route::get('/products/{client}', [ClientController::class, 'viewProducts'])->name('admin.client.products');
+        Route::get('/transactions/{client}', [ClientController::class, 'viewTransactions'])->name('admin.client.transactions');
     });
 
     /* ==================== purchase =================== */

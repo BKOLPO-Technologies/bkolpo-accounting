@@ -33,6 +33,6 @@ trait CalculatesClientPurchases
 
     public function totalDiscount()
     {
-        return $this->purchases()->sum('discount');
+        return $this->sales()->sum('discount');
     }
 }

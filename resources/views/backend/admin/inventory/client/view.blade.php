@@ -107,13 +107,13 @@
                                         <div class="row mt-3">
                                             
                                             <div class="col-md-6">
-                                                <a href="#" class="btn btn-primary btn-sm">
-                                                   View Products Purchased
+                                                <a href="{{ route('admin.client.products', $client->id) }}" class="btn btn-primary btn-sm">
+                                                   View Products Saled
                                                 </a>
                                             </div>
                                         
                                             <div class="col-md-6 text-right">
-                                                <a href="#" class="btn btn-success btn-sm">
+                                                <a href="{{ route('admin.client.transactions', $client->id) }}" class="btn btn-success btn-sm">
                                                     View Transactions
                                                 </a>
                                             </div>
