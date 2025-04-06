@@ -47,7 +47,7 @@
             <table class="custom-invoice-table" style="border: 2px solid #000000; border-collapse: separate; border-spacing: 0; width: 100%;">
               <thead>
                 <tr>
-                  <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Item</th>
+                  {{-- <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Item</th> --}}
                   <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Item Code</th>
                   <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Description</th>
                   <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Qty</th>
@@ -59,7 +59,7 @@
               <tbody>
                 @foreach(range(1, 6) as $i)
                 <tr>
-                  <td style="padding: 8px 12px; border-right: 1px solid #000000;">1</td>
+                  {{-- <td style="padding: 8px 12px; border-right: 1px solid #000000;">1</td> --}}
                   <td style="padding: 8px 12px; border-right: 1px solid #000000;">SUB010001</td>
                   <td style="padding: 8px 12px; border-right: 1px solid #000000;">Dismantling of serviceable/damaged brick</td>
                   <td style="padding: 8px 12px; border-right: 1px solid #000000;">30</td>
@@ -68,7 +68,6 @@
                   <td style="padding: 8px 12px; border-right: 1px solid #000000;">16,140.00 BDT</td>
                 </tr>
                 @endforeach
-
               </tbody>
 
             </table>
