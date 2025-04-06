@@ -331,7 +331,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [SalePaymentController::class, 'index'])->name('sale.payment.index');
         Route::get('/create', [SalePaymentController::class, 'create'])->name('sale.payment.create');
         Route::post('/store', [SalePaymentController::class, 'store'])->name('sale.payment.store');
-        Route::get('/view/{id}', [SalePaymentController::class, 'view'])->name('sale.payment.show');
+        //Route::get('/view/{id}', [SalePaymentController::class, 'view'])->name('sale.payment.show');
+        Route::get('/view', [SalePaymentController::class, 'view'])->name('sale.payment.show');
         Route::get('/edit/{id}', [SalePaymentController::class, 'edit'])->name('sale.payment.edit');
         Route::put('/update/{id}', [SalePaymentController::class, 'update'])->name('sale.payment.update');
         Route::get('/delete/{id}', [SalePaymentController::class, 'destroy'])->name('sale.payment.destroy');

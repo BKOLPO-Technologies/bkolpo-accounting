@@ -90,11 +90,13 @@ class ProductSaleReceiveController extends Controller
             // Determine payment method
             $paymentDescription = "{$ledger->name}";
             $payment_method = $ledger->type == 'Cash' ? 'Cash' : 'Bank';
+
+            //dd($project);
   
             // Create a new project receipt
             $receipt = ProjectReceipt::create([
                 'client_id' => $project->client_id,
-                'invoice_no' => $project->invoice_no ,
+                'invoice_no' => $project->invoice_no,
                 'total_amount' => $request->input('total_amount'),
                 'pay_amount' => $request->input('pay_amount'),
                 'due_amount' => $request->input('due_amount'),

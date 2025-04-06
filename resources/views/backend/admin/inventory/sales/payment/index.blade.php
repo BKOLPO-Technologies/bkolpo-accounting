@@ -74,7 +74,7 @@
                                                     </a>
                                                 </td> --}}
                                                 <td>
-                                                    <a href="#" class="btn btn-success btn-sm">
+                                                    <a href="{{ route('sale.payment.show', ['invoice_no' => $payment->invoice_no]) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                 </td>

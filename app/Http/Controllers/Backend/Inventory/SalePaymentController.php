@@ -7,6 +7,7 @@ use App\Models\Client;
 
 use App\Models\Ledger;
 use App\Models\Payment;
+use App\Models\Project;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use App\Models\LedgerGroup;
@@ -74,33 +75,6 @@ class SalePaymentController extends Controller
     
         return response()->json(['ledgers' => $formattedLedgers]);
     }
-
-    // public function getChalansBySupplier(Request $request)
-    // {
-    //     //dd($request->supplier_id);
-    //     // Step 1: Find Purchase where supplier_id matches
-    //     $purchase = Purchase::where('supplier_id', $request->supplier_id)->pluck('id'); 
-    //     //dd($purchase);
-
-    //     // Step 2: Find Incoming Chalans based on purchase_id
-    //     $chalans = IncomingChalan::whereIn('purchase_id', $purchase)
-    //         ->whereHas('purchase', function($query) {
-    //             $query->where('status', '!=', 'paid'); 
-    //         })
-    //         ->with('purchase') // Ensure related purchase invoice is fetched
-    //         ->get();
-
-    //     // Step 3: Format the response
-    //     $formattedChalans = $chalans->map(function ($chalan) {
-    //         return [
-    //             'id' => $chalan->id,
-    //             'invoice_no' => $chalan->purchase->invoice_no ?? 'N/A',
-    //             'total_amount' => $chalan->purchase->total-$chalan->purchase->paid_amount ?? 0
-    //         ];
-    //     });
-
-    //     return response()->json(['chalans' => $formattedChalans]);
-    // }
 
     public function getChalansBySupplier(Request $request)
     {
@@ -343,30 +317,6 @@ class SalePaymentController extends Controller
             return redirect()->back()->with('error', 'Payment failed! ' . $e->getMessage());
         }
     }
-    
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -426,5 +376,29 @@ class SalePaymentController extends Controller
             // return redirect()->back()->with('error', 'Failed to delete payment receipt! ' . $e->getMessage());
             return redirect()->back()->with('success', 'Payment receipt deleted successfully, and journal entry updated!');
         }
+    }
+
+    
+    public function view(Request $request)
+    {
+        $invoice_no = $request->query('invoice_no');
+
+        //dd($invoice_no);
+
+        $pageTitle = 'Project Payment Details';
+
+        $project = Project::where('reference_no', $invoice_no)
+            ->with(['vendor', 'items']) 
+            ->first();
+
+        if (!$project) {
+            return redirect()->back()->with('error', 'Receipt not found.');
+        }
+
+        $project_receipts = Payment::where('invoice_no', $invoice_no)->get();
+
+        //dd($project_receipts);
+
+        return view('backend.admin.inventory.project.payment.receipt.view', compact('pageTitle', 'project', 'project_receipts'));
     }
 }
