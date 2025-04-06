@@ -85,8 +85,11 @@ class ProjectController extends Controller
         $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
 
 
+        // Remove the hyphen from fiscal year (e.g., "24-25" becomes "2425")
+        $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
+
         // Combine fiscal year, current month, and the incremental number to generate the reference number
-        $referance_no = 'BCL-PR-' . $companyInfo->fiscal_year . $currentMonth . $formattedIncrement;
+        $referance_no = 'BCL-PR-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement;
       
         $vat = $companyInfo->vat;
         $tax = $companyInfo->tax;
