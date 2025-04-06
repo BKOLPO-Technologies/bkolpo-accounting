@@ -528,7 +528,7 @@
     }
 
     function calculateGrandTotal() {
-        var subtotal = 5000; // Example subtotal (replace with actual value)
+        var subtotal = 0; // Example subtotal (replace with actual value)
         var vat = 0;
         var tax = 0;
 
