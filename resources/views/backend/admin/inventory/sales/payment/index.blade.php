@@ -43,7 +43,7 @@
                                             {{-- <th>Due Amount</th> --}}
                                             <th>Payment Method</th>  
                                             <th>Payment Date</th>
-                                            {{-- <th>Actions</th> --}}
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -73,6 +73,11 @@
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </td> --}}
+                                                <td>
+                                                    <a href="#" class="btn btn-success btn-sm">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
