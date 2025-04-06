@@ -246,7 +246,7 @@ class ClientController extends Controller
 
         //dd($transactions);
 
-        $pageTitle = 'client Transactions';
+        $pageTitle = 'Client Transactions';
 
         // Return the view for transactions
         return view('backend.admin.inventory.client.transactions', compact('pageTitle','client', 'transactions'));
