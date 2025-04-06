@@ -48,7 +48,7 @@
                                     <tr>
                                         <td>{{ $sl++ }}</td>
                                         <td>{{ $transaction->invoice_no }}</td>
-                                        <td>{{ bdt() }} {{ number_format($transaction->pay_amount, 2) }}</td>
+                                        <td>{{ bdt() }} {{ number_format($transaction->paid_amount, 2) }}</td>
                                         <td>{{ \Carbon\Carbon::parse($transaction->payment_date)->format('d F Y') }}</td>
                                         {{-- <td>{{ ucfirst($transaction->status) }}</td> --}}
                                     </tr>

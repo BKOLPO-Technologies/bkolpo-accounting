@@ -244,6 +244,8 @@ class ClientController extends Controller
         // Fetch the transactions/payments related to this supplier
         $transactions = Sale::where('client_id', $clientId)->get();
 
+        //dd($transactions);
+
         $pageTitle = 'client Transactions';
 
         // Return the view for transactions
