@@ -108,7 +108,7 @@
                                             
                                             <div class="col-md-6">
                                                 <a href="{{ route('admin.client.products', $client->id) }}" class="btn btn-primary btn-sm">
-                                                   View Products Saled
+                                                   View Products Sales
                                                 </a>
                                             </div>
                                         
@@ -129,7 +129,7 @@
                                         <hr>
                                         <div class="row m-t-lg">
                                             <div class="col-md-2">
-                                                <strong>Name</strong>
+                                                <strong>Company Name</strong>
                                             </div>
                                             <div class="col-md-10">
                                                 {{ $client->name }}
@@ -138,7 +138,7 @@
                                         <hr>
                                         <div class="row m-t-lg">
                                             <div class="col-md-2">
-                                                <strong>Company</strong>
+                                                <strong>Group Name</strong>
                                             </div>
                                             <div class="col-md-10">
                                                 {{ $client->company }}

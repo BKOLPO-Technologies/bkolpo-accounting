@@ -144,8 +144,8 @@
                                     <table class="table table-bordered" id="sale-details-table">
                                         <thead class="thead-light">
                                             <tr>
-                                                <th>Name</th>
-                                                <th>Company</th>
+                                                <th>Company Name</th>
+                                                <th>Group Name</th>
                                                 <th>Phone</th>
                                                 <th>Email</th>
                                             </tr>

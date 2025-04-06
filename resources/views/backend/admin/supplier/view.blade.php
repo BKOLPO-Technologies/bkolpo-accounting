@@ -106,7 +106,7 @@
                                             
                                             <div class="col-md-6">
                                                 <a href="{{ route('admin.supplier.products', $supplier->id) }}" class="btn btn-primary btn-sm">
-                                                   View Products Purchased
+                                                   View Products Purchases
                                                 </a>
                                             </div>
                                         

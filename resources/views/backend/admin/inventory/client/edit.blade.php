@@ -50,14 +50,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Title</label>
-                                <input type="text" class="form-control" name="name" value="{{ $client->name }}">
+                                <label>Company Name</label>
+                                <input type="text" class="form-control" name="name" placeholder="Company Name" value="{{ $client->name }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Company</label>
-                                <input type="text" class="form-control" placeholder="Company Name" name="company" value="{{ $client->company }}">
+                                <label>Group Name</label>
+                                <input type="text" class="form-control" placeholder="Group Name" name="company" value="{{ $client->company }}">
                             </div>
                         </div>
                     </div>
