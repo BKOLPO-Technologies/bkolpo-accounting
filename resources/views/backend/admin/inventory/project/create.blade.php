@@ -245,7 +245,6 @@
 
                                         <!-- Second Row: Remaining fields (Transport Cost, Carrying Charge, Vat, Tax, Grand Total) -->
                                         <div class="row w-100">
-                                            <!-- Include VAT Checkbox -->
                                             <div class="col-md-6 mb-2">
                                                 <div class="form-group">
                                                     <div class="form-group clearfix mt-3">
@@ -258,7 +257,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- Include Tax Checkbox -->
+                                            
                                             <div class="col-md-6 mb-2">
                                                 <div class="form-group">
                                                     <div class="form-group clearfix mt-3">
@@ -271,18 +270,19 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        
+                                            
                                             <!-- VAT -->
                                             <div class="col-12 col-lg-6 mb-2 vat-fields" style="display:none;">
                                                 <label for="vat">VAT</label>
-                                                <input type="number" min="0" id="vat" name="vat" class="form-control" step="0.01" readonly placeholder="Enter VAT" />
+                                                <input type="number" min="0" id="vat" name="vat" class="form-control" step="0.01" value="{{ $vat }}" readonly placeholder="Enter VAT" />
                                             </div>
-                                        
+                                            
                                             <!-- Tax -->
                                             <div class="col-12 col-lg-6 mb-3 tax-fields" style="display:none;">
                                                 <label for="tax">TAX</label>
-                                                <input type="number" min="0" id="tax" name="tax" class="form-control" step="0.01" readonly placeholder="Enter Tax" />
+                                                <input type="number" min="0" id="tax" name="tax" class="form-control" step="0.01" value="{{ $tax }}" readonly placeholder="Enter Tax" />
                                             </div>
+
                                         
                                             <!-- Grand Total -->
                                             <div class="col-12 mb-2">
