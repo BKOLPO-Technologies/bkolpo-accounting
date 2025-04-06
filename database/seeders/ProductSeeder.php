@@ -27,7 +27,7 @@ class ProductSeeder extends Seeder
 
         // Fetch existing categories by slug and units by name
         $categories = Category::pluck('id', 'slug');
-        $units = Unit::pluck('id', 'name'); // Assuming unique unit names
+        $units = Unit::pluck('id', 'id'); // Assuming unique unit names
 
         // Define products with respective categories and units
         $products = [
