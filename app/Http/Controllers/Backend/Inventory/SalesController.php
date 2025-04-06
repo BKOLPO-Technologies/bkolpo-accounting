@@ -159,10 +159,17 @@ class SalesController extends Controller
                 // Check if a Journal Voucher already exists for the given invoice
                 $journalVoucher = JournalVoucher::where('transaction_code', $sale->invoice_no)->first();
 
+                // Get current timestamp in 'dmyHis' format (day, month, year)
+                $randomNumber = rand(100000, 999999);
+                $fullDate = now()->format('d/m/y');
+
+                // Combine the timestamp, random number, and full date
+                $transactionCode = 'BCL-V-'.$fullDate.' - '.$randomNumber;
+
                 if (!$journalVoucher) {
                     // Create a new Journal Voucher if not exists
                     $journalVoucher = JournalVoucher::create([
-                        'transaction_code'  => $sale->invoice_no,
+                        'transaction_code'  => $transactionCode,
                         'transaction_date'  => now()->format('Y-m-d'),
                         'description'       => 'Invoice Entry for Sales',
                         'status'            => 1, // Pending status
