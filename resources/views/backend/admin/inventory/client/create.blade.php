@@ -41,14 +41,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Title</label>
-                                    <input type="text" class="form-control" placeholder="Title" name="name" required>
+                                    <label>Company Name</label>
+                                    <input type="text" class="form-control" placeholder="Company Name" name="name" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Company</label>
-                                    <input type="text" class="form-control" placeholder="Company Name" name="company">
+                                    <label>Group Name</label>
+                                    <input type="text" class="form-control" placeholder="Group Name" name="company">
                                 </div>
                             </div>
                         </div>
@@ -90,15 +90,26 @@
                                     <input type="text" class="form-control" placeholder="Address" name="address">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Zip no</label>
                                     <input type="text" class="form-control" placeholder="Zip no" name="zip">
                                 </div>
+                            </div> --}}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Bank Account Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" name="bank_account_name" placeholder="Enter Bank Account Name">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Country</label>
@@ -112,6 +123,31 @@
                                 </div>
                             </div>
                             
+                        </div> --}}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Bank Account Number</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" name="bank_account_number" placeholder="Enter Bank Account Number">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Routing Number</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" name="bank_routing_number" placeholder="Enter Roting Number">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -130,7 +166,7 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-lg-12">
-                                <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;"><i class="fas fa-plus"></i> Add Customer</button>
+                                <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;"><i class="fas fa-plus"></i> Add Client</button>
                             </div>
                         </div> 
 

@@ -16,22 +16,22 @@
                         <div class="col-md-6">
                             <!-- Title -->
                             <div class="form-group">
-                                <label for="new_client_name">Title</label>
+                                <label for="new_client_name">Company Name</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_client_name" name="name" placeholder="Enter Client Title" required>
+                                    <input type="text" class="form-control" id="new_client_name" name="name" placeholder="Enter Client Name" required>
                                 </div>
                             </div>
                             <!-- Company -->
                             <div class="form-group">
-                                <label for="new_client_company">Company</label>
+                                <label for="new_client_company">Group Name</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-building"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" id="new_client_company" placeholder="Enter Company Name" name="company">
+                                    <input type="text" class="form-control" id="new_client_company" placeholder="Enter Company Group Name" name="company">
                                 </div>
                             </div>
                             <!-- Contact Person -->
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                             <!-- City -->
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="new_client_city">City</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -97,9 +97,9 @@
                                     </div>
                                     <input type="text" class="form-control" id="new_client_city" placeholder="Enter City" name="city">
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- Zip No -->
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="new_client_zip">Zip no</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -107,15 +107,42 @@
                                     </div>
                                     <input type="text" class="form-control" id="new_client_zip" placeholder="Enter Zip No" name="zip">
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- Country -->
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="new_client_country">Country</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-flag"></i></span>
                                     </div>
                                     <input type="text" class="form-control" id="new_client_country" placeholder="Enter Country" name="country">
+                                </div>
+                            </div> --}}
+                            <div class="form-group">
+                                <label>Bank Account Name</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" id="bank_account_name" name="bank_account_name" placeholder="Enter Bank Account Name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Bank Account Number</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" id="bank_account_number" name="bank_account_number" placeholder="Enter Bank Account Number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Routing Number</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" id="bank_routing_number" name="bank_routing_number" placeholder="Enter Roting Number">
                                 </div>
                             </div>
                             <!-- Post Box -->

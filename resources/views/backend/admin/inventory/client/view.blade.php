@@ -157,6 +157,36 @@
                                         </div>
                                         <hr>
                                         <div class="row m-t-lg">
+                                            <div class="col-md-3">
+                                                <strong>Bank Account Name</strong>
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ $client->bank_account_name }}
+                                            </div>
+
+                                        </div>
+                                        <hr>
+                                        <div class="row m-t-lg">
+                                            <div class="col-md-3">
+                                                <strong>Bank Account Number</strong>
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ $client->bank_account_number }}
+                                            </div>
+
+                                        </div>
+                                        <hr>
+                                        <div class="row m-t-lg">
+                                            <div class="col-md-3">
+                                                <strong>Routing Number</strong>
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ $client->bank_routing_number }}
+                                            </div>
+
+                                        </div>
+                                        <hr>
+                                        <div class="row m-t-lg">
                                             <div class="col-md-2">
                                                 <strong>City</strong>
                                             </div>

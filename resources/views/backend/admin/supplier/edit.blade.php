@@ -66,7 +66,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Contact Designation</label>
+                                        <label>Designation</label>
                                         <input type="text" class="form-control" name="designation" value="{{ $supplier->designation }}">
                                     </div>
                                 </div>

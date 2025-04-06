@@ -126,7 +126,7 @@
                                         <hr>
                                         <div class="row m-t-lg">
                                             <div class="col-md-2">
-                                                <strong>Title</strong>
+                                                <strong>Company Name</strong>
                                             </div>
                                             <div class="col-md-10">
                                                 {{ $supplier->name }}
@@ -135,7 +135,7 @@
                                         <hr>
                                         <div class="row m-t-lg">
                                             <div class="col-md-2">
-                                                <strong>Company</strong>
+                                                <strong>Group Name</strong>
                                             </div>
                                             <div class="col-md-10">
                                                 {{ $supplier->company }}
@@ -153,7 +153,7 @@
                                         <hr>
                                         <div class="row m-t-lg">
                                             <div class="col-md-2">
-                                                <strong>Contact Designation</strong>
+                                                <strong>Designation</strong>
                                             </div>
                                             <div class="col-md-10">
                                                 {{ $supplier->designation }}
@@ -166,6 +166,36 @@
                                             </div>
                                             <div class="col-md-10">
                                                 {{ $supplier->address }}
+                                            </div>
+
+                                        </div>
+                                        <hr>
+                                        <div class="row m-t-lg">
+                                            <div class="col-md-3">
+                                                <strong>Bank Account Name</strong>
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ $supplier->bank_account_name }}
+                                            </div>
+
+                                        </div>
+                                        <hr>
+                                        <div class="row m-t-lg">
+                                            <div class="col-md-3">
+                                                <strong>Bank Account Number</strong>
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ $supplier->bank_account_number }}
+                                            </div>
+
+                                        </div>
+                                        <hr>
+                                        <div class="row m-t-lg">
+                                            <div class="col-md-3">
+                                                <strong>Routing Number</strong>
+                                            </div>
+                                            <div class="col-md-9">
+                                                {{ $supplier->bank_routing_number }}
                                             </div>
 
                                         </div>

@@ -36,7 +36,7 @@
                             <thead>
                                 <tr>
                                     <th>Sl</th>
-                                    <th>Title</th>
+                                    <th>Company Name</th>
                                     <th>Address</th>
                                     <th>Email</th>
                                     <th>Phone</th>

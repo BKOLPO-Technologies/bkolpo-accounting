@@ -91,7 +91,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Contact Designation
+                                        <label>Designation
                                             @error('designation')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
@@ -100,7 +100,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Enter Contact Designation" name="designation" required>
+                                            <input type="text" class="form-control" placeholder="Enter Designation" name="designation" required>
                                         </div>
                                     </div>
                                 </div>
