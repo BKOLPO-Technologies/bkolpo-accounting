@@ -1,184 +1,104 @@
 @extends('layouts.admin')
-<style>
-    @media print {
-        #filter-form {
-            display: none !important;
-        }
-    }
-</style>
+
 @section('admin')
 
 <div class="content-wrapper">
   <section class="content-header">
     <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>Invoice</h1>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Invoice</li>
-          </ol>
-        </div>
-      </div>
+      <h1>Purchase Order - Subcontractor</h1>
     </div>
   </section>
 
   <section class="content">
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-12">
-          
-          <div id="printable-area">
-            <div class="invoice p-3 mb-3">
-
-              <div class="text-center mb-1" style="font-weight: bold; text-decoration: underline;">
-                  <h4>Work Order</h4>
-              </div>
-
-              <div class="row-1">
-                <div>Ref: HWT/WO/24-25/1</div>
-                <div>Date: 11/01/2025</div>
-                <div>To</div>
-                <div>Hydratech Water Technology</div>
-                <div>156, South Kamalpur, Dhaka-1217</div>
-              </div>
-
-              <div class="subject">
-                <h6 class="mt-4 mb-4" style="font-weight: bold;">
-                  Subject- Purchase Order For ETP & ECC (Environmental Clearence Certificate) of ETP From DoE.
-                </h6>
-              </div>
-
-              <div class="row-3 mb-4" style="font-weight: bold;">
-                <div>Attention: Md Akidul Islam</div>
-                <div>Proprietor</div>
-                <div>Hydratech Water Technology</div>
-              </div>
-
-              <div class="row-4" style="font-weight: bold;">
-                <div style="margin-bottom: 7px">Sir, Please Supply This Item:-</div>
-                <div>Address: Robi Battery & Recycling, Koti, Chomohoni, Koshba.</div>
-                <div>Contact Person: Engr. Aminul Islam Shikder - 01881708817</div>
-                <div>Excutive Director & COO</div>
-              </div>
-
-              <br>
-              
-              <style>
-                  .custom-table {
-                      border: 1px solid black; /* Outer border */
-                  }
-                  .custom-table th,
-                  .custom-table td {
-                      border: 1px solid black !important; /* Inner cell borders */
-                  }
-                  .custom-table thead {
-                      background-color: #f8f9fa; /* Optional: Light gray background for the header */
-                  }
-              </style>
-
-              <div class="row">
-                  <div class="col-12 table-responsive">
-                      <table class="table custom-table">
-                          <thead>
-                              <tr>
-                                  <th>Sl. No.</th>
-                                  <th>Description</th>
-                                  <th>Quantity</th>
-                                  <th>Unit</th>
-                                  <th>Rate</th>
-                                  <th>Amount</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <tr>
-                                  <td>1</td>
-                                  <td>El snort testosterone trophy driving gloves handsome</td>
-                                  <td>1</td>
-                                  <td>Job</td>
-                                  <td>1,800,000</td>
-                                  <td>1,800,000</td>
-                              </tr>
-                          </tbody>
-                          <tfoot>
-                              <tr>
-                                  <td colspan="5" class="text-center" style="font-weight: bold;">Total Amount</td>
-                                  <td class="fw-bold">1,800,000</td>
-                              </tr>
-                          </tfoot>
-                      </table>
-                  </div>
-              </div>
-
-              <div><span style="font-weight: bold;">In Word:</span> Eighteen Lac Taka Only.</div>
-
-              <div class="row-7 mt-4">
-                  <div style="font-weight: bold;">Payment Trams:</div>
-                  <ul>
-                      <li>30% Advance with work order.</li>
-                      <li>Rest of 50% will pay after delivery.</li>
-                      <li>Rest of 20% will pay after complete full work within 3 Month.</li>
-                  </ul>
-              </div>
-
-              <div class="row-8 mt-5">
-                <div class="mb-4">Best Regards</div>
-                <div>Shohel Alam</div>
-                <div>CEO</div>
-                <div>Bkolpo Construction Ltd.</div>
-              </div>
-
-              <div class="row-9 text-center mt-3" style="font-size: 12px;">
-                  <div>BKOLPO Construction Limited | Tokyo Tower ( 6th Floor ) | Cherag Ali | Tongi | Gazipur-1711 | Bangladesh |</div>
-                  <div>Mobile: +8801730-742238-88 | E-mail : construction@bkolpo.com.bd </div>
-              </div>
-
-
+      <div id="printable-area">
+        <div class="invoice-box" style="padding: 30px; border: 1px solid #ccc; background: #fff;">
+          <div class="row mb-4">
+            <div class="col-2">
+              <img src="{{ asset('bkolpo-logo.png') }}" alt="BKOLPO Logo" style="height: 40px; margin-top: 0;">
+            </div>
+            <div class="col-7">
+              <div class="custom-header" style="font-weight: bold; margin-bottom: 15px;"><h3>Smc jjled tv</h3></div>
+              <div>Document Number: 323080015</div>
+              <div>Document Date: 16/08/2023</div>
+              <div>Delivery Address: Site Delivery</div>
+            </div>
+            <div class="col-3 text-right">
+              <div class="fs-1" style="font-size: 1.5rem; font-weight: bold;">Purchase Order - Subcontractor</div>
             </div>
           </div>
 
+          <div class="row mb-4">
+            <div class="col-6">
+              <div class="custom-header" style="font-weight: bold; margin-bottom: 15px;">Vendor:</div>
+              <p><strong>Vendor Code:</strong> S18055</p>
+              <p><strong>Vendor Name:</strong> BKOLPO CONSTRUCTION LTD.</p>
+              <p><strong>Address:</strong> TOKYO TOWER (6TH FLOOR), CHERAG ALI, TONGI.</p>
+            </div>
+            <div class="col-6 text-right">
+              <div class="custom-header" style="font-weight: bold; margin-bottom: 15px;">Document Info:</div>
+              <p><strong>Document Number:</strong> 323080015</p>
+              <p><strong>Document Date:</strong> 16/08/2023</p>
+              <p><strong>Delivery Address:</strong> Site Delivery</p>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="custom-invoice-table" style="border: 2px solid #000000; border-collapse: separate; border-spacing: 0; width: 100%;">
+              <thead>
+                <tr>
+                  <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Item</th>
+                  <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Item Code</th>
+                  <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Description</th>
+                  <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Qty</th>
+                  <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">UoM</th>
+                  <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Unit Price</th>
+                  <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach(range(1, 6) as $i)
+                <tr>
+                  <td style="padding: 8px 12px; border-right: 1px solid #000000;">1</td>
+                  <td style="padding: 8px 12px; border-right: 1px solid #000000;">SUB010001</td>
+                  <td style="padding: 8px 12px; border-right: 1px solid #000000;">Dismantling of serviceable/damaged brick</td>
+                  <td style="padding: 8px 12px; border-right: 1px solid #000000;">30</td>
+                  <td style="padding: 8px 12px; border-right: 1px solid #000000;">M3</td>
+                  <td style="padding: 8px 12px; border-right: 1px solid #000000;">538.00 BDT</td>
+                  <td style="padding: 8px 12px; border-right: 1px solid #000000;">16,140.00 BDT</td>
+                </tr>
+                @endforeach
+
+              </tbody>
+
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <div class="row no-print">
-      <div class="col-12">
-
-          <button class="btn btn-primary" onclick="printBalanceSheet()">
-              <i class="fa fa-print"></i> Print
-          </button>
-
-      </div>
+  <div class="row no-print ml-2 mt-3">
+    <div class="col-12">
+      <button class="btn btn-primary" onclick="printBalanceSheet()">
+        <i class="fa fa-print"></i> Print
+      </button>
+    </div>
   </div>
-
 </div>
 
 @endsection
 
 @push('js')
 <script>
-  const options = { 
-    day: '2-digit', 
-    month: 'long', 
-    year: 'numeric' 
-  };
-  const currentDate = new Date().toLocaleDateString('en-US', options);
-  document.getElementById('current-date').textContent = 'Date: ' + currentDate;
-
-</script>
-
-
-<script>
     function printBalanceSheet() {
-        var printContent = document.getElementById("printable-area").innerHTML;
-        var originalContent = document.body.innerHTML;
 
-        document.body.innerHTML = printContent;
-        window.print();
-        document.body.innerHTML = originalContent;
+      var printContent = document.getElementById("printable-area").innerHTML;
+      var originalContent = document.body.innerHTML;
+
+      document.body.innerHTML = printContent;
+      window.print();
+      document.body.innerHTML = originalContent;
     }
 </script>
 @endpush
