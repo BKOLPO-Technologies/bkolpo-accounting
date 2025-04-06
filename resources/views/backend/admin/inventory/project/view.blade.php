@@ -191,7 +191,6 @@
                                 <div class="col-6">
                                 </div> 
                                 <div class="col-6">
-                                    {{-- <p class="lead">Amount Due 2/22/2014</p> --}}
                             
                                     <div class="table-responsive">
                                         <table class="table">

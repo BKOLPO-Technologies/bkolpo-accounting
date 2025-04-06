@@ -72,6 +72,76 @@
 
             </table>
           </div>
+
+          <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                      <th>Serial</th>
+                      <th>Description</th>
+                      <th>Qty</th>
+                      <th>Unit</th>
+                      <th>Unit Price</th>
+                      <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(range(1, 6) as $i)
+                        <tr>
+                          <td >{{ $i }}</td>
+                          <td >Dismantling of serviceable/damaged brick</td>
+                          <td >30</td>
+                          <td >M3</td>
+                          <td >538.00 BDT</td>
+                          <td >16,140.00 BDT</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+          </div>
+
+          <hr>
+                            
+          <div class="row">
+              <div class="col-6"></div>
+              <div class="col-6">
+          
+                  <div class="table-responsive">
+                      <table class="table">
+                          <tr>
+                              <th style="width:50%">Total Amount:</th>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <th>Total Discount:</th>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <th>Transport Cost:</th>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <th>Carrying:</th>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <th>Vat:</th>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <th>Tax:</th>
+                              <td></td>
+                          </tr>
+                          
+                          <tr>
+                              <th>Total:</th>
+                              <td></td>
+                          </tr>
+                      </table>
+                  </div>
+              </div>
+          </div>
+
         </div>
       </div>
     </div>
