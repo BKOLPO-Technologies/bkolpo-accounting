@@ -153,7 +153,7 @@
                                                 <th>Order Unit</th>
                                                 <th>Unit Price</th>
                                                 <th>Quantity</th>
-                                                <th>Subtotal</th>
+                                                {{-- <th>Subtotal</th> --}}
                                                 <th>Discount</th>
                                                 <th>Total</th>
                                             </tr>
@@ -175,7 +175,7 @@
                                                     <td>{{ $item->unit->name ?? '' }}</td>
                                                     <td>{{ number_format($item->unit_price, 2) }}</td>
                                                     <td>{{ $item->quantity }}</td>
-                                                    <td>{{ number_format($item->subtotal, 2) }}</td>
+                                                    {{-- <td>{{ number_format($item->subtotal, 2) }}</td> --}}
                                                     <td>{{ number_format($item->discount, 2) }}</td>
                                                     <td>{{ number_format($item->total, 2) }}</td>
                                                 </tr>
@@ -195,21 +195,21 @@
                                     <div class="table-responsive">
                                         <table class="table">
                                             <tr>
-                                                <th style="width:50%">Subtotal:</th>
+                                                <th style="width:50%">Total Amount:</th>
                                                 <td>{{ bdt() }} {{ number_format($subtotal, 2) }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Total Discount:</th>
                                                 <td>{{ bdt() }} {{ number_format($project->total_discount, 2) }}</td>
                                             </tr>
-                                            <tr>
+                                            {{-- <tr>
                                                 <th>Transport Cost:</th>
                                                 <td>{{ bdt() }} {{ number_format($project->transport_cost, 2) }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Carrying/Labour Charge:</th>
                                                 <td>{{ bdt() }} {{ number_format($project->carrying_charge, 2) }}</td>
-                                            </tr>
+                                            </tr> --}}
                                             <tr>
                                                 <th>Vat:</th>
                                                 <td>{{ bdt() }} {{ number_format($project->vat, 2) }}</td>
@@ -220,7 +220,7 @@
                                             </tr>
                                             
                                             <tr>
-                                                <th>Total:</th>
+                                                <th>Grand Total:</th>
                                                 <td>{{ bdt() }} {{ number_format($grandTotal, 2) }}</td>
                                             </tr>
                                         </table>
