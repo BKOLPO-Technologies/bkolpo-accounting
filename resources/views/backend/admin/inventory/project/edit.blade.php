@@ -316,7 +316,8 @@
                                                     <td><label for="total_discount">Discount</label></td>
                                                     <td>
                                                         <div class="col-12 col-lg-12 mb-3">
-                                                            <input type="number" id="total_discount" name="total_discount" class="form-control" step="0.01" placeholder="Enter Discount" />
+                                                            {{-- <input type="number" id="total_discount" name="total_discount" class="form-control" step="0.01" placeholder="Enter Discount" /> --}}
+                                                            <input type="number" id="total_discount" name="total_discount" class="form-control" placeholder="Enter Total Discount" value="{{ old('total_discount', $project->total_discount) }}">
                                                         </div>
                                                     </td>
                                                 </tr>
