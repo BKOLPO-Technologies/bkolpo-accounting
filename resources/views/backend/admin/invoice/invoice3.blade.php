@@ -43,11 +43,10 @@
             </div>
           </div>
 
-          <div class="table-responsive">
+          {{-- <div class="table-responsive">
             <table class="custom-invoice-table" style="border: 2px solid #000000; border-collapse: separate; border-spacing: 0; width: 100%;">
               <thead>
                 <tr>
-                  {{-- <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Item</th> --}}
                   <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Item Code</th>
                   <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Description</th>
                   <th style="padding: 8px 12px; border-right: 1px solid #000000; font-size: 14px;">Qty</th>
@@ -59,7 +58,6 @@
               <tbody>
                 @foreach(range(1, 6) as $i)
                 <tr>
-                  {{-- <td style="padding: 8px 12px; border-right: 1px solid #000000;">1</td> --}}
                   <td style="padding: 8px 12px; border-right: 1px solid #000000;">SUB010001</td>
                   <td style="padding: 8px 12px; border-right: 1px solid #000000;">Dismantling of serviceable/damaged brick</td>
                   <td style="padding: 8px 12px; border-right: 1px solid #000000;">30</td>
@@ -71,10 +69,10 @@
               </tbody>
 
             </table>
-          </div>
+          </div> --}}
 
           <div class="card-body">
-            <table class="table table-striped">
+            <table class="table table-striped border">
                 <thead>
                     <tr>
                       <th>Serial</th>
@@ -98,16 +96,14 @@
                     @endforeach
                 </tbody>
             </table>
-          </div>
 
-          <hr>
-                            
-          <div class="row">
-              <div class="col-6"></div>
-              <div class="col-6">
+            {{-- --- --}}
+            <div class="row">
+              <div class="col-8"></div>
+              <div class="col-4">
           
                   <div class="table-responsive">
-                      <table class="table">
+                      <table class="table border">
                           <tr>
                               <th style="width:50%">Total Amount:</th>
                               <td></td>
@@ -140,7 +136,53 @@
                       </table>
                   </div>
               </div>
+            </div>
+            {{-- --- --}}
           </div>
+
+          {{-- <hr> --}}
+          
+          {{-- <div class="card-body">
+            <div class="row">
+                <div class="col-8"></div>
+                <div class="col-4">
+            
+                    <div class="table-responsive">
+                        <table class="table border">
+                            <tr>
+                                <th style="width:50%">Total Amount:</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>Total Discount:</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>Transport Cost:</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>Carrying:</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>Vat:</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>Tax:</th>
+                                <td></td>
+                            </tr>
+                            
+                            <tr>
+                                <th>Total:</th>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+          </div> --}}
 
         </div>
       </div>
