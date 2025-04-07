@@ -257,11 +257,11 @@
                                 <!-- First Row: Subtotal and Total Discount -->
                                 <div class="row w-100">
                                     <!-- Subtotal -->
-                                    <div class="col-12 col-lg-8 mb-2">
+                                    <div class="col-12 col-lg-6 mb-2">
                                        
                                     </div>
                             
-                                    <div class="col-12 col-lg-4 mb-2">
+                                    <div class="col-12 col-lg-6 mb-2">
                                         {{-- <div class="row w-100">
                                             <div class="col-12 col-lg-6 mb-2">
                                                 <label for="subtotal">Total Amount</label>
