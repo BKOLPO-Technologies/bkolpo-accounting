@@ -395,30 +395,30 @@
             let transportCost = parseFloat($('#transport_cost').val()) || 0;
             let carryingCharge = parseFloat($('#carrying_charge').val()) || 0;
 
-            // let vat = parseFloat($('#vat').val()) || 0;
-            // console.log(vat);
-            // let tax = parseFloat($('#tax').val()) || 0;
 
-            // // Include VAT and TAX only if selected
-            // let vat = 0;
-            // if ($('#include_vat').is(':checked')) {
-            //     vat = parseFloat($('#vat').val()) || 0;
-            // }
+            // // Percentage-based VAT and TAX calculations
+            // let vatPercent = $('#include_vat').is(':checked') ? (parseFloat($('#vat').val()) || 0) : 0;
+            // let taxPercent = $('#include_tax').is(':checked') ? (parseFloat($('#tax').val()) || 0) : 0;
 
-            // let tax = 0;
-            // if ($('#include_tax').is(':checked')) {
-            //     tax = parseFloat($('#tax').val()) || 0;
-            // }
+            // let tax = (subtotal * taxPercent) / 100;
+            // let vat = (subtotal * vatPercent) / 100;
 
-            // Percentage-based VAT and TAX calculations
+            // // Calculate grand total
+            // let grandTotal = subtotal - manualTotalDiscount + transportCost + carryingCharge + vat + tax;
+
+            // Step 1: Base grand total without VAT and TAX
+            let grandTotal = subtotal - manualTotalDiscount + transportCost + carryingCharge;
+
+            // Step 2: Add VAT based on current grandTotal
             let vatPercent = $('#include_vat').is(':checked') ? (parseFloat($('#vat').val()) || 0) : 0;
+            let vatAmount = (grandTotal * vatPercent) / 100;
+            grandTotal += vatAmount;
+
+            // Step 3: Add TAX based on updated grandTotal (after VAT)
             let taxPercent = $('#include_tax').is(':checked') ? (parseFloat($('#tax').val()) || 0) : 0;
-
-            let vat = (subtotal * vatPercent) / 100;
-            let tax = (subtotal * taxPercent) / 100;
-
-            // Calculate grand total
-            let grandTotal = subtotal - manualTotalDiscount + transportCost + carryingCharge + vat + tax;
+            let taxAmount = (grandTotal * taxPercent) / 100;
+            grandTotal += taxAmount;
+            
             $('#grand_total').val(grandTotal.toFixed(2));
         }
     

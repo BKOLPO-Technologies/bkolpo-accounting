@@ -325,9 +325,10 @@
                                                 <tr>
                                                     <td>
                                                         <div class="icheck-success d-inline">
-                                                            <input type="checkbox" name="include_tax" id="include_tax">
+                                                            {{-- <input type="checkbox" name="include_tax" id="include_tax"> --}}
+                                                            <input type="checkbox" name="include_tax" id="include_tax" {{ $project->tax > 0 ? 'checked' : '' }}>
                                                             <label for="include_tax">
-                                                                Include TAX
+                                                                Include TAX (%)
                                                             </label>
                                                         </div>
                                                     </td>
@@ -340,9 +341,10 @@
                                                 <tr>
                                                     <td>
                                                         <div class="icheck-success d-inline">
-                                                            <input type="checkbox" name="include_vat" id="include_vat">
+                                                            {{-- <input type="checkbox" name="include_vat" id="include_vat"> --}}
+                                                            <input type="checkbox" name="include_vat" id="include_vat" {{ $project->vat > 0 ? 'checked' : '' }}>
                                                             <label for="include_vat">
-                                                                Include VAT
+                                                                Include VAT (%)
                                                             </label>
                                                         </div>
                                                     </td>
@@ -484,15 +486,29 @@
             //     tax = parseFloat($('#tax').val()) || 0;
             // }
 
-            // Percentage-based VAT and TAX calculations
+            // // Percentage-based VAT and TAX calculations
+            // let vatPercent = $('#include_vat').is(':checked') ? (parseFloat($('#vat').val()) || 0) : 0;
+            // let taxPercent = $('#include_tax').is(':checked') ? (parseFloat($('#tax').val()) || 0) : 0;
+
+            // let vat = (subtotal * vatPercent) / 100;
+            // let tax = (subtotal * taxPercent) / 100;
+
+            // // Calculate grand total
+            // let grandTotal = subtotal - manualTotalDiscount + transportCost + carryingCharge + vat + tax;
+
+            // Step 1: Base grand total without VAT and TAX
+            let grandTotal = subtotal - manualTotalDiscount + transportCost + carryingCharge;
+
+            // Step 2: Add VAT based on current grandTotal
             let vatPercent = $('#include_vat').is(':checked') ? (parseFloat($('#vat').val()) || 0) : 0;
+            let vatAmount = (grandTotal * vatPercent) / 100;
+            grandTotal += vatAmount;
+
+            // Step 3: Add TAX based on updated grandTotal (after VAT)
             let taxPercent = $('#include_tax').is(':checked') ? (parseFloat($('#tax').val()) || 0) : 0;
+            let taxAmount = (grandTotal * taxPercent) / 100;
+            grandTotal += taxAmount;
 
-            let vat = (subtotal * vatPercent) / 100;
-            let tax = (subtotal * taxPercent) / 100;
-
-            // Calculate grand total
-            let grandTotal = subtotal - manualTotalDiscount + transportCost + carryingCharge + vat + tax;
             $('#grand_total').val(grandTotal.toFixed(2));
         }
 
