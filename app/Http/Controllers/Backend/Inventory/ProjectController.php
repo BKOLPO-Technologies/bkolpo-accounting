@@ -285,7 +285,12 @@ class ProjectController extends Controller
 
         $units = Unit::where('status',1)->latest()->get();
 
-        return view('backend.admin.inventory.project.edit',compact('pageTitle', 'clients', 'project','units'));
+        $companyInfo = get_company();
+        
+        $vat = $companyInfo->vat;
+        $tax = $companyInfo->tax;
+
+        return view('backend.admin.inventory.project.edit',compact('pageTitle', 'clients', 'project','units','vat','tax'));
     }
 
     /**
