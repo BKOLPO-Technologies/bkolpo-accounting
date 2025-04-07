@@ -13,6 +13,10 @@
     <div class="container-fluid">
       <div id="printable-area">
           <div class="invoice-box" style="padding: 30px; border: 1px solid #ccc; background: #fff;">
+
+            <div class="card-body">
+
+
             <div class="row mb-4">
               <div class="col-2">
                 <img src="{{ asset('bkolpo-logo.png') }}" alt="BKOLPO Logo" style="height: 40px; margin-top: 0;">
@@ -42,6 +46,8 @@
                 <p><strong>Delivery Address:</strong> Site Delivery</p>
               </div>
             </div>
+            
+          </div>
 
             {{-- <div class="table-responsive">
               <table class="custom-invoice-table" style="border: 2px solid #000000; border-collapse: separate; border-spacing: 0; width: 100%;">
@@ -108,22 +114,22 @@
                                 <th style="width:50%">Total Amount:</th>
                                 <td>16,140.00 BDT</td>
                             </tr>
+                            
                             <tr>
                                 <th>Discount:</th>
                                 <td>16,140.00 BDT</td>
                             </tr>
+
                             <tr>
-                                <th>Transport Cost:</th>
+                                <th>Net Amount:</th>
                                 <td>16,140.00 BDT</td>
                             </tr>
-                            <tr>
-                                <th>Carrying:</th>
-                                <td>16,140.00 BDT</td>
-                            </tr>
+
                             <tr>
                                 <th>Vat:</th>
                                 <td>16,140.00 BDT</td>
                             </tr>
+
                             <tr>
                                 <th>Tax:</th>
                                 <td>16,140.00 BDT</td>
