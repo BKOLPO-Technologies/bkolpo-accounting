@@ -174,7 +174,7 @@ class ProjectController extends Controller
                     'unit_id' => $request->order_unit[$index],
                     'unit_price' => $request->unit_price[$index],
                     'quantity' => $request->quantity[$index],
-                    // 'subtotal' => $request->subtotal[$index],
+                    'subtotal' => $request->subtotal[$index] ?? 0,
                     'discount' => $request->discount[$index] ?? 0,
                     'total' => $request->total[$index],
                 ]);
@@ -385,7 +385,7 @@ class ProjectController extends Controller
                         'unit_id' => $request->order_unit[$index],
                         'unit_price' => $request->unit_price[$index],
                         'quantity' => $request->quantity[$index],
-                        'subtotal' => $request->subtotal[$index],
+                        'subtotal' => $request->subtotal[$index] ?? 0,
                         'discount' => $request->discount[$index] ?? 0,
                         'total' => $request->total[$index],
                     ]);
