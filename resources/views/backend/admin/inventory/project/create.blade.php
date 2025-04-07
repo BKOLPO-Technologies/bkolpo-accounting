@@ -351,11 +351,9 @@
         $('.select2').select2();
         
     });
-    
-    // All Functionality Calculations
-    $(document).ready(function () {
-        // Function to calculate totals
-        function calculateTotal() {
+
+    // Function to calculate totals
+    function calculateTotal() {
             let subtotal = 0;
             let totalDiscount = 0;
 
@@ -396,13 +394,37 @@
 
             let transportCost = parseFloat($('#transport_cost').val()) || 0;
             let carryingCharge = parseFloat($('#carrying_charge').val()) || 0;
-            let vat = parseFloat($('#vat').val()) || 0;
-            let tax = parseFloat($('#tax').val()) || 0;
+
+            // let vat = parseFloat($('#vat').val()) || 0;
+            // console.log(vat);
+            // let tax = parseFloat($('#tax').val()) || 0;
+
+            // // Include VAT and TAX only if selected
+            // let vat = 0;
+            // if ($('#include_vat').is(':checked')) {
+            //     vat = parseFloat($('#vat').val()) || 0;
+            // }
+
+            // let tax = 0;
+            // if ($('#include_tax').is(':checked')) {
+            //     tax = parseFloat($('#tax').val()) || 0;
+            // }
+
+            // Percentage-based VAT and TAX calculations
+            let vatPercent = $('#include_vat').is(':checked') ? (parseFloat($('#vat').val()) || 0) : 0;
+            let taxPercent = $('#include_tax').is(':checked') ? (parseFloat($('#tax').val()) || 0) : 0;
+
+            let vat = (subtotal * vatPercent) / 100;
+            let tax = (subtotal * taxPercent) / 100;
 
             // Calculate grand total
             let grandTotal = subtotal - manualTotalDiscount + transportCost + carryingCharge + vat + tax;
             $('#grand_total').val(grandTotal.toFixed(2));
         }
+    
+    // All Functionality Calculations
+    $(document).ready(function () {
+        
 
         // Trigger calculation on unit price, quantity, discount, and total_discount fields
         $(document).on('input keyup', '.unit-price, .quantity, .discount, #transport_cost, #carrying_charge, #vat, #tax, #total_discount', function () {
@@ -524,7 +546,8 @@
         document.querySelector('.tax-fields').style.display = includeTax ? 'block' : 'none';
 
         // Call the function to recalculate the grand total
-        calculateGrandTotal();
+        // calculateGrandTotal();
+        calculateTotal();
     }
 
     function calculateGrandTotal() {
@@ -548,6 +571,8 @@
         if (vat > 0) {
             grandTotal += (subtotal * vat / 100); // Add VAT
         }
+
+        console.log(grandTotal);
 
         if (tax > 0) {
             grandTotal += (subtotal * tax / 100); // Add Tax
