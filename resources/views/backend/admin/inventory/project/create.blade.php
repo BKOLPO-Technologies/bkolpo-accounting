@@ -254,7 +254,7 @@
                                                         <div class="icheck-success d-inline">
                                                             <input type="checkbox" name="include_tax" id="include_tax">
                                                             <label for="include_tax">
-                                                                Include TAX
+                                                                Include TAX (%)
                                                             </label>
                                                         </div>
                                                     </td>
@@ -269,7 +269,7 @@
                                                         <div class="icheck-success d-inline">
                                                             <input type="checkbox" name="include_vat" id="include_vat">
                                                             <label for="include_vat">
-                                                                Include VAT
+                                                                Include VAT (%)
                                                             </label>
                                                         </div>
                                                     </td>
