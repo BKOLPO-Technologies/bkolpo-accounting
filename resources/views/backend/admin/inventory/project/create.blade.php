@@ -174,11 +174,11 @@
                                                     <tr>
                                                         <th>Item Description</th>
                                                         <th>Order Unit</th>
-                                                        <th>Unit Price ({{ bdt() }})</th>
                                                         <th>Quantity</th>
-                                                        <th>Subtotal</th>
-                                                        <th>Discount</th>
-                                                        <th>Total ({{ bdt() }})</th>
+                                                        <th>Unit Price</th>
+                                                        {{-- <th>Subtotal</th>
+                                                        <th>Discount</th> --}}
+                                                        <th>Total</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -196,17 +196,17 @@
                                                             </select>
                                                         </td>                                                        
                                                         <td>
-                                                            <input type="number" name="unit_price[]" class="form-control unit-price" placeholder="Enter Unit Price" min="0" step="0.01" required>
-                                                        </td>
-                                                        <td>
                                                             <input type="number" name="quantity[]" class="form-control quantity" placeholder="Enter Quantity" min="1" step="0.01" required>
                                                         </td>
                                                         <td>
+                                                            <input type="number" name="unit_price[]" class="form-control unit-price" placeholder="Enter Unit Price" min="0" step="0.01" required>
+                                                        </td>
+                                                        {{-- <td>
                                                             <input type="text" name="subtotal[]" class="form-control subtotal"  readonly>
                                                         </td>
                                                         <td>
                                                             <input type="number" name="discount[]" class="form-control discount" placeholder="Enter Discount" min="0" step="0.01">
-                                                        </td>
+                                                        </td> --}}
                                                         <td>
                                                             <input type="text" name="total[]" class="form-control total" readonly>
                                                         </td>
@@ -225,71 +225,71 @@
                             <div class="d-flex justify-content-end flex-column align-items-end">
                                 <!-- First Row: Subtotal and Total Discount -->
                                 <div class="row w-100">
-                                    <!-- Subtotal -->
-                                    <div class="col-12 col-lg-8 mb-2">
-                                       
+                                    <div class="col-12 col-lg-6 mb-2">
                                     </div>
-                            
-                                    <!-- Total Discount -->
-                                    <div class="col-12 col-lg-4 mb-2">
-                                        <div class="row w-100">
-                                            <div class="col-12 col-lg-6 mb-2">
-                                                <label for="subtotal">Subtotal</label>
-                                                <input type="text" id="subtotal" name="total_subtotal" class="form-control" value="0" readonly />
-                                            </div>
-                                            <div class="col-12 col-lg-6 mb-2">
-                                                <label for="total_discount">Total Discount</label>
-                                                <input type="number" id="total_discount" name="total_discount" class="form-control" step="0.01" placeholder="Enter Total Discount" />
-                                            </div>
-                                        </div>
-
-                                        <!-- Second Row: Remaining fields (Transport Cost, Carrying Charge, Vat, Tax, Grand Total) -->
-                                        <div class="row w-100">
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-group">
-                                                    <div class="form-group clearfix mt-3">
-                                                        <div class="icheck-success d-inline">
-                                                            <input type="checkbox" name="include_vat" id="include_vat">
-                                                            <label for="include_vat">
-                                                                Include VAT
-                                                            </label>
+                                    <div class="col-12 col-lg-6 mb-2">
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <!-- Subtotal and Discount Row -->
+                                                <tr>
+                                                    <td><label for="subtotal">Total Amount</label></td>
+                                                    <td>
+                                                        <div class="col-12 col-lg-12 mb-3">
+                                                            <input type="text" id="subtotal" name="total_subtotal" class="form-control" value="0" readonly />
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-group">
-                                                    <div class="form-group clearfix mt-3">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><label for="total_discount">Discount</label></td>
+                                                    <td>
+                                                        <div class="col-12 col-lg-12 mb-3">
+                                                            <input type="number" id="total_discount" name="total_discount" class="form-control" step="0.01" placeholder="Enter Discount" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                
+                                                <!-- Include VAT and TAX Checkboxes -->
+                                                <tr>
+                                                    <td>
                                                         <div class="icheck-success d-inline">
                                                             <input type="checkbox" name="include_tax" id="include_tax">
                                                             <label for="include_tax">
                                                                 Include TAX
                                                             </label>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- VAT -->
-                                            <div class="col-12 col-lg-6 mb-2 vat-fields" style="display:none;">
-                                                <label for="vat">VAT</label>
-                                                <input type="number" min="0" id="vat" name="vat" class="form-control" step="0.01" value="{{ $vat }}" readonly placeholder="Enter VAT" />
-                                            </div>
-                                            
-                                            <!-- Tax -->
-                                            <div class="col-12 col-lg-6 mb-3 tax-fields" style="display:none;">
-                                                <label for="tax">TAX</label>
-                                                <input type="number" min="0" id="tax" name="tax" class="form-control" step="0.01" value="{{ $tax }}" readonly placeholder="Enter Tax" />
-                                            </div>
-
-                                        
-                                            <!-- Grand Total -->
-                                            <div class="col-12 mb-2">
-                                                <label for="grand_total">Grand Total</label>
-                                                <input type="text" id="grand_total" name="grand_total" class="form-control" value="0" readonly />
-                                            </div>
-                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="col-12 col-lg-12 mb-3 tax-fields">
+                                                            <input type="number" min="0" id="tax" name="tax" class="form-control" step="0.01" value="{{ $tax }}" readonly placeholder="Enter Tax" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="icheck-success d-inline">
+                                                            <input type="checkbox" name="include_vat" id="include_vat">
+                                                            <label for="include_vat">
+                                                                Include VAT
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="col-12 col-lg-12 mb-3 vat-fields">
+                                                            <input type="number" min="0" id="vat" name="vat" class="form-control" step="0.01" value="{{ $vat }}" readonly placeholder="Enter VAT" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <!-- Grand Total Row -->
+                                                <tr>
+                                                    <td><label for="grand_total">Grand Total</label></td>
+                                                    <td>
+                                                        <div class="col-12 col-lg-12 mb-3">
+                                                            <input type="text" id="grand_total" name="grand_total" class="form-control" value="0" readonly />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -304,7 +304,7 @@
                                     </div>
                                     <select name="project_type" id="project_type" class="form-control @error('project_type') is-invalid @enderror" required>
                                         <option value="" disabled>Select Project Type</option>
-                                        <option value="ongoing" {{ old('project_type') == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
+                                        {{-- <option value="ongoing" {{ old('project_type') == 'ongoing' ? 'selected' : '' }}>Ongoing</option> --}}
                                         <option value="Running" {{ old('project_type') == 'Running' ? 'selected' : '' }}>Running</option>
                                         <option value="upcoming" {{ old('project_type') == 'upcoming' ? 'selected' : '' }}>Upcoming</option>
                                         <option value="completed" {{ old('project_type') == 'completed' ? 'selected' : '' }}>Completed</option>
@@ -444,10 +444,8 @@
                             @endforeach
                         </select>
                     </td>
-                    <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" required></td>
                     <td><input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required></td>
-                    <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
-                    <td><input type="number" name="discount[]" class="form-control discount" min="0" step="0.01" placeholder="Enter Discount"></td>
+                    <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" required></td>
                     <td><input type="text" name="total[]" class="form-control total" readonly></td>
                     <td class="text-center">
                         <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
@@ -540,10 +538,10 @@
         var includeTax = document.getElementById('include_tax').checked;
 
         // Show or hide the VAT field based on the checkbox
-        document.querySelector('.vat-fields').style.display = includeVat ? 'block' : 'none';
+        document.querySelector('.vat-fields').style.display = includeVat;
 
         // Show or hide the Tax field based on the checkbox
-        document.querySelector('.tax-fields').style.display = includeTax ? 'block' : 'none';
+        document.querySelector('.tax-fields').style.display = includeTax;
 
         // Call the function to recalculate the grand total
         // calculateGrandTotal();
@@ -569,10 +567,9 @@
         var grandTotal = subtotal;
 
         if (vat > 0) {
-            grandTotal += (subtotal * vat / 100); // Add VAT
+            grandTotal += (grandTotal * vat / 100); // Add VAT
         }
 
-        console.log(grandTotal);
 
         if (tax > 0) {
             grandTotal += (subtotal * tax / 100); // Add Tax
