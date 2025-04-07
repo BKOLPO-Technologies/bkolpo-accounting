@@ -143,6 +143,9 @@ class ProjectController extends Controller
             ]);
 
             //dd($request->all());
+
+            $tax = $request->include_tax ? $request->tax : 0; 
+            $vat = $request->include_vat ? $request->vat : 0; 
     
             // Store the project in the database
             $project = Project::create([
@@ -156,8 +159,8 @@ class ProjectController extends Controller
                 'subtotal' => $request->total_subtotal ?? 0,
                 'transport_cost' => $request->transport_cost ?? 0,
                 'carrying_charge' => $request->carrying_charge ?? 0,
-                'vat' => $request->vat ?? 0,
-                'tax' => $request->tax ?? 0,
+                'vat' => $vat,
+                'tax' => $tax,
                 'grand_total' => $request->grand_total ?? 0,
                 'paid_amount' => $request->paid_amount ?? 0,
                 'status' => 'pending',
@@ -340,6 +343,9 @@ class ProjectController extends Controller
                 'item_ids.*' => 'nullable|integer|exists:project_items,id', 
             ]);
 
+            $tax = $request->include_tax ? $request->tax : 0; 
+            $vat = $request->include_vat ? $request->vat : 0; 
+
             // Update project details
             $project->update([
                 'project_name' => $request->project_name,
@@ -352,8 +358,8 @@ class ProjectController extends Controller
                 'subtotal' => $request->total_subtotal ?? 0,
                 'transport_cost' => $request->transport_cost ?? 0,
                 'carrying_charge' => $request->carrying_charge ?? 0,
-                'vat' => $request->vat ?? 0,
-                'tax' => $request->tax ?? 0,
+                'vat' => $vat,
+                'tax' => $tax,
                 'grand_total' => $request->grand_total ?? 0,
                 'paid_amount' => $request->paid_amount ?? 0,
                 'project_type' => $request->project_type,
