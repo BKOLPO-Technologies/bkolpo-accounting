@@ -29,6 +29,10 @@ class CompanySeeder extends Seeder
                 'branch_id' => 2, // Adjust branch_id as per your existing data
                 'account_no' => 'BK9876543210',
                 'initial_balance' => 10000.00,
+                'vat' => 10,
+                'tax' => 5,
+                'currency_symbol' =>'BDT',
+                'fiscal_year' => 2425,
                 'description' => 'A well-known construction company based in Bangladesh.',
                 'status' => 1, // Active
                 'created_by' => 'admin',
