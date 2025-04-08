@@ -479,6 +479,8 @@
     calculateTotal();
 </script>
 
+
+
 <script> 
     $('#createClientForm').on('submit', function(e) {
         e.preventDefault(); // Prevent default form submission
