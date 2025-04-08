@@ -22,7 +22,7 @@ class ProductSaleReceiveController extends Controller
      */
     public function index()
     {
-        $pageTitle = 'Project Receive List';
+        $pageTitle = 'Payment Receive List';
     
         $receipts = ProjectReceipt::with(['client'])
             ->orderBy('id', 'desc')
@@ -36,7 +36,7 @@ class ProductSaleReceiveController extends Controller
      */
     public function create()
     {
-        $pageTitle = 'Project Receive Payment';
+        $pageTitle = 'Receive Payment';
 
         $customers = Client::latest()->get();
         $ledgerGroups = LedgerGroup::with('ledgers')->latest()->get();
@@ -210,7 +210,7 @@ class ProductSaleReceiveController extends Controller
 
         // dd($invoice_no);
 
-        $pageTitle = 'Project Receive Details';
+        $pageTitle = 'Payment Receive Details';
 
         $projectId = Sale::where('invoice_no', $invoice_no)->first();
 

@@ -154,7 +154,7 @@
                                                 <th>Unit Price</th>
                                                 <th>Quantity</th>
                                                 {{-- <th>Subtotal</th> --}}
-                                                <th>Discount</th>
+                                                {{-- <th>Discount</th> --}}
                                                 <th>Total</th>
                                             </tr>
                                         </thead>
@@ -176,7 +176,7 @@
                                                     <td>{{ number_format($item->unit_price, 2) }}</td>
                                                     <td>{{ $item->quantity }}</td>
                                                     {{-- <td>{{ number_format($item->subtotal, 2) }}</td> --}}
-                                                    <td>{{ number_format($item->discount, 2) }}</td>
+                                                    {{-- <td>{{ number_format($item->discount, 2) }}</td> --}}
                                                     <td>{{ number_format($item->total, 2) }}</td>
                                                 </tr>
                                             @endforeach
@@ -211,17 +211,18 @@
                                                 <td>{{ bdt() }} {{ number_format($project->carrying_charge, 2) }}</td>
                                             </tr> --}}
                                             <tr>
-                                                <th>Vat:</th>
+                                                <th>VAT ({{ number_format($project->vat, 2) }} %): </th>
                                                 <td>{{ bdt() }} {{ number_format($project->vat, 2) }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Tax:</th>
+                                                <th>TAX ({{ number_format($project->tax, 2) }} %):</th>
                                                 <td>{{ bdt() }} {{ number_format($project->tax, 2) }}</td>
                                             </tr>
                                             
                                             <tr>
                                                 <th>Grand Total:</th>
-                                                <td>{{ bdt() }} {{ number_format($grandTotal, 2) }}</td>
+                                                {{-- <td>{{ bdt() }} {{ number_format($grandTotal, 2) }}</td> --}}
+                                                <td>{{ bdt() }} {{ number_format($project->grand_total, 2) }}</td>
                                             </tr>
                                         </table>
                                     </div>

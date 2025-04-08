@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12">
             <h4>
-                <i class="fas fa-globe"></i> Bkolpo, Technology.
+                <i class="fas fa-globe"></i> Bkolpo Constructions Ltd.
                 <small class="float-right">{{ now()->format('d M Y') }}</small>
             </h4>
         </div>
@@ -79,14 +79,14 @@
                         <th colspan="3" class="text-right">Subtotal:</th>
                         <th>{{ number_format($total, 2) }}</th>
                     </tr>
-                    <tr>
+                    {{-- <tr>
                         <th colspan="3" class="text-right">Transport Cost:</th>
                         <th>{{ number_format($transportCost, 2) }}</th>
                     </tr>
                     <tr>
                         <th colspan="3" class="text-right">Carrying Charge:</th>
                         <th>{{ number_format($carryingCharge, 2) }}</th>
-                    </tr>
+                    </tr> --}}
                     <tr>
                         <th colspan="3" class="text-right">VAT:</th>
                         <th>{{ number_format($vat, 2) }}</th>

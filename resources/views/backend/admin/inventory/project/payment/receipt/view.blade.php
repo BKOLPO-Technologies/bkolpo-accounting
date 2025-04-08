@@ -148,26 +148,27 @@
                                                 <th>Total Discount:</th>
                                                 <td>{{ bdt() }} {{ number_format($project->total_discount, 2) }}</td>
                                             </tr>
-                                            <tr>
+                                            {{-- <tr>
                                                 <th>Transport Cost:</th>
                                                 <td>{{ bdt() }} {{ number_format($project->transport_cost, 2) }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Carrying/Labour Charge:</th>
                                                 <td>{{ bdt() }} {{ number_format($project->carrying_charge, 2) }}</td>
-                                            </tr>
+                                            </tr> --}}
                                             <tr>
-                                                <th>Vat:</th>
+                                                <th>VAT:</th>
                                                 <td>{{ bdt() }} {{ number_format($project->vat, 2) }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Tax:</th>
+                                                <th>TAX:</th>
                                                 <td>{{ bdt() }} {{ number_format($project->tax, 2) }}</td>
                                             </tr>
                                             
                                             <tr>
                                                 <th>Total:</th>
-                                                <td>{{ bdt() }} {{ number_format($grandTotal, 2) }}</td>
+                                                {{-- <td>{{ bdt() }} {{ number_format($grandTotal, 2) }}</td> --}}
+                                                <td>{{ bdt() }} {{ number_format($project->grand_total, 2) }}</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -176,7 +177,7 @@
 
                          <div class="mt-4">
                                 <div class="card-header">
-                                    <h4>Project Receive </h4>
+                                    <h4>Receive Payment</h4>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-striped">
@@ -247,7 +248,7 @@
                                             </tr>
                                             <tr>
                                                 <th>Total Amount need to Paid :</th>
-                                                <td>{{ bdt() }} {{ number_format($grandTotal - $totalPaid, 2) }}</td>
+                                                <td>{{ bdt() }} {{ number_format($project->grand_total, 2) }}</td>
                                             </tr>
                                         </table>
                                     </div>

@@ -209,7 +209,11 @@ class ProjectController extends Controller
             ->with(['client', 'items']) 
             ->first();
 
-        return view('backend.admin.inventory.project.view',compact('pageTitle', 'project'));
+        $companyInfo = get_company();
+        $vat = $companyInfo->vat;
+        $tax = $companyInfo->tax;
+
+        return view('backend.admin.inventory.project.view',compact('pageTitle', 'project','vat','tax'));
     }
 
     /**

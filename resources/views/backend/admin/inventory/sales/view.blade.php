@@ -45,7 +45,7 @@
                             <div class="row">
                                 <div class="col-12">
                                 <h4>
-                                    <i class="fas fa-globe"></i> Bkolpo, Technology.
+                                    <i class="fas fa-globe"></i> Bkolpo Construction Ltd.
                                     <!-- <small class="float-right">Date: 2/10/2014</small> -->
                                     <small class="float-right" id="current-date"></small>
                                 </h4>

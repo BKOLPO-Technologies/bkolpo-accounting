@@ -3,8 +3,8 @@
   $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet','report.ledger.report','report.ledger.single.report','report.ledger.group.report','report.ledger.group.single.report','report.ledger.profit.loss','report.project.profit.loss');
   $isSupplierActive = Route::is('admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit','admin.supplier.products','admin.supplier.transactions');
   $isClientActive = Route::is('admin.client.index','admin.client.create','admin.client.view','admin.client.edit','admin.client.products','admin.client.transactions');
-  $isProjectActive = Route::is('projects.index', 'projects.create', 'projects.show', 'projects.edit');
-  $isInvoiceActive = Route::is('project.receipt.payment.index', 'project.receipt.payment.create', 'projects.sales','project.receipt.payment.show','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit');
+  $isProjectActive = Route::is('projects.index', 'projects.create', 'projects.show', 'projects.edit', 'projects.sales');
+  $isInvoiceActive = Route::is('project.receipt.payment.index', 'project.receipt.payment.create', 'project.receipt.payment.show','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit', 'project.receipt.payment.show');
   $isSalesActive = Route::is('admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit','quotations.index','quotations.create','quotations.edit','quotations.show','outcoming.chalan.index','outcoming.chalan.create','outcoming.chalan.show','outcoming.chalan.edit','receipt.payment.index','receipt.payment.create','stock.out','stock.out.view');
   $isPurchaseActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.show','admin.purchase.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create','stock.in','stock.in.view', 'sale.payment.show');
 @endphp
@@ -224,7 +224,7 @@
 
         <li class="nav-item">
           <a href="{{ route('project.receipt.payment.index') }}"
-            class="nav-link {{ Route::is('project.receipt.payment.index', 'project.receipt.payment.create') ? 'active' : '' }}">
+            class="nav-link {{ Route::is('project.receipt.payment.index', 'project.receipt.payment.create', 'project.receipt.payment.show') ? 'active' : '' }}">
               <i class="far fa-circle nav-icon"></i>
               <p>Bill Received</p>
           </a>
