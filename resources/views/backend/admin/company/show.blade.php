@@ -47,6 +47,22 @@
                                         <td>{{ $company->description ?? 'N/A' }}</td>
                                     </tr>
                                     <tr>
+                                        <th>Currency Symbol</th>
+                                        <td>{{ $company->currency_symbol ?? 'N/A' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Fiscal Year</th>
+                                        <td>{{ $company->fiscal_year ?? 'N/A' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>VAT</th>
+                                        <td>{{ $company->vat ?? 'N/A' }} %</td>
+                                    </tr>
+                                    <tr>
+                                        <th>TAX</th>
+                                        <td>{{ $company->tax ?? 'N/A' }} %</td>
+                                    </tr>
+                                    <tr>
                                         <th>Status</th>
                                         <td>
                                             @if($company->status)
