@@ -234,7 +234,7 @@
                                                 <tr>
                                                     <td><label for="subtotal">Total Amount</label></td>
                                                     <td>
-                                                        <div class="col-12 col-lg-12 mb-3">
+                                                        <div class="col-12 col-lg-12">
                                                             <input type="text" id="subtotal" name="total_subtotal" class="form-control" value="0" readonly />
                                                         </div>
                                                     </td>
@@ -242,7 +242,7 @@
                                                 <tr>
                                                     <td><label for="total_discount">Discount</label></td>
                                                     <td>
-                                                        <div class="col-12 col-lg-12 mb-3">
+                                                        <div class="col-12 col-lg-12">
                                                             <input type="number" id="total_discount" name="total_discount" class="form-control" step="0.01" placeholder="Enter Discount" />
                                                         </div>
                                                     </td>
@@ -250,7 +250,7 @@
                                                 <tr>
                                                     <td><label for="total_netamount">Net Amount</label></td>
                                                     <td>
-                                                        <div class="col-12 col-lg-12 mb-3">
+                                                        <div class="col-12 col-lg-12">
                                                             <input type="number" id="total_netamount" name="total_netamount" class="form-control" step="0.01" readonly placeholder="0.00" />
                                                         </div>
                                                     </td>
@@ -267,12 +267,12 @@
                                                                 <input type="number" name="tax" id="tax" value="{{ $tax }}" min="0"
                                                                     class="form-control form-control-sm d-inline-block"
                                                                     step="0.01" placeholder="Enter TAX"
-                                                                    style="width: 100px; margin-left: 10px;" disabled />
+                                                                    style="width: 70px; margin-left: 10px;" disabled />
                                                             </label>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <div class="col-12 col-lg-12 mb-3 tax-fields">
+                                                        <div class="col-12 col-lg-12 tax-fields">
                                                             <input type="text" id="tax_amount" name="tax_amount" class="form-control" readonly placeholder="TAX Amount" />
                                                         </div>
                                                     </td>
@@ -287,12 +287,12 @@
                                                                 <input type="number" id="vat" name="vat" value="{{ $vat }}" min="0"
                                                                        class="form-control form-control-sm vat-input"
                                                                        step="0.01" placeholder="Enter VAT"
-                                                                       style="width: 100px; display: inline-block; margin-left: 10px;" disabled />
+                                                                       style="width: 70px; display: inline-block; margin-left: 10px;" disabled />
                                                             </label>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <div class="col-12 col-lg-12 mb-3 vat-fields">
+                                                        <div class="col-12 col-lg-12 vat-fields">
                                                             <input type="text" id="vat_amount" name="vat_amount" class="form-control" readonly placeholder="VAT Amount" />
                                                         </div>
                                                     </td>
@@ -302,7 +302,7 @@
                                                 <tr>
                                                     <td><label for="grand_total">Grand Total</label></td>
                                                     <td>
-                                                        <div class="col-12 col-lg-12 mb-3">
+                                                        <div class="col-12 col-lg-12">
                                                             <input type="text" id="grand_total" name="grand_total" class="form-control" value="0" readonly />
                                                         </div>
                                                     </td>
