@@ -2,9 +2,9 @@
 namespace App\Http\Controllers\Backend\Inventory;
 use Exception;
 use Carbon\Carbon;
-use App\Models\Client;
 use App\Models\Sale;
 use App\Models\Unit;
+use App\Models\Client;
 use App\Models\Project;
 use App\Models\Purchase;
 use App\Models\ProjectItem;
@@ -13,9 +13,9 @@ use App\Models\JournalVoucher;
 use App\Traits\ProjectSalesTrait;
 use App\Traits\TrialBalanceTrait;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\JournalVoucherDetail;
-use Illuminate\Support\Facades\Log; 
 use Illuminate\Database\QueryException;
 
 class ProjectController extends Controller
@@ -312,7 +312,7 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
 
-        // dd($request->all());
+        //dd($request->all());
         DB::beginTransaction(); // Start a database transaction
 
         try {
@@ -356,6 +356,7 @@ class ProjectController extends Controller
             $tax = $request->include_tax ? $request->tax : 0; 
             $vat = $request->include_vat ? $request->vat : 0; 
 
+            //dd("h");
             // Update project details
             $project->update([
                 'project_name' => $request->project_name,
@@ -397,7 +398,7 @@ class ProjectController extends Controller
                         'unit_id' => $request->order_unit[$index],
                         'unit_price' => $request->unit_price[$index],
                         'quantity' => $request->quantity[$index],
-                        'subtotal' => $request->subtotal[$index],
+                        'subtotal' => $request->subtotal[$index] ?? 0,
                         'discount' => $request->discount[$index] ?? 0,
                         'total' => $request->total[$index],
                     ]);
@@ -426,6 +427,17 @@ class ProjectController extends Controller
 
         } catch (Exception $e) {
             DB::rollBack(); // Rollback transaction on error
+
+            // Log the error with detailed context
+            Log::error('Project update failed', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all(),
+                'project_id' => $project->id,
+            ]);
+            
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }

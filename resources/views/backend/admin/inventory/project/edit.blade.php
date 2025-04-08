@@ -334,11 +334,11 @@
                                                 <tr>
                                                     <td>
                                                         <div class="icheck-success d-inline">
-                                                            <input type="checkbox" name="include_tax" id="include_tax">
+                                                            <input type="checkbox" name="include_tax" id="include_tax" {{ $project->tax > 0 ? 'checked' : '' }}>
                                                            <!-- Include TAX -->
                                                             <label for="include_tax" class="me-3">
                                                                 Include TAX (%)
-                                                                <input type="number" name="tax" id="tax" value="{{ $tax }}" min="0"
+                                                                <input type="number" name="tax" id="tax" value="{{ $project->tax }}" min="0"
                                                                     class="form-control form-control-sm d-inline-block"
                                                                     step="0.01" placeholder="Enter TAX"
                                                                     style="width: 100px; margin-left: 10px;" disabled />
@@ -347,7 +347,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="col-12 col-lg-12 mb-3 tax-fields">
-                                                            <input type="text" id="tax_amount" name="tax_amount" class="form-control" readonly placeholder="TAX Amount" />
+                                                            <input type="text" id="tax_amount" name="tax_amount" value="{{ $project->tax_amount }}" class="form-control" readonly placeholder="TAX Amount" />
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -355,10 +355,10 @@
                                                 <tr>
                                                     <td>
                                                         <div class="icheck-success d-inline">
-                                                            <input type="checkbox" name="include_vat" id="include_vat">
+                                                            <input type="checkbox" name="include_vat" id="include_vat" {{ $project->vat > 0 ? 'checked' : '' }}>
                                                             <label for="include_vat">
                                                                 Include VAT (%)
-                                                                <input type="number" id="vat" name="vat" value="{{ $vat }}" min="0"
+                                                                <input type="number" id="vat" name="vat" value="{{ $project->tax }}" min="0"
                                                                        class="form-control form-control-sm vat-input"
                                                                        step="0.01" placeholder="Enter VAT"
                                                                        style="width: 100px; display: inline-block; margin-left: 10px;" disabled />
@@ -367,7 +367,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="col-12 col-lg-12 mb-3 vat-fields">
-                                                            <input type="text" id="vat_amount" name="vat_amount" class="form-control" readonly placeholder="VAT Amount" />
+                                                            <input type="text" id="vat_amount" name="vat_amount" value="{{ $project->vat_amount }}" class="form-control" readonly placeholder="VAT Amount" />
                                                         </div>
                                                     </td>
                                                 </tr>
