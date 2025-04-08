@@ -212,9 +212,17 @@ class ProductSaleReceiveController extends Controller
 
         $pageTitle = 'Payment Receive Details';
 
-        $projectId = Sale::where('invoice_no', $invoice_no)->first();
+        $sale = Sale::where('invoice_no', $invoice_no)
+            ->with(['products', 'client'])
+            ->first();
 
-        $project = Project::where('id', $projectId->project_id)
+        //dd($sale);
+
+        // $sale = Sale::where('id', $id)
+        //     ->with(['products', 'client']) // Include supplier details
+        //     ->first();
+
+        $project = Project::where('id', $sale->project_id)
             ->with(['client', 'items']) 
             ->first();
 
@@ -226,7 +234,7 @@ class ProductSaleReceiveController extends Controller
 
         //dd($project_receipts);
 
-        return view('backend.admin.inventory.project.payment.receipt.view', compact('pageTitle', 'project', 'project_receipts'));
+        return view('backend.admin.inventory.project.payment.receipt.view', compact('pageTitle', 'project', 'project_receipts', 'sale'));
     }
 
     public function destroy($id)

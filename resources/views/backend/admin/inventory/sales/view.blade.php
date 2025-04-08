@@ -93,7 +93,7 @@
                                                 <th>Unit Price</th>
                                                 <th>Sell Price</th>
                                                 <th>Quantity</th>
-                                                <th>Subtotal</th>
+                                                <th>Total</th>
                                                 {{-- <th>Discount</th>
                                                 <th>Final Total</th> --}}
                                             </tr>

@@ -87,10 +87,10 @@
 
                             <div class="mt-4">
                                 <div class="card-header">
-                                    <h4>Project Items</h4>
+                                    {{-- <h4>Project Items</h4> --}}
                                 </div>
                                 <div class="card-body">
-                                    <table class="table table-striped">
+                                    {{-- <table class="table table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Sl</th>
@@ -126,6 +126,45 @@
                                                 </tr>
                                             @endforeach
                                         </tbody>
+                                    </table> --}}
+
+                                    <table class="table table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Unit Price</th>
+                                                <th>Sell Price</th>
+                                                <th>Quantity</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        @php
+                                            $subtotal = 0;
+                                            $totalDiscount = 0; 
+                                        @endphp
+                                        @foreach ($sale->products as $product)
+                                            @php
+                                                // Calculate the product's total price
+                                                $productTotal = $product->pivot->quantity * $product->pivot->price;
+                                                $subtotal += $productTotal;
+                                                
+                                                // Assume there is a 'discount' field in the pivot table or product
+                                                $productDiscount = !empty($product->pivot->discount) ? $product->pivot->discount : 0; // Set discount to 0 if not available
+                                                $totalDiscount += $productDiscount;
+                            
+                                                // Calculate the final total for the product after discount
+                                                $finalTotal = $productTotal - $productDiscount;
+                                            @endphp
+                                            <tr data-product-id="{{ $product->id }}">
+                                                <td>{{ $product->name }}</td>
+                                                <td>{{ number_format($product->price, 2) }}</td>
+                                                <td>{{ number_format($product->pivot->price, 2) }}</td>
+                                                <td>{{ $product->pivot->quantity }}</td>
+                                                <td>{{ number_format($productTotal, 2) }}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -138,8 +177,8 @@
                                 <div class="col-6">
                                     {{-- <p class="lead">Amount Due 2/22/2014</p> --}}
                             
-                                    <div class="table-responsive">
-                                        <table class="table">
+                                    <div class="table-responsive ">
+                                        {{-- <table class="table">
                                             <tr>
                                                 <th style="width:50%">Subtotal:</th>
                                                 <td>{{ bdt() }} {{ number_format($subtotal, 2) }}</td>
@@ -148,14 +187,6 @@
                                                 <th>Total Discount:</th>
                                                 <td>{{ bdt() }} {{ number_format($project->total_discount, 2) }}</td>
                                             </tr>
-                                            {{-- <tr>
-                                                <th>Transport Cost:</th>
-                                                <td>{{ bdt() }} {{ number_format($project->transport_cost, 2) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Carrying/Labour Charge:</th>
-                                                <td>{{ bdt() }} {{ number_format($project->carrying_charge, 2) }}</td>
-                                            </tr> --}}
                                             <tr>
                                                 <th>VAT:</th>
                                                 <td>{{ bdt() }} {{ number_format($project->vat, 2) }}</td>
@@ -167,8 +198,21 @@
                                             
                                             <tr>
                                                 <th>Total:</th>
-                                                {{-- <td>{{ bdt() }} {{ number_format($grandTotal, 2) }}</td> --}}
                                                 <td>{{ bdt() }} {{ number_format($project->grand_total, 2) }}</td>
+                                            </tr>
+                                        </table> --}}
+                                        <table class="table">
+                                            <tr>
+                                                <th style="width:50%">Subtotal:</th>
+                                                <td>{{ bdt() }} {{ number_format($subtotal, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Total Discount:</th>
+                                                <td>{{ bdt() }} {{ number_format($totalDiscount + (float) $sale->discount, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Total:</th>
+                                                <td>{{ bdt() }} {{ number_format($sale->total, 2) }}</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -248,7 +292,7 @@
                                             </tr>
                                             <tr>
                                                 <th>Total Amount need to Paid :</th>
-                                                <td>{{ bdt() }} {{ number_format($project->grand_total, 2) }}</td>
+                                                <td>{{ bdt() }} {{ number_format($sale->total - $sale->paid_amount, 2) }}</td>
                                             </tr>
                                         </table>
                                     </div>
