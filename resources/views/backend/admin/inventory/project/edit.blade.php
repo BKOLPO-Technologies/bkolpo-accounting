@@ -179,8 +179,8 @@
                                                         <th>Order Unit</th>
                                                         <th>Unit Price ({{ bdt() }})</th>
                                                         <th>Quantity</th>
-                                                        <th>Subtotal</th>
-                                                        <th>Discount</th>
+                                                        {{-- <th>Subtotal</th> --}}
+                                                        {{-- <th>Discount</th> --}}
                                                         <th>Total ({{ bdt() }})</th>
                                                         <th>Action</th>
                                                     </tr>
@@ -215,16 +215,16 @@
                                                                     value="{{ old('quantity.' . $loop->index, $item->quantity) }}" 
                                                                     placeholder="Enter Quantity" min="1" required>
                                                             </td>
-                                                            <td>
+                                                            {{-- <td>
                                                                 <input type="text" name="subtotal[]" class="form-control subtotal" 
                                                                     value="{{ old('subtotal.' . $loop->index, $item->subtotal) }}" 
                                                                     readonly>
-                                                            </td>
-                                                            <td>
+                                                            </td> --}}
+                                                            {{-- <td>
                                                                 <input type="number" name="discount[]" class="form-control discount" 
                                                                     value="{{ old('discount.' . $loop->index, $item->discount) }}" 
                                                                     placeholder="Enter Discount" min="0">
-                                                            </td>
+                                                            </td> --}}
                                                             <td>
                                                                 <input type="text" name="total[]" class="form-control total" 
                                                                     value="{{ old('total.' . $loop->index, $item->total) }}" 
@@ -321,37 +321,53 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+
+                                                <tr>
+                                                    <td><label for="total_netamount">Net Amount</label></td>
+                                                    <td>
+                                                        <div class="col-12 col-lg-12 mb-3">
+                                                            <input type="number" id="total_netamount" name="total_netamount" class="form-control" step="0.01" readonly placeholder="0.00" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                 
-                                                <!-- Include VAT and TAX Checkboxes -->
                                                 <tr>
                                                     <td>
                                                         <div class="icheck-success d-inline">
-                                                            {{-- <input type="checkbox" name="include_tax" id="include_tax"> --}}
-                                                            <input type="checkbox" name="include_tax" id="include_tax" {{ $project->tax > 0 ? 'checked' : '' }}>
-                                                            <label for="include_tax">
+                                                            <input type="checkbox" name="include_tax" id="include_tax">
+                                                           <!-- Include TAX -->
+                                                            <label for="include_tax" class="me-3">
                                                                 Include TAX (%)
+                                                                <input type="number" name="tax" id="tax" value="{{ $tax }}" min="0"
+                                                                    class="form-control form-control-sm d-inline-block"
+                                                                    step="0.01" placeholder="Enter TAX"
+                                                                    style="width: 100px; margin-left: 10px;" disabled />
                                                             </label>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="col-12 col-lg-12 mb-3 tax-fields">
-                                                            <input type="number" min="0" id="tax" name="tax" class="form-control" step="0.01" value="{{ $tax }}"  placeholder="Enter Tax" />
+                                                            <input type="text" id="tax_amount" name="tax_amount" class="form-control" readonly placeholder="TAX Amount" />
                                                         </div>
                                                     </td>
                                                 </tr>
+                                                
                                                 <tr>
                                                     <td>
                                                         <div class="icheck-success d-inline">
-                                                            {{-- <input type="checkbox" name="include_vat" id="include_vat"> --}}
-                                                            <input type="checkbox" name="include_vat" id="include_vat" {{ $project->vat > 0 ? 'checked' : '' }}>
+                                                            <input type="checkbox" name="include_vat" id="include_vat">
                                                             <label for="include_vat">
                                                                 Include VAT (%)
+                                                                <input type="number" id="vat" name="vat" value="{{ $vat }}" min="0"
+                                                                       class="form-control form-control-sm vat-input"
+                                                                       step="0.01" placeholder="Enter VAT"
+                                                                       style="width: 100px; display: inline-block; margin-left: 10px;" disabled />
                                                             </label>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="col-12 col-lg-12 mb-3 vat-fields">
-                                                            <input type="number" min="0" id="vat" name="vat" class="form-control" step="0.01" value="{{ $vat }}"  placeholder="Enter VAT" />
+                                                            <input type="text" id="vat_amount" name="vat_amount" class="form-control" readonly placeholder="VAT Amount" />
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -423,154 +439,59 @@
 @endsection
 @push('js')
 <script>
-    // Initialize Select2 if necessary
-    $(document).ready(function() {
-        $('.select2').select2();
-        
-    });
-    
-    // Function to calculate totals
+   $(document).ready(function () {
+    $('.select2').select2();
+
     function calculateTotal() {
-            let subtotal = 0;
-            let totalDiscount = 0;
+        let subtotal = 0;
+        let totalDiscount = parseFloat($('#total_discount').val()) || 0;
+        let transportCost = parseFloat($('#transport_cost').val()) || 0;
+        let carryingCharge = parseFloat($('#carrying_charge').val()) || 0;
 
-            // Loop through all product rows
-            $('#product-tbody tr').each(function () {
-                let price = parseFloat($(this).find('.unit-price').val()) || 0;
-                let quantity = parseFloat($(this).find('.quantity').val()) || 0;
-                let discount = parseFloat($(this).find('.discount').val()) || 0;
+        // Loop through product rows to calculate subtotal
+        $('#product-tbody tr').each(function () {
+            let price = parseFloat($(this).find('.unit-price').val()) || 0;
+            let quantity = parseFloat($(this).find('.quantity').val()) || 0;
+            let discount = parseFloat($(this).find('.discount').val()) || 0;
 
-                // Initialize rowSubtotal to 0
-                let rowSubtotal = 0;
+            let rowSubtotal = price * (quantity || 1);
+            let rowTotal = rowSubtotal - discount;
 
-                // Calculate rowSubtotal based on quantity and price
-                if (price && quantity) {
-                    rowSubtotal = price * quantity; // When both price and quantity are valid
-                } else {
-                    rowSubtotal = price; // When quantity is 0 or invalid, use only price
-                }
+            subtotal += rowTotal;
+            $(this).find('.subtotal').val(rowSubtotal.toFixed(2));
+            $(this).find('.total').val(rowTotal.toFixed(2));
+        });
 
-                let rowTotal = rowSubtotal - discount;
+        $('#subtotal').val(subtotal.toFixed(2));
 
-                subtotal += rowTotal;
-                totalDiscount += discount; // Accumulate row-level discounts
+        // Calculate Net Amount (subtotal - discount + transport cost + carrying charge)
+        let netAmount = subtotal - totalDiscount + transportCost + carryingCharge;
+        $('#total_netamount').val(netAmount.toFixed(2));
 
-                $(this).find('.subtotal').val(rowSubtotal.toFixed(2));
-                $(this).find('.total').val(rowTotal.toFixed(2));
-            });
+        // Calculate Tax on the net amount
+        let taxPercent = $('#include_tax').is(':checked') ? (parseFloat($('#tax').val()) || 0) : 0;
+        let taxAmount = (netAmount * taxPercent) / 100;
+        $('#tax_amount').val(taxAmount.toFixed(2)); // Display TAX amount
 
-            // Update subtotal and discount values
-            $('#subtotal').val(subtotal.toFixed(2));
+        // Calculate the sum of net amount and tax amount
+        let netAmountWithTax = netAmount + taxAmount;
 
-            // Manually update total discount in the input field and reflect it in the calculation
-            // Get the manually entered discount from the total_discount field
-            let manualTotalDiscount = parseFloat($('#total_discount').val()) || 0;
+        // Calculate VAT on the sum of net amount + tax amount
+        let vatPercent = $('#include_vat').is(':checked') ? (parseFloat($('#vat').val()) || 0) : 0;
+        let vatAmount = (netAmountWithTax * vatPercent) / 100;
+        $('#vat_amount').val(vatAmount.toFixed(2)); // Display VAT amount
 
-            // Update total discount with the sum of product-level discounts and manual discount
-            //$('#total_discount').val(manualTotalDiscount.toFixed(2));
+        // Calculate final Grand Total
+        let grandTotal = netAmountWithTax + vatAmount;
+        $('#grand_total').val(grandTotal.toFixed(2)); // Display Grand Total
+    }
 
-            let transportCost = parseFloat($('#transport_cost').val()) || 0;
-            let carryingCharge = parseFloat($('#carrying_charge').val()) || 0;
-
-            // let vat = parseFloat($('#vat').val()) || 0;
-            // console.log(vat);
-            // let tax = parseFloat($('#tax').val()) || 0;
-
-            // // Include VAT and TAX only if selected
-            // let vat = 0;
-            // if ($('#include_vat').is(':checked')) {
-            //     vat = parseFloat($('#vat').val()) || 0;
-            // }
-
-            // let tax = 0;
-            // if ($('#include_tax').is(':checked')) {
-            //     tax = parseFloat($('#tax').val()) || 0;
-            // }
-
-            // // Percentage-based VAT and TAX calculations
-            // let vatPercent = $('#include_vat').is(':checked') ? (parseFloat($('#vat').val()) || 0) : 0;
-            // let taxPercent = $('#include_tax').is(':checked') ? (parseFloat($('#tax').val()) || 0) : 0;
-
-            // let vat = (subtotal * vatPercent) / 100;
-            // let tax = (subtotal * taxPercent) / 100;
-
-            // // Calculate grand total
-            // let grandTotal = subtotal - manualTotalDiscount + transportCost + carryingCharge + vat + tax;
-
-            // Step 1: Base grand total without VAT and TAX
-            let grandTotal = subtotal - manualTotalDiscount + transportCost + carryingCharge;
-
-            // Step 2: Add VAT based on current grandTotal
-            let vatPercent = $('#include_vat').is(':checked') ? (parseFloat($('#vat').val()) || 0) : 0;
-            let vatAmount = (grandTotal * vatPercent) / 100;
-            grandTotal += vatAmount;
-
-            // Step 3: Add TAX based on updated grandTotal (after VAT)
-            let taxPercent = $('#include_tax').is(':checked') ? (parseFloat($('#tax').val()) || 0) : 0;
-            let taxAmount = (grandTotal * taxPercent) / 100;
-            grandTotal += taxAmount;
-
-            $('#grand_total').val(grandTotal.toFixed(2));
-        }
-
-    // All Functionality Calculations
-    $(document).ready(function () {
-    // // Function to calculate totals
-    // function calculateTotal() {
-    //     let subtotal = 0;
-    //     let totalDiscount = 0;
-
-    //     // Loop through all product rows
-    //     $('#product-tbody tr').each(function () {
-    //         let price = parseFloat($(this).find('.unit-price').val()) || 0;
-    //         let quantity = parseFloat($(this).find('.quantity').val()) || 0;
-    //         let discount = parseFloat($(this).find('.discount').val()) || 0;
-
-    //         // Initialize rowSubtotal to 0
-    //         let rowSubtotal = 0;
-
-    //         // Calculate rowSubtotal based on quantity and price
-    //         if (price && quantity) {
-    //             rowSubtotal = price * quantity; // When both price and quantity are valid
-    //         } else {
-    //             rowSubtotal = price; // When quantity is 0 or invalid, use only price
-    //         }
-
-    //         let rowTotal = rowSubtotal - discount;
-
-    //         subtotal += rowTotal;
-    //         totalDiscount += discount; // Accumulate row-level discounts
-
-    //         $(this).find('.subtotal').val(rowSubtotal.toFixed(2));
-    //         $(this).find('.total').val(rowTotal.toFixed(2));
-    //     });
-
-    //     // Update subtotal and discount values
-    //     $('#subtotal').val(subtotal.toFixed(2));
-
-    //     // Manually update total discount in the input field and reflect it in the calculation
-    //     // Get the manually entered discount from the total_discount field
-    //     let manualTotalDiscount = parseFloat($('#total_discount').val()) || 0;
-
-    //     // Update total discount with the sum of product-level discounts and manual discount
-    //     //$('#total_discount').val(manualTotalDiscount.toFixed(2));
-
-    //     let transportCost = parseFloat($('#transport_cost').val()) || 0;
-    //     let carryingCharge = parseFloat($('#carrying_charge').val()) || 0;
-    //     let vat = parseFloat($('#vat').val()) || 0;
-    //     let tax = parseFloat($('#tax').val()) || 0;
-
-    //     // Calculate grand total
-    //     let grandTotal = subtotal - manualTotalDiscount + transportCost + carryingCharge + vat + tax;
-    //     $('#grand_total').val(grandTotal.toFixed(2));
-    // }
-
-    // Trigger calculation on unit price, quantity, discount, and total_discount fields
-    $(document).on('input keyup', '.unit-price, .quantity, .discount, #transport_cost, #carrying_charge, #vat, #tax, #total_discount', function () {
+    // Trigger calculation on input changes
+    $(document).on('input keyup change', '.unit-price, .quantity, .discount, #transport_cost, #carrying_charge, #vat, #tax, #total_discount', function () {
         calculateTotal();
     });
 
-    // Add new row dynamically
+    // Add row
     $(document).on('click', '.add-row', function () {
         let newRow = `
             <tr>
@@ -583,10 +504,8 @@
                         @endforeach
                     </select>
                 </td>
-                <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" required></td>
                 <td><input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required></td>
-                <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
-                <td><input type="number" name="discount[]" class="form-control discount" min="0" step="0.01" placeholder="Enter Discount"></td>
+                <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" required></td>
                 <td><input type="text" name="total[]" class="form-control total" readonly></td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
@@ -595,69 +514,98 @@
         $('#product-tbody').append(newRow);
     });
 
-    // Remove row and recalculate total
+    // Remove row
     $(document).on('click', '.remove-row', function () {
         $(this).closest('tr').remove();
         calculateTotal();
     });
 
-    // Initial calculation when the page loads
+    // VAT/TAX checkbox toggles
+    $('#include_vat').on('change', function () {
+        $('#vat').prop('disabled', !this.checked);
+        calculateTotal();
+    });
+
+    $('#include_tax').on('change', function () {
+        $('#tax').prop('disabled', !this.checked);
+        calculateTotal();
+    });
+
+    // Manual change in VAT/TAX input triggers calculation
+    $('#vat, #tax').on('input keyup change', function () {
+        calculateTotal();
+    });
+
+    // Initialize states
+    $('#vat').prop('disabled', !$('#include_vat').is(':checked'));
+    $('#tax').prop('disabled', !$('#include_tax').is(':checked'));
+
+    // Initial calculation
     calculateTotal();
 });
 
 </script>
 
-<script>
-    // Listen for change events on the Include VAT and Include Tax checkboxes
-    document.getElementById('include_vat').addEventListener('change', updateFields);
-    document.getElementById('include_tax').addEventListener('change', updateFields);
 
-    function updateFields() {
-        // Get the checkbox states
-        var includeVat = document.getElementById('include_vat').checked;
-        var includeTax = document.getElementById('include_tax').checked;
+<script> 
+    $('#createClientForm').on('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
 
-        // Show or hide the VAT field based on the checkbox
-        document.querySelector('.vat-fields').style.display = includeVat;
+        let formData = $(this).serialize(); // Get form data
 
-        // Show or hide the Tax field based on the checkbox
-        document.querySelector('.tax-fields').style.display = includeTax;
+        $.ajax({
+            url: '{{ route('admin.client2.store') }}',
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                // Check if the supplier was created successfully
+                if (response.success) {
+                    // Close the modal
+                    $('#createClientModal').modal('hide');
+                    
+                    // Clear form inputs
+                    $('#createClientForm')[0].reset();
 
-        // Call the function to recalculate the grand total
-        // calculateGrandTotal();
-        calculateTotal();
-    }
+                    // console.log(response.client.id);
+                    // console.log(response.client.name);
 
-    function calculateGrandTotal() {
-        var subtotal = 0; // Example subtotal (replace with actual value)
-        var vat = 0;
-        var tax = 0;
+                    // // Append new supplier to the supplier select dropdown
+                    // $('#client_id').append(new Option(response.client.name, response.client.id));
 
-        // If VAT is included, get the VAT value and calculate
-        if (document.getElementById('include_vat').checked) {
-            vat = parseFloat(document.getElementById('vat').value) || 0;
-        }
+                    // // Re-initialize the select2 to refresh the dropdown
+                    // $('#client_id').trigger('change');
 
-        // If Tax is included, get the Tax value and calculate
-        if (document.getElementById('include_tax').checked) {
-            tax = parseFloat(document.getElementById('tax').value) || 0;
-        }
+                    // Create a new option with data attributes
+                    let newOption = $('<option>', {
+                        value: response.client.id,
+                        text: response.client.name,
+                        'data-name': response.client.name,
+                        'data-company': response.client.company,
+                        'data-phone': response.client.phone,
+                        'data-email': response.client.email
+                    });
 
-        // Calculate the grand total
-        var grandTotal = subtotal;
+                    // Insert new supplier AFTER "Select Vendor" option
+                    $('#client_id option:first').after(newOption);
 
-        if (vat > 0) {
-            grandTotal += (grandTotal * vat / 100); // Add VAT
-        }
+                    // Select the newly added supplier
+                    $('#client_id').val(response.client.id).trigger('change');
 
-
-        if (tax > 0) {
-            grandTotal += (subtotal * tax / 100); // Add Tax
-        }
-
-        // Update the grand total input field
-        document.getElementById('grand_total').value = grandTotal.toFixed(2);
-    }
+                    // Show success message
+                    toastr.success('Client added successfully!');
+                } else {
+                    toastr.error('Something went wrong. Please try again.');
+                }
+            },
+            error: function(response) {
+                // Handle error (validation errors, etc.)
+                let errors = response.responseJSON.errors;
+                for (let field in errors) {
+                    $(`#new_client_${field}`).addClass('is-invalid');
+                    $(`#new_client_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
+                }
+            }
+        });
+    });
 </script>
-
 @endpush

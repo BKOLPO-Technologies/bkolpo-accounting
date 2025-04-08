@@ -211,12 +211,12 @@
                                                 <td>{{ bdt() }} {{ number_format($project->carrying_charge, 2) }}</td>
                                             </tr> --}}
                                             <tr>
-                                                <th>VAT ({{ number_format($vat, 2) }} %): </th>
-                                                <td>{{ bdt() }} {{ number_format($project->vat, 2) }}</td>
+                                                <th>VAT ({{ number_format($project->vat, 2) }} %): </th>
+                                                <td>{{ bdt() }} {{ number_format($project->vat_amount, 2) }}</td>
                                             </tr>
                                             <tr>
-                                                <th>TAX ({{ number_format($tax, 2) }} %):</th>
-                                                <td>{{ bdt() }} {{ number_format($project->tax, 2) }}</td>
+                                                <th>TAX ({{ number_format($project->tax, 2) }} %):</th>
+                                                <td>{{ bdt() }} {{ number_format($project->tax_amount, 2) }}</td>
                                             </tr>
                                             
                                             <tr>
