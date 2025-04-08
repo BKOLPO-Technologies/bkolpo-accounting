@@ -302,7 +302,7 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
 
-        //dd($request->all());
+        // dd($request->all());
         DB::beginTransaction(); // Start a database transaction
 
         try {
