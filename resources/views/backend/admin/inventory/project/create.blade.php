@@ -264,7 +264,7 @@
                                                            <!-- Include TAX -->
                                                             <label for="include_tax" class="me-3">
                                                                 Include TAX (%)
-                                                                <input type="number" id="tax" value="{{ $tax }}" min="0"
+                                                                <input type="number" name="tax" id="tax" value="{{ $tax }}" min="0"
                                                                     class="form-control form-control-sm d-inline-block"
                                                                     step="0.01" placeholder="Enter TAX"
                                                                     style="width: 100px; margin-left: 10px;" disabled />
@@ -273,7 +273,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="col-12 col-lg-12 mb-3 tax-fields">
-                                                            <input type="text" id="tax_amount" class="form-control" readonly placeholder="TAX Amount" />
+                                                            <input type="text" id="tax_amount" name="tax_amount" class="form-control" readonly placeholder="TAX Amount" />
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -293,7 +293,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="col-12 col-lg-12 mb-3 vat-fields">
-                                                            <input type="text" id="vat_amount" class="form-control" readonly placeholder="VAT Amount" />
+                                                            <input type="text" id="vat_amount" name="vat_amount" class="form-control" readonly placeholder="VAT Amount" />
                                                         </div>
                                                     </td>
                                                 </tr>

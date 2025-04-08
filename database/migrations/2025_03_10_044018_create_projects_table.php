@@ -21,10 +21,13 @@ return new class extends Migration
             $table->date('schedule_date')->nullable();
             $table->decimal('total_discount', 10, 2)->default(0);
             $table->decimal('subtotal', 10, 2)->default(0);
+            $table->decimal('total_netamount', 10, 2)->default(0);
             $table->decimal('transport_cost', 10, 2)->default(0);
             $table->decimal('carrying_charge', 10, 2)->default(0);
             $table->decimal('vat', 10, 2)->default(0);
+            $table->decimal('vat_amount', 10, 2)->default(0);
             $table->decimal('tax', 10, 2)->default(0);
+            $table->decimal('tax_amount', 10, 2)->default(0);
             $table->decimal('grand_total', 10, 2)->default(0);
             $table->decimal('paid_amount', 15, 2)->default(0); // Amount already paid
             $table->enum('status', ['pending', 'paid', 'partially_paid'])->default('pending'); // Project status
