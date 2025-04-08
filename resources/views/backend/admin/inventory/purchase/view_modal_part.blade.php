@@ -92,7 +92,7 @@
                         <th>{{ number_format($vat, 2) }}</th>
                     </tr>
                     <tr>
-                        <th colspan="3" class="text-right">Tax:</th>
+                        <th colspan="3" class="text-right">TAX:</th>
                         <th>{{ number_format($tax, 2) }}</th>
                     </tr>
                     <tr>

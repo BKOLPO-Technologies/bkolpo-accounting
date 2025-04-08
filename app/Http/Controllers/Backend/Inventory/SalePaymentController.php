@@ -385,11 +385,13 @@ class SalePaymentController extends Controller
 
         //dd($invoice_no);
 
-        $pageTitle = 'Project Payment Details';
+        $pageTitle = 'Payment Details';
 
-        $projectId = Purchase::where('invoice_no', $invoice_no)->first();
+        $purchase = Purchase::where('invoice_no', $invoice_no)
+            ->with(['products', 'supplier'])
+            ->first();
 
-        $project = Project::where('id', $projectId->project_id)
+        $project = Project::where('id', $purchase->project_id)
             ->with(['items']) 
             ->first();
 
@@ -401,6 +403,6 @@ class SalePaymentController extends Controller
 
         //dd($project_receipts);
 
-        return view('backend.admin.inventory.sales.payment.view', compact('pageTitle', 'project', 'project_receipts'));
+        return view('backend.admin.inventory.sales.payment.view', compact('pageTitle', 'project', 'project_receipts', 'purchase'));
     }
 }
