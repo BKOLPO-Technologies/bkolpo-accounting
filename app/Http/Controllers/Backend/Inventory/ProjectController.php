@@ -1,11 +1,8 @@
 <?php
-
 namespace App\Http\Controllers\Backend\Inventory;
-
 use Exception;
 use Carbon\Carbon;
 use App\Models\Client;
-
 use App\Models\Sale;
 use App\Models\Unit;
 use App\Models\Project;
@@ -23,6 +20,9 @@ use Illuminate\Database\QueryException;
 
 class ProjectController extends Controller
 {
+    // Include the trait
+    use ProjectSalesTrait;
+
     /**
      * Display a listing of the resource.
      */
@@ -212,7 +212,9 @@ class ProjectController extends Controller
         return view('backend.admin.inventory.project.view',compact('pageTitle', 'project'));
     }
 
-    use ProjectSalesTrait; // Include the trait
+    /**
+     * projectsSales.
+     */
     public function projectsSales(Request $request, $id)
     {
         //dd($id);
@@ -253,6 +255,9 @@ class ProjectController extends Controller
         return view('backend.admin.inventory.project.sale', array_merge($data, compact('pageTitle', 'fromDate', 'toDate')));
     }
 
+    /**
+     * showDetails.
+     */
     public function showDetails($purchaseId)
     {
         try {
@@ -270,8 +275,6 @@ class ProjectController extends Controller
             return response()->json(['error' => 'Error fetching purchase details. Please try again later.'], 500);
         }
     }
-
-
 
     /**
      * Show the form for editing the specified resource.
@@ -417,8 +420,6 @@ class ProjectController extends Controller
         }
     }
 
-
-
     /**
      * Remove the specified resource from storage.
      */
@@ -446,22 +447,9 @@ class ProjectController extends Controller
         }
     }
 
-    // get project details
-    // public function getProjectDetails(Request $request)
-    // {
-    //     $project = Project::find($request->project_id);
-
-    //     if ($project) {
-    //         return response()->json([
-    //             'success' => true,
-    //             'total_amount' => $project->grand_total-$project->paid_amount,
-    //             'due_amount' => $project->due_amount
-    //         ]);
-    //     }
-
-    //     return response()->json(['success' => false]);
-    // }
-
+    /**
+     * getProjectDetails.
+     */
     public function getProjectDetails(Request $request)
     {
         $sales = Sale::where('project_id', $request->project_id)->whereColumn('total', '>', 'paid_amount')->get();
