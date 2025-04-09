@@ -15,8 +15,8 @@ class ClientSeeder extends Seeder
     {
         $clients = [
             [
-                'name' => 'Bkolpo Constructions',
-                'company' => 'Bkolpo Constructions',
+                'name' => 'Bkolpo Construction Ltd',
+                'company' => 'Bkolpo Construction Ltd',
                 'title' => 'Ahmed Ali',
                 'designation' => 'Manager',
                 'phone' => '01783465103',
