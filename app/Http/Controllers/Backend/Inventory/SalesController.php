@@ -171,6 +171,7 @@ class SalesController extends Controller
             $sale->project_id = $request->project_id;
             $sale->save();
 
+
             // Loop through the product data and save it to the database
             foreach ($productIds as $index => $productId) {
                 $product = Product::find($productId);
@@ -188,9 +189,10 @@ class SalesController extends Controller
                 $saleProduct->save(); // Save the record
             }
 
+          
+
             // Step 2: Get sale amount
             $sale_amount = $sale->total_netamount ?? 0; // If sale doesn't have amount, default to 0
-
 
             $salesLedger = Ledger::where('type', 'Sales')->first();
             $receivableLedger = Ledger::where('type', 'Receivable')->first();
@@ -217,6 +219,7 @@ class SalesController extends Controller
                 // ->where('transaction_code', $sale->invoice_no)
                 ->first(); 
 
+
                 // dd($journalVoucher);
 
                 if ($journalVoucher) {
@@ -231,17 +234,13 @@ class SalesController extends Controller
 
                 $transactionCode = 'BCL-V-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement;
 
-                // dd($transactionCode);
-
-                if ($journalVoucher) {
-                    // Create a new Journal Voucher if not exists
-                    $journalVoucher = JournalVoucher::create([
-                        'transaction_code'  => $transactionCode,
-                        'transaction_date'  => now()->format('Y-m-d'),
-                        'description'       => 'Invoice Entry for Sales',
-                        'status'            => 1, // Pending status
-                    ]);
-                }
+                // Create a new Journal Voucher if not exists
+                $journalVoucher = JournalVoucher::create([
+                    'transaction_code'  => $transactionCode,
+                    'transaction_date'  => now()->format('Y-m-d'),
+                    'description'       => 'Invoice Entry for Sales',
+                    'status'            => 1, // Pending status
+                ]);
 
                 // Create journal voucher details for Accounts Receivable (Debit Entry)
                 JournalVoucherDetail::create([
