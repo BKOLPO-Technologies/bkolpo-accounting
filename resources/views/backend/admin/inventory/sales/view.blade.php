@@ -78,7 +78,7 @@
 
                             <div class="row invoice-info">
                                 <div class="col-sm-4 invoice-col">
-                                Owener
+                                Owner
                                 <address>
                                     <strong>{{ get_company()->name ?? '' }}</strong><br>
                                     {{ get_company()->address ?? '' }}<br>
@@ -178,7 +178,7 @@
                                         
                                     </div>
                                 </div>
-                                <table style="width: 100%; border-collapse: collapse; margin-top: 30px;" border="1">
+                                {{-- <table style="width: 100%; border-collapse: collapse; margin-top: 30px;" border="1">
                                     <tr>
                                         <td style="padding: 10px; text-align: center; width: 25%;">
                                             <small style="font-weight:bolder;">Prepare by : (Department Manager)</small>
@@ -211,8 +211,7 @@
                                             Date: <span style="display: inline-block; width: 80%;margin: 20px 0 0 0; border-bottom: 2px dotted black;"></span>
                                         </td>
                                     </tr>
-                                    
-                                </table>
+                                </table> --}}
                             </div>
                         </div>
                         </div>
