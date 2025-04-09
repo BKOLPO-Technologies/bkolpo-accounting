@@ -4,8 +4,20 @@
         #filter-form {
             display: none !important;
         }
+        .col-lg-4 {
+            float: right !important;
+            width: 33.3333% !important;
+        }
+        .col-lg-8 {
+            float: left !important;
+            width: 66.6667% !important;
+        }
+        .table td, .table th {
+            border: 1px solid black !important;
+        }
     }
-</style>
+    </style>
+    
 @section('admin')
 
 <div class="content-wrapper">
@@ -50,10 +62,15 @@
                         <div class="invoice p-3 mb-3">
                             <div class="row">
                                 <div class="col-12">
-                                <h4>
-                                    <i class="fas fa-globe"></i> {{ get_company()->name ?? '' }}
-                                    <small class="float-right" id="current-date"></small>
-                                </h4>
+                                    <h4>
+                                        <img 
+                                            src="{{ !empty(get_company()->logo) ? url('upload/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
+                                            alt="Company Logo" 
+                                            style="height: 40px; vertical-align: middle; margin-right: 10px;"
+                                        >
+                                        {{ get_company()->name ?? '' }}
+                                        <small class="float-right" id="current-date"></small>
+                                    </h4>                                    
                                 </div>
                             </div>
 
@@ -90,84 +107,77 @@
 
                             <div class="row">
                                 <div class="col-12 table-responsive">
-                                    <table class="table table-striped">
+                                    <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
                                         <thead>
                                             <tr>
-                                                <th>Product</th>
-                                                <th>Price</th>
-                                                <th>Quantity</th>
-                                                <th>Total</th>
+                                                <th style="border: 1px solid black; padding: 8px;">Product</th>
+                                                <th style="border: 1px solid black; padding: 8px;">Price</th>
+                                                <th style="border: 1px solid black; padding: 8px;">Quantity</th>
+                                                <th style="border: 1px solid black; padding: 8px;">Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        @php
-                                            $subtotal = 0;
-                                            $totalDiscount = 0; 
-                                        @endphp
-                                        @foreach ($sale->products as $product)
                                             @php
-                                                $productTotal = $product->pivot->quantity * $product->pivot->price;
-                                                $subtotal += $productTotal;
-                                                
-                                                $productDiscount = !empty($product->pivot->discount) ? $product->pivot->discount : 0;
-                                                $totalDiscount += $productDiscount;
-                            
-                                                $finalTotal = $productTotal - $productDiscount;
+                                                $subtotal = 0;
+                                                $totalDiscount = 0;
                                             @endphp
-                                            <tr data-product-id="{{ $product->id }}">
-                                                <td>{{ $product->name }}</td>
-                                                <td>{{ number_format($product->price, 2) }}</td>
-                                                <td>{{ $product->pivot->quantity }}</td>
-                                                <td>{{ number_format($productTotal, 2) }}</td>
-                                            </tr>
-                                        @endforeach
+                                            @foreach ($sale->products as $product)
+                                                @php
+                                                    $productTotal = $product->pivot->quantity * $product->pivot->price;
+                                                    $subtotal += $productTotal;
+                                                    
+                                                    $productDiscount = !empty($product->pivot->discount) ? $product->pivot->discount : 0;
+                                                    $totalDiscount += $productDiscount;
+                                
+                                                    $finalTotal = $productTotal - $productDiscount;
+                                                @endphp
+                                                <tr data-product-id="{{ $product->id }}">
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ $product->name }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ number_format($product->price, 2) }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ $product->pivot->quantity }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ number_format($productTotal, 2) }}</td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            
-                            <hr>
-                            
-                            <div class="d-flex justify-content-end flex-column align-items-end">
-                                <div class="row w-100">
-                                    <div class="col-8 col-lg-6">
+                                <div class="row">
+                                    <div class="col-lg-8">
                                     </div>
-                                    <div class="col-4 col-lg-6">
+                                    <div class="col-lg-4">
 
-                                        <table class="table table-bordered">
+                                        <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-top: 20px;">
                                             <tbody>
                                                 <tr>
-                                                    <td>Total Amount</td>
-                                                    <td>{{ $subtotal }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">Total Amount</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ number_format($subtotal, 2) }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Discount</td>
-                                                    <td>{{ $sale->discount }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">Discount</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ number_format($sale->discount, 2) }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Net Amount</td>
-                                                    <td>{{ $sale->total_netamount }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">Net Amount</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ number_format($sale->total_netamount, 2) }}</td>
                                                 </tr>
-
                                                 <tr>
-                                                    <td>TAX ({{ $sale->tax }}%)</td>
-                                                    <td>{{ $sale->tax_amount }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">TAX ({{ $sale->tax }}%)</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ number_format($sale->tax_amount, 2) }}</td>
                                                 </tr>
-                                                
                                                 <tr>
-                                                    <td>VAT ({{ $sale->vat }}%)</td>
-                                                    <td>{{ $sale->vat_amount }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">VAT ({{ $sale->vat }}%)</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ number_format($sale->vat_amount, 2) }}</td>
                                                 </tr>
-                                                
                                                 <tr>
-                                                    <td>Grand Total</td>
-                                                    <td>{{ $sale->grand_total }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;"><strong>Grand Total</strong></td>
+                                                    <td style="border: 1px solid black; padding: 8px;"><strong>{{ number_format($sale->grand_total, 2) }}</strong></td>
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        
                                     </div>
                                 </div>
-
                                 <table style="width: 100%; border-collapse: collapse; margin-top: 30px;" border="1">
                                     <tr>
                                         <td style="padding: 10px; text-align: center; width: 25%;">
@@ -203,10 +213,7 @@
                                     </tr>
                                     
                                 </table>
-                                                                                              
-                                
                             </div>
-                        </div>
                         </div>
                         </div>
                     </div>
