@@ -63,6 +63,14 @@
                                         <td>{{ $company->post_code ?? 'N/A' }}</td>
                                     </tr>
                                     <tr>
+                                        <th>Phone</th>
+                                        <td>{{ $company->phone ?? 'N/A' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Email</th>
+                                        <td>{{ $company->email ?? 'N/A' }}</td>
+                                    </tr>
+                                    <tr>
                                         <th>Description</th>
                                         <td>{{ $company->description ?? 'N/A' }}</td>
                                     </tr>
@@ -81,6 +89,18 @@
                                     <tr>
                                         <th>TAX</th>
                                         <td>{{ $company->tax ?? 'N/A' }} %</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Company Logo</th>
+                                        <td>
+                                            <div class="col-md-1">
+                                            <img
+                                                id="logoPreview"
+                                                src="{{ !empty($company->logo) ? url('upload/company/' . $company->logo) : url(asset('backend/logo.jpg')) }}" 
+                                                alt="Logo"
+                                                style="width: 100%; height: 60px; border: 1px solid #ddd; border-radius: 5px;">
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Status</th>
