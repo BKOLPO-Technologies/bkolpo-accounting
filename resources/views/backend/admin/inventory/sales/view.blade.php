@@ -46,7 +46,6 @@
                                 <div class="col-12">
                                 <h4>
                                     <i class="fas fa-globe"></i> Bkolpo Construction Ltd.
-                                    <!-- <small class="float-right">Date: 2/10/2014</small> -->
                                     <small class="float-right" id="current-date"></small>
                                 </h4>
                                 </div>
@@ -90,40 +89,31 @@
                                         <thead>
                                             <tr>
                                                 <th>Product</th>
-                                                {{-- <th>Unit Price</th> --}}
                                                 <th>Price</th>
                                                 <th>Quantity</th>
                                                 <th>Total</th>
-                                                {{-- <th>Discount</th>
-                                                <th>Final Total</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody>
                                         @php
                                             $subtotal = 0;
-                                            $totalDiscount = 0; // For the overall discount across all products
+                                            $totalDiscount = 0; 
                                         @endphp
                                         @foreach ($sale->products as $product)
                                             @php
-                                                // Calculate the product's total price
                                                 $productTotal = $product->pivot->quantity * $product->pivot->price;
                                                 $subtotal += $productTotal;
                                                 
-                                                // Assume there is a 'discount' field in the pivot table or product
-                                                $productDiscount = !empty($product->pivot->discount) ? $product->pivot->discount : 0; // Set discount to 0 if not available
+                                                $productDiscount = !empty($product->pivot->discount) ? $product->pivot->discount : 0;
                                                 $totalDiscount += $productDiscount;
                             
-                                                // Calculate the final total for the product after discount
                                                 $finalTotal = $productTotal - $productDiscount;
                                             @endphp
                                             <tr data-product-id="{{ $product->id }}">
                                                 <td>{{ $product->name }}</td>
                                                 <td>{{ number_format($product->price, 2) }}</td>
-                                                {{-- <td>{{ number_format($product->pivot->price, 2) }}</td> --}}
                                                 <td>{{ $product->pivot->quantity }}</td>
                                                 <td>{{ number_format($productTotal, 2) }}</td>
-                                                {{-- <td>{{ number_format($productDiscount, 2) }}</td>
-                                                <td>{{ number_format($finalTotal, 2) }}</td> --}}
                                             </tr>
                                         @endforeach
                                         </tbody>
@@ -135,134 +125,83 @@
                             
                             <div class="d-flex justify-content-end flex-column align-items-end">
                                 <div class="row w-100">
-                                    <div class="col-12 col-lg-6 mb-2">
+                                    <div class="col-8 col-lg-6">
                                     </div>
-                                    <div class="col-12 col-lg-6 mb-2">
-                                        {{-- <p class="lead">Amount Due 2/22/2014</p> --}}
-                                    
-                                        {{-- <div class="table-responsive">
-                                            <table class="table">
-                                            <tr>
-                                                <th style="width:50%">Subtotal:</th>
-                                                <td>{{ bdt() }} {{ number_format($subtotal, 2) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Total Discount:</th>
-                                                <td>{{ bdt() }} {{ number_format($totalDiscount + (float) $sale->discount, 2) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Total:</th>
-                                                <td>{{ bdt() }} {{ number_format($sale->total, 2) }}</td>
-                                            </tr>
-                                            </table>
-                                        </div> --}}
+                                    <div class="col-4 col-lg-6">
 
                                         <table class="table table-bordered">
                                             <tbody>
                                                 <tr>
-                                                    <td><label for="subtotal">Total Amount</label></td>
-                                                    <td>
-                                                        <div class="col-12 col-lg-12">
-                                                            <input type="text" id="subtotal" name="subtotal" class="form-control" value="{{ $subtotal }}" readonly />
-                                                        </div>
-                                                    </td>
+                                                    <td>Total Amount</td>
+                                                    <td>{{ $subtotal }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><label for="total_discount">Discount</label></td>
-                                                    <td>
-                                                        <div class="col-12 col-lg-12">
-                                                            <input type="number" id="total_discount" name="discount" class="form-control" step="0.01" placeholder="Enter Discount" value="{{ $sale->discount }}" oninput="updateTotal()" readonly/>
-                                                        </div>
-                                                    </td>
+                                                    <td>Discount</td>
+                                                    <td>{{ $sale->discount }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><label for="total_netamount">Net Amount</label></td>
-                                                    <td>
-                                                        <div class="col-12 col-lg-12">
-                                                            <input type="number" id="total_netamount" name="total_netamount" class="form-control" step="0.01" placeholder="0.00" value="{{ $sale->total_netamount }}" readonly/>
-                                                        </div>
-                                                    </td>
+                                                    <td>Net Amount</td>
+                                                    <td>{{ $sale->total_netamount }}</td>
                                                 </tr>
 
                                                 <tr>
-                                                    <td>
-                                                        <div class="icheck-success d-inline">
-                                                            {{-- <input type="checkbox" name="include_tax" id="include_tax" {{ $sale->tax > 0 ? 'checked' : '' }}> --}}
-
-                                                            <input type="checkbox" 
-                                                                {{ $sale->tax > 0 ? 'checked' : '' }} 
-                                                                onclick="return false;">
-                                                            
-
-                                                            <label for="include_tax" class="me-3">
-                                                                Include TAX (%)
-                                                                <input type="number" name="tax" id="tax" value="{{ $sale->tax }}" min="0"
-                                                                    class="form-control form-control-sm d-inline-block"
-                                                                    step="0.01" placeholder="Enter TAX"
-                                                                    style="width: 100px; margin-left: 10px;" disabled />
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="col-12 col-lg-12 mb-3 tax-fields">
-                                                            <input type="text" id="tax_amount" name="tax_amount" value="{{ $sale->tax_amount }}" class="form-control" readonly placeholder="TAX Amount" />
-                                                        </div>
-                                                    </td>
+                                                    <td>TAX ({{ $sale->tax }}%)</td>
+                                                    <td>{{ $sale->tax_amount }}</td>
                                                 </tr>
                                                 
                                                 <tr>
-                                                    <td>
-                                                        <div class="icheck-success d-inline">
-
-                                                            <input type="checkbox"
-                                                                {{ $sale->vat > 0 ? 'checked' : '' }} 
-                                                                onclick="return false;" />
-
-                                                            <label for="include_vat">
-                                                                Include VAT (%)
-                                                                <input type="number" id="vat" name="vat" value="{{ $sale->vat }}" min="0"
-                                                                    class="form-control form-control-sm vat-input"
-                                                                    step="0.01" placeholder="Enter VAT"
-                                                                    style="width: 70px; display: inline-block; margin-left: 10px;" disabled />
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="col-12 col-lg-12 vat-fields">
-                                                            <input type="text" id="vat_amount" name="vat_amount" value="{{ $sale->vat_amount }}" class="form-control" readonly placeholder="VAT Amount" />
-                                                        </div>
-                                                    </td>
+                                                    <td>VAT ({{ $sale->vat }}%)</td>
+                                                    <td>{{ $sale->vat_amount }}</td>
                                                 </tr>
                                                 
                                                 <tr>
-                                                    <td><label for="grand_total">Grand Total</label></td>
-                                                    <td>
-                                                        <div class="col-12 col-lg-12">
-                                                            <input type="text" id="grand_total" name="grand_total" class="form-control" value="{{ $sale->grand_total }}" readonly/>
-                                                        </div>
-                                                    </td>
+                                                    <td>Grand Total</td>
+                                                    <td>{{ $sale->grand_total }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
+
+                                <table style="width: 100%; border-collapse: collapse; margin-top: 30px;" border="1">
+                                    <tr>
+                                        <td style="padding: 10px; text-align: center; width: 25%;">
+                                            <strong>Prepare by :</strong><br>
+                                            ( Department Manager )<br><br>
+                                            Signature: ___________
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; width: 25%;">
+                                            <strong>Checked by :</strong><br>
+                                            ( Cost Manager )<br><br>
+                                            Signature: ___________
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; width: 25%;">
+                                            <strong>Approved by :</strong><br>
+                                            ( Co-Project Manager )<br><br>
+                                            Signature: ___________
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; width: 25%;">
+                                            <strong>Received by :</strong><br>
+                                            ( Vendor / Subcontractor )<br><br>
+                                            Signature: ___________
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px; text-align: center;">Date: ___________________</td>
+                                        <td style="padding: 10px; text-align: center;">Date: ___________________</td>
+                                        <td style="padding: 10px; text-align: center;">Date: ___________________</td>
+                                        <td style="padding: 10px; text-align: center;">Date: ___________________</td>
+                                    </tr>
+                                </table>                                                               
+                                
                             </div>
                             
-
                             <div class="row no-print">
                                 <div class="col-12">
-                                    
-                                    <!-- <a href="{{ route('admin.purchase.print') }}" target="_blank" class="btn btn-default">
-                                        <i class="fas fa-print"></i> Print
-                                    </a> -->
 
                                     <button class="btn btn-primary" onclick="printBalanceSheet()">
                                         <i class="fa fa-print"></i> Print
                                     </button>
-
-                                    <!-- <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-                                        <i class="fas fa-download"></i> Generate PDF
-                                    </button> -->
 
                                 </div>
                             </div>
@@ -290,7 +229,6 @@
   document.getElementById('current-date').textContent = 'Date: ' + currentDate;
 
 </script>
-
 
 <script>
     function printBalanceSheet() {

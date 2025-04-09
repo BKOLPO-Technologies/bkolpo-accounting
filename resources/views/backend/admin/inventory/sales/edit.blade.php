@@ -303,7 +303,7 @@
                                                     <td><label for="total_discount">Discount</label></td>
                                                     <td>
                                                         <div class="col-12 col-lg-12">
-                                                            <input type="number" id="total_discount" name="discount" class="form-control" step="0.01" placeholder="Enter Discount" value="{{ $sale->discount }}" oninput="updateTotal()" />
+                                                            <input type="number" id="total_discount" name="total_discount" class="form-control" step="0.01" placeholder="Enter Discount" value="{{ $sale->discount }}" oninput="updateTotal()" />
                                                         </div>
                                                     </td>
                                                 </tr>
