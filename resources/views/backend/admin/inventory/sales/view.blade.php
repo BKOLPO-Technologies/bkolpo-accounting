@@ -189,9 +189,10 @@
                                                         <div class="icheck-success d-inline">
                                                             {{-- <input type="checkbox" name="include_tax" id="include_tax" {{ $sale->tax > 0 ? 'checked' : '' }}> --}}
 
-                                                            <input type="checkbox" name="include_vat" id="include_vat" 
-                                                                {{ $sale->vat > 0 ? 'checked' : '' }} 
+                                                            <input type="checkbox" 
+                                                                {{ $sale->tax > 0 ? 'checked' : '' }} 
                                                                 onclick="return false;">
+                                                            
 
                                                             <label for="include_tax" class="me-3">
                                                                 Include TAX (%)
@@ -212,7 +213,11 @@
                                                 <tr>
                                                     <td>
                                                         <div class="icheck-success d-inline">
-                                                            <input type="checkbox" name="include_vat" id="include_vat" {{ $sale->vat > 0 ? 'checked' : '' }} onclick="return false;" />
+
+                                                            <input type="checkbox"
+                                                                {{ $sale->vat > 0 ? 'checked' : '' }} 
+                                                                onclick="return false;" />
+
                                                             <label for="include_vat">
                                                                 Include VAT (%)
                                                                 <input type="number" id="vat" name="vat" value="{{ $sale->vat }}" min="0"
