@@ -58,7 +58,7 @@
                                 <div class="col-sm-4 invoice-col">
                                 Owener
                                 <address>
-                                    <strong>Bkolpo, Technology.</strong><br>
+                                    <strong>Bkolpo Construction Ltd.</strong><br>
                                     Tokyo tower<br>
                                     Tongi, Gazipur, Dhaka<br>
                                     Phone: (804) 123-5432<br>
@@ -90,8 +90,8 @@
                                         <thead>
                                             <tr>
                                                 <th>Product</th>
-                                                <th>Unit Price</th>
-                                                <th>Sell Price</th>
+                                                {{-- <th>Unit Price</th> --}}
+                                                <th>Price</th>
                                                 <th>Quantity</th>
                                                 <th>Total</th>
                                                 {{-- <th>Discount</th>
@@ -119,7 +119,7 @@
                                             <tr data-product-id="{{ $product->id }}">
                                                 <td>{{ $product->name }}</td>
                                                 <td>{{ number_format($product->price, 2) }}</td>
-                                                <td>{{ number_format($product->pivot->price, 2) }}</td>
+                                                {{-- <td>{{ number_format($product->pivot->price, 2) }}</td> --}}
                                                 <td>{{ $product->pivot->quantity }}</td>
                                                 <td>{{ number_format($productTotal, 2) }}</td>
                                                 {{-- <td>{{ number_format($productDiscount, 2) }}</td>
@@ -133,28 +133,113 @@
                             
                             <hr>
                             
-                            <div class="row">
-                                <div class="col-6">
-                                </div> 
-                                <div class="col-6">
-                                <p class="lead">Amount Due 2/22/2014</p>
-                            
-                                <div class="table-responsive">
-                                    <table class="table">
-                                    <tr>
-                                        <th style="width:50%">Subtotal:</th>
-                                        <td>{{ bdt() }} {{ number_format($subtotal, 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Total Discount:</th>
-                                        <td>{{ bdt() }} {{ number_format($totalDiscount + (float) $sale->discount, 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Total:</th>
-                                        <td>{{ bdt() }} {{ number_format($sale->total, 2) }}</td>
-                                    </tr>
-                                    </table>
-                                </div>
+                            <div class="d-flex justify-content-end flex-column align-items-end">
+                                <div class="row w-100">
+                                    <div class="col-12 col-lg-6 mb-2">
+                                    </div>
+                                    <div class="col-12 col-lg-6 mb-2">
+                                        {{-- <p class="lead">Amount Due 2/22/2014</p> --}}
+                                    
+                                        {{-- <div class="table-responsive">
+                                            <table class="table">
+                                            <tr>
+                                                <th style="width:50%">Subtotal:</th>
+                                                <td>{{ bdt() }} {{ number_format($subtotal, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Total Discount:</th>
+                                                <td>{{ bdt() }} {{ number_format($totalDiscount + (float) $sale->discount, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Total:</th>
+                                                <td>{{ bdt() }} {{ number_format($sale->total, 2) }}</td>
+                                            </tr>
+                                            </table>
+                                        </div> --}}
+
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <td><label for="subtotal">Total Amount</label></td>
+                                                    <td>
+                                                        <div class="col-12 col-lg-12">
+                                                            <input type="text" id="subtotal" name="subtotal" class="form-control" value="{{ $subtotal }}" readonly />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><label for="total_discount">Discount</label></td>
+                                                    <td>
+                                                        <div class="col-12 col-lg-12">
+                                                            <input type="number" id="total_discount" name="discount" class="form-control" step="0.01" placeholder="Enter Discount" value="{{ $sale->discount }}" oninput="updateTotal()" readonly/>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><label for="total_netamount">Net Amount</label></td>
+                                                    <td>
+                                                        <div class="col-12 col-lg-12">
+                                                            <input type="number" id="total_netamount" name="total_netamount" class="form-control" step="0.01" placeholder="0.00" value="{{ $sale->total_netamount }}" readonly/>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>
+                                                        <div class="icheck-success d-inline">
+                                                            {{-- <input type="checkbox" name="include_tax" id="include_tax" {{ $sale->tax > 0 ? 'checked' : '' }}> --}}
+
+                                                            <input type="checkbox" name="include_vat" id="include_vat" 
+                                                                {{ $sale->vat > 0 ? 'checked' : '' }} 
+                                                                onclick="return false;">
+
+                                                            <label for="include_tax" class="me-3">
+                                                                Include TAX (%)
+                                                                <input type="number" name="tax" id="tax" value="{{ $sale->tax }}" min="0"
+                                                                    class="form-control form-control-sm d-inline-block"
+                                                                    step="0.01" placeholder="Enter TAX"
+                                                                    style="width: 100px; margin-left: 10px;" disabled />
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="col-12 col-lg-12 mb-3 tax-fields">
+                                                            <input type="text" id="tax_amount" name="tax_amount" value="{{ $sale->tax_amount }}" class="form-control" readonly placeholder="TAX Amount" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <td>
+                                                        <div class="icheck-success d-inline">
+                                                            <input type="checkbox" name="include_vat" id="include_vat" {{ $sale->vat > 0 ? 'checked' : '' }} onclick="return false;" />
+                                                            <label for="include_vat">
+                                                                Include VAT (%)
+                                                                <input type="number" id="vat" name="vat" value="{{ $sale->vat }}" min="0"
+                                                                    class="form-control form-control-sm vat-input"
+                                                                    step="0.01" placeholder="Enter VAT"
+                                                                    style="width: 70px; display: inline-block; margin-left: 10px;" disabled />
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="col-12 col-lg-12 vat-fields">
+                                                            <input type="text" id="vat_amount" name="vat_amount" value="{{ $sale->vat_amount }}" class="form-control" readonly placeholder="VAT Amount" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <td><label for="grand_total">Grand Total</label></td>
+                                                    <td>
+                                                        <div class="col-12 col-lg-12">
+                                                            <input type="text" id="grand_total" name="grand_total" class="form-control" value="{{ $sale->grand_total }}" readonly/>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                             

@@ -106,7 +106,7 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
-        //  dd($request->all());
+        //dd($request->all());
 
         // Validate the request data
         $validated = $request->validate([
@@ -311,6 +311,8 @@ class SalesController extends Controller
     {
         $pageTitle = 'Invoice Edit';
 
+        $products = Product::where('status',1)->latest()->get();
+
         // Fetch purchase details with supplier and products
         $sale = Sale::where('id', $id)
             ->with(['products', 'client']) // Include supplier details
@@ -375,6 +377,7 @@ class SalesController extends Controller
             'discounts' => $discounts,
             'sale' => $sale,
             'clients' => $clients,
+            'products' => $products,
         ]);
     }
 
@@ -423,6 +426,9 @@ class SalesController extends Controller
 
         try {
             DB::beginTransaction();
+
+            $tax = $request->include_tax ? $request->tax : 0; 
+            $vat = $request->include_vat ? $request->vat : 0; 
 
             // if($request->project_id == Null){
             //     $invoice_no = $validated['invoice_no'];
