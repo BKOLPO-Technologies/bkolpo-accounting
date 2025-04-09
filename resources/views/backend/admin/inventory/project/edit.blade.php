@@ -358,7 +358,7 @@
                                                             <input type="checkbox" name="include_vat" id="include_vat" {{ $project->vat > 0 ? 'checked' : '' }}>
                                                             <label for="include_vat">
                                                                 Include VAT (%)
-                                                                <input type="number" id="vat" name="vat" value="{{ $project->tax }}" min="0"
+                                                                <input type="number" id="vat" name="vat" value="{{ $project->vat }}" min="0"
                                                                        class="form-control form-control-sm vat-input"
                                                                        step="0.01" placeholder="Enter VAT"
                                                                        style="width: 100px; display: inline-block; margin-left: 10px;" disabled />
