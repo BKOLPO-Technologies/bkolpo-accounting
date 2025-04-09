@@ -28,6 +28,7 @@ return new class extends Migration
             $table->decimal('tax', 10, 2)->default(0);
             $table->decimal('tax_amount', 10, 2)->default(0)->nullable();
             $table->decimal('total', 10, 2)->nullable(); 
+            $table->decimal('grand_total', 10, 2)->nullable(); 
 
             // $table->decimal('total_amount', 15, 2); // Total sale amount
             $table->decimal('paid_amount', 15, 2)->default(0); // Amount already paid

@@ -106,7 +106,7 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+        //  dd($request->all());
 
         // Validate the request data
         $validated = $request->validate([
@@ -166,6 +166,7 @@ class SalesController extends Controller
             $sale->tax = $tax;
             $sale->tax_amount = $request->tax_amount;
             $sale->total = $request->subtotal;
+            $sale->grand_total = $request->grand_total;
             $sale->description = $request->description;
             $sale->category_id = $request->category_id;
             $sale->project_id = $request->project_id;
@@ -192,7 +193,7 @@ class SalesController extends Controller
           
 
             // Step 2: Get sale amount
-            $sale_amount = $sale->total_netamount ?? 0; // If sale doesn't have amount, default to 0
+            $sale_amount = $sale->grand_total ?? 0; // If sale doesn't have amount, default to 0
 
             $salesLedger = Ledger::where('type', 'Sales')->first();
             $receivableLedger = Ledger::where('type', 'Receivable')->first();
@@ -446,6 +447,7 @@ class SalesController extends Controller
             $sale->tax_amount = $request->tax_amount;
             $sale->category_id = $request->category_id;
             $sale->total = $request->subtotal;
+            $sale->grand_total = $request->grand_total;
             $sale->description = $request->description;
             $sale->project_id = $request->project_id;
             $sale->save();
