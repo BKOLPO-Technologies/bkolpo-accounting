@@ -165,25 +165,29 @@
 
                                 <table style="width: 100%; border-collapse: collapse; margin-top: 30px;" border="1">
                                     <tr>
-                                        <td style="padding: 10px; text-align: center; width: 25%;">
-                                            <strong>Prepare by :</strong><br>
-                                            ( Department Manager )<br><br>
-                                            Signature: ___________
+                                        <td style="text-align: center; width: 25%;">
+                                            <strong>Prepare by :</strong>( Department Manager )<br><br>
+                                            ____________________
+                                            <br>
+                                            <br>
                                         </td>
-                                        <td style="padding: 10px; text-align: center; width: 25%;">
-                                            <strong>Checked by :</strong><br>
-                                            ( Cost Manager )<br><br>
-                                            Signature: ___________
+                                        <td style="text-align: center; width: 25%;">
+                                            <strong>Checked by :</strong>( Cost Manager )<br><br>
+                                            ____________________
+                                            <br>
+                                            <br>
                                         </td>
-                                        <td style="padding: 10px; text-align: center; width: 25%;">
-                                            <strong>Approved by :</strong><br>
-                                            ( Co-Project Manager )<br><br>
-                                            Signature: ___________
+                                        <td style="text-align: center; width: 25%;">
+                                            <strong>Approved by :</strong>( Co-Project Manager )<br><br>
+                                            ____________________
+                                            <br>
+                                            <br>
                                         </td>
-                                        <td style="padding: 10px; text-align: center; width: 25%;">
-                                            <strong>Received by :</strong><br>
-                                            ( Vendor / Subcontractor )<br><br>
-                                            Signature: ___________
+                                        <td style="text-align: center; width: 25%;">
+                                            <strong>Received by :</strong>( Vendor / Subcontractor )<br><br>
+                                            ____________________
+                                            <br>
+                                            <br>
                                         </td>
                                     </tr>
                                     <tr>
