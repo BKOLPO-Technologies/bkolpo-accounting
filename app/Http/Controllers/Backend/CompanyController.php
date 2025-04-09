@@ -337,7 +337,26 @@ class CompanyController extends Controller
         $company->fiscal_year = $request->input('fiscal_year');
         $company->vat = $request->input('vat');
         $company->tax = $request->input('tax');
-        $company->description = $request->input('description', ''); 
+        $company->description = $request->input('description', '');
+        $company->country = $request->input('country', '');
+        $company->address = $request->input('address', '');
+        $company->city = $request->input('city', '');
+        $company->state = $request->input('state', '');
+        $company->post_code = $request->input('post_code', '');
+        $company->email = $request->input('email', '');
+        $company->phone = $request->input('phone', '');
+        $company->account_no = $request->input('account_no', '');
+        $company->currency_symbol = $request->input('currency_symbol', '');
+        $company->fiscal_year = $request->input('fiscal_year', '');
+
+        if ($request->hasFile('logo')) {
+            @unlink(public_path('upload/company/' . $company->logo)); // Delete old logo
+            $file = $request->file('logo');
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $file->move(public_path('upload/company'), $filename);
+            $company->logo = $filename;
+        }
+
         $company->save();
 
         return redirect()->route('company.index')->with('success', 'Company updated successfully.');

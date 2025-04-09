@@ -70,6 +70,7 @@
                                             @enderror
                                         </div>
 
+                                        <!-- Address Selection -->
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="address">Address</label>
@@ -83,6 +84,7 @@
                                             </div>
                                         </div>
 
+                                        <!-- City Selection -->
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="city">City</label>
@@ -96,6 +98,7 @@
                                             </div>
                                         </div>
 
+                                        <!-- Country Selection -->
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="country">Country</label>
@@ -109,6 +112,7 @@
                                             </div>
                                         </div>
 
+                                        <!-- State Selection -->
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="state">State</label>
@@ -122,6 +126,7 @@
                                             </div>
                                         </div>
 
+                                        <!-- Post Code -->
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="post_code">Post Code</label>
@@ -135,6 +140,7 @@
                                             </div>
                                         </div>
 
+                                        <!-- Phone -->
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="phone">Phone</label>
@@ -148,6 +154,7 @@
                                             </div>
                                         </div>
 
+                                        <!-- Email -->
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="email">Email</label>
@@ -176,6 +183,7 @@
                                             @enderror
                                         </div>
 
+                                        <!-- Currency Symbol -->
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="currency_symbol">Currency Symbol</label>
@@ -188,6 +196,7 @@
                                                 @enderror
                                             </div>
                                         </div>
+                                        
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="fiscal_year">Fiscal Year</label>

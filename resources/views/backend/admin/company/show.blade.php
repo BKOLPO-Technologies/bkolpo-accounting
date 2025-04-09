@@ -43,6 +43,26 @@
                                         <td>{{ $company->branch->name ?? 'N/A' }}</td>
                                     </tr>
                                     <tr>
+                                        <th>Address</th>
+                                        <td>{{ $company->address ?? 'N/A' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>City</th>
+                                        <td>{{ $company->city ?? 'N/A' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Country</th>
+                                        <td>{{ $company->country ?? 'N/A' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>State</th>
+                                        <td>{{ $company->state ?? 'N/A' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Post Code</th>
+                                        <td>{{ $company->post_code ?? 'N/A' }}</td>
+                                    </tr>
+                                    <tr>
                                         <th>Description</th>
                                         <td>{{ $company->description ?? 'N/A' }}</td>
                                     </tr>

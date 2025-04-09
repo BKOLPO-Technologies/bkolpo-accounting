@@ -73,8 +73,106 @@
                                             @enderror
                                         </div>
 
+                                        <!-- Address Selection -->
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="address">Address</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                                    <input type="text" name="address" value="{{ old('address', $company->address) }}" id="address" class="form-control" placeholder="Enter Address">
+                                                </div>
+                                                @error('address')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <!-- City Selection -->
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="city">City</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-city"></i></span>
+                                                    <input type="text" name="city" value="{{ old('city', $company->city) }}" id="city" class="form-control" placeholder="Enter City">
+                                                </div>
+                                                @error('city')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <!-- Country Selection -->
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="country">Country</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-flag"></i></span>
+                                                    <input type="text" name="country" value="{{ old('country', $company->country) }}" id="country" class="form-control" placeholder="Enter Country">
+                                                </div>
+                                                @error('country')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <!-- State Selection -->
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="state">State</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-map"></i></span>
+                                                    <input type="text" name="state" value="{{ old('state', $company->state) }}" id="state" class="form-control" placeholder="Enter State">
+                                                </div>
+                                                @error('state')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <!-- Post Code -->
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="post_code">Post Code</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-mail-bulk"></i></span>
+                                                    <input type="text" name="post_code" value="{{ old('post_code', $company->post_code) }}" id="post_code" class="form-control" placeholder="Enter Post Code">
+                                                </div>
+                                                @error('post_code')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <!-- Phone -->
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="phone">Phone</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                                    <input type="number" name="phone" value="{{ old('phone', $company->phone) }}" id="phone" class="form-control" placeholder="Enter Phone">
+                                                </div>
+                                                @error('phone')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <!-- Email -->
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="email">Email</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                                    <input type="email" name="email" value="{{ old('email', $company->email) }}" id="email" class="form-control" placeholder="Enter Email">
+                                                </div>
+                                                @error('email')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
                                         <!-- Status -->
-                                        <div class="col-md-12 mb-3">
+                                        <div class="col-lg-6">
                                             <label for="status" class="form-label">Status</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="fa fa-check-circle"></i></span>
@@ -88,6 +186,7 @@
                                             @enderror
                                         </div>
 
+                                        <!-- Currency Symbol -->
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="currency_symbol">Currency Symbol</label>
@@ -100,6 +199,8 @@
                                                 @enderror
                                             </div>
                                         </div>
+
+                                        <!-- Fiscal Year -->
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="fiscal_year">Fiscal Year</label>
@@ -113,6 +214,7 @@
                                             </div>
                                         </div>
 
+                                        <!-- VAT -->
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="vat">VAT</label>
@@ -125,6 +227,8 @@
                                                 @enderror
                                             </div>
                                         </div>
+
+                                        <!-- TAX -->
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="tax">TAX</label>
@@ -154,6 +258,24 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
+
+                                        <!-- Company Logo -->
+                                        <div class="col-md-11 mb-3">
+                                            <label for="logo" class="form-label">Company Logo</label>
+                                            <input type="file" class="form-control" id="logo" name="logo" accept="image/*">
+                                        </div>
+
+                                        <!-- Preview Container -->
+                                        <div class="col-md-1 mb-3">
+                                            <div class="mt-3">
+                                                <img
+                                                    id="logoPreview"
+                                                    src="{{ !empty($company->logo) ? url('upload/company/' . $company->logo) : url(asset('backend/logo.jpg')) }}" 
+                                                    alt="Logo"
+                                                    style="width: 100%; height: 60px; border: 1px solid #ddd; border-radius: 5px;">
+                                            </div>
+                                        </div>
+
                                     </div>
                                     <!-- Submit Button -->
                                     <div class="row mt-3">
@@ -182,5 +304,26 @@
         });
     });
 
+</script>
+
+<script>
+    // Company Logo
+    document.getElementById('logo').addEventListener('change', function (event) {
+        const file = event.target.files[0]; // Get the selected file
+        const preview = document.getElementById('logoPreview'); // Get the preview element
+        const defaultImage = 'https://via.placeholder.com/70x60'; // Online default image URL
+
+        if (file) {
+            const reader = new FileReader(); // Create a FileReader object
+
+            reader.onload = function (e) {
+                preview.src = e.target.result; // Set the image source to the uploaded file
+            };
+
+            reader.readAsDataURL(file); // Read the file as a data URL
+        } else {
+            preview.src = defaultImage; // Reset to the default online image
+        }
+    });
 </script>
 @endpush
