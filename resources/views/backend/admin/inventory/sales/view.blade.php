@@ -38,6 +38,12 @@
                                 </a>
                             </div>
                         </div>
+                        <!-- Print Button -->
+                        <div class="text-right mt-3 mr-4">
+                            <button class="btn btn-primary" onclick="printBalanceSheet()">
+                                <i class="fa fa-print"></i> Print
+                            </button>
+                        </div>
                         <div id="printable-area">
                         <div class="card-body">
 
@@ -45,7 +51,7 @@
                             <div class="row">
                                 <div class="col-12">
                                 <h4>
-                                    <i class="fas fa-globe"></i> Bkolpo Construction Ltd.
+                                    <i class="fas fa-globe"></i> {{ get_company()->name ?? '' }}
                                     <small class="float-right" id="current-date"></small>
                                 </h4>
                                 </div>
@@ -57,11 +63,10 @@
                                 <div class="col-sm-4 invoice-col">
                                 Owener
                                 <address>
-                                    <strong>Bkolpo Construction Ltd.</strong><br>
-                                    Tokyo tower<br>
-                                    Tongi, Gazipur, Dhaka<br>
-                                    Phone: (804) 123-5432<br>
-                                    Email: info@almasaeedstudio.com
+                                    <strong>{{ get_company()->name ?? '' }}</strong><br>
+                                    {{ get_company()->address ?? '' }}<br>
+                                    Phone: {{ get_company()->phone ?? '' }}<br>
+                                    Email: {{ get_company()->email ?? '' }}
                                 </address>
                                 </div>
                                 <div class="col-sm-4 invoice-col">
@@ -165,52 +170,43 @@
 
                                 <table style="width: 100%; border-collapse: collapse; margin-top: 30px;" border="1">
                                     <tr>
-                                        <td style="text-align: center; width: 25%;">
-                                            <strong>Prepare by :</strong>( Department Manager )<br><br>
-                                            ____________________
-                                            <br>
-                                            <br>
+                                        <td style="padding: 10px; text-align: center; width: 25%;">
+                                            <small style="font-weight:bolder;">Prepare by : (Department Manager)</small>
+                                            <p style="border-bottom: 2px dotted black; margin: 30px 10 10 10;"></p>
                                         </td>
-                                        <td style="text-align: center; width: 25%;">
-                                            <strong>Checked by :</strong>( Cost Manager )<br><br>
-                                            ____________________
-                                            <br>
-                                            <br>
+                                        <td style="padding: 10px; text-align: center; width: 25%;">
+                                            <small style="font-weight:bolder;">Checked by : (Cost Manager)</small>
+                                            <p style="border-bottom: 2px dotted black; margin: 30px 10 10 10;"></p>
                                         </td>
-                                        <td style="text-align: center; width: 25%;">
-                                            <strong>Approved by :</strong>( Co-Project Manager )<br><br>
-                                            ____________________
-                                            <br>
-                                            <br>
+                                        <td style="padding: 10px; text-align: center; width: 25%;">
+                                            <small style="font-weight:bolder;">Approved by : (Co-Project Manager)</small>
+                                            <p style="border-bottom: 2px dotted black; margin: 30px 10 10 10;"></p>
                                         </td>
-                                        <td style="text-align: center; width: 25%;">
-                                            <strong>Received by :</strong>( Vendor / Subcontractor )<br><br>
-                                            ____________________
-                                            <br>
-                                            <br>
+                                        <td style="padding: 10px; text-align: center; width: 25%;">
+                                            <small style="font-weight:bolder;">Received by : (Vendor / Subcontractor)</small>
+                                            <p style="border-bottom: 2px dotted black; margin: 30px 10 10 10;"></p>
                                         </td>
-                                    </tr>
+                                    </tr>                                    
                                     <tr>
-                                        <td style="padding: 10px; text-align: center;">Date: ___________________</td>
-                                        <td style="padding: 10px; text-align: center;">Date: ___________________</td>
-                                        <td style="padding: 10px; text-align: center;">Date: ___________________</td>
-                                        <td style="padding: 10px; text-align: center;">Date: ___________________</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px dotted black;">
+                                            Date: <span style="display: inline-block; width: 80%;margin: 20px 0 0 0; border-bottom: 2px dotted black;"></span>
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px dotted black;">
+                                            Date: <span style="display: inline-block; width: 80%;margin: 20px 0 0 0; border-bottom: 2px dotted black;"></span>
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px dotted black;">
+                                            Date: <span style="display: inline-block; width: 80%;margin: 20px 0 0 0; border-bottom: 2px dotted black;"></span>
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px dotted black;">
+                                            Date: <span style="display: inline-block; width: 80%;margin: 20px 0 0 0; border-bottom: 2px dotted black;"></span>
+                                        </td>
                                     </tr>
-                                </table>                                                               
+                                    
+                                </table>
+                                                                                              
                                 
                             </div>
-                            
-                            <div class="row no-print">
-                                <div class="col-12">
-
-                                    <button class="btn btn-primary" onclick="printBalanceSheet()">
-                                        <i class="fa fa-print"></i> Print
-                                    </button>
-
-                                </div>
-                            </div>
                         </div>
-
                         </div>
                         </div>
                     </div>
