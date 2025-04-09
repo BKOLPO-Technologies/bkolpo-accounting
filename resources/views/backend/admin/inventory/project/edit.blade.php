@@ -307,7 +307,7 @@
                                                 <tr>
                                                     <td><label for="subtotal">Total Amount</label></td>
                                                     <td>
-                                                        <div class="col-12 col-lg-12 mb-3">
+                                                        <div class="col-12 col-lg-12">
                                                             <input type="text" id="subtotal" name="total_subtotal" class="form-control" value="0" readonly />
                                                         </div>
                                                     </td>
@@ -315,7 +315,7 @@
                                                 <tr>
                                                     <td><label for="total_discount">Discount</label></td>
                                                     <td>
-                                                        <div class="col-12 col-lg-12 mb-3">
+                                                        <div class="col-12 col-lg-12">
                                                             {{-- <input type="number" id="total_discount" name="total_discount" class="form-control" step="0.01" placeholder="Enter Discount" /> --}}
                                                             <input type="number" id="total_discount" name="total_discount" class="form-control" placeholder="Enter Total Discount" value="{{ old('total_discount', $project->total_discount) }}">
                                                         </div>
@@ -325,7 +325,7 @@
                                                 <tr>
                                                     <td><label for="total_netamount">Net Amount</label></td>
                                                     <td>
-                                                        <div class="col-12 col-lg-12 mb-3">
+                                                        <div class="col-12 col-lg-12">
                                                             <input type="number" id="total_netamount" name="total_netamount" class="form-control" step="0.01" readonly placeholder="0.00" />
                                                         </div>
                                                     </td>
@@ -366,7 +366,7 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <div class="col-12 col-lg-12 mb-3 vat-fields">
+                                                        <div class="col-12 col-lg-12 vat-fields">
                                                             <input type="text" id="vat_amount" name="vat_amount" value="{{ $project->vat_amount }}" class="form-control" readonly placeholder="VAT Amount" />
                                                         </div>
                                                     </td>
@@ -375,7 +375,7 @@
                                                 <tr>
                                                     <td><label for="grand_total">Grand Total</label></td>
                                                     <td>
-                                                        <div class="col-12 col-lg-12 mb-3">
+                                                        <div class="col-12 col-lg-12">
                                                             <input type="text" id="grand_total" name="grand_total" class="form-control" value="0" readonly />
                                                         </div>
                                                     </td>
