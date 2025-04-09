@@ -199,8 +199,12 @@
                                                 <td>{{ bdt() }} {{ number_format($subtotal, 2) }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Total Discount:</th>
+                                                <th>Discount:</th>
                                                 <td>{{ bdt() }} {{ number_format($project->total_discount, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Net Amount:</th>
+                                                <td>{{ bdt() }} {{ number_format($project->total_netamount, 2) }}</td>
                                             </tr>
                                             {{-- <tr>
                                                 <th>Transport Cost:</th>
