@@ -31,7 +31,7 @@ return new class extends Migration
             $table->decimal('grand_total', 10, 2)->nullable(); 
 
             // $table->decimal('total_amount', 15, 2); // Total sale amount
-            $table->decimal('paid_amount', 15, 2)->default(0); // Amount already paid
+            $table->decimal('paid_amount', 15, 2)->default(0)->nullable(); // Amount already paid
             $table->enum('status', ['pending', 'paid', 'partially_paid'])->default('pending'); // Sale status
             
             $table->text('description')->nullable();
