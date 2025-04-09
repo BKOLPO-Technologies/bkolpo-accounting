@@ -192,6 +192,12 @@ class ProductController extends Controller
             $products = Product::where('category_id', $categoryId)->with('unit')->get();
         }
 
-        return response()->json($products);
+        $category = Category::find($categoryId);
+        // return response()->json($products);
+
+        return response()->json([
+            'products' => $products,
+            'category' => $category,
+        ]);
     }
 }

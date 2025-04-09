@@ -45,6 +45,8 @@ class CategoryController extends Controller
             'slug' => $slug,
             'image' => $request->image ?? null, // Add logic for image if needed
             'status' => $request->status ?? 1, // Default to active if not provided
+            'vat' => $request->vat,
+            'tax' => $request->tax
         ]);
 
         return redirect()->route('admin.category.index')->with('success', 'Category created successfully!');
@@ -104,6 +106,8 @@ class CategoryController extends Controller
         // Update the supplier data
         $category->update([
             'name' => $request->input('name'),
+            'vat' => $request->input('vat'),
+            'tax' => $request->input('tax'),
         ]);
 
         // Redirect back to the supplier index with a success message

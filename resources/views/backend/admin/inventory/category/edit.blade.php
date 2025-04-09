@@ -57,6 +57,30 @@
                                 <input type="text" class="form-control" placeholder="Enter Cateogry Name" name="name" value="{{ $category->name }}">
                             </div>
                         </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="vat">VAT</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                    <input type="number" min="0" name="vat" value="{{ old('vat', $category->vat) }}" id="vat" class="form-control" placeholder="Enter VAT">
+                                </div>
+                                @error('vat')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="tax">TAX</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                    <input type="number" min="0" name="tax" value="{{ old('tax', $category->tax) }}" id="tax" class="form-control" placeholder="Enter TAX">
+                                </div>
+                                @error('tax')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
                         <div class="col-md-6 mb-2">
                             <label for="status" class="form-label">Status
                                 @error('status')

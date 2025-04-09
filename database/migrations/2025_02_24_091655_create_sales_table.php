@@ -18,13 +18,16 @@ return new class extends Migration
             $table->integer('project_id')->nullable(); 
             $table->string('invoice_no')->unique(); 
             $table->date('invoice_date'); 
-            $table->decimal('subtotal', 10, 2); 
-            $table->decimal('discount', 10, 2);
-            $table->decimal('transport_cost', 10, 2)->default(0);
-            $table->decimal('carrying_charge', 10, 2)->default(0);
-            $table->decimal('vat', 10, 2)->default(0);
+            $table->decimal('subtotal', 10, 2)->default(0)->nullable(); 
+            $table->decimal('total_netamount', 10, 2)->default(0)->nullable();
+            $table->decimal('discount', 10, 2)->default(0)->nullable();
+            $table->decimal('transport_cost', 10, 2)->default(0)->nullable();
+            $table->decimal('carrying_charge', 10, 2)->default(0)->nullable();
+            $table->decimal('vat', 10, 2)->default(0)->nullable();
+            $table->decimal('vat_amount', 10, 2)->default(0)->nullable();
             $table->decimal('tax', 10, 2)->default(0);
-            $table->decimal('total', 10, 2); 
+            $table->decimal('tax_amount', 10, 2)->default(0)->nullable();
+            $table->decimal('total', 10, 2)->nullable(); 
 
             // $table->decimal('total_amount', 15, 2); // Total sale amount
             $table->decimal('paid_amount', 15, 2)->default(0); // Amount already paid

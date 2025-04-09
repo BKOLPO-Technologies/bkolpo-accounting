@@ -133,8 +133,8 @@
                                                     <th>Price</th>
                                                     <th>Quantity</th>
                                                     <th>Unit</th>
-                                                    {{-- <th>Subtotal</th> --}}
-                                                    {{-- <th>Discount</th> --}}
+                                                    <th>Subtotal</th>
+                                                    <th>Discount</th>
                                                     <th>Total</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -162,18 +162,18 @@
                                                     <td>
                                                         <input type="number" name="unit_price[]" class="form-control unit-price" min="0" required readonly>
                                                     </td>
-                                                    <td style="width:15% !important;">
+                                                    <td style="width:11% !important;">
                                                         <input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required>
                                                     </td>
                                                     <td style="width:7% !important;">
                                                         <input type="text" name="order_unit[]" class="form-control unit-input" required readonly>
                                                     </td>
-                                                    {{-- <td style="width:8% !important;">
+                                                    <td style="width:8% !important;">
                                                         <input type="text" name="subtotal[]" class="form-control subtotal"  readonly>
-                                                    </td> --}}
-                                                    {{-- <td style="width:11% !important;">
+                                                    </td>
+                                                    <td style="width:11% !important;">
                                                         <input type="number" name="discount[]" class="form-control product-discount" placeholder="Enter Discount" step="0.01" min="0">
-                                                    </td> --}}
+                                                    </td>
                                                     <td>
                                                         <input type="text" name="total[]" class="form-control total" readonly>
                                                     </td>
@@ -188,94 +188,49 @@
                             </div>
 
                             <div class="d-flex justify-content-end flex-column align-items-end">
-                                <!-- First Row: Subtotal and Total Discount -->
-                                <div class="row w-100">
-                                    <div class="col-12 col-lg-6 mb-2">
-                                    </div>
-                                    <div class="col-12 col-lg-6 mb-2">
-                                        <table class="table table-bordered">
-                                            <tbody>
-                                                <!-- Subtotal and Discount Row -->
-                                                <tr>
-                                                    <td><label for="subtotal">Total Amount</label></td>
-                                                    <td>
-                                                        <div class="col-12 col-lg-12">
-                                                            <input type="text" id="subtotal" name="subtotal" class="form-control" value="0" readonly />
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label for="total_discount">Discount</label></td>
-                                                    <td>
-                                                        <div class="col-12 col-lg-12">
-                                                            <input type="number" id="total_discount" name="total_discount" class="form-control" step="0.01" placeholder="Enter Discount" />
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label for="total_netamount">Net Amount</label></td>
-                                                    <td>
-                                                        <div class="col-12 col-lg-12">
-                                                            <input type="number" id="total_netamount" name="total_netamount" class="form-control" step="0.01" readonly placeholder="0.00" />
-                                                        </div>
-                                                    </td>
-                                                </tr>
                                 
-                                                <!-- Include VAT and TAX Checkboxes -->
-                                                <tr>
-                                                    <td>
-                                                        <div class="icheck-success d-inline">
-                                                            <input type="checkbox" name="include_tax" id="include_tax">
-                                                           <!-- Include TAX -->
-                                                            <label for="include_tax" class="me-3">
-                                                                Include TAX (%)
-                                                                <input type="number" name="tax" id="tax" value="0" min="0"
-                                                                    class="form-control form-control-sm d-inline-block"
-                                                                    step="0.01" placeholder="Enter TAX"
-                                                                    style="width: 70px; margin-left: 10px;" disabled />
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="col-12 col-lg-12 tax-fields">
-                                                            <input type="text" id="tax_amount" name="tax_amount" class="form-control" readonly placeholder="TAX Amount" />
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                    <td>
-                                                        <div class="icheck-success d-inline">
-                                                            <input type="checkbox" name="include_vat" id="include_vat">
-                                                            <label for="include_vat">
-                                                                Include VAT (%)
-                                                                <input type="number" id="vat" name="vat" value="0" min="0"
-                                                                       class="form-control form-control-sm vat-input"
-                                                                       step="0.01" placeholder="Enter VAT"
-                                                                       style="width: 70px; display: inline-block; margin-left: 10px;" disabled />
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="col-12 col-lg-12 vat-fields">
-                                                            <input type="text" id="vat_amount" name="vat_amount" class="form-control" readonly placeholder="VAT Amount" />
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                
-                                                <!-- Grand Total Row -->
-                                                <tr>
-                                                    <td><label for="grand_total">Grand Total</label></td>
-                                                    <td>
-                                                        <div class="col-12 col-lg-12">
-                                                            <input type="text" id="grand_total" name="grand_total" class="form-control" value="0" readonly />
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                <div class="col-12 col-lg-4 mb-2">
+                                    <div class="row w-100">
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="subtotal">Subtotal</label>
+                                            <input type="text" id="subtotal" name="subtotal" class="form-control" value="0" readonly />
+                                        </div>
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="total_discount">Total Discount</label>
+                                            <input type="number" id="discount" name="discount" class="form-control" value="0" step="0.01" oninput="updateTotal()" />
+                                        </div>
                                     </div>
+
+                                    <div class="row w-100">
+                                        
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="transport_cost">Transport Cost</label>
+                                            <input type="number" min="0" id="transport_cost" name="transport_cost" class="form-control" step="0.01" placeholder="Enter Transport Cost" value="0" oninput="updateTotal()"/>
+                                        </div>
+                                
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="carrying_charge">Carrying Charge</label>
+                                            <input type="number" min="0" id="carrying_charge" name="carrying_charge" class="form-control" step="0.01" placeholder="Enter Carrying Charge" value="0" oninput="updateTotal()" />
+                                        </div>
+                                
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <label for="vat">VAT</label>
+                                            <input type="number" min="0" id="vat" name="vat" class="form-control" placeholder="Enter Vat" step="0.01" value="0" oninput="updateTotal()"/>
+                                        </div>
+                                
+                                        <div class="col-12 col-lg-6 mb-3">
+                                            <label for="tax">TAX</label>
+                                            <input type="number" min="0" id="tax" name="tax" class="form-control" placeholder="Enter Tax" step="0.01" value="0" oninput="updateTotal()"/>
+                                        </div>
+                                        
+                                        <div class="col-12 mb-2">
+                                            <label for="grand_total">Grand Total</label>
+                                            <input type="number" min="0" id="total" name="total" class="form-control" value="0"  readonly />
+                                        </div>
+                                    </div>
+
                                 </div>
+
                             </div>
                             
                             <hr>
@@ -401,31 +356,36 @@
 <script>
     $(document).ready(function () {
 
+        // Function to add/update selected product details in hidden fields
         function addToHiddenFields(productId, quantity, price, discount) {
             let productIds = $('#product_ids').val() ? $('#product_ids').val().split(',') : [];
             let quantities = $('#quantities').val() ? $('#quantities').val().split(',') : [];
             let prices = $('#prices').val() ? $('#prices').val().split(',') : [];
             let discounts = $('#discounts').val() ? $('#discounts').val().split(',') : [];
 
-            let index = productIds.indexOf(productId);
+            let index = productIds.indexOf(productId); // Check if product already exists
 
             if (index !== -1) {
+                // Update existing product details
                 quantities[index] = quantity;
                 prices[index] = price;
                 discounts[index] = discount;
             } else {
+                // Add new product details
                 productIds.push(productId);
                 quantities.push(quantity);
                 prices.push(price);
                 discounts.push(discount);
             }
 
+            // Update hidden input fields
             $('#product_ids').val(productIds.join(','));
             $('#quantities').val(quantities.join(','));
             $('#prices').val(prices.join(','));
             $('#discounts').val(discounts.join(','));
         }
 
+        // Function to remove product from hidden fields
         function removeFromHiddenFields(productId) {
             let productIds = $('#product_ids').val().split(',');
             let quantities = $('#quantities').val().split(',');
@@ -440,31 +400,43 @@
                 discounts.splice(index, 1);
             }
 
+            // Update hidden input fields
             $('#product_ids').val(productIds.join(','));
             $('#quantities').val(quantities.join(','));
             $('#prices').val(prices.join(','));
             $('#discounts').val(discounts.join(','));
         }
 
+        // Function to load products based on the selected category
+        //function loadProductsByCategory(categoryId) {
         function loadProductsByCategory(categoryId, row) {
-            var $productSelect = row.find('.product-select');
+            //var $productSelect = $('.product-select');
+            var $productSelect = row.find('.product-select'); // Find only this row's product select
 
+            // Check if categoryId is valid
             if (!categoryId) {
                 $productSelect.empty().append('<option value="">Select a category first</option>');
                 return;
             }
 
+            // Clear current options and show loading message
             $productSelect.empty().append('<option value="">Loading products...</option>');
 
+            // Send an AJAX request to fetch the products for the selected category
             $.ajax({
-                url: '/admin/product/products-by-category/' + encodeURIComponent(categoryId),
+                url: '/admin/product/products-by-category/' + encodeURIComponent(categoryId), // Prevent special character issues
                 method: 'GET',
-                dataType: 'json',
-                success: function (response) {
+                dataType: 'json', // Ensure proper JSON parsing
+                success: function(response) {
+
+                    // Empty the select element and add the default "Select Product" option
                     $productSelect.empty().append('<option value="">Select Product</option>');
-                    if (Array.isArray(response.products) && response.products.length > 0) {
-                        response.products.forEach(function (product) {
-                            let unitName = product.unit && product.unit.name ? product.unit.name : 'N/A';
+
+                    if (Array.isArray(response) && response.length > 0) {
+                        // Append products to the select dropdown
+                        response.forEach(function(product) {
+                            let unitName = product.unit && product.unit.name ? product.unit.name : 'N/A'; // Handle missing unit
+
                             $productSelect.append(`
                                 <option value="${product.id}" 
                                         data-id="${product.id}" 
@@ -479,43 +451,39 @@
                         $productSelect.append('<option value="">No products found</option>');
                     }
 
-                    if (response.category) {
-                        let tax = response.category.tax ?? 0;
-                        let vat = response.category.vat ?? 0;
-
-                        $('#tax').val(tax);
-                        $('#vat').val(vat);
-                    } else {
-                        $('#tax').val(0);
-                        $('#vat').val(0);
-                    }
-
+                    // Refresh select2 after updating the options (if using select2)
                     $productSelect.trigger('change');
                 },
-                error: function (xhr, status, error) {
+                error: function(xhr, status, error) {
                     console.error('AJAX Error:', status, error);
                     $productSelect.empty().append('<option value="">Error fetching products</option>');
                 }
             });
         }
 
-        $(document).on('change', '.category-select', function () {
+        // When a category is selected, load products for that category
+        //$('#category_id').on('change', function() {
+        // $(document).on('change', '#category_id', function() {
+        $(document).on('change', '.category-select', function() {
             var categoryId = $(this).val();
-            var row = $(this).closest('tr');
-            loadProductsByCategory(categoryId, row);
+            //loadProductsByCategory(categoryId);  // Load products for the selected category
+            var row = $(this).closest('tr'); // Get the specific row
+            loadProductsByCategory(categoryId, row);  // Pass the row to the function
         });
 
+        // Function to update row fields when product is selected
         $(document).on('change', '.product-select', function () {
             let selectedOption = $(this).find(':selected');
             let productId = selectedOption.val();
             let productPrice = selectedOption.data('price') || 0;
             let productUnit = selectedOption.data('unit') || '';
 
+            // Check if the product is already selected in another row
             let isDuplicate = false;
             $('.product-select').not(this).each(function () {
                 if ($(this).val() === productId) {
                     isDuplicate = true;
-                    return false;
+                    return false; // Break the loop
                 }
             });
 
@@ -525,26 +493,33 @@
                     progressBar: true,
                     timeOut: 5000
                 });
-                $(this).val('').trigger('change');
+                $(this).val('').trigger('change'); 
                 return;
             }
 
             if (productId) {
                 let row = $(this).closest('tr');
 
-                row.find('.unit-price').val(productPrice);
-                row.find('.quantity').val(1);
-                row.find('.subtotal').val(productPrice);
-                row.find('.total').val(productPrice);
+                // Set values in the row
+                row.find('.unit-price').val(productPrice);  // Set Sell Price
+                row.find('.quantity').val(1);  // Set Quantity
+                row.find('.subtotal').val(productPrice);  // Subtotal initially
+                row.find('.total').val(productPrice);  // Total initially
                 row.find('.unit-input').val(productUnit);
-                row.find('.product-discount').val(0);
+                row.find('.product-discount').val(0); // Set default discount to 0
 
+                // Add product to hidden fields
                 addToHiddenFields(productId, 1, productPrice, 0);
+
+            } else {
+                //console.log("productId not found");
             }
 
-            calculateTotal();
+            calculateTotal(); // Update overall total
+
         });
 
+        // Function to calculate totals when quantity or discount changes
         $(document).on('input', '.quantity, .product-discount', function () {
             let row = $(this).closest('tr');
             let productId = row.find('.product-select').val();
@@ -558,66 +533,43 @@
             row.find('.subtotal').val(subtotal.toFixed(2));
             row.find('.total').val(total.toFixed(2));
 
+            // Update hidden fields
             addToHiddenFields(productId, quantity, unitPrice, discount);
 
-            calculateTotal();
+            calculateTotal(); // Update grand total
         });
 
+        // Function to calculate total sum of all rows
         function calculateTotal() {
+
             let subtotal = 0;
+            let totalDiscount = parseFloat($("#discount").val()) || 0;
+            let transportCost = parseFloat($("#transport_cost").val()) || 0;
+            let carryingCharge = parseFloat($("#carrying_charge").val()) || 0;
+            let vat = parseFloat($("#vat").val()) || 0;
+            let tax = parseFloat($("#tax").val()) || 0;
 
             $(".total").each(function () {
                 subtotal += parseFloat($(this).val()) || 0;
             });
 
+            let grandTotal = subtotal - totalDiscount + transportCost + carryingCharge + vat + tax;
+
             $("#subtotal").val(subtotal.toFixed(2));
-            calculateNetAmount(); // Now integrated
+            $("#total").val(grandTotal.toFixed(2));
         }
 
-        function calculateNetAmount() {
-            let subtotal = parseFloat($('#subtotal').val()) || 0;
-            let discount = parseFloat($('#total_discount').val()) || 0;
-            let netAmount = subtotal - discount;
-
-            $('#total_netamount').val(netAmount.toFixed(2));
-
-            // TAX
-            let taxPercent = parseFloat($('#tax').val()) || 0;
-            let taxAmount = $('#include_tax').is(':checked') ? (netAmount * taxPercent / 100) : 0;
-            $('#tax_amount').val(taxAmount.toFixed(2));
-
-            // Calculate the sum of net amount and tax amount
-            let netAmountWithTax = netAmount + taxAmount;
-
-            // VAT
-            let vatPercent = parseFloat($('#vat').val()) || 0;
-            let vatAmount = $('#include_vat').is(':checked') ? (netAmountWithTax * vatPercent / 100) : 0;
-            $('#vat_amount').val(vatAmount.toFixed(2));
-
-            // Grand total
-            let grandTotal = netAmountWithTax + vatAmount;
-            $('#grand_total').val(grandTotal.toFixed(2));
-        }
-
-        $(document).on("input", "#total_discount, #vat, #tax", function () {
-            calculateNetAmount();
+        // Update total when additional cost fields change
+        $(document).on("input", "#discount, #transport_cost, #carrying_charge, #vat, #tax", function () {
+            calculateTotal();
         });
 
-        $(document).on('change', '#include_vat', function () {
-            $('#vat').prop('disabled', !this.checked);
-            calculateNetAmount();
-        });
-
-        $(document).on('change', '#include_tax', function () {
-            $('#tax').prop('disabled', !this.checked);
-            calculateNetAmount();
-        });
-
+        // Function to add new row dynamically
         $(document).on('click', '.add-row', function () {
             let newRow = `
                 <tr>
                     <td>
-                        <select name="category_id" class="form-control category-select select2" style="width: 100%;">
+                        <select name="category_id" id="category_id" class="form-control category-select select2 @error('category_id') is-invalid @enderror" style="width: 100%;">
                             <option value="all">All Categories</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -634,24 +586,31 @@
                             @endforeach
                         </select>
                     </td>
-                    <td><input type="number" name="unit_price[]" class="form-control unit-price" readonly></td>
-                    <td><input type="number" name="quantity[]" class="form-control quantity" value="1"></td>
-                    <td><input type="text" name="order_unit[]" class="form-control unit-input" readonly></td>
+                    <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" required readonly></td>
+                    <td><input type="number" name="quantity[]" class="form-control quantity" min="1" value="1" required></td>
+                    <td><input type="text" name="order_unit[]" class="form-control unit-input" required readonly></td>
+                    <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
+                    <td><input type="number" name="discount[]" class="form-control product-discount" min="0" placeholder="Enter Discount"></td>
                     <td><input type="text" name="total[]" class="form-control total" readonly></td>
                     <td class="text-center">
                         <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>`;
             $('#product-tbody').append(newRow);
+
+            // Initialize Select2 for new select elements
             $('.select2').select2();
         });
 
+        // Remove row
         $(document).on('click', '.remove-row', function () {
+
             let row = $(this).closest('tr');
             let productId = row.find('.product-select').val();
-            row.remove();
-            removeFromHiddenFields(productId);
-            calculateTotal();
+
+            row.remove(); // Remove row from DOM
+            removeFromHiddenFields(productId); // Remove product from hidden fields
+            calculateTotal(); // Update grand total
         });
     });
 </script>

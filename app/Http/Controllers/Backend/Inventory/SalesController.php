@@ -46,11 +46,45 @@ class SalesController extends Controller
         $pageTitle = 'Invoice';
 
         // Get current timestamp in 'dmyHis' format (day, month, year)
-        $randomNumber = rand(100000, 999999);
-        $fullDate = now()->format('d/m/y');
+        // $randomNumber = rand(100000, 999999);
+        // $fullDate = now()->format('d/m/y');
 
         // Combine the timestamp, random number, and full date
-        $invoice_no = 'BCL-INV-'.$fullDate.' - '.$randomNumber;
+        // $invoice_no = 'BCL-INV-'.$fullDate.' - '.$randomNumber;
+
+        $companyInfo = get_company(); 
+
+        // Get the current date and month
+        $currentMonth = now()->format('m'); // Current month (01-12)
+        $currentYear = now()->format('y'); // Current year (yy)
+
+        // Generate a random number for the current insert
+        $randomNumber = rand(100000, 999999);
+
+        // Get the last reference number for the current month
+        $lastInvoiceNo = Sale::whereRaw('MONTH(created_at) = ?', [$currentMonth]) // Filter by the current month
+        ->orderBy('created_at', 'desc') // Order by the latest created entry
+        ->first(); // Get the latest entry
+
+        // Increment the last Invoice No number for this month
+        if ($lastInvoiceNo) {
+            // Extract the incremental part from the last reference number
+            preg_match('/(\d{3})$/', $lastInvoiceNo->invoice_no, $matches); // Assuming the last part is always 3 digits (001, 002, etc.)
+            $increment = (int)$matches[0] + 1; // Increment the number
+        } else {
+            // If no reference exists for the current month, start from 001
+            $increment = 1;
+        }
+
+        // Format the increment to be always 3 digits (e.g., 001, 002, 003)
+        $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
+
+
+        // Remove the hyphen from fiscal year (e.g., "24-25" becomes "2425")
+        $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
+
+        // Combine fiscal year, current month, and the incremental number to generate the reference number
+        $invoice_no = 'BCL-INV-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement;
 
         // Generate a random 8-digit number
         // $randomNumber = mt_rand(100000, 999999);
@@ -79,9 +113,9 @@ class SalesController extends Controller
             'client' => 'required|exists:clients,id',
             'invoice_no' => 'required|unique:sales,invoice_no',
             // 'invoice_date' => 'required|date',
-            'subtotal' => 'required|numeric',
-            'discount' => 'required|numeric',
-            'total' => 'required|numeric',
+            // 'subtotal' => 'required|numeric',
+            // 'discount' => 'required|numeric',
+            // 'total' => 'nullable|numeric|min:0',
             //'product_ids' => 'required|not_in:',  // Ensure at least one product is selected
             'product_ids' => 'required|not_in:',
             // 'project_id' => 'required|exists:projects,id',
@@ -114,18 +148,24 @@ class SalesController extends Controller
             //     $invoice_no = $project->reference_no;
             // }
 
+            $tax = $request->include_tax ? $request->tax : 0; 
+            $vat = $request->include_vat ? $request->vat : 0; 
+
             // Create a new sale record
             $sale = new Sale();
             $sale->client_id = $validated['client'];
             $sale->invoice_no = $validated['invoice_no'];
             $sale->invoice_date = now()->format('Y-m-d');
-            $sale->subtotal = $validated['subtotal'];
-            $sale->discount = $validated['discount'];
+            $sale->subtotal = $request->subtotal;
+            $sale->discount = $request->total_discount;
+            $sale->total_netamount = $request->total_netamount ?? 0;
             $sale->transport_cost = $request->transport_cost;
             $sale->carrying_charge = $request->carrying_charge;
-            $sale->vat = $request->vat;
-            $sale->tax = $request->tax;
-            $sale->total = $validated['total'];
+            $sale->vat = $vat;
+            $sale->vat_amount = $request->vat_amount;
+            $sale->tax = $tax;
+            $sale->tax_amount = $request->tax_amount;
+            $sale->total = $request->subtotal;
             $sale->description = $request->description;
             $sale->category_id = $request->category_id;
             $sale->project_id = $request->project_id;
@@ -149,24 +189,51 @@ class SalesController extends Controller
             }
 
             // Step 2: Get sale amount
-            $sale_amount = $sale->total ?? 0; // If sale doesn't have amount, default to 0
+            $sale_amount = $sale->total_netamount ?? 0; // If sale doesn't have amount, default to 0
 
 
             $salesLedger = Ledger::where('type', 'Sales')->first();
             $receivableLedger = Ledger::where('type', 'Receivable')->first();
 
             if ($salesLedger && $receivableLedger) {
-                // Check if a Journal Voucher already exists for the given invoice
-                $journalVoucher = JournalVoucher::where('transaction_code', $sale->invoice_no)->first();
+                // // Check if a Journal Voucher already exists for the given invoice
+                // $journalVoucher = JournalVoucher::where('transaction_code', $sale->invoice_no)->first();
 
-                // Get current timestamp in 'dmyHis' format (day, month, year)
+                // // Get current timestamp in 'dmyHis' format (day, month, year)
+                // $randomNumber = rand(100000, 999999);
+                // $fullDate = now()->format('d/m/y');
+
+                // // Combine the timestamp, random number, and full date
+                // $transactionCode = 'BCL-V-'.$fullDate.' - '.$randomNumber;
+
+                // 09-04-2025 new code //
+                $companyInfo = get_company(); 
+                $currentMonth = now()->format('m');
+                $currentYear = now()->format('y');
                 $randomNumber = rand(100000, 999999);
-                $fullDate = now()->format('d/m/y');
 
-                // Combine the timestamp, random number, and full date
-                $transactionCode = 'BCL-V-'.$fullDate.' - '.$randomNumber;
+                $journalVoucher = JournalVoucher::whereRaw('MONTH(created_at) = ?', [$currentMonth]) 
+                ->orderBy('created_at', 'desc') 
+                // ->where('transaction_code', $sale->invoice_no)
+                ->first(); 
 
-                if (!$journalVoucher) {
+                // dd($journalVoucher);
+
+                if ($journalVoucher) {
+                    preg_match('/(\d{3})$/', $journalVoucher->transaction_code, $matches); 
+                    $increment = (int)$matches[0] + 1;
+                }else{
+                    $increment = 1;
+                }
+
+                $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
+                $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
+
+                $transactionCode = 'BCL-V-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement;
+
+                // dd($transactionCode);
+
+                if ($journalVoucher) {
                     // Create a new Journal Voucher if not exists
                     $journalVoucher = JournalVoucher::create([
                         'transaction_code'  => $transactionCode,
@@ -325,9 +392,9 @@ class SalesController extends Controller
             'client' => 'required|exists:clients,id',
             'invoice_no' => 'required|unique:purchases,invoice_no,' . $id,
             //'invoice_date' => 'required|date',
-            'subtotal' => 'required|numeric',
-            'discount' => 'required|numeric',
-            'total' => 'required|numeric',
+            // 'subtotal' => 'required|numeric',
+            // 'discount' => 'required|numeric',
+            // 'total' => 'required|numeric',
             'product_ids' => 'required'
         ]);
 
@@ -368,16 +435,18 @@ class SalesController extends Controller
             $sale->client_id = $validated['client'];  // Ensure this field exists in DB
             $sale->invoice_no = $validated['invoice_no'];
             $sale->invoice_date = now()->format('Y-m-d');
-            $sale->subtotal = $validated['subtotal'];
-            $sale->discount = $validated['discount'];
+            $sale->subtotal = $request->subtotal;
+            $sale->discount = $request->total_discount;
+            $sale->total_netamount = $request->total_netamount ?? 0;
 
             $sale->transport_cost = $request->transport_cost;
             $sale->carrying_charge = $request->carrying_charge;
-            $sale->vat = $request->vat;
-            $sale->tax = $request->tax;
+            $sale->vat = $vat;
+            $sale->vat_amount = $request->vat_amount;
+            $sale->tax = $tax;
+            $sale->tax_amount = $request->tax_amount;
             $sale->category_id = $request->category_id;
-
-            $sale->total = $validated['total'];
+            $sale->total = $request->subtotal;
             $sale->description = $request->description;
             $sale->project_id = $request->project_id;
             $sale->save();
