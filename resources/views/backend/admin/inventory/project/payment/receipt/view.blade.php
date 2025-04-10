@@ -292,7 +292,7 @@
                                             </tr>
                                             <tr>
                                                 <th>Total Amount need to Paid :</th>
-                                                <td>{{ bdt() }} {{ number_format($sale->total - $sale->paid_amount, 2) }}</td>
+                                                <td>{{ bdt() }} {{ number_format($sale->grand_total - $sale->paid_amount, 2) }}</td>
                                             </tr>
                                         </table>
                                     </div>
