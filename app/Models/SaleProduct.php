@@ -27,4 +27,9 @@ class SaleProduct extends Model
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class, 'product_id');
+    }
 }

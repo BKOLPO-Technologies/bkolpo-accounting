@@ -98,7 +98,7 @@ class SalesController extends Controller
         $vat = $companyInfo->vat;
         $tax = $companyInfo->tax;
         
-        return view('backend.admin.inventory.sales.create_1', compact(
+        return view('backend.admin.inventory.sales.create', compact(
             'pageTitle', 
             'clients', 
             'products',
@@ -258,6 +258,10 @@ class SalesController extends Controller
         $sale = Sale::where('id', $id)
             ->with(['products', 'client']) // Include supplier details
             ->first();
+
+        //$h = $sale->saleProducts->product;
+
+        //dd($h);
 
         // Fetch purchase details with supplier and products
         $purchase = Purchase::where('id', $id)
