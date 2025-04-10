@@ -103,45 +103,79 @@ class ProjectsSeeder extends Seeder
         // Get unit IDs indexed by name
         $units = Unit::pluck('id', 'name')->toArray();
     
-        $itemsData = [
-            [
-                'items' => 'Item 1',
-                'unit_id' => 1, // Get the unit ID or null if not found
-                'unit_price' => 100,
-                'quantity' => 10,
-                'subtotal' => 1000,
-                'discount' => 0,
-                'total' => 1000,
-                'project_id' => $project->id,
-            ],
-            [
-                'items' => 'Item 2',
-                'unit_id' => 2,
-                'unit_price' => 200,
-                'quantity' => 5,
-                'subtotal' => 1000,
-                'discount' => 0,
-                'total' => 1000,
-                'project_id' => $project->id,
-            ],
-            [
-                'items' => 'Item 3',
-                'unit_id' => 3,
-                'unit_price' => 300,
-                'quantity' => 3,
-                'subtotal' => 900,
-                'discount' => 0,
-                'total' => 900,
-                'project_id' => $project->id,
-            ]
-        ];
+        // $itemsData = [
+        //     [
+        //         'items' => 'Item 1',
+        //         'unit_id' => 1, // Get the unit ID or null if not found
+        //         'unit_price' => 100,
+        //         'quantity' => 10,
+        //         'subtotal' => 1000,
+        //         'discount' => 0,
+        //         'total' => 1000,
+        //         'project_id' => $project->id,
+        //     ],
+        //     [
+        //         'items' => 'Item 2',
+        //         'unit_id' => 2,
+        //         'unit_price' => 200,
+        //         'quantity' => 5,
+        //         'subtotal' => 1000,
+        //         'discount' => 0,
+        //         'total' => 1000,
+        //         'project_id' => $project->id,
+        //     ],
+        //     [
+        //         'items' => 'Item 3',
+        //         'unit_id' => 3,
+        //         'unit_price' => 300,
+        //         'quantity' => 3,
+        //         'subtotal' => 900,
+        //         'discount' => 0,
+        //         'total' => 900,
+        //         'project_id' => $project->id,
+        //     ]
+        // ];
     
-        foreach ($itemsData as $itemData) {
+        // foreach ($itemsData as $itemData) {
+        //     ProjectItem::updateOrCreate(
+        //         ['items' => $itemData['items'], 'project_id' => $project->id],
+        //         $itemData
+        //     );
+        // }
+        // Assign items based on project name or ID
+
+        $itemsMap = [
+            'Project Titan' => [
+                ['items' => 'Titan Beam', 'unit_id' => 1, 'unit_price' => 120, 'quantity' => 8],
+                ['items' => 'Titan Panel', 'unit_id' => 2, 'unit_price' => 90, 'quantity' => 12],
+            ],
+            'Project Everest' => [
+                ['items' => 'Everest Steel', 'unit_id' => 1, 'unit_price' => 140, 'quantity' => 5],
+                ['items' => 'Everest Bolt', 'unit_id' => 2, 'unit_price' => 75, 'quantity' => 15],
+            ],
+            'Project Horizon' => [
+                ['items' => 'Horizon Glass', 'unit_id' => 3, 'unit_price' => 200, 'quantity' => 6],
+                ['items' => 'Horizon Frame', 'unit_id' => 1, 'unit_price' => 110, 'quantity' => 10],
+            ],
+        ];
+
+        $projectItems = $itemsMap[$project->project_name] ?? [];
+
+        foreach ($projectItems as $item) {
+            $subtotal = $item['unit_price'] * $item['quantity'];
+            $itemData = array_merge($item, [
+                'subtotal' => $subtotal,
+                'discount' => 0,
+                'total' => $subtotal,
+                'project_id' => $project->id,
+            ]);
+
             ProjectItem::updateOrCreate(
-                ['items' => $itemData['items'], 'project_id' => $project->id],
+                ['items' => $item['items'], 'project_id' => $project->id],
                 $itemData
             );
         }
+
     }
     
 }
