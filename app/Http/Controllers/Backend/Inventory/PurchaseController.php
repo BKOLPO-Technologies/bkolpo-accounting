@@ -377,9 +377,9 @@ class PurchaseController extends Controller
             'supplier' => 'required|exists:suppliers,id',
             'invoice_no' => 'required|unique:purchases,invoice_no,' . $id, // Allow current invoice_no
             // 'invoice_date' => 'required|date',
-            'subtotal' => 'required|numeric',
-            'discount' => 'required|numeric',
-            'total' => 'required|numeric',
+            // 'subtotal' => 'required|numeric',
+            // 'discount' => 'required|numeric',
+            // 'total' => 'required|numeric',
             'product_ids' => 'required|not_in:',  // Ensure at least one product is selected
         ]);
 
@@ -402,19 +402,25 @@ class PurchaseController extends Controller
                 $categoryId = $request->category_id;
             }
 
+            $tax = $request->include_tax ? $request->tax : 0; 
+            $vat = $request->include_vat ? $request->vat : 0; 
+
             // Find the existing purchase record
             $purchase = Purchase::findOrFail($id);
             $purchase->supplier_id = $validated['supplier'];
             $purchase->invoice_no = $validated['invoice_no'];
             $purchase->invoice_date = now()->format('Y-m-d');
-            $purchase->subtotal = $validated['subtotal'];
-            $purchase->discount = $validated['discount'];
+            $purchase->subtotal = $request->subtotal;
+            $purchase->discount = $request->total_discount;
+            $purchase->total_netamount = $request->total_netamount ?? 0;
             $purchase->transport_cost = $request->transport_cost;
             $purchase->carrying_charge = $request->carrying_charge;
-            $purchase->vat = $request->vat;
-            $purchase->tax = $request->tax;
-            $purchase->total = $validated['total'];
-            $purchase->description = $request->description;
+            $purchase->vat = $vat;
+            $purchase->vat_amount = $request->vat_amount;
+            $purchase->tax = $tax;
+            $purchase->tax_amount = $request->tax_amount;
+            $purchase->total = $request->subtotal;
+            $purchase->grand_total = $request->grand_total;
             $purchase->category_id = $categoryId;
             $purchase->project_id = $request->project_id;
             $purchase->save();
