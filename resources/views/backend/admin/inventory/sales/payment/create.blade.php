@@ -50,19 +50,6 @@
                                     </div>
                                 </div>
 
-                                {{-- <input type="hidden" name="invoice_no" id="invoice_no"> --}}
-
-                                <!-- Incoming Chalan -->
-                                {{-- <div class="col-md-6 mb-3">
-                                    <label for="incoming_chalan_id" class="form-label">Incoming Chalan:</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
-                                        <select class="form-control select2" name="incoming_chalan_id" id="incoming_chalan_id">
-                                            <option value="">Select Chalan</option>
-                                        </select>
-                                    </div>
-                                </div> --}}
-
                                 <!-- Purchase Invoice No -->
                                 <div class="col-md-6 mb-3">
                                     <label for="invoice_no" class="form-label">PO No:</label>
