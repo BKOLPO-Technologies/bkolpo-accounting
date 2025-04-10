@@ -308,6 +308,8 @@ class SalesController extends Controller
 
         //return view('backend.admin.inventory.sales.edit',compact('pageTitle', 'sale', 'clients', 'products', 'subtotal', 'projects'));
 
+        $units = Unit::where('status',1)->latest()->get();
+
         return view('backend.admin.inventory.sales.edit', [
             'pageTitle' => $pageTitle, 
             'purchase' => $purchase, 
@@ -325,6 +327,7 @@ class SalesController extends Controller
             'sale' => $sale,
             'clients' => $clients,
             'products' => $products,
+            'units' => $units,
         ]);
     }
 
@@ -379,7 +382,8 @@ class SalesController extends Controller
             foreach ($request->order_unit as $index => $productId) {
                 $quantity  = $request->quantity[$index] ?? 0;
                 $unitPrice = $request->unit_price[$index] ?? 0;
-                $discount  = $request->discounts[$index] ?? 0;
+                //$discount  = $request->discounts[$index] ?? 0;
+                $discount = (float) ($request->discount[$index] ?? 0);
                 $itemId = $request->item_id[$index] ?? null;
 
                 SaleProduct::create([
@@ -390,7 +394,7 @@ class SalesController extends Controller
                     'price'      => $unitPrice,
                     'discount'   => $discount,
                     'subtotal'   => $quantity * $unitPrice,
-                    'total'      => ($quantity * $unitPrice) - $discount,
+                    'total' => ((float)$quantity * (float)$unitPrice) - (float)$discount,
                 ]);
             }
 

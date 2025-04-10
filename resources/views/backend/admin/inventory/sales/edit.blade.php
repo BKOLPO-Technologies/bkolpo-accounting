@@ -141,14 +141,6 @@
                                         <table id="product-table" class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    {{-- <th>Category</th>
-                                                    <th>Item Description</th>
-                                                    <th>Price</th>
-                                                    <th>Quantity</th>
-                                                    <th>Unit</th>
-                                                    <th>Total</th>
-                                                    <th>Action</th> --}}
-
                                                     <th>Item Description</th>
                                                     <th>Order Unit</th>
                                                     <th>Quantity</th>
@@ -160,50 +152,32 @@
                                             <tbody id="product-tbody">
                                                 @foreach ($sale->saleProducts as $product)
                                                 <tr>
-                                                    {{-- <td style="width:15% !important;">
-                                                        <select name="category_id" id="category_id" class="form-control select2 category-select @error('category_id') is-invalid @enderror" style="width: 100%;">
-                                                            <option value="all">All Categories</option>
-                                                            @foreach($categories as $category)
-                                                                <option value="{{ $category->id }}"
-                                                                    {{ (old('category_id') ?? $product->product->category_id) == $category->id ? 'selected' : '' }}>
-                                                                    {{ $category->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </td> --}}
                                                     <td class="col-3">
                                                         <input type="text" name="description[]" class="form-control" value="{{ $product->item->items }}" placeholder="Enter Item Description" readonly required>
                                                         <input type="hidden" name="item_id[]" value="{{ $product->item->id }}">
                                                     </td>
-                                                    <td style="width:17% !important;">
-                                                        <select name="products" id="product" class="form-control select2 @error('products') is-invalid @enderror product-select" style="width: 100%;">
-                                                            <option value="">Select Product</option>
-                                                            @foreach($aproducts as $aproduct)
-                                                                <option value="{{ $aproduct->id }}" data-category="{{ $aproduct->category_id }}" data-id="{{ $aproduct->id }}" data-name="{{ $aproduct->name }}" data-price="{{ $aproduct->price }}" data-unit="{{ $aproduct->unit->name }}"
-                                                                    {{ (old('aproduct_id') ?? $product->product_id) == $aproduct->id ? 'selected' : '' }}>
-                                                                    {{ $aproduct->name }}
+                                                    
+                                                    <td>
+                                                        <select name="order_unit[]" class="form-control" required>
+                                                            @foreach ($units as $unit)
+                                                                <option value="{{ $unit->id }}" {{ $unit->id == $product->item->unit_id ? 'selected' : '' }}>
+                                                                    {{ $unit->name }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
-                                                    </td>
+                                                    </td>                                                    
+
                                                     <td>
-                                                        <input type="number" name="unit_price[]" class="form-control unit-price" readonly value="{{ $product->price }}">
-                                                    </td>
-                                                    <td style="width:11% !important;">
-                                                        <input type="number" name="quantity[]" class="form-control quantity" min="1" value="{{ $product->quantity }}" required>
+                                                        <input type="number" name="quantity[]" class="form-control quantity" value="{{ $product->quantity }}" min="1" step="0.01" required>
                                                     </td>
                                                     <td style="width:7% !important;">
-                                                        <input type="text" name="order_unit[]" class="form-control unit-input" value="{{ $product->item->unit->name }}" required readonly>
+                                                        <input type="number" name="unit_price[]" class="form-control unit-price" value="{{ $product->price }}" min="0" step="0.01" required>
                                                     </td>
                                                     <td>
                                                         <input type="text" name="total[]" class="form-control total" readonly value="{{ ((($product->price) * ($product->quantity)) - ($product->discount)) }}">
                                                     </td>
                                                     <td class="text-center">
-                                                        @if ($loop->first)
-                                                            <button type="button" class="btn btn-success btn-sm add-row"><i class="fas fa-plus"></i></button>
-                                                        @else
-                                                            <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
-                                                        @endif
+                                                        <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -225,7 +199,7 @@
                                                     <td><label for="subtotal">Total Amount</label></td>
                                                     <td>
                                                         <div class="col-12 col-lg-12">
-                                                            <input type="text" id="subtotal" name="subtotal" class="form-control" value="{{ $subtotal }}" readonly />
+                                                            <input type="text" id="subtotal" name="subtotal" class="form-control" value="{{ $sale->subtotal }}" readonly />
                                                         </div>
                                                     </td>
                                                 </tr>
