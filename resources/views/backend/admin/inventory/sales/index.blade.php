@@ -60,7 +60,7 @@
                                                     <td>{{ bdt() }} {{ number_format($sale->grand_total-$sale->paid_amount, 2) }}</td> 
                                                     <!-- Status column with Badge -->
                                                     <td>
-                                                        @if($sale->paid_amount >= $sale->total)
+                                                        @if($sale->paid_amount >= $sale->grand_total)
                                                             <span class="badge bg-success">Paid</span>
                                                         @elseif($sale->paid_amount > 0)
                                                             <span class="badge bg-warning">Partially Paid</span>

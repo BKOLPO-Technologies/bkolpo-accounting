@@ -40,12 +40,47 @@ class PurchaseController extends Controller
         $projects = Project::where('project_type','Running')->latest()->get();
         $pageTitle = 'Purchase';
 
-        // Get current timestamp in 'dmyHis' format (day, month, year)
-        $randomNumber = rand(100000, 999999);
-        $fullDate = now()->format('d/m/y');
+        // // Get current timestamp in 'dmyHis' format (day, month, year)
+        // $randomNumber = rand(100000, 999999);
+        // $fullDate = now()->format('d/m/y');
 
-        // Combine the timestamp, random number, and full date
-        $invoice_no = 'BCL-PO-'.$fullDate.' - '.$randomNumber;
+        // // Combine the timestamp, random number, and full date
+        // $invoice_no = 'BCL-PO-'.$fullDate.' - '.$randomNumber;
+
+        $companyInfo = get_company(); 
+
+        // Get the current date and month
+        $currentMonth = now()->format('m'); // Current month (01-12)
+        $currentYear = now()->format('y'); // Current year (yy)
+
+        // Generate a random number for the current insert
+        $randomNumber = rand(100000, 999999);
+
+        // Get the last reference number for the current month
+        $lastInvoiceNo = Purchase::whereRaw('MONTH(created_at) = ?', [$currentMonth]) // Filter by the current month
+        ->orderBy('created_at', 'desc') // Order by the latest created entry
+        ->first(); // Get the latest entry
+
+        // Increment the last Invoice No number for this month
+        if ($lastInvoiceNo) {
+            // Extract the incremental part from the last reference number
+            preg_match('/(\d{3})$/', $lastInvoiceNo->invoice_no, $matches); // Assuming the last part is always 3 digits (001, 002, etc.)
+            $increment = (int)$matches[0] + 1; // Increment the number
+        } else {
+            // If no reference exists for the current month, start from 001
+            $increment = 1;
+        }
+
+        // Format the increment to be always 3 digits (e.g., 001, 002, 003)
+        $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
+
+
+        // Remove the hyphen from fiscal year (e.g., "24-25" becomes "2425")
+        $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
+
+        // Combine fiscal year, current month, and the incremental number to generate the reference number
+        $invoice_no = 'BCL-PO-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement;
+
 
         // // Generate a random 8-digit number
         // $randomNumber = mt_rand(100000, 999999);
@@ -73,9 +108,9 @@ class PurchaseController extends Controller
         $validated = $request->validate([
             'supplier' => 'required|exists:suppliers,id',
             'invoice_no' => 'required|unique:purchases,invoice_no',
-            'subtotal' => 'required|numeric',
-            'discount' => 'required|numeric',
-            'total' => 'required|numeric',
+            // 'subtotal' => 'required|numeric',
+            // 'discount' => 'required|numeric',
+            // 'total' => 'required|numeric',
             'product_ids' => 'required|not_in:',  // Ensure at least one product is selected
             'project_id' => 'required|exists:projects,id',
         ]);
@@ -108,18 +143,26 @@ class PurchaseController extends Controller
             $categoryId = $request->category_id == 'all' ? null : $request->category_id;
             //Log::info('Category ID determined', ['categoryId' => $categoryId]);
 
+
+            $tax = $request->include_tax ? $request->tax : 0; 
+            $vat = $request->include_vat ? $request->vat : 0; 
+
             // Create a new purchase record
             $purchase = new Purchase();
             $purchase->supplier_id = $validated['supplier'];
             $purchase->invoice_no = $validated['invoice_no'];
             $purchase->invoice_date = now()->format('Y-m-d');
-            $purchase->subtotal = $validated['subtotal'];
-            $purchase->discount = $validated['discount'];
+            $purchase->subtotal = $request->subtotal;
+            $purchase->discount = $request->total_discount;
+            $purchase->total_netamount = $request->total_netamount ?? 0;
             $purchase->transport_cost = $request->transport_cost;
             $purchase->carrying_charge = $request->carrying_charge;
-            $purchase->vat = $request->vat;
-            $purchase->tax = $request->tax;
-            $purchase->total = $validated['total'];
+            $purchase->vat = $vat;
+            $purchase->vat_amount = $request->vat_amount;
+            $purchase->tax = $tax;
+            $purchase->tax_amount = $request->tax_amount;
+            $purchase->total = $request->subtotal;
+            $purchase->grand_total = $request->grand_total;
             $purchase->description = $request->description;
             $purchase->category_id = '1';
             $purchase->project_id = $request->project_id;
@@ -157,7 +200,7 @@ class PurchaseController extends Controller
                 // ]);
             }
 
-            $purchase_amount = $purchase->total ?? 0;
+            $purchase_amount = $purchase->grand_total ?? 0;
             //Log::info('Purchase amount calculated', ['purchase_amount' => $purchase_amount]);
 
             // $purchasesLedger = Ledger::where('name', 'Purchases')->first();
@@ -166,24 +209,44 @@ class PurchaseController extends Controller
             $purchasesLedger = Ledger::where('type', 'Purchases')->first();
             $payableLedger = Ledger::where('type', 'Payable')->first();
 
-            // Get current timestamp in 'dmyHis' format (day, month, year)
-            $randomNumber = rand(100000, 999999);
-            $fullDate = now()->format('d/m/y');
+            // // Get current timestamp in 'dmyHis' format (day, month, year)
+            // $randomNumber = rand(100000, 999999);
+            // $fullDate = now()->format('d/m/y');
 
-            // Combine the timestamp, random number, and full date
-            $transactionCode = 'BCL-V-'.$fullDate.' - '.$randomNumber;
+            // // Combine the timestamp, random number, and full date
+            // $transactionCode = 'BCL-V-'.$fullDate.' - '.$randomNumber;
 
             if ($purchasesLedger && $payableLedger) {
-                $journalVoucher = JournalVoucher::where('transaction_code', $purchase->invoice_no)->first();
 
-                if (!$journalVoucher) {
-                    $journalVoucher = JournalVoucher::create([
-                        'transaction_code' => $transactionCode,
-                        'transaction_date' => now()->format('Y-m-d'),
-                        'description' => 'Purchase PO No Recorded - Supplier',
-                        'status' => 1, 
-                    ]);
+                // 09-04-2025 new code //
+                $companyInfo = get_company(); 
+                $currentMonth = now()->format('m');
+                $currentYear = now()->format('y');
+                $randomNumber = rand(100000, 999999);
+
+                $journalVoucher = JournalVoucher::whereRaw('MONTH(created_at) = ?', [$currentMonth]) 
+                ->orderBy('created_at', 'desc') 
+                // ->where('transaction_code', $sale->invoice_no)
+                ->first(); 
+
+                if ($journalVoucher) {
+                    preg_match('/(\d{3})$/', $journalVoucher->transaction_code, $matches); 
+                    $increment = (int)$matches[0] + 1;
+                }else{
+                    $increment = 1;
                 }
+
+                $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
+                $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
+
+                $transactionCode = 'BCL-V-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement;
+
+                $journalVoucher = JournalVoucher::create([
+                    'transaction_code' => $transactionCode,
+                    'transaction_date' => now()->format('Y-m-d'),
+                    'description' => 'Purchase PO No Recorded - Supplier',
+                    'status' => 1, 
+                ]);
 
                 // Purchase -> Purchases Account (Debit Entry)
                 JournalVoucherDetail::create([

@@ -186,7 +186,7 @@ class SalesController extends Controller
                 $saleProduct->product_id = $productId; // Product ID
                 $saleProduct->quantity = $quantity; // Quantity
                 $saleProduct->price = $price; // Price
-                $saleProduct->discount = $discount; // Discount
+                $saleProduct->discount = $discount ?: 0; // Discount
                 $saleProduct->save(); // Save the record
             }
 

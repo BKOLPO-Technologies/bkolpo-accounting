@@ -53,12 +53,12 @@
                                                 <td>{{ $purchase->invoice_no }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($purchase->invoice_date)->format('d F Y') }}</td>
                                                 <td>{{ $purchase->supplier->name ?? 'N/A' }}</td> 
-                                                <td>{{ bdt() }} {{ number_format($purchase->total, 2) }}</td>
+                                                <td>{{ bdt() }} {{ number_format($purchase->grand_total, 2) }}</td>
                                                 <td>{{ bdt() }} {{ number_format($purchase->paid_amount ?? 'N/A', 2) }}</td> 
-                                                <td>{{ bdt() }} {{ number_format($purchase->total-$purchase->paid_amount, 2) }}</td> 
+                                                <td>{{ bdt() }} {{ number_format($purchase->grand_total-$purchase->paid_amount, 2) }}</td> 
                                                 <!-- Status column with Badge -->
                                                 <td>
-                                                    @if($purchase->paid_amount >= $purchase->total)
+                                                    @if($purchase->paid_amount >= $purchase->grand_total)
                                                         <span class="badge bg-success">Paid</span>
                                                     @elseif($purchase->paid_amount > 0)
                                                         <span class="badge bg-warning">Partially Paid</span>
