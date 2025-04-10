@@ -384,6 +384,7 @@
                 <tr data-product-id="${itemId}">
                     <td class="col-3">
                         <input type="text" name="description[]" class="form-control" value="${itemDesc}" placeholder="Enter Item Description" readonly required>
+                        <input type="hidden" name="item_id[]" value="${itemId}">
                     </td>
                     <td class="col-2">
                         <select name="order_unit[]" class="form-control" required>

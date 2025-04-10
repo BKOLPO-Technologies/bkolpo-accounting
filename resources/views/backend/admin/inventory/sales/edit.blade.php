@@ -158,7 +158,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="product-tbody">
-                                                @foreach ($sale->saleProducts->project->items as $product)
+                                                @foreach ($sale->saleProducts as $product)
                                                 <tr>
                                                     {{-- <td style="width:15% !important;">
                                                         <select name="category_id" id="category_id" class="form-control select2 category-select @error('category_id') is-invalid @enderror" style="width: 100%;">
@@ -172,7 +172,8 @@
                                                         </select>
                                                     </td> --}}
                                                     <td class="col-3">
-                                                        <input type="text" name="description[]" class="form-control" value="{{ $product->items }}" placeholder="Enter Item Description" readonly required>
+                                                        <input type="text" name="description[]" class="form-control" value="{{ $product->item->items }}" placeholder="Enter Item Description" readonly required>
+                                                        <input type="hidden" name="item_id[]" value="{{ $product->item->id }}">
                                                     </td>
                                                     <td style="width:17% !important;">
                                                         <select name="products" id="product" class="form-control select2 @error('products') is-invalid @enderror product-select" style="width: 100%;">
@@ -192,7 +193,7 @@
                                                         <input type="number" name="quantity[]" class="form-control quantity" min="1" value="{{ $product->quantity }}" required>
                                                     </td>
                                                     <td style="width:7% !important;">
-                                                        <input type="text" name="order_unit[]" class="form-control unit-input" value="{{ $product->product->unit->name }}" required readonly>
+                                                        <input type="text" name="order_unit[]" class="form-control unit-input" value="{{ $product->item->unit->name }}" required readonly>
                                                     </td>
                                                     <td>
                                                         <input type="text" name="total[]" class="form-control total" readonly value="{{ ((($product->price) * ($product->quantity)) - ($product->discount)) }}">

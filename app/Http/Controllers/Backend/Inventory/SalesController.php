@@ -116,6 +116,7 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         // Validate input
         $validated = $request->validate([
             'client'      => 'required|exists:clients,id',
@@ -153,13 +154,16 @@ class SalesController extends Controller
     
             // Loop through products
             foreach ($request->order_unit as $index => $productId) {
+                // dd($productId);
                 $quantity = $request->quantity[$index] ?? 0;
                 $unitPrice = $request->unit_price[$index] ?? 0;
                 $discount = $request->discounts[$index] ?? 0; // fallback if provided
+                $itemId    = $request->item_id[$index] ?? null; 
     
                 SaleProduct::create([
                     'sale_id'    => $sale->id,
-                    'product_id' => $productId,
+                    // 'product_id' => $productId,
+                    'item_id' => $itemId,
                     'quantity'   => $quantity,
                     'price'      => $unitPrice,
                     'discount'   => $discount ?? 0,
@@ -259,9 +263,7 @@ class SalesController extends Controller
             ->with(['products', 'client']) // Include supplier details
             ->first();
 
-        //$h = $sale->saleProducts->product;
-
-        //dd($h);
+        // $h = $sale->saleProducts;
 
         // Fetch purchase details with supplier and products
         $purchase = Purchase::where('id', $id)
@@ -330,7 +332,8 @@ class SalesController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
+    {   
+        // dd($request->all());
         // Step 1: Validate
         $validated = $request->validate([
             'client'      => 'required|exists:clients,id',
@@ -377,10 +380,12 @@ class SalesController extends Controller
                 $quantity  = $request->quantity[$index] ?? 0;
                 $unitPrice = $request->unit_price[$index] ?? 0;
                 $discount  = $request->discounts[$index] ?? 0;
+                $itemId = $request->item_id[$index] ?? null;
 
                 SaleProduct::create([
                     'sale_id'    => $sale->id,
-                    'product_id' => $productId,
+                    // 'product_id' => $productId,
+                    'item_id'    => $itemId,
                     'quantity'   => $quantity,
                     'price'      => $unitPrice,
                     'discount'   => $discount,

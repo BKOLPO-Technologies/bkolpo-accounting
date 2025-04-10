@@ -11,6 +11,7 @@ class SaleProduct extends Model
     protected $fillable = [
         'sale_id',
         'product_id',
+        'item_id',
         'quantity',
         'price',
         'discount',
@@ -28,8 +29,10 @@ class SaleProduct extends Model
         return $this->belongsTo(Product::class, 'product_id');
     }
 
-    public function project()
+    public function item()
     {
-        return $this->belongsTo(Project::class, 'product_id');
+        return $this->belongsTo(ProjectItem::class, 'item_id');
     }
+
+    
 }
