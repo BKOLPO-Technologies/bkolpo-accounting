@@ -94,6 +94,9 @@ class SalesController extends Controller
         // $invoice_no = 'BKOLPO-'. $randomNumber;
 
         $units = Unit::where('status',1)->latest()->get();
+
+        $vat = $companyInfo->vat;
+        $tax = $companyInfo->tax;
         
         return view('backend.admin.inventory.sales.create_1', compact(
             'pageTitle', 
@@ -102,7 +105,9 @@ class SalesController extends Controller
             'categories',
             'projects',
             'invoice_no',
-            'units'
+            'units',
+            'vat',
+            'tax'
         )); 
     }
 
@@ -111,190 +116,121 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
-
-        // Validate the request data
+        // Validate input
         $validated = $request->validate([
-            'client' => 'required|exists:clients,id',
-            'invoice_no' => 'required|unique:sales,invoice_no',
-            // 'invoice_date' => 'required|date',
-            // 'subtotal' => 'required|numeric',
-            // 'discount' => 'required|numeric',
-            // 'total' => 'nullable|numeric|min:0',
-            //'product_ids' => 'required|not_in:',  // Ensure at least one product is selected
-            'product_ids' => 'required|not_in:',
-            // 'project_id' => 'required|exists:projects,id',
+            'client'      => 'required|exists:clients,id',
+            'invoice_no'  => 'required|unique:sales,invoice_no',
+            'quantity'    => 'required|array|min:1',
+            'unit_price'  => 'required|array',
+            'order_unit'  => 'required|array',
         ]);
-
-
-        // dd($validated);
-
-        // Access product data from the request
-        $productIds = explode(',', $request->input('product_ids'));  // Array of product IDs
-        $quantities = explode(',', $request->input('quantities'));  // Array of quantities
-        $prices = explode(',', $request->input('prices'));  // Array of prices
-        $discounts = explode(',', $request->input('discounts'));  // Array of discounts
-
-        // Check if at least one product is selected
-        if (empty($productIds) || count($productIds) === 0 || $productIds[0] == '') {
-            // If no product is selected, return an error message
-            return back()->with('error', 'At least one product must be selected.');
-        }
-        // dd($productIds);
-
+    
         try {
-            // Start the transaction
             DB::beginTransaction();
-
-            // if($request->project_id == Null){
-            //     $invoice_no = $validated['invoice_no'];
-            // }else{
-            //     $project = Project::findOrfail($request->project_id);
-            //     $invoice_no = $project->reference_no;
-            // }
-
-            $tax = $request->include_tax ? $request->tax : 0; 
-            $vat = $request->include_vat ? $request->vat : 0; 
-
-            // Create a new sale record
-            $sale = new Sale();
-            $sale->client_id = $validated['client'];
-            $sale->invoice_no = $validated['invoice_no'];
-            $sale->invoice_date = now()->format('Y-m-d');
-            $sale->subtotal = $request->subtotal;
-            $sale->discount = $request->total_discount;
-            $sale->total_netamount = $request->total_netamount ?? 0;
-            $sale->transport_cost = $request->transport_cost;
-            $sale->carrying_charge = $request->carrying_charge;
-            $sale->vat = $vat;
-            $sale->vat_amount = $request->vat_amount;
-            $sale->tax = $tax;
-            $sale->tax_amount = $request->tax_amount;
-            $sale->total = $request->subtotal;
-            $sale->grand_total = $request->grand_total;
-            $sale->description = $request->description;
-            $sale->category_id = $request->category_id;
-            $sale->project_id = $request->project_id;
-            $sale->save();
-
-
-            // Loop through the product data and save it to the database
-            foreach ($productIds as $index => $productId) {
-                $product = Product::find($productId);
-                $quantity = $quantities[$index];
-                $price = $prices[$index];
-                $discount = $discounts[$index];
-
-                // Insert into SaleProduct table
-                $saleProduct = new SaleProduct();
-                $saleProduct->sale_id = $sale->id; // Link to the sale
-                $saleProduct->product_id = $productId; // Product ID
-                $saleProduct->quantity = $quantity; // Quantity
-                $saleProduct->price = $price; // Price
-                $saleProduct->discount = $discount; // Discount
-                $saleProduct->save(); // Save the record
+    
+            $tax = $request->has('include_tax') ? ($request->tax ?? 0) : 0;
+            $vat = $request->has('include_vat') ? ($request->vat ?? 0) : 0;
+    
+            // Save sale record
+            $sale = Sale::create([
+                'client_id'        => $validated['client'],
+                'invoice_no'       => $validated['invoice_no'],
+                'invoice_date'     => now()->format('Y-m-d'),
+                'subtotal'         => $request->subtotal ?? 0,
+                'discount'         => $request->total_discount ?? 0,
+                'total_netamount'  => $request->total_netamount ?? 0,
+                'transport_cost'   => $request->transport_cost ?? 0,
+                'carrying_charge'  => $request->carrying_charge ?? 0,
+                'vat'              => $vat,
+                'vat_amount'       => $request->vat_amount ?? 0,
+                'tax'              => $tax,
+                'tax_amount'       => $request->tax_amount ?? 0,
+                'total'            => $request->subtotal ?? 0,
+                'grand_total'      => $request->grand_total ?? 0,
+                'description'      => $request->description,
+                'project_id'       => $request->projects, // you used "projects" instead of "project_id"
+            ]);
+    
+            // Loop through products
+            foreach ($request->order_unit as $index => $productId) {
+                $quantity = $request->quantity[$index] ?? 0;
+                $unitPrice = $request->unit_price[$index] ?? 0;
+                $discount = $request->discounts[$index] ?? 0; // fallback if provided
+    
+                SaleProduct::create([
+                    'sale_id'    => $sale->id,
+                    'product_id' => $productId,
+                    'quantity'   => $quantity,
+                    'price'      => $unitPrice,
+                    'discount'   => $discount ?? 0,
+                    'subtotal'   => $quantity * $unitPrice,
+                    'total'      => ($quantity * $unitPrice) - ($discount ?? 0),
+                ]);
             }
-
-          
-
-            // Step 2: Get sale amount
-            $sale_amount = $sale->grand_total ?? 0; // If sale doesn't have amount, default to 0
-
+    
+            // Ledger & Journal Voucher logic (same as your current logic)
+            $saleAmount = $sale->grand_total ?? 0;
             $salesLedger = Ledger::where('type', 'Sales')->first();
             $receivableLedger = Ledger::where('type', 'Receivable')->first();
-
+    
             if ($salesLedger && $receivableLedger) {
-                // // Check if a Journal Voucher already exists for the given invoice
-                // $journalVoucher = JournalVoucher::where('transaction_code', $sale->invoice_no)->first();
-
-                // // Get current timestamp in 'dmyHis' format (day, month, year)
-                // $randomNumber = rand(100000, 999999);
-                // $fullDate = now()->format('d/m/y');
-
-                // // Combine the timestamp, random number, and full date
-                // $transactionCode = 'BCL-V-'.$fullDate.' - '.$randomNumber;
-
-                // 09-04-2025 new code //
                 $companyInfo = get_company(); 
                 $currentMonth = now()->format('m');
-                $currentYear = now()->format('y');
-                $randomNumber = rand(100000, 999999);
-
-                $journalVoucher = JournalVoucher::whereRaw('MONTH(created_at) = ?', [$currentMonth]) 
-                ->orderBy('created_at', 'desc') 
-                // ->where('transaction_code', $sale->invoice_no)
-                ->first(); 
-
-
-                // dd($journalVoucher);
-
-                if ($journalVoucher) {
-                    preg_match('/(\d{3})$/', $journalVoucher->transaction_code, $matches); 
-                    $increment = (int)$matches[0] + 1;
-                }else{
-                    $increment = 1;
-                }
-
-                $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
-                $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
-
-                $transactionCode = 'BCL-V-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement;
-
-                // Create a new Journal Voucher if not exists
+                $fiscalYear = str_replace('-', '', $companyInfo->fiscal_year);
+    
+                $latestJV = JournalVoucher::whereRaw('MONTH(created_at) = ?', [$currentMonth])
+                            ->orderBy('created_at', 'desc')
+                            ->first();
+    
+                $increment = $latestJV && preg_match('/(\d{3})$/', $latestJV->transaction_code, $matches)
+                            ? ((int)$matches[0] + 1)
+                            : 1;
+    
+                $transactionCode = 'BCL-V-' . $fiscalYear . $currentMonth . str_pad($increment, 3, '0', STR_PAD_LEFT);
+    
                 $journalVoucher = JournalVoucher::create([
-                    'transaction_code'  => $transactionCode,
-                    'transaction_date'  => now()->format('Y-m-d'),
-                    'description'       => 'Invoice Entry for Sales',
-                    'status'            => 1, // Pending status
+                    'transaction_code' => $transactionCode,
+                    'transaction_date' => now()->format('Y-m-d'),
+                    'description'      => 'Invoice Entry for Sales',
+                    'status'           => 1,
                 ]);
-
-                // Create journal voucher details for Accounts Receivable (Debit Entry)
-                JournalVoucherDetail::create([
-                    'journal_voucher_id' => $journalVoucher->id,
-                    'ledger_id'          => $receivableLedger->id, // Accounts Receivable Ledger
-                    'reference_no'       => $sale->invoice_no,
-                    'description'        => 'Accounts Receivable Entry for Invoice ' . $sale->invoice_no, 
-                    'debit'              => $sale_amount, // Debit Entry for Receivable
-                    'credit'             => 0,
-                    'created_at'         => now(),
-                    'updated_at'         => now(),
-                ]);
-
-                // Create journal voucher details for Sales (Credit Entry)
-                JournalVoucherDetail::create([
-                    'journal_voucher_id' => $journalVoucher->id,
-                    'ledger_id'          => $salesLedger->id, // Sales Ledger
-                    'reference_no'       => $sale->invoice_no,
-                    'description'        => 'Sales Entry for Invoice ' . $sale->invoice_no . ' - Amount: ' . number_format($sale_amount, 2),  
-                    'debit'              => 0,
-                    'credit'             => $sale_amount, // Credit Entry for Sales
-                    'created_at'         => now(),
-                    'updated_at'         => now(),
+    
+                JournalVoucherDetail::insert([
+                    [
+                        'journal_voucher_id' => $journalVoucher->id,
+                        'ledger_id'          => $receivableLedger->id,
+                        'reference_no'       => $sale->invoice_no,
+                        'description'        => 'Receivable for Invoice ' . $sale->invoice_no,
+                        'debit'              => $saleAmount,
+                        'credit'             => 0,
+                        'created_at'         => now(),
+                        'updated_at'         => now(),
+                    ],
+                    [
+                        'journal_voucher_id' => $journalVoucher->id,
+                        'ledger_id'          => $salesLedger->id,
+                        'reference_no'       => $sale->invoice_no,
+                        'description'        => 'Sales for Invoice ' . $sale->invoice_no,
+                        'debit'              => 0,
+                        'credit'             => $saleAmount,
+                        'created_at'         => now(),
+                        'updated_at'         => now(),
+                    ]
                 ]);
             }
-
-            // Commit the transaction
+    
             DB::commit();
-
-            // Redirect back with a success message
             return redirect()->route('admin.sale.index')->with('success', 'Sale created successfully!');
         } catch (\Exception $e) {
-            // Rollback transaction if anything fails
             DB::rollback();
-
-            // Log the error message
-            Log::error('Sale creation failed: ', [
+            Log::error('Sale creation failed:', [
                 'error' => $e->getMessage(),
-                'exception' => $e,
-                'user_id' => auth()->id(),  // Optional: Log user ID if you're tracking who made the request
-                'data' => $validated,  // Optional: Log the validated data for debugging purposes
+                'user_id' => auth()->id(),
             ]);
-
-            // Return with the actual error message to be displayed on the front end
             return back()->withErrors(['error' => $e->getMessage()]);
         }
-
     }
+    
     /**
      * Display the specified resource.
      */
@@ -390,90 +326,62 @@ class SalesController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {   
-        //dd($request->all());
-        // // Debug Request Data
-        // Log::info('Request Data:', $request->all());
-
-        // Validate Request
+    {
+        // Step 1: Validate
         $validated = $request->validate([
-            'client' => 'required|exists:clients,id',
-            'invoice_no' => 'required|unique:purchases,invoice_no,' . $id,
-            //'invoice_date' => 'required|date',
-            // 'subtotal' => 'required|numeric',
-            // 'discount' => 'required|numeric',
-            // 'total' => 'required|numeric',
-            'product_ids' => 'required'
+            'client'      => 'required|exists:clients,id',
+            'invoice_no'  => 'required|unique:sales,invoice_no,' . $id,
+            'order_unit'  => 'required|array|min:1',
+            'quantity'    => 'required|array|min:1',
+            'unit_price'  => 'required|array|min:1',
         ]);
-
-        // Check Sale Record
-        $sale = Sale::find($id);
-        if (!$sale) {
-            return back()->withErrors(['error' => 'Sale not found!']);
-        }
-
-        // Extract Product Data
-        $productIds = explode(',', $request->input('product_ids'));  
-        $quantities = explode(',', $request->input('quantities'));  
-        $prices = explode(',', $request->input('prices'));  
-        $discounts = explode(',', $request->input('discounts'));  
-
-        // // Debug Product Data
-        // Log::info('Product Data:', [
-        //     'product_ids' => $productIds,
-        //     'quantities' => $quantities,
-        //     'prices' => $prices
-        // ]);
-
-        if (empty($productIds) || count($productIds) === 0 || $productIds[0] == '') {
-            return back()->with('error', 'At least one product must be selected.');
-        }
 
         try {
             DB::beginTransaction();
 
-            $tax = $request->include_tax ? $request->tax : 0; 
-            $vat = $request->include_vat ? $request->vat : 0; 
+            // Step 2: Find sale
+            $sale = Sale::findOrFail($id);
 
-            // if($request->project_id == Null){
-            //     $invoice_no = $validated['invoice_no'];
-            // }else{
-            //     $project = Project::findOrfail($request->project_id);
-            //     $invoice_no = $project->reference_no;
-            // }
+            // Step 3: Update sale fields
+            $tax = $request->has('include_tax') ? ($request->tax ?? 0) : 0;
+            $vat = $request->has('include_vat') ? ($request->vat ?? 0) : 0;
 
-            // Update Sale
-            $sale->client_id = $validated['client'];  // Ensure this field exists in DB
-            $sale->invoice_no = $validated['invoice_no'];
-            $sale->invoice_date = now()->format('Y-m-d');
-            $sale->subtotal = $request->subtotal;
-            $sale->discount = $request->total_discount;
-            $sale->total_netamount = $request->total_netamount ?? 0;
+            $sale->update([
+                'client_id'        => $validated['client'],
+                'invoice_no'       => $validated['invoice_no'],
+                'invoice_date'     => now()->format('Y-m-d'),
+                'subtotal'         => $request->subtotal ?? 0,
+                'discount'         => $request->total_discount ?? 0,
+                'total_netamount'  => $request->total_netamount ?? 0,
+                'transport_cost'   => $request->transport_cost ?? 0,
+                'carrying_charge'  => $request->carrying_charge ?? 0,
+                'vat'              => $vat,
+                'vat_amount'       => $request->vat_amount ?? 0,
+                'tax'              => $tax,
+                'tax_amount'       => $request->tax_amount ?? 0,
+                'total'            => $request->subtotal ?? 0,
+                'grand_total'      => $request->grand_total ?? 0,
+                'description'      => $request->description,
+                'project_id'       => $request->projects ?? null,
+            ]);
 
-            $sale->transport_cost = $request->transport_cost;
-            $sale->carrying_charge = $request->carrying_charge;
-            $sale->vat = $vat;
-            $sale->vat_amount = $request->vat_amount;
-            $sale->tax = $tax;
-            $sale->tax_amount = $request->tax_amount;
-            $sale->category_id = $request->category_id;
-            $sale->total = $request->subtotal;
-            $sale->grand_total = $request->grand_total;
-            $sale->description = $request->description;
-            $sale->project_id = $request->project_id;
-            $sale->save();
+            // Step 4: Delete old sale products
+            $sale->saleProducts()->delete();
 
-            // Delete Old Products
-            SaleProduct::where('sale_id', $id)->delete();
+            // Step 5: Add updated sale products
+            foreach ($request->order_unit as $index => $productId) {
+                $quantity  = $request->quantity[$index] ?? 0;
+                $unitPrice = $request->unit_price[$index] ?? 0;
+                $discount  = $request->discounts[$index] ?? 0;
 
-            // Insert New Products
-            foreach ($productIds as $index => $productId) {
                 SaleProduct::create([
-                    'sale_id' => $sale->id,
+                    'sale_id'    => $sale->id,
                     'product_id' => $productId,
-                    'quantity' => $quantities[$index],
-                    'price' => $prices[$index],
-                    'discount' => $discounts[$index],
+                    'quantity'   => $quantity,
+                    'price'      => $unitPrice,
+                    'discount'   => $discount,
+                    'subtotal'   => $quantity * $unitPrice,
+                    'total'      => ($quantity * $unitPrice) - $discount,
                 ]);
             }
 
@@ -481,10 +389,17 @@ class SalesController extends Controller
             return redirect()->route('admin.sale.index')->with('success', 'Sale updated successfully!');
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Update Sale Error: ' . $e->getMessage());
-            return back()->withErrors(['error' => 'Error: ' . $e->getMessage()]);
+
+            Log::error('Sale update failed:', [
+                'error'    => $e->getMessage(),
+                'user_id'  => auth()->id(),
+                'sale_id'  => $id,
+            ]);
+
+            return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
 
     /**
      * Remove the specified resource from storage.

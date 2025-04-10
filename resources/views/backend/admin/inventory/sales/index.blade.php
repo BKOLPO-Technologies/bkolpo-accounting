@@ -55,9 +55,9 @@
                                                     <td>{{ $sale->project->reference_no ?? '' }}</td>
                                                     <td>{{ $sale->client->name ?? 'N/A' }}</td> 
                                                     <td>{{ \Carbon\Carbon::parse($sale->invoice_date)->format('d F Y') }}</td>
-                                                    <td>{{ bdt() }} {{ number_format($sale->total, 2) }}</td> 
+                                                    <td>{{ bdt() }} {{ number_format($sale->grand_total, 2) }}</td> 
                                                     <td>{{ bdt() }} {{ number_format($sale->paid_amount ?? 'N/A', 2) }}</td> 
-                                                    <td>{{ bdt() }} {{ number_format($sale->total-$sale->paid_amount, 2) }}</td> 
+                                                    <td>{{ bdt() }} {{ number_format($sale->grand_total-$sale->paid_amount, 2) }}</td> 
                                                     <!-- Status column with Badge -->
                                                     <td>
                                                         @if($sale->paid_amount >= $sale->total)
