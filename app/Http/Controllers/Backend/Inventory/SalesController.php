@@ -336,7 +336,7 @@ class SalesController extends Controller
      */
     public function update(Request $request, $id)
     {   
-        // dd($request->all());
+        //dd($request->all());
         // Step 1: Validate
         $validated = $request->validate([
             'client'      => 'required|exists:clients,id',
@@ -372,7 +372,8 @@ class SalesController extends Controller
                 'total'            => $request->subtotal ?? 0,
                 'grand_total'      => $request->grand_total ?? 0,
                 'description'      => $request->description,
-                'project_id'       => $request->projects ?? null,
+                //'project_id'       => $request->projects ?? null,
+                'project_id'       => $request->project_id ?? null,
             ]);
 
             // Step 4: Delete old sale products

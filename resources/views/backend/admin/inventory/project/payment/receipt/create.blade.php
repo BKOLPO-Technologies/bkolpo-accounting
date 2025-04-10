@@ -193,10 +193,11 @@
                 type: "GET",
                 data: { project_id: projectId },
                 success: function (response) {
+                    console.log(response);
                     if (response.success) {
                         let options = '<option value="">Select Reference No</option>';
                         response.sales.forEach(sale => {
-                            options += `<option value="${sale.invoice_no}" data-total="${sale.total}" data-due="${sale.total - sale.paid_amount}">${sale.invoice_no}</option>`;
+                            options += `<option value="${sale.invoice_no}" data-total="${sale.grand_total}" data-due="${sale.grand_total - sale.paid_amount}">${sale.invoice_no}</option>`;
                         });
 
                         $('#invoice_no').html(options);
