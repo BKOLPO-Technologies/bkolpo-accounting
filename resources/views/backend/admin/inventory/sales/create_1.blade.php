@@ -73,8 +73,7 @@
                                 </div>
 
                                 <!-- Product Select with Search Feature -->
-                                {{--
-                                <div class="col-lg-3 col-md-6 mb-3">
+                                {{-- <div class="col-lg-3 col-md-6 mb-3">
                                     <label for="product">Product</label>
                                     <div class="input-group">
                                         <select name="products" id="product" class="form-control select2 @error('product') is-invalid @enderror" style="width: 100%;">
@@ -91,11 +90,11 @@
                                             <i class="fas fa-exclamation-circle"></i> {{ $message }}
                                         </div>
                                     @enderror
-                                </div>
-                                 --}}
+                                </div> --}}
+                                
 
                                 <!-- Project Select with Search Feature -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                {{-- <div class="col-lg-4 col-md-6 mb-3">
                                     <label for="project_id">Project</label>
                                     <div class="input-group">
                                         <select name="project_id" id="project_id" class="form-control select2 @error('project_id') is-invalid @enderror" style="width: 100%;">
@@ -108,6 +107,27 @@
                                         </select>
                                     </div>
                                     @error('project_id')
+                                        <div class="invalid-feedback">
+                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div> --}}
+
+                                <!-- Project Select with Search Feature -->
+                                <div class="col-lg-3 col-md-6 mb-3">
+                                    <label for="project">Project</label>
+                                    <div class="input-group">
+                                        <select name="projects" id="project" class="form-control select2 @error('project') is-invalid @enderror" style="width: 100%;">
+                                            <option value="">Select Project</option>
+                                            @foreach($projects as $project)
+                                                <option value="{{ $project->id }}" 
+                                                        data-items='@json($project->items)'>
+                                                    {{ $project->project_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    @error('project')
                                         <div class="invalid-feedback">
                                             <i class="fas fa-exclamation-circle"></i> {{ $message }}
                                         </div>
@@ -150,14 +170,21 @@
                                         <table id="product-table" class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th>Product</th>
+                                                    {{-- <th>Product</th>
                                                     <th>Sell Price</th>
                                                     <th>Quantity</th>
                                                     <th>Current Stock</th>
                                                     <th>Subtotal</th>
                                                     <th>Discount</th>
                                                     <th>Total</th>
-                                                    <th>Remove</th>
+                                                    <th>Remove</th> --}}
+
+                                                    <th>Item Description</th>
+                                                    <th>Order Unit</th>
+                                                    <th>Quantity</th>
+                                                    <th>Unit Price</th>
+                                                    <th>Total</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -296,61 +323,165 @@
 </script>
 
 <script>
-    // Initialize product table and searchable select
-    let products = [];
+    const units = @json($units);
+    console.log(units);
+</script>
 
-    // Add product to the table
-    $('#product').on('change', function() {
-        const selectedOption = $(this).find(':selected');
-        const productId = selectedOption.val();
+<script>
+    // // Initialize product table and searchable select
+    // let products = [];
+
+    // // Add product to the table
+    // $('#product').on('change', function() {
+    //     const selectedOption = $(this).find(':selected');
+    //     const productId = selectedOption.val();
         
-        // Check if product is already in the table
-        if ($('#product-table tbody tr[data-product-id="' + productId + '"]').length > 0) {
-            toastr.error('This product is already added!.', {
-                closeButton: true,
-                progressBar: true,
-                timeOut: 5000
-            });
+    //     // Check if product is already in the table
+    //     if ($('#product-table tbody tr[data-product-id="' + productId + '"]').length > 0) {
+    //         toastr.error('This product is already added!.', {
+    //             closeButton: true,
+    //             progressBar: true,
+    //             timeOut: 5000
+    //         });
+    //         return;
+    //     }
+
+    //     const productName = selectedOption.data('name');
+    //     const productPrice = parseFloat(selectedOption.data('price'));
+    //     const productStock = parseInt(selectedOption.data('stock'));
+
+    //     const productRow = `
+    //         <tr data-product-id="${productId}">
+    //             <td class="col-3">${productName}</td>
+    //             <td class="col-2">
+    //                 <input type="number" class="price-input form-control" value="${productPrice.toFixed(2)}" step="1" data-product-id="${productId}" oninput="updateRow(this)">
+    //             </td>
+    //             <td class="col-1">
+    //                 <input type="number" class="quantity form-control" value="1" min="1" data-price="${productPrice}" data-stock="${productStock}" oninput="updateRow(this)" />
+    //             </td>
+    //             <td class="current-stock col-2">
+    //                 <span class="badge bg-info">${productStock}</span>
+    //             </td>
+    //             <td class="subtotal">${productPrice.toFixed(2)}</td>
+    //             <td class="discount-col">
+    //                 <input type="number" class="product-discount form-control" value="0" oninput="updateRow(this)" step="0.1" min="0"/>
+    //             </td>
+    //             <td class="total">${productPrice.toFixed(2)}</td>
+    //             <td><button type="button" class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button></td>
+    //         </tr>
+    //     `;
+
+    //     $('#product-table tbody').append(productRow);
+    //     updateTotal();
+
+    //     // Hide "No Product Found" row if there are products in the table
+    //     $('#no-products-row').hide();
+
+    //     // Reset product select
+    //     $(this).val('');
+
+    //     // Add the product to the hidden fields
+    //     addToHiddenFields(productId, 1, productPrice);
+    // });
+
+
+    ///////////////////////////////////////////////////////////
+    $('#project').on('change', function () {
+        const selectedOption = $(this).find(':selected');
+        const items = selectedOption.data('items');
+
+        console.log(items);
+
+        if (!items || items.length === 0) {
+            toastr.warning('No items found for this project.');
             return;
         }
 
-        const productName = selectedOption.data('name');
-        const productPrice = parseFloat(selectedOption.data('price'));
-        const productStock = parseInt(selectedOption.data('stock'));
+        // Clear existing rows except the "no-products" row
+        $('#product-table tbody').empty();
 
-        const productRow = `
-            <tr data-product-id="${productId}">
-                <td class="col-3">${productName}</td>
-                <td class="col-2">
-                    <input type="number" class="price-input form-control" value="${productPrice.toFixed(2)}" step="1" data-product-id="${productId}" oninput="updateRow(this)">
-                </td>
-                <td class="col-1">
-                    <input type="number" class="quantity form-control" value="1" min="1" data-price="${productPrice}" data-stock="${productStock}" oninput="updateRow(this)" />
-                </td>
-                <td class="current-stock col-2">
-                    <span class="badge bg-info">${productStock}</span>
-                </td>
-                <td class="subtotal">${productPrice.toFixed(2)}</td>
-                <td class="discount-col">
-                    <input type="number" class="product-discount form-control" value="0" oninput="updateRow(this)" step="0.1" min="0"/>
-                </td>
-                <td class="total">${productPrice.toFixed(2)}</td>
-                <td><button type="button" class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button></td>
-            </tr>
-        `;
+        // items.forEach(item => {
+        //     const itemId = item.id;
+        //     // console.log(itemId);
+        //     const itemName = item.items;
+        //     //console.log(itemName);
+        //     const itemPrice = parseFloat(item.price || 0);
+        //     const itemStock = parseInt(item.quantity || 0);
 
-        $('#product-table tbody').append(productRow);
+        //     const row = `
+        //         <tr data-product-id="${itemId}">
+        //             <td class="col-3">${itemName}</td>
+        //             <td class="col-2">
+        //                 <select name="order_unit[]" class="form-control" required>
+        //                     <option value="" disabled selected>Select Unit</option>
+        //                     
+        //                 </select>
+        //             </td>
+        //             <td class="col-1">
+        //                 <input type="number" name="quantity[]" class="form-control quantity" placeholder="Enter Quantity" min="1" step="0.01" required>
+        //             </td>
+        //             <td class="current-stock col-2">
+        //                 <input type="number" name="unit_price[]" class="form-control unit-price" placeholder="Enter Unit Price" min="0" step="0.01" required>
+        //             </td>
+        //             <td class="subtotal">
+        //                 <input type="text" name="total[]" class="form-control total" readonly>
+        //             </td>
+        //             <td><button type="button" class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button></td>
+        //         </tr>
+        //     `;
+
+        //     $('#product-table tbody').append(row);
+        //     addToHiddenFields(itemId, 1, itemPrice);
+        // });
+
+        items.forEach(item => {
+            const itemId = item.id;
+            const itemDesc = item.items || 'N/A';
+            const itemQuantity = parseFloat(item.quantity || 0);
+            const itemPrice = parseFloat(item.unit_price || 0);
+            const itemTotal = parseFloat(item.total || 0);
+
+            // Generate Unit Options
+            // let unitOptions = '<option value="" disabled selected>Select Unit</option>';
+            // units.forEach(unit => {
+            //     unitOptions += `<option value="${unit.id}">${unit.name}</option>`;
+            // });
+
+            let unitOptions = '<option value="" disabled>Select Unit</option>';
+            units.forEach(unit => {
+                const selected = unit.id === item.unit_id ? 'selected' : '';
+                unitOptions += `<option value="${unit.id}" ${selected}>${unit.name}</option>`;
+            });
+
+            const row = `
+                <tr data-product-id="${itemId}">
+                    <td class="col-3">${itemDesc}</td>
+                    <td class="col-2">
+                        <select name="order_unit[]" class="form-control" required>
+                            ${unitOptions}
+                        </select>
+                    </td>
+                    <td class="col-1">
+                        <input type="number" name="quantity[]" class="form-control quantity" value="${itemQuantity}" min="1" step="0.01" required>
+                    </td>
+                    <td class="col-2">
+                        <input type="number" name="unit_price[]" class="form-control unit-price" value="${itemPrice}" min="0" step="0.01" required>
+                    </td>
+                    <td class="col-2">
+                        <input type="text" name="total[]" class="form-control total" readonly value="${itemTotal.toFixed(2)}">
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `;
+
+            $('#product-table tbody').append(row);
+        });
+
         updateTotal();
-
-        // Hide "No Product Found" row if there are products in the table
-        $('#no-products-row').hide();
-
-        // Reset product select
-        $(this).val('');
-
-        // Add the product to the hidden fields
-        addToHiddenFields(productId, 1, productPrice);
     });
+    ///////////////////////////////////////////////////////////////////////
 
     // Function to add selected product to hidden fields
     function addToHiddenFields(productId, quantity, price) {

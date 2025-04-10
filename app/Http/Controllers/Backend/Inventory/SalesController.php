@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend\Inventory;
 
 use Carbon\Carbon;
 use App\Models\Sale;
+use App\Models\Unit;
 use App\Models\Client;
 use App\Models\Ledger;
 use App\Models\Product;
@@ -42,7 +43,8 @@ class SalesController extends Controller
 
         $products = Product::where('status',1)->latest()->get();
         $categories = Category::where('status',1)->latest()->get();
-        $projects = Project::where('project_type','Running')->latest()->get();
+        $projects = Project::where('project_type','Running')->with('items')->latest()->get();
+        //dd($projects);
         $pageTitle = 'Invoice';
 
         // Get current timestamp in 'dmyHis' format (day, month, year)
@@ -91,13 +93,16 @@ class SalesController extends Controller
 
         // $invoice_no = 'BKOLPO-'. $randomNumber;
 
-        return view('backend.admin.inventory.sales.create', compact(
+        $units = Unit::where('status',1)->latest()->get();
+        
+        return view('backend.admin.inventory.sales.create_1', compact(
             'pageTitle', 
             'clients', 
             'products',
             'categories',
             'projects',
-            'invoice_no'
+            'invoice_no',
+            'units'
         )); 
     }
 
