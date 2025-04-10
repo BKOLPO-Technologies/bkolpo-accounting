@@ -1,5 +1,4 @@
-{{-- Based on project -> update from category, product --}}
-
+{{-- Based on category and product --}}
 @extends('layouts.admin', ['pageTitle' => 'Purchase List'])
 <style>
     @media print {
@@ -112,11 +111,10 @@
                                     <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
                                         <thead>
                                             <tr>
-                                                <th style="border: 1px solid black; padding: 8px;">Item Description</th>
-                                                <th style="border: 1px solid black; padding: 8px;">Order Unit</th>
+                                                <th style="border: 1px solid black; padding: 8px;">Product</th>
+                                                <th style="border: 1px solid black; padding: 8px;">Price</th>
                                                 <th style="border: 1px solid black; padding: 8px;">Quantity</th>
-                                                <th style="border: 1px solid black; padding: 8px; text-align: right;">Unit Price</th>
-                                                <th style="border: 1px solid black; padding: 8px; text-align: right;">Total</th>
+                                                <th style="border: 1px solid black; padding: 8px;">Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -124,23 +122,21 @@
                                                 $subtotal = 0;
                                                 $totalDiscount = 0;
                                             @endphp
-                                            @foreach ($sale->saleProducts as $product)
+                                            @foreach ($sale->products as $product)
                                                 @php
-                                                    // $productTotal = $product->pivot->quantity * $product->pivot->price;
-                                                    // $subtotal += $productTotal;
+                                                    $productTotal = $product->pivot->quantity * $product->pivot->price;
+                                                    $subtotal += $productTotal;
                                                     
-                                                    // $productDiscount = !empty($product->pivot->discount) ? $product->pivot->discount : 0;
-                                                    // $totalDiscount += $productDiscount;
+                                                    $productDiscount = !empty($product->pivot->discount) ? $product->pivot->discount : 0;
+                                                    $totalDiscount += $productDiscount;
                                 
-                                                    // $finalTotal = $productTotal - $productDiscount;
-                                                    $finalTotal = $product->quantity * $product->price;
+                                                    $finalTotal = $productTotal - $productDiscount;
                                                 @endphp
                                                 <tr data-product-id="{{ $product->id }}">
-                                                    <td style="border: 1px solid black; padding: 8px;">{{ $product->item->items }}</td>
-                                                    <td style="border: 1px solid black; padding: 8px;">{{ $product->item->unit->name ?? '' }}</td>
-                                                    <td style="border: 1px solid black; padding: 8px;">{{ $product->quantity }}</td>
-                                                    <td style="border: 1px solid black; padding: 8px; text-align: right;">{{ $product->price }}</td>
-                                                    <td style="border: 1px solid black; padding: 8px; text-align: right;">{{ number_format($finalTotal, 2) }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ $product->name }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ number_format($product->price, 2) }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ $product->pivot->quantity }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ number_format($productTotal, 2) }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -156,27 +152,27 @@
                                             <tbody>
                                                 <tr>
                                                     <td style="border: 1px solid black; padding: 8px;">Total Amount</td>
-                                                    <td style="border: 1px solid black; padding: 8px; text-align: right;">{{ number_format($sale->subtotal, 2) }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ number_format($subtotal, 2) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="border: 1px solid black; padding: 8px;">Discount</td>
-                                                    <td style="border: 1px solid black; padding: 8px;text-align: right;">{{ number_format($sale->discount, 2) }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ number_format($sale->discount, 2) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="border: 1px solid black; padding: 8px;">Net Amount</td>
-                                                    <td style="border: 1px solid black; padding: 8px; text-align: right;">{{ number_format($sale->total_netamount, 2) }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ number_format($sale->total_netamount, 2) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="border: 1px solid black; padding: 8px;">TAX ({{ $sale->tax }}%)</td>
-                                                    <td style="border: 1px solid black; padding: 8px; text-align: right;">{{ number_format($sale->tax_amount, 2) }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ number_format($sale->tax_amount, 2) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="border: 1px solid black; padding: 8px;">VAT ({{ $sale->vat }}%)</td>
-                                                    <td style="border: 1px solid black; padding: 8px; text-align: right;">{{ number_format($sale->vat_amount, 2) }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ number_format($sale->vat_amount, 2) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="border: 1px solid black; padding: 8px;"><strong>Grand Total</strong></td>
-                                                    <td style="border: 1px solid black; padding: 8px; text-align: right;"><strong>{{ number_format($sale->grand_total, 2) }}</strong></td>
+                                                    <td style="border: 1px solid black; padding: 8px;"><strong>{{ number_format($sale->grand_total, 2) }}</strong></td>
                                                 </tr>
                                             </tbody>
                                         </table>

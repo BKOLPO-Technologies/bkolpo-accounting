@@ -243,7 +243,7 @@ class SalesController extends Controller
         $pageTitle = 'Invoice View';
 
         $sale = Sale::where('id', $id)
-            ->with(['products', 'client']) // Include supplier details
+            ->with(['saleProducts.item.unit', 'client']) // Include supplier details
             ->first();
 
         return view('backend.admin.inventory.sales.view',compact('pageTitle', 'sale'));
