@@ -289,7 +289,7 @@ class SalesController extends Controller
         });
 
         //$grandtotal = $subtotal + (($purchase->transport_cost) + ($purchase->carrying_charge) + ($purchase->vat) + ($purchase->tax) - ($purchase->discount));
-        $grandtotal = $subtotal + (($sale->transport_cost) + ($sale->carrying_charge) + ($sale->vat) + ($sale->tax) - ($sale->discount));
+        $grandtotal = $subtotal + (($sale->transport_cost) + ($sale->carrying_charge) + ($sale->vat_amount) + ($sale->tax_amount) - ($sale->discount));
 
         $suppliers = Supplier::orderBy('id', 'desc')->get();
         $clients = Client::orderBy('id', 'desc')->get();
