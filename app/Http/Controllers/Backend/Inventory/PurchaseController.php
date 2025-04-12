@@ -385,7 +385,8 @@ class PurchaseController extends Controller
 
         // Extract product data from request
         $productIds = explode(',', $request->input('product_ids'));  
-        $quantities = explode(',', $request->input('quantities'));  
+        //$quantities = explode(',', $request->input('quantities'));  
+        $quantities = $request->input('quantity');
         $prices = explode(',', $request->input('prices'));  
         $discounts = explode(',', $request->input('discounts'));  
 

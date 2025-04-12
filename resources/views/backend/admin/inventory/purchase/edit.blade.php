@@ -1,3 +1,4 @@
+{{-- with vat tax checkable option --}}
 @extends('layouts.admin', ['pageTitle' => 'Purchase'])
 @section('admin')
 <div class="content-wrapper">
@@ -131,8 +132,8 @@
                                                     <th>Price</th>
                                                     <th>Quantity</th>
                                                     <th>Unit</th>
-                                                    <th>Subtotal</th>
-                                                    <th>Discount</th>
+                                                    {{-- <th>Subtotal</th>
+                                                    <th>Discount</th> --}}
                                                     <th>Total</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -152,7 +153,7 @@
                                                         </select>
                                                     </td>
                                                     <td style="width:17% !important;">
-                                                        <select name="products" id="product" class="form-control select2 @error('products') is-invalid @enderror product-select" style="width: 100%;">
+                                                        <select name="aproducts[]" id="product" class="form-control select2 @error('products') is-invalid @enderror product-select" style="width: 100%;">
                                                             <option value="">Select Product</option>
                                                             @foreach($aproducts as $aproduct)
                                                                 <option value="{{ $aproduct->id }}" data-category="{{ $aproduct->category_id }}" data-id="{{ $aproduct->id }}" data-name="{{ $aproduct->name }}" data-price="{{ $aproduct->price }}" data-unit="{{ $aproduct->unit->name }}"
@@ -161,6 +162,15 @@
                                                                 </option>
                                                             @endforeach
                                                         </select>
+
+                                                        {{-- <select name="aproducts[]" class="form-control select2 product-select" style="width: 100%;">
+                                                            <option value="">Select Product</option>
+                                                            @foreach($aproducts as $aproduct)
+                                                                <option value="{{ $aproduct->id }}" data-price="{{ $aproduct->price }}" data-unit="{{ $aproduct->unit->name }}">
+                                                                    {{ $aproduct->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select> --}}
                                                     </td>
                                                     <td>
                                                         <input type="number" name="unit_price[]" class="form-control unit-price" readonly value="{{ $product->price }}">
@@ -171,15 +181,18 @@
                                                     <td style="width:7% !important;">
                                                         <input type="text" name="order_unit[]" class="form-control unit-input" value="{{ $product->product->unit->name }}" required readonly>
                                                     </td>
-                                                    <td style="width:8% !important;"> 
+                                                    {{-- <td style="width:8% !important;"> 
                                                         <input type="text" name="subtotal[]" class="form-control subtotal" value="{{ $product->price * $product->quantity }}" readonly>
+                                                    </td> --}}
+                                                    <td style="width:8% !important;">
+                                                        <input type="text" name="total[]" class="form-control subtotal" value="{{ $product->price * $product->quantity }}" readonly>
                                                     </td>
-                                                    <td style="width:11% !important;">
+                                                    {{-- <td style="width:11% !important;">
                                                         <input type="number" name="discount[]" class="form-control product-discount" min="0" step="0.01" value="{{ $product->discount }}">
                                                     </td>
                                                     <td>
                                                         <input type="text" name="total[]" class="form-control total" readonly value="{{ ((($product->price) * ($product->quantity)) - ($product->discount)) }}">
-                                                    </td>
+                                                    </td> --}}
                                                     <td class="text-center">
                                                         @if ($loop->first)
                                                             <button type="button" class="btn btn-success btn-sm add-row"><i class="fas fa-plus"></i></button>
@@ -197,7 +210,7 @@
 
                             <div class="d-flex justify-content-end flex-column align-items-end">
 
-                                <div class="col-12 col-lg-4 mb-2">
+                                {{-- <div class="col-12 col-lg-4 mb-2">
                                     <div class="row w-100">
                                         <div class="col-12 col-lg-6 mb-2">
                                             <label for="subtotal">Subtotal</label>
@@ -237,6 +250,84 @@
                                         </div>
                                     </div>
 
+                                </div> --}}
+
+                                <div class="row w-100">
+                                    <div class="col-12 col-lg-6 mb-2"></div>
+                                    <div class="col-12 col-lg-6 mb-2">
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <!-- Subtotal -->
+                                                <tr>
+                                                    <td><label for="subtotal">Total Amount</label></td>
+                                                    <td class="text-end">
+                                                        <input type="text" id="subtotal" name="subtotal" class="form-control text-end" value="{{ $subtotal }}" readonly />
+                                                    </td>
+                                                </tr>
+                            
+                                                <!-- Discount -->
+                                                <tr>
+                                                    <td><label for="total_discount">Discount</label></td>
+                                                    <td class="text-end">
+                                                        <input type="number" id="total_discount" name="total_discount" class="form-control text-end" step="0.01" placeholder="Enter Discount" value="{{ $purchase->discount }}" />
+                                                    </td>
+                                                </tr>
+                            
+                                                <!-- Net Amount -->
+                                                <tr>
+                                                    <td><label for="total_netamount">Net Amount</label></td>
+                                                    <td class="text-end">
+                                                        <input type="number" id="total_netamount" name="total_netamount" class="form-control text-end" step="0.01" readonly placeholder="0.00" value="{{ $purchase->total_netamount }}" />
+                                                    </td>
+                                                </tr>
+                            
+                                                <!-- TAX -->
+                                                <tr>
+                                                    <td>
+                                                        <div class="icheck-success d-inline">
+                                                            <input type="checkbox" name="include_tax" id="include_tax" {{ $purchase->tax > 0 ? 'checked' : '' }}>
+                                                            <label for="include_tax" class="me-3">
+                                                                Include TAX (%)
+                                                                <input type="number" name="tax" id="tax" value="{{ $purchase->tax }}" min="0"
+                                                                    class="form-control form-control-sm d-inline-block text-end"
+                                                                    step="0.01" placeholder="TAX" style="width: 70px; margin-left: 10px;" />
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <input type="text" id="tax_amount" name="tax_amount" class="form-control text-end" readonly placeholder="TAX Amount" value="{{ $purchase->tax_amount }}" readonly/>
+                                                    </td>
+                                                </tr>
+                            
+                                                <!-- VAT -->
+                                                <tr>
+                                                    <td>
+                                                        <div class="icheck-success d-inline">
+                                                            <input type="checkbox" name="include_vat" id="include_vat"  {{ $purchase->vat > 0 ? 'checked' : '' }}>
+                                                            <label for="include_vat">
+                                                                Include VAT (%)
+                                                                <input type="number" id="vat" name="vat" value="{{ $purchase->vat }}" min="0"
+                                                                       class="form-control form-control-sm vat-input text-end"
+                                                                       step="0.01" placeholder="VAT"
+                                                                       style="width: 70px; display: inline-block; margin-left: 10px;" />
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <input type="text" id="vat_amount" name="vat_amount" value="{{ $purchase->vat_amount }}" class="form-control text-end" readonly placeholder="VAT Amount" />
+                                                    </td>
+                                                </tr>
+                            
+                                                <!-- Grand Total -->
+                                                <tr>
+                                                    <td><label for="grand_total">Grand Total</label></td>
+                                                    <td class="text-end">
+                                                        <input type="text" id="grand_total" name="grand_total" class="form-control text-end" value="{{ $purchase->grand_total }}" readonly />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
 
                             </div>
@@ -341,7 +432,282 @@
 </script>
 
 <script>
+    // $(document).ready(function () {
+
+    //     function addToHiddenFields(productId, quantity, price, discount) {
+    //         let productIds = $('#product_ids').val() ? $('#product_ids').val().split(',') : [];
+    //         let quantities = $('#quantities').val() ? $('#quantities').val().split(',') : [];
+    //         let prices = $('#prices').val() ? $('#prices').val().split(',') : [];
+    //         let discounts = $('#discounts').val() ? $('#discounts').val().split(',') : [];
+
+    //         let index = productIds.indexOf(productId); 
+
+    //         if (index !== -1) {
+                
+    //             quantities[index] = quantity;
+    //             prices[index] = price;
+    //             discounts[index] = discount;
+    //         } else {
+                
+    //             productIds.push(productId);
+    //             quantities.push(quantity);
+    //             prices.push(price);
+    //             discounts.push(discount);
+    //         }
+
+    //         $('#product_ids').val(productIds.join(','));
+    //         $('#quantities').val(quantities.join(','));
+    //         $('#prices').val(prices.join(','));
+    //         $('#discounts').val(discounts.join(','));
+    //     }
+
+    //     function removeFromHiddenFields(productId) {
+    //         let productIds = $('#product_ids').val().split(',');
+    //         let quantities = $('#quantities').val().split(',');
+    //         let prices = $('#prices').val().split(',');
+    //         let discounts = $('#discounts').val().split(',');
+
+    //         let index = productIds.indexOf(productId);
+    //         if (index !== -1) {
+    //             productIds.splice(index, 1);
+    //             quantities.splice(index, 1);
+    //             prices.splice(index, 1);
+    //             discounts.splice(index, 1);
+    //         }
+
+    //         $('#product_ids').val(productIds.join(','));
+    //         $('#quantities').val(quantities.join(','));
+    //         $('#prices').val(prices.join(','));
+    //         $('#discounts').val(discounts.join(','));
+    //     }
+
+    //     function loadProductsByCategory(categoryId, row) {
+    //         var $productSelect = row.find('.product-select'); 
+
+    //         if (!categoryId) {
+    //             $productSelect.empty().append('<option value="">Select a category first</option>');
+    //             return;
+    //         }
+
+    //         $productSelect.empty().append('<option value="">Loading products...</option>');
+
+    //         $.ajax({
+    //             url: '/admin/product/products-by-category/' + encodeURIComponent(categoryId), 
+    //             method: 'GET',
+    //             dataType: 'json', 
+    //             success: function(response) {
+
+    //                 $productSelect.empty().append('<option value="">Select Product</option>');
+
+    //                 if (Array.isArray(response.products) && response.products.length > 0) {
+                        
+    //                     response.products.forEach(function(product) {
+    //                         let unitName = product.unit && product.unit.name ? product.unit.name : 'N/A'; 
+
+    //                         $productSelect.append(`
+    //                             <option value="${product.id}" 
+    //                                     data-id="${product.id}" 
+    //                                     data-name="${product.name}" 
+    //                                     data-price="${product.price}" 
+    //                                     data-unit="${unitName}">
+    //                                 ${product.name}
+    //                             </option>
+    //                         `);
+    //                     });
+    //                 } else {
+    //                     $productSelect.append('<option value="">No products found</option>');
+    //                 }
+
+    //                 if (response.category) {
+    //                     let tax = response.category.tax ?? 0;
+    //                     let vat = response.category.vat ?? 0;
+
+    //                     $('#tax').val(tax);
+    //                     $('#vat').val(vat);
+    //                 } else {
+    //                     $('#tax').val(0);
+    //                     $('#vat').val(0);
+    //                 }
+
+    //                 $productSelect.trigger('change');
+    //             },
+    //             error: function(xhr, status, error) {
+    //                 console.error('AJAX Error:', status, error);
+    //                 $productSelect.empty().append('<option value="">Error fetching products</option>');
+    //             }
+    //         });
+    //     }
+
+    //     $(document).on('change', '.category-select', function() {
+    //         var categoryId = $(this).val();
+    //         var row = $(this).closest('tr'); 
+    //         loadProductsByCategory(categoryId, row);  
+    //     });
+
+    //     $(document).on('change', '.product-select', function () {
+    //         let selectedOption = $(this).find(':selected');
+    //         let productId = selectedOption.val();
+    //         let productPrice = selectedOption.data('price') || 0;
+    //         let productUnit = selectedOption.data('unit') || '';
+
+    //         let isDuplicate = false;
+    //         $('.product-select').not(this).each(function () {
+    //             if ($(this).val() === productId) {
+    //                 isDuplicate = true;
+    //                 return false;
+    //             }
+    //         });
+
+    //         if (isDuplicate) {
+    //             toastr.error('This product is already added!', {
+    //                 closeButton: true,
+    //                 progressBar: true,
+    //                 timeOut: 5000
+    //             });
+    //             $(this).val('').trigger('change'); 
+    //             return;
+    //         }
+
+    //         if (productId) {
+    //             let row = $(this).closest('tr');
+
+    //             row.find('.unit-price').val(productPrice);
+    //             row.find('.quantity').val(1);
+    //             row.find('.subtotal').val(productPrice);
+    //             row.find('.total').val(productPrice);
+    //             row.find('.unit-input').val(productUnit);
+    //             row.find('.product-discount').val(0);
+
+    //             addToHiddenFields(productId, 1, productPrice, 0);
+
+    //         } else {
+    //             console.log("productId not found");
+    //         }
+
+    //         calculateTotal();
+
+    //     });
+
+    //     $(document).on('input', '.quantity, .product-discount', function () {
+    //         let row = $(this).closest('tr');
+    //         let productId = row.find('.product-select').val();
+    //         let unitPrice = parseFloat(row.find('.unit-price').val()) || 0;
+    //         let quantity = parseFloat(row.find('.quantity').val()) || 1;
+    //         let discount = parseFloat(row.find('.product-discount').val()) || 0;
+
+    //         let subtotal = unitPrice * quantity;
+    //         let total = subtotal - discount;
+
+    //         row.find('.subtotal').val(subtotal.toFixed(2));
+    //         row.find('.total').val(total.toFixed(2));
+
+    //         addToHiddenFields(productId, quantity, unitPrice, discount);
+
+    //         calculateTotal();
+    //     });
+
+    //     function calculateTotal() {
+    //         let subtotal = 0;
+
+    //         $(".total").each(function () {
+    //             subtotal += parseFloat($(this).val()) || 0;
+    //         });
+
+    //         $("#subtotal").val(subtotal.toFixed(2));
+    //         calculateNetAmount(); // Now integrated
+    //     }
+
+    //     function calculateNetAmount() {
+    //         let subtotal = parseFloat($('#subtotal').val()) || 0;
+    //         let discount = parseFloat($('#total_discount').val()) || 0;
+    //         let netAmount = subtotal - discount;
+
+    //         $('#total_netamount').val(netAmount.toFixed(2));
+
+    //         // TAX
+    //         let taxPercent = parseFloat($('#tax').val()) || 0;
+    //         let taxAmount = $('#include_tax').is(':checked') ? (netAmount * taxPercent / 100) : 0;
+    //         $('#tax_amount').val(taxAmount.toFixed(2));
+
+    //         // Calculate the sum of net amount and tax amount
+    //         let netAmountWithTax = netAmount + taxAmount;
+
+    //         // VAT
+    //         let vatPercent = parseFloat($('#vat').val()) || 0;
+    //         let vatAmount = $('#include_vat').is(':checked') ? (netAmountWithTax * vatPercent / 100) : 0;
+    //         $('#vat_amount').val(vatAmount.toFixed(2));
+
+    //         // Grand total
+    //         let grandTotal = netAmountWithTax + vatAmount;
+    //         $('#grand_total').val(grandTotal.toFixed(2));
+    //     }
+
+    //     $(document).on("input", "#total_discount, #transport_cost, #carrying_charge, #vat, #tax", function () {
+    //         //calculateTotal();
+    //         calculateNetAmount();
+    //     });
+
+    //     $(document).on('change', '#include_vat', function () {
+    //         $('#vat').prop('disabled', !this.checked);
+    //         calculateNetAmount();
+    //     });
+
+    //     $(document).on('change', '#include_tax', function () {
+    //         $('#tax').prop('disabled', !this.checked);
+    //         calculateNetAmount();
+    //     });
+
+    //     $(document).on('click', '.add-row', function () {
+    //         let newRow = `
+    //             <tr>
+    //                 <td>
+    //                     <select name="category_id" id="category_id" class="form-control category-select select2 @error('category_id') is-invalid @enderror" style="width: 100%;">
+    //                         <option value="all">All Categories</option>
+    //                         @foreach($categories as $category)
+    //                             <option value="{{ $category->id }}">{{ $category->name }}</option>
+    //                         @endforeach
+    //                     </select>
+    //                 </td>
+    //                 <td style="width:17% !important;">
+    //                     <select name="products" id="product" class="form-control select2 @error('products') is-invalid @enderror product-select" style="width: 100%;">
+    //                         <option value="">Select Product</option>
+    //                         @foreach($aproducts as $aproduct)
+    //                             <option value="{{ $aproduct->id }}" data-category="{{ $aproduct->category_id }}" data-id="{{ $aproduct->id }}" data-name="{{ $aproduct->name }}" data-price="{{ $aproduct->price }}" data-unit="{{ $aproduct->unit->name }}"
+    //                                 {{ (old('aproduct_id') ?? $product->product_id) == $aproduct->id ? 'selected' : '' }}>
+    //                                 {{ $aproduct->name }}
+    //                             </option>
+    //                         @endforeach
+    //                     </select>
+    //                 </td>
+    //                 <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" required readonly></td>
+    //                 <td><input type="number" name="quantity[]" class="form-control quantity" min="1" value="1" required></td>
+    //                 <td><input type="text" name="order_unit[]" class="form-control unit-input" required readonly></td>
+    //                 <td><input type="text" name="total[]" class="form-control total" readonly></td>
+    //                 <td class="text-center">
+    //                     <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
+    //                 </td>
+    //             </tr>`;
+    //         $('#product-tbody').append(newRow);
+
+    //         $('.select2').select2();
+    //     });
+
+    //     $(document).on('click', '.remove-row', function () {
+
+    //         let row = $(this).closest('tr');
+    //         let productId = row.find('.product-select').val();
+
+    //         row.remove(); 
+    //         removeFromHiddenFields(productId); 
+    //         calculateTotal(); 
+    //     });
+    // });
+</script>
+
+<script>
     $(document).ready(function () {
+        // Initialize select2
+        $('.select2').select2();
 
         function addToHiddenFields(productId, quantity, price, discount) {
             let productIds = $('#product_ids').val() ? $('#product_ids').val().split(',') : [];
@@ -349,15 +715,13 @@
             let prices = $('#prices').val() ? $('#prices').val().split(',') : [];
             let discounts = $('#discounts').val() ? $('#discounts').val().split(',') : [];
 
-            let index = productIds.indexOf(productId); 
+            let index = productIds.indexOf(productId);
 
             if (index !== -1) {
-                
                 quantities[index] = quantity;
                 prices[index] = price;
                 discounts[index] = discount;
             } else {
-                
                 productIds.push(productId);
                 quantities.push(quantity);
                 prices.push(price);
@@ -408,9 +772,9 @@
 
                     $productSelect.empty().append('<option value="">Select Product</option>');
 
-                    if (Array.isArray(response) && response.length > 0) {
+                    if (Array.isArray(response.products) && response.products.length > 0) {
                         
-                        response.forEach(function(product) {
+                        response.products.forEach(function(product) {
                             let unitName = product.unit && product.unit.name ? product.unit.name : 'N/A'; 
 
                             $productSelect.append(`
@@ -436,17 +800,66 @@
             });
         }
 
-        $(document).on('change', '.category-select', function() {
+        $(document).on('change', '.category-select', function () {
             var categoryId = $(this).val();
-            var row = $(this).closest('tr'); 
-            loadProductsByCategory(categoryId, row);  
+            var row = $(this).closest('tr');
+            loadProductsByCategory(categoryId, row);
         });
 
+        // Add new row (HTML string like in create page)
+        $(document).on('click', '.add-row', function () {
+            let newRow = `
+                <tr>
+                    <td>
+                        <select name="category_id" class="form-control category-select select2" style="width: 100%;">
+                            <option value="all">All Categories</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td style="width:17% !important;">
+                        <select name="aproducts[]" class="form-control select2 product-select" style="width: 100%;">
+                            <option value="">Select Product</option>
+                            @foreach($aproducts as $aproduct)
+                                <option value="{{ $aproduct->id }}" data-price="{{ $aproduct->price }}" data-unit="{{ $aproduct->unit->name }}">
+                                    {{ $aproduct->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td><input type="number" name="unit_price[]" class="form-control unit-price" readonly></td>
+                    <td><input type="number" name="quantity[]" class="form-control quantity" value="1"></td>
+                    <td><input type="text" name="order_unit[]" class="form-control unit-input" readonly></td>
+                    <td><input type="text" name="total[]" class="form-control subtotal" readonly></td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+
+            $('#product-tbody').append(newRow);
+            $('.select2').select2(); // Re-initialize select2 for new elements
+        });
+
+
+        // Remove row
+        $(document).on('click', '.remove-row', function () {
+            $(this).closest('tr').remove();
+            updateSubtotal();
+        });
+
+        // On product select, set unit price and unit
         $(document).on('change', '.product-select', function () {
-            let selectedOption = $(this).find(':selected');
-            let productId = selectedOption.val();
-            let productPrice = selectedOption.data('price') || 0;
-            let productUnit = selectedOption.data('unit') || '';
+            const selected = $(this).find(':selected');
+            const row = $(this).closest('tr');
+            // row.find('.unit-price').val(selected.data('price'));
+            // row.find('.unit-input').val(selected.data('unit'));
+            let productPrice = selected.data('price') || 0;
+            let productUnit = selected.data('unit') || '';
+            let productQuantity = selected.data('quantity') || '';
+            let productId = selected.val();
+            //console.log(productId);
+            console.log(productQuantity);
 
             let isDuplicate = false;
             $('.product-select').not(this).each(function () {
@@ -470,110 +883,99 @@
                 let row = $(this).closest('tr');
 
                 row.find('.unit-price').val(productPrice);
-                row.find('.quantity').val(1);
+                row.find('.quantity').val(productQuantity);
                 row.find('.subtotal').val(productPrice);
                 row.find('.total').val(productPrice);
                 row.find('.unit-input').val(productUnit);
                 row.find('.product-discount').val(0);
 
-                addToHiddenFields(productId, 1, productPrice, 0);
+                console.log(productPrice);
+
+                addToHiddenFields(productId, productQuantity, productPrice, 0);
 
             } else {
-                console.log("productId not found");
+                //console.log("productId not found1");
             }
 
-            calculateTotal();
-
+            calculateRowTotal(row);
         });
 
-        $(document).on('input', '.quantity, .product-discount', function () {
-            let row = $(this).closest('tr');
-            let productId = row.find('.product-select').val();
-            let unitPrice = parseFloat(row.find('.unit-price').val()) || 0;
-            let quantity = parseFloat(row.find('.quantity').val()) || 1;
-            let discount = parseFloat(row.find('.product-discount').val()) || 0;
-
-            let subtotal = unitPrice * quantity;
-            let total = subtotal - discount;
-
-            row.find('.subtotal').val(subtotal.toFixed(2));
-            row.find('.total').val(total.toFixed(2));
-
-            addToHiddenFields(productId, quantity, unitPrice, discount);
-
-            calculateTotal();
+        // Quantity change
+        $(document).on('input', '.quantity', function () {
+            const row = $(this).closest('tr');
+            calculateRowTotal(row);
         });
 
-        function calculateTotal() {
+        // Calculate total for each row
+        function calculateRowTotal(row) {
+            const quantity = parseFloat(row.find('.quantity').val()) || 0;
+            const unitPrice = parseFloat(row.find('.unit-price').val()) || 0;
+            const subtotal = (quantity * unitPrice).toFixed(2);
+            row.find('.subtotal').val(subtotal);
+            updateSubtotal();
+        }
 
+        // Update subtotal and grand total
+        function updateSubtotal() {
             let subtotal = 0;
-            let totalDiscount = parseFloat($("#discount").val()) || 0;
-            let transportCost = parseFloat($("#transport_cost").val()) || 0;
-            let carryingCharge = parseFloat($("#carrying_charge").val()) || 0;
-            let vat = parseFloat($("#vat").val()) || 0;
-            let tax = parseFloat($("#tax").val()) || 0;
-
-            $(".total").each(function () {
+            $('.subtotal').each(function () {
                 subtotal += parseFloat($(this).val()) || 0;
             });
 
-            let grandTotal = subtotal - totalDiscount + transportCost + carryingCharge + vat + tax;
+            $('#subtotal').val(subtotal.toFixed(2));
 
-            $("#subtotal").val(subtotal.toFixed(2));
-            $("#total").val(grandTotal.toFixed(2));
+            const discount = parseFloat($('#total_discount').val()) || 0;
+            const netAmount = subtotal - discount;
+            $('#total_netamount').val(netAmount.toFixed(2));
+
+            let taxAmount = 0;
+            let vatAmount = 0;
+
+            if ($('#include_tax').is(':checked')) {
+                const taxRate = parseFloat($('#tax').val()) || 0;
+                taxAmount = (netAmount * taxRate / 100);
+                $('#tax_amount').val(taxAmount.toFixed(2));
+            } else {
+                $('#tax_amount').val('');
+            }
+
+            if ($('#include_vat').is(':checked')) {
+                const vatRate = parseFloat($('#vat').val()) || 0;
+                vatAmount = (netAmount * vatRate / 100);
+                $('#vat_amount').val(vatAmount.toFixed(2));
+            } else {
+                $('#vat_amount').val('');
+            }
+
+            const grandTotal = netAmount + taxAmount + vatAmount;
+            $('#grand_total').val(grandTotal.toFixed(2));
         }
 
-        $(document).on("input", "#discount, #transport_cost, #carrying_charge, #vat, #tax", function () {
-            calculateTotal();
+        // Discount / Tax / VAT change
+        $('#total_discount, #tax, #vat').on('input', function () {
+            updateSubtotal();
         });
 
-        $(document).on('click', '.add-row', function () {
-            let newRow = `
-                <tr>
-                    <td>
-                        <select name="category_id" id="category_id" class="form-control category-select select2 @error('category_id') is-invalid @enderror" style="width: 100%;">
-                            <option value="all">All Categories</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <select name="aproducts[]" class="form-control select2 product-select" style="width: 100%;">
-                            <option value="">Select Product</option>
-                            @foreach($aproducts as $aproduct)
-                                <option value="{{ $aproduct->id }}" data-price="{{ $aproduct->price }}" data-unit="{{ $aproduct->unit->name }}">
-                                    {{ $aproduct->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" required readonly></td>
-                    <td><input type="number" name="quantity[]" class="form-control quantity" min="1" value="1" required></td>
-                    <td><input type="text" name="order_unit[]" class="form-control unit-input" required readonly></td>
-                    <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
-                    <td><input type="number" name="discount[]" class="form-control product-discount" min="0" placeholder="Enter Discount"></td>
-                    <td><input type="text" name="total[]" class="form-control total" readonly></td>
-                    <td class="text-center">
-                        <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>`;
-            $('#product-tbody').append(newRow);
-
-            $('.select2').select2();
+        // Enable tax input
+        $('#include_tax').change(function () {
+            $('#tax').prop('disabled', !this.checked);
+            updateSubtotal();
         });
 
-        $(document).on('click', '.remove-row', function () {
+        // Enable vat input
+        $('#include_vat').change(function () {
+            $('#vat').prop('disabled', !this.checked);
+            updateSubtotal();
+        });
 
-            let row = $(this).closest('tr');
-            let productId = row.find('.product-select').val();
-
-            row.remove(); 
-            removeFromHiddenFields(productId); 
-            calculateTotal(); 
+        // Trigger initial calculations
+        $('#product-tbody tr').each(function () {
+            calculateRowTotal($(this));
         });
     });
 </script>
+
+
 
 
 @endpush

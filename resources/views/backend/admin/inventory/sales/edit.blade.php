@@ -169,7 +169,7 @@
                                                     </td>                                                    
 
                                                     <td>
-                                                        <input type="number" name="quantity[]" class="form-control quantity" value="{{ $product->quantity }}" min="1" step="0.01" required>
+                                                        <input type="number" name="quantity[]" class="form-control quantity" value="{{ $product->quantity }}" min="1" step="1" required>
                                                     </td>
                                                     <td style="width:7% !important;">
                                                         <input type="number" name="unit_price[]" class="form-control unit-price" value="{{ $product->price }}" min="0" step="0.01" required>
@@ -397,7 +397,7 @@
         const selectedOption = $(this).find(':selected');
         const items = selectedOption.data('items');
 
-        console.log(items);
+        //console.log(items);
 
         if (!items || items.length === 0) {
             toastr.warning('No items found for this project.');
