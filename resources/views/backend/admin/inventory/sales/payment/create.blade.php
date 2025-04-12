@@ -331,7 +331,7 @@
                     type: "GET",
                     data: { supplier_id: supplierId },
                     success: function (response) {
-                        //console.log(response); // Log the response to the console
+                        console.log(response); // Log the response to the console
 
                         let options = '<option value="">Select PO No</option>';
 
@@ -375,8 +375,8 @@
                             // console.log(purchase);
                             let payments = response.payments;
 
-                            let vat = parseFloat(response.purchase.vat) || 0;
-                            let tax = parseFloat(response.purchase.tax) || 0;
+                            let vat = parseFloat(response.purchase.vat_amount) || 0;
+                            let tax = parseFloat(response.purchase.tax_amount) || 0;
                             let transportCost = parseFloat(response.purchase.transport_cost) || 0;
                             let carryingCharge = parseFloat(response.purchase.carrying_charge) || 0;
                             let discount = parseFloat(response.purchase.discount) || 0;

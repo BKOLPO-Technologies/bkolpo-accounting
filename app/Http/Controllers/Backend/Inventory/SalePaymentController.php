@@ -82,7 +82,7 @@ class SalePaymentController extends Controller
         // Step 1: Find Purchase where supplier_id matches
         $purchases = Purchase::where('supplier_id', $request->supplier_id)
             ->where('status', '!=', 'paid')
-            ->get(['id', 'invoice_no', 'total', 'paid_amount']);
+            ->get(['id', 'invoice_no', 'grand_total', 'paid_amount']);
         //dd($purchase);
 
         // Step 2: Find Incoming Chalans based on purchase_id
@@ -92,8 +92,8 @@ class SalePaymentController extends Controller
                 'invoice_no' => $purchase->invoice_no ?? 'N/A',
                 // 'total_amount' => ($purchase->total ?? 0),
                 // 'total_due_amount' => ($purchase->total ?? 0) - ($purchase->paid_amount ?? 0),
-                'total_amount' => number_format(($purchase->total ?? 0), 2, '.', ''),
-                'total_due_amount' => number_format(($purchase->total ?? 0) - ($purchase->paid_amount ?? 0), 2, '.', ''),
+                'total_amount' => number_format(($purchase->grand_total ?? 0), 2, '.', ''),
+                'total_due_amount' => number_format(($purchase->grand_total ?? 0) - ($purchase->paid_amount ?? 0), 2, '.', ''),
             ];
         });
 

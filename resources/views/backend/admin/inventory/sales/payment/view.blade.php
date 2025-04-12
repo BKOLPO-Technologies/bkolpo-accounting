@@ -158,8 +158,8 @@
                                             @php
                                                 $transportCost = $purchase->transport_cost ?? 0;
                                                 $carryingCharge = $purchase->carrying_charge ?? 0;
-                                                $vat = $purchase->vat ?? 0;
-                                                $tax = $purchase->tax ?? 0;
+                                                $vat = $purchase->vat_amount ?? 0;
+                                                $tax = $purchase->tax_amount ?? 0;
                                                 $totalDiscount = $purchase->discount ?? 0;
                         
                                                 $totalVatTax = ($transportCost + $carryingCharge + $vat + $tax) - $totalDiscount;
@@ -301,7 +301,7 @@
                                             <tr>
                                                 <th>Total Amount need to Paid :</th>
                                                 {{-- <td>{{ bdt() }} {{ number_format($grandTotal - $totalPaid, 2) }}</td> --}}
-                                                <td>{{ bdt() }} {{ number_format($purchase->total - $purchase->paid_amount, 2) }}</td>
+                                                <td>{{ bdt() }} {{ number_format($purchase->grand_total - $purchase->paid_amount, 2) }}</td>
                                             </tr>
                                         </table>
                                     </div>

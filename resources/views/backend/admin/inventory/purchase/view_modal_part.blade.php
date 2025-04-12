@@ -66,8 +66,8 @@
                         // Fetch additional costs from the purchase table
                         $transportCost = $purchase->transport_cost ?? 0;
                         $carryingCharge = $purchase->carrying_charge ?? 0;
-                        $vat = $purchase->vat ?? 0;
-                        $tax = $purchase->tax ?? 0;
+                        $vat = $purchase->vat_amount ?? 0;
+                        $tax = $purchase->tax_amount ?? 0;
                         $totalDiscount = $purchase->discount ?? 0;
 
                         $totalVatTax = ($transportCost + $carryingCharge + $vat + $tax) - $totalDiscount;
