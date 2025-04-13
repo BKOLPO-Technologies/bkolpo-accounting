@@ -152,13 +152,13 @@
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <td style="width:14% !important;">
+                                                    <td style="width:20% !important;">
                                                         <select name="aproducts[]" id="product" class="form-control select2 @error('products') is-invalid @enderror product-select" style="width: 100%;">
                                                             <option value="">Select Product</option>
                                                             @foreach($aproducts as $aproduct)
                                                                 <option value="{{ $aproduct->id }}" data-category="{{ $aproduct->category_id }}" data-id="{{ $aproduct->id }}" data-name="{{ $aproduct->name }}" data-price="{{ $aproduct->price }}" data-unit="{{ $aproduct->unit->name }}"
                                                                     {{ (old('aproduct_id') ?? $product->product_id) == $aproduct->id ? 'selected' : '' }}>
-                                                                    {{ $aproduct->name }}
+                                                                    {{ $aproduct->name }}{{ $product->product_code ? ' (' . $product->product_code . ')' : '' }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -490,7 +490,7 @@
                             <option value="">Select Product</option>
                             @foreach($aproducts as $aproduct)
                                 <option value="{{ $aproduct->id }}" data-price="{{ $aproduct->price }}" data-unit="{{ $aproduct->unit->name }}">
-                                    {{ $aproduct->name }}
+                                    {{ $aproduct->name }}{{ $product->product_code ? ' (' . $product->product_code . ')' : '' }}
                                 </option>
                             @endforeach
                         </select>

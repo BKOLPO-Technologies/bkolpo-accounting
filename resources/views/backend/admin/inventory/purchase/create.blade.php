@@ -189,12 +189,12 @@
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <td style="width:17% !important;">
+                                                    <td style="width:20% !important;">
                                                         <select name="products" id="product" class="form-control select2 @error('products') is-invalid @enderror product-select" style="width: 100%;">
                                                             <option value="">Select Product</option>
                                                             @foreach($products as $product)
                                                                 <option value="{{ $product->id }}" data-category="{{ $product->category_id }}" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-unit="{{ $product->unit->name }}">
-                                                                    {{ $product->name }}
+                                                                    {{ $product->name }}{{ $product->product_code ? ' (' . $product->product_code . ')' : '' }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -639,7 +639,7 @@
                             <option value="">Select Product</option>
                             @foreach($products as $product)
                                 <option value="{{ $product->id }}" data-price="{{ $product->price }}" data-unit="{{ $product->unit->name }}">
-                                    {{ $product->name }}
+                                    {{ $product->name }}{{ $product->product_code ? ' (' . $product->product_code . ')' : '' }}
                                 </option>
                             @endforeach
                         </select>
