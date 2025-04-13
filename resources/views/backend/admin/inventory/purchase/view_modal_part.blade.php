@@ -3,7 +3,7 @@
         <div class="col-12">
             <h4>
                 <i class="fas fa-globe"></i> Bkolpo Constructions Ltd.
-                <small class="float-right">{{ now()->format('d M Y') }}</small>
+                {{-- <small class="float-right">{{ now()->format('d M Y') }}</small> --}}
             </h4>
         </div>
     </div>
