@@ -133,10 +133,10 @@
                                         <th>Terms & Conditions</th>
                                         <td>{{ $project->terms_conditions ?? 'N/A' }}</td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <th>Status</th>
                                         <td><span class="badge bg-info">{{ ucfirst($project->status) }}</span></td>
-                                    </tr>
+                                    </tr> --}}
                                 </table>
                             </div>
 
