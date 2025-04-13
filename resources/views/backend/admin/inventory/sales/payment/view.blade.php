@@ -70,7 +70,7 @@
                                         <th>Terms & Conditions</th>
                                         <td>{{ $project->terms_conditions ?? 'N/A' }}</td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <th>Status</th>
                                         <td>
                                             @if($project->status == 'pending')
@@ -81,7 +81,7 @@
                                                 <span class="badge bg-info text-dark">Partially Paid</span>
                                             @endif
                                         </td>                                        
-                                    </tr>
+                                    </tr> --}}
                                 </table>
                             </div>
 
