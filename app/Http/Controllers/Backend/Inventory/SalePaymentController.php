@@ -50,7 +50,15 @@ class SalePaymentController extends Controller
 
         $incomingChalans = IncomingChalan::latest()->get();
         // $clients = Client::latest()->get();
-        $suppliers = Supplier::latest()->get();
+        // $suppliers = Supplier::latest()->get();
+
+        $suppliers = Supplier::whereHas('purchases', function ($query) {
+            $query->where('status', '!=', 'Paid');
+        })->latest()->get();
+
+
+        // dd($suppliers);
+
         $ledgerGroups = LedgerGroup::with('ledgers')->latest()->get();
 
         // Retrieve Ledgers where the type is either 'Bank' or 'Cash'

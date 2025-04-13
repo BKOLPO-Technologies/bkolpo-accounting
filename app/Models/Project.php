@@ -36,5 +36,11 @@ class Project extends Model
         return $this->hasMany(ProjectReceipt::class, 'invoice_no', 'reference_no');
     }
 
+    public function paidSales()
+    {
+        return $this->hasMany(Sale::class, 'project_id')->where('status', 'paid');
+    }
+
+
 
 }

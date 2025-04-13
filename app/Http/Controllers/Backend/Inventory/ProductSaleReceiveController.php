@@ -47,8 +47,27 @@ class ProductSaleReceiveController extends Controller
         //     ->get();
 
         // Only fetch projects that have invoices in the 'sales' table
-        $projects = Project::whereHas('sales')->where('project_type', 'Running')->latest()->get();
+        // $projects = Project::whereHas('sales')->where('project_type', 'Running')->latest()->get();
+
+        $projects = Project::whereHas('sales', function ($query) {
+                $query->where(function ($q) {
+                    $q->whereColumn('grand_total', '!=', 'paid_amount')
+                    ->orWhere('status', '!=', 'Paid');
+                });
+            })
+            ->where('project_type', 'Running')
+            ->with(['sales' => function($q) {
+                $q->where('status', 'Paid')
+                ->select('project_id', DB::raw('SUM(grand_total) as total_grand'), DB::raw('SUM(paid_amount) as total_paid'))
+                ->groupBy('project_id');
+            }])
+            ->latest()
+            ->get();
         
+        // dd($projects);
+
+
+    
         $ledgers = Ledger::whereIn('type', ['Bank', 'Cash'])->get();
 
 

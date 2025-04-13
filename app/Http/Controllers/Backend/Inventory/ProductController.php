@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Unit;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -40,6 +41,8 @@ class ProductController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        $productCode = 'PRD' . strtoupper(Str::random(5));
+
         // Store the product with the validated data
         $product =  Product::create([
             'name' => $request->name,
@@ -49,6 +52,7 @@ class ProductController extends Controller
             'status' => $request->status ?? 1, // Default to active if not provided
             'category_id' => $request->category_id,
             'unit_id' => $request->unit_id,
+            'product_code' => $productCode,
         ]);
 
         if ($request->hasFile('image')) {
