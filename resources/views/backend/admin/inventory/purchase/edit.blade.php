@@ -158,7 +158,7 @@
                                                             @foreach($aproducts as $aproduct)
                                                                 <option value="{{ $aproduct->id }}" data-category="{{ $aproduct->category_id }}" data-id="{{ $aproduct->id }}" data-name="{{ $aproduct->name }}" data-price="{{ $aproduct->price }}" data-unit="{{ $aproduct->unit->name }}"
                                                                     {{ (old('aproduct_id') ?? $product->product_id) == $aproduct->id ? 'selected' : '' }}>
-                                                                    {{ $aproduct->name }}{{ $product->product_code ? ' (' . $product->product_code . ')' : '' }}
+                                                                    {{ $aproduct->name }}{{ $aproduct->product_code ? ' (' . $aproduct->product_code . ')' : '' }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -490,7 +490,7 @@
                             <option value="">Select Product</option>
                             @foreach($aproducts as $aproduct)
                                 <option value="{{ $aproduct->id }}" data-price="{{ $aproduct->price }}" data-unit="{{ $aproduct->unit->name }}">
-                                    {{ $aproduct->name }}{{ $product->product_code ? ' (' . $product->product_code . ')' : '' }}
+                                    {{ $aproduct->name }}{{ $aproduct->product_code ? ' (' . $aproduct->product_code . ')' : '' }}
                                 </option>
                             @endforeach
                         </select>
