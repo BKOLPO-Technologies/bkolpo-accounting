@@ -39,6 +39,7 @@
                 <thead>
                     <tr>
                         <th>Product</th>
+                        <th>Product Code</th>
                         <th>Unit Price</th>
                         <th>Quantity</th>
                         <th>Subtotal</th>
@@ -56,6 +57,7 @@
                         @endphp
                         <tr>
                             <td>{{ $product->name }}</td>
+                            <td>{{ $product->product_code ?? '' }}</td>
                             <td>{{ number_format($product->pivot->price, 2) }}</td>
                             <td>{{ $product->pivot->quantity }} ({{ $product->unit->name }})</td>
                             <td>{{ number_format($subtotal, 2) }}</td>
