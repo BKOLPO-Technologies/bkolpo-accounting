@@ -392,7 +392,7 @@
                         </select>
                     </td>
                     <td class="col-2">
-                        <input type="number" name="quantity[]" class="form-control quantity" value="${itemQuantity}" min="1" step="0.01" required>
+                        <input type="number" name="quantity[]" class="form-control quantity" value="${itemQuantity}" min="1" step="1" required>
                     </td>
                     <td class="col-2">
                         <input type="number" name="unit_price[]" class="form-control unit-price" value="${itemPrice}" min="0" step="0.01" required style="text-align: right;">
