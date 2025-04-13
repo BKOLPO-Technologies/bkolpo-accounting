@@ -200,7 +200,7 @@
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input type="number" name="unit_price[]" class="form-control unit-price" min="0" required readonly>
+                                                        <input type="number" name="unit_price[]" class="form-control unit-price" min="0" required readonly style="text-align: right;">
                                                     </td>
                                                     <td style="width:15% !important;">
                                                         <input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required>
@@ -208,14 +208,8 @@
                                                     <td style="width:7% !important;">
                                                         <input type="text" name="order_unit[]" class="form-control unit-input" required readonly>
                                                     </td>
-                                                    {{-- <td style="width:8% !important;">
-                                                        <input type="text" name="subtotal[]" class="form-control subtotal"  readonly>
-                                                    </td>
-                                                    <td style="width:11% !important;">
-                                                        <input type="number" name="discount[]" class="form-control product-discount" placeholder="Enter Discount" step="0.01" min="0">
-                                                    </td> --}}
                                                     <td>
-                                                        <input type="text" name="total[]" class="form-control total" readonly>
+                                                        <input type="text" name="total[]" class="form-control total" readonly style="text-align: right;">
                                                     </td>
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-success btn-sm add-row"><i class="fas fa-plus"></i></button>
@@ -237,7 +231,7 @@
                                                 <tr>
                                                     <td><label for="subtotal">Total Amount</label></td>
                                                     <td class="text-end">
-                                                        <input type="text" id="subtotal" name="subtotal" class="form-control text-end" value="0" readonly />
+                                                        <input type="text" id="subtotal" name="subtotal" class="form-control" value="0" readonly style="text-align: right;"/>
                                                     </td>
                                                 </tr>
                             
@@ -245,7 +239,7 @@
                                                 <tr>
                                                     <td><label for="total_discount">Discount</label></td>
                                                     <td class="text-end">
-                                                        <input type="number" id="total_discount" name="total_discount" class="form-control text-end" step="0.01" placeholder="Enter Discount" />
+                                                        <input type="number" id="total_discount" name="total_discount" class="form-control" step="0.01" placeholder="Enter Discount" style="text-align: right;"/>
                                                     </td>
                                                 </tr>
                             
@@ -253,7 +247,7 @@
                                                 <tr>
                                                     <td><label for="total_netamount">Net Amount</label></td>
                                                     <td class="text-end">
-                                                        <input type="number" id="total_netamount" name="total_netamount" class="form-control text-end" step="0.01" readonly placeholder="0.00" />
+                                                        <input type="number" id="total_netamount" name="total_netamount" class="form-control" readonly placeholder="0.00" style="text-align: right;"/>
                                                     </td>
                                                 </tr>
                             
@@ -271,7 +265,7 @@
                                                         </div>
                                                     </td>
                                                     <td class="text-end">
-                                                        <input type="text" id="tax_amount" name="tax_amount" class="form-control text-end" readonly placeholder="TAX Amount" />
+                                                        <input type="text" id="tax_amount" name="tax_amount" class="form-control text-end" readonly placeholder="TAX Amount" style="text-align: right;"/>
                                                     </td>
                                                 </tr>
                             
@@ -290,7 +284,7 @@
                                                         </div>
                                                     </td>
                                                     <td class="text-end">
-                                                        <input type="text" id="vat_amount" name="vat_amount" class="form-control text-end" readonly placeholder="VAT Amount" />
+                                                        <input type="text" id="vat_amount" name="vat_amount" class="form-control text-end" readonly placeholder="VAT Amount" style="text-align: right;"/>
                                                     </td>
                                                 </tr>
                             
@@ -298,7 +292,7 @@
                                                 <tr>
                                                     <td><label for="grand_total">Grand Total</label></td>
                                                     <td class="text-end">
-                                                        <input type="text" id="grand_total" name="grand_total" class="form-control text-end" value="0" readonly />
+                                                        <input type="text" id="grand_total" name="grand_total" class="form-control" value="0" readonly style="text-align: right;"/>
                                                     </td>
                                                 </tr>
                                             </tbody>
