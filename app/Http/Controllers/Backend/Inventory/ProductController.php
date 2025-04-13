@@ -46,13 +46,13 @@ class ProductController extends Controller
         // Store the product with the validated data
         $product =  Product::create([
             'name' => $request->name,
+            'product_code' => $productCode,
             'price' => $request->price ?? 0, // Store null if not provided
             'description' => $request->description ?? null, // Store null if not provided
             //'quantity' => $request->quantity,
             'status' => $request->status ?? 1, // Default to active if not provided
             'category_id' => $request->category_id,
             'unit_id' => $request->unit_id,
-            'product_code' => $productCode,
         ]);
 
         if ($request->hasFile('image')) {
@@ -153,9 +153,12 @@ class ProductController extends Controller
             $product->image = $filename;
         }
 
+        $productCode = 'PRD' . strtoupper(Str::random(5));
+
         // Update the product data
         $product->update([
             'name' => $request->input('name'),
+            'product_code' => $productCode,
             'price' => $request->input('price', $product->price), // Keep existing price if not provided
             'description' => $request->input('description', $product->description), // Keep existing description
             //'quantity' => $request->input('quantity', $product->quantity), // Keep existing quantity
