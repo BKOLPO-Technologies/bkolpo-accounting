@@ -153,12 +153,12 @@ class ProductController extends Controller
             $product->image = $filename;
         }
 
-        $productCode = 'PRD' . strtoupper(Str::random(5));
+        // $productCode = 'PRD' . strtoupper(Str::random(5));
 
         // Update the product data
         $product->update([
             'name' => $request->input('name'),
-            'product_code' => $productCode,
+            // 'product_code' => $productCode,
             'price' => $request->input('price', $product->price), // Keep existing price if not provided
             'description' => $request->input('description', $product->description), // Keep existing description
             //'quantity' => $request->input('quantity', $product->quantity), // Keep existing quantity
