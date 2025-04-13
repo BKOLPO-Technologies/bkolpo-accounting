@@ -495,10 +495,10 @@
                             @endforeach
                         </select>
                     </td>
-                    <td><input type="number" name="unit_price[]" class="form-control unit-price" readonly></td>
+                    <td><input type="number" name="unit_price[]" class="form-control unit-price" readonly style="text-align: right;"></td>
                     <td><input type="number" name="quantity[]" class="form-control quantity" value="1"></td>
                     <td><input type="text" name="order_unit[]" class="form-control unit-input" readonly></td>
-                    <td><input type="text" name="total[]" class="form-control subtotal" readonly></td>
+                    <td><input type="text" name="total[]" class="form-control subtotal" readonly style="text-align: right;"></td>
                     <td class="text-center">
                         <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
                     </td>
