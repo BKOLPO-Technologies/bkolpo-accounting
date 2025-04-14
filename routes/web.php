@@ -318,12 +318,13 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [PurchaseController::class, 'index'])->name('admin.purchase.index');
         Route::get('/create', [PurchaseController::class, 'AdminPurchaseCreate'])->name('admin.purchase.create');
         Route::post('/store', [PurchaseController::class, 'AdminPurchaseStore'])->name('admin.purchase.store');
-        Route::get('/view/{id}', [PurchaseController::class, 'AdminPurchaseView'])->name('admin.purchase.show');
+        //Route::get('/view/{id}', [PurchaseController::class, 'AdminPurchaseView'])->name('admin.purchase.show');
         Route::get('/edit/{id}', [PurchaseController::class, 'AdminPurchaseEdit'])->name('admin.purchase.edit');
         Route::put('/update/{id}', [PurchaseController::class, 'AdminPurchaseUpdate'])->name('admin.purchase.update');
         Route::get('/delete/{id}', [PurchaseController::class, 'destroy'])->name('admin.purchase.destroy');
         Route::get('/get-invoice-details/{id}', [PurchaseController::class, 'getInvoiceDetails']);
         Route::get('/print', [PurchaseController::class, 'Print'])->name('admin.purchase.print');
+        Route::get('/view', [PurchaseController::class, 'AdminPurchaseView2'])->name('admin.purchase.view');
     });
     
     /* ==================== Sales Payment Controller =================== */
@@ -464,4 +465,3 @@ Route::get('/get-sub-groups/{group_id}', function ($group_id) {
 });
 
 Route::get('/purchase-details/{purchase_id}', [ProjectController::class, 'showDetails']);
-Route::get('/admin/purchase/view', [PurchaseController::class, 'AdminPurchaseView2'])->name('admin.purchase.view');

@@ -40,6 +40,7 @@
                     <tr>
                         <th>Product</th>
                         <th>Product Code</th>
+                        <th>Speciphication</th>
                         <th>Unit Price</th>
                         <th>Quantity</th>
                         <th>Subtotal</th>
@@ -58,6 +59,7 @@
                         <tr>
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->product_code ?? '' }}</td>
+                            <td>{{ $product->description }}</td>
                             <td>{{ number_format($product->pivot->price, 2) }}</td>
                             <td>{{ $product->pivot->quantity }} ({{ $product->unit->name }})</td>
                             <td>{{ number_format($subtotal, 2) }}</td>
@@ -78,7 +80,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="3" class="text-right">Subtotal:</th>
+                        <th colspan="5" class="text-right">Subtotal:</th>
                         <th>{{ number_format($total, 2) }}</th>
                     </tr>
                     {{-- <tr>
@@ -90,19 +92,19 @@
                         <th>{{ number_format($carryingCharge, 2) }}</th>
                     </tr> --}}
                     <tr>
-                        <th colspan="3" class="text-right">VAT:</th>
+                        <th colspan="5" class="text-right">VAT:</th>
                         <th>{{ number_format($vat, 2) }}</th>
                     </tr>
                     <tr>
-                        <th colspan="3" class="text-right">TAX:</th>
+                        <th colspan="5" class="text-right">TAX:</th>
                         <th>{{ number_format($tax, 2) }}</th>
                     </tr>
                     <tr>
-                        <th colspan="3" class="text-right">Discount:</th>
+                        <th colspan="5" class="text-right">Discount:</th>
                         <th>-{{ number_format($totalDiscount, 2) }}</th>
                     </tr>
                     <tr>
-                        <th colspan="3" class="text-right">Total Purchase Amount:</th>
+                        <th colspan="5" class="text-right">Total Purchase Amount:</th>
                         <th>{{ number_format($totalTotal, 2) }}</th>
                     </tr>
                 </tfoot>

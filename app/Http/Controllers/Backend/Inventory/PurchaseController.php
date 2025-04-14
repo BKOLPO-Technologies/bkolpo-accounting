@@ -327,10 +327,10 @@ class PurchaseController extends Controller
         // $purchase = Purchase::where('id', $id)->with('products')->first();
         // Fetch purchase details with supplier and products
         $purchase = Purchase::where('id', $id)
-            ->with(['products', 'supplier', 'project']) // Include supplier details
+            ->with(['products', 'supplier', 'project', 'purchaseProducts']) // Include supplier details
             ->first();
 
-        //dd($purchase);
+        //dd($purchase->purchaseProducts);
         
         if ($purchase->invoice_date) {
             $purchase->invoice_date = Carbon::parse($purchase->invoice_date);

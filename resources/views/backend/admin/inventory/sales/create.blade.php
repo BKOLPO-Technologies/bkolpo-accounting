@@ -132,7 +132,8 @@
                                         <table id="product-table" class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th>Item Description</th>
+                                                    <th>Item</th>
+                                                    <th>Speciphication</th>
                                                     <th>Order Unit</th>
                                                     <th>Quantity</th>
                                                     <th>Unit Price</th>
@@ -358,7 +359,7 @@
         const selectedOption = $(this).find(':selected');
         const items = selectedOption.data('items');
 
-        console.log(items);
+        //console.log(items);
 
         if (!items || items.length === 0) {
             toastr.warning('No items found for this project.');
@@ -369,6 +370,7 @@
 
         items.forEach(item => {
             const itemId = item.id;
+            const itemSpecifications = item.items_description || 'N/A';
             const itemDesc = item.items || 'N/A';
             const itemQuantity = parseFloat(item.quantity || 0);
             const itemPrice = parseFloat(item.unit_price || 0);
@@ -385,6 +387,9 @@
                     <td class="col-3">
                         <input type="text" name="description[]" class="form-control" value="${itemDesc}" placeholder="Enter Item Description" readonly required>
                         <input type="hidden" name="item_id[]" value="${itemId}">
+                    </td>
+                    <td class="col-2">
+                        <input type="text" name="specifications[]" class="form-control" value="${itemSpecifications}" readonly>
                     </td>
                     <td class="col-2">
                         <select name="order_unit[]" class="form-control" required>

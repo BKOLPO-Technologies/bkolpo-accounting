@@ -128,7 +128,8 @@
                                             <thead>
                                                 <tr>
                                                     <th>Category</th>
-                                                    <th>Item Description</th>
+                                                    <th>Item</th>
+                                                    <th>Speciphication</th>
                                                     <th>Price</th>
                                                     <th>Quantity</th>
                                                     <th>Unit</th>
@@ -162,6 +163,9 @@
                                                                 </option>
                                                             @endforeach
                                                         </select>
+                                                    </td>
+                                                    <td style="width:14% !important;">
+                                                        <input type="text" name="speciphictions[]" class="form-control speciphictions" readonly value="{{ $product->product->description }}">
                                                     </td>
                                                     <td style="width:14% !important;">
                                                         <input type="number" name="unit_price[]" class="form-control unit-price" readonly value="{{ $product->price }}" style="text-align: right;">
@@ -447,6 +451,7 @@
                             $productSelect.append(`
                                 <option value="${product.id}" 
                                         data-id="${product.id}" 
+                                        data-speciphiction="${product.description}"
                                         data-name="${product.name}" 
                                         data-price="${product.price}" 
                                         data-unit="${unitName}">
@@ -495,8 +500,11 @@
                             @endforeach
                         </select>
                     </td>
+                    <td style="width:14% !important;">
+                        <input type="text" name="speciphictions[]" class="form-control speciphictions" readonly>
+                    </td>
                     <td><input type="number" name="unit_price[]" class="form-control unit-price" readonly style="text-align: right;"></td>
-                    <td><input type="number" name="quantity[]" class="form-control quantity" value="1"></td>
+                    <td><input type="number" name="quantity[]" class="form-control quantity" value="{{ 1 }}"></td>
                     <td><input type="text" name="order_unit[]" class="form-control unit-input" readonly></td>
                     <td><input type="text" name="total[]" class="form-control subtotal" readonly style="text-align: right;"></td>
                     <td class="text-center">
@@ -523,10 +531,11 @@
             // row.find('.unit-input').val(selected.data('unit'));
             let productPrice = selected.data('price') || 0;
             let productUnit = selected.data('unit') || '';
-            let productQuantity = selected.data('quantity') || '';
+            let productQuantity = selected.data('quantity') || 1;
             let productId = selected.val();
+            let productSpeciphiction = selected.data('speciphiction') || "N";
             //console.log(productId);
-            console.log(productQuantity);
+            //console.log(productQuantity);
 
             let isDuplicate = false;
             $('.product-select').not(this).each(function () {
@@ -548,7 +557,7 @@
 
             if (productId) {
                 let row = $(this).closest('tr');
-
+                row.find('.speciphictions').val(productSpeciphiction);
                 row.find('.unit-price').val(productPrice);
                 row.find('.quantity').val(productQuantity);
                 row.find('.subtotal').val(productPrice);
@@ -556,7 +565,7 @@
                 row.find('.unit-input').val(productUnit);
                 row.find('.product-discount').val(0);
 
-                console.log(productPrice);
+                //console.log(productPrice);
 
                 addToHiddenFields(productId, productQuantity, productPrice, 0);
 

@@ -142,8 +142,9 @@
                                         <table id="product-table" class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th>Item Description</th>
+                                                    <th>Item</th>
                                                     <th>Order Unit</th>
+                                                    <th>Speciphication</th>
                                                     <th>Quantity</th>
                                                     <th>Unit Price</th>
                                                     <th>Total</th>
@@ -169,8 +170,13 @@
                                                     </td>                                                    
 
                                                     <td>
+                                                        <input type="text" name="specifications[]" class="form-control specifications" value="{{ $product->item->items_description }}" required readonly>
+                                                    </td>
+
+                                                    <td>
                                                         <input type="number" name="quantity[]" class="form-control quantity" value="{{ $product->quantity }}" min="1" step="1" required>
                                                     </td>
+
                                                     <td style="width:7% !important;">
                                                         <input type="number" name="unit_price[]" class="form-control unit-price" value="{{ $product->price }}" min="0" step="0.01" required style="text-align: right;">
                                                     </td>

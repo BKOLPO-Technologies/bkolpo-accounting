@@ -263,6 +263,8 @@ class SalesController extends Controller
             ->with(['products', 'client']) // Include supplier details
             ->first();
 
+        // dd($sale->saleProducts);
+
         // $h = $sale->saleProducts;
 
         // Fetch purchase details with supplier and products

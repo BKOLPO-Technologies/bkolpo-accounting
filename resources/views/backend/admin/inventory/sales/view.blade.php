@@ -112,7 +112,8 @@
                                     <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
                                         <thead>
                                             <tr>
-                                                <th style="border: 1px solid black; padding: 8px;">Item Description</th>
+                                                <th style="border: 1px solid black; padding: 8px;">Item</th>
+                                                <th style="border: 1px solid black; padding: 8px;">Speciphication</th>
                                                 <th style="border: 1px solid black; padding: 8px;">Order Unit</th>
                                                 <th style="border: 1px solid black; padding: 8px;">Quantity</th>
                                                 <th style="border: 1px solid black; padding: 8px; text-align: right;">Unit Price</th>
@@ -137,6 +138,7 @@
                                                 @endphp
                                                 <tr data-product-id="{{ $product->id }}">
                                                     <td style="border: 1px solid black; padding: 8px;">{{ $product->item->items }}</td>
+                                                    <td style="border: 1px solid black; padding: 8px;">{{ $product->item->items_description }}</td>
                                                     <td style="border: 1px solid black; padding: 8px;">{{ $product->item->unit->name ?? '' }}</td>
                                                     <td style="border: 1px solid black; padding: 8px;">{{ $product->quantity }}</td>
                                                     <td style="border: 1px solid black; padding: 8px; text-align: right;">{{ $product->price }}</td>

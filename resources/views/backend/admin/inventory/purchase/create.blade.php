@@ -169,7 +169,8 @@
                                             <thead>
                                                 <tr>
                                                     <th>Category</th>
-                                                    <th>Item Description</th>
+                                                    <th>Item</th>
+                                                    <th>Speciphication</th>
                                                     <th>Price</th>
                                                     <th>Quantity</th>
                                                     <th>Unit</th>
@@ -198,6 +199,9 @@
                                                                 </option>
                                                             @endforeach
                                                         </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="speciphictions[]" class="form-control speciphictions" readonly>
                                                     </td>
                                                     <td>
                                                         <input type="number" name="unit_price[]" class="form-control unit-price" min="0" required readonly style="text-align: right;">
@@ -300,7 +304,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
                             
                             <hr>
 
@@ -471,6 +474,7 @@
                 method: 'GET',
                 dataType: 'json',
                 success: function (response) {
+                    //console.log(response);
                     $productSelect.empty().append('<option value="">Select Product</option>');
                     if (Array.isArray(response.products) && response.products.length > 0) {
                         response.products.forEach(function (product) {
@@ -478,8 +482,9 @@
                             $productSelect.append(`
                                 <option value="${product.id}" 
                                         data-id="${product.id}" 
-                                        data-name="${product.name}" 
-                                        data-price="${product.price}" 
+                                        data-speciphiction="${product.description}"
+                                        data-name="${product.name}"
+                                        data-price="${product.price}"
                                         data-unit="${unitName}">
                                     ${product.name}
                                 </option>
@@ -518,6 +523,7 @@
         $(document).on('change', '.product-select', function () {
             let selectedOption = $(this).find(':selected');
             let productId = selectedOption.val();
+            let productSpeciphiction = selectedOption.data('speciphiction') || "N";
             let productPrice = selectedOption.data('price') || 0;
             let productUnit = selectedOption.data('unit') || '';
 
@@ -541,7 +547,7 @@
 
             if (productId) {
                 let row = $(this).closest('tr');
-
+                row.find('.speciphictions').val(productSpeciphiction);
                 row.find('.unit-price').val(productPrice);
                 row.find('.quantity').val(1);
                 row.find('.subtotal').val(productPrice);
@@ -643,6 +649,9 @@
                                 </option>
                             @endforeach
                         </select>
+                    </td>
+                    <td>
+                        <input type="text" name="speciphictions[]" class="form-control speciphictions" readonly>
                     </td>
                     <td><input type="number" name="unit_price[]" class="form-control unit-price" readonly style="text-align: right;"></td>
                     <td><input type="number" name="quantity[]" class="form-control quantity" value="1"></td>
