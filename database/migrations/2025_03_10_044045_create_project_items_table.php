@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('project_id'); // Foreign key to projects
             $table->string('items');
+            $table->text('items_description')->nullable();
             $table->integer('unit_id')->nullable();
             $table->decimal('unit_price', 10, 2);
             $table->integer('quantity');

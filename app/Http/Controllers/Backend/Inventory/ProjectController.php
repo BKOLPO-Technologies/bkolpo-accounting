@@ -6,6 +6,7 @@ use App\Models\Sale;
 use App\Models\Unit;
 use App\Models\Client;
 use App\Models\Project;
+use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\ProjectItem;
 use Illuminate\Http\Request;
@@ -56,6 +57,7 @@ class ProjectController extends Controller
         // // Combine the timestamp, random number, and full date
         // $referance_no = 'BCL-PR-'.$fullDate.' - '.$randomNumber;
         $units = Unit::where('status',1)->latest()->get();
+        $products = Product::where('status',1)->latest()->get();
 
         $companyInfo = get_company(); // Fetch company info
 
@@ -94,7 +96,7 @@ class ProjectController extends Controller
         $vat = $companyInfo->vat;
         $tax = $companyInfo->tax;
 
-        return view('backend.admin.inventory.project.create',compact('pageTitle','clients','referance_no','units','vat','tax')); 
+        return view('backend.admin.inventory.project.create',compact('pageTitle','clients','referance_no','units','products','vat','tax')); 
     }
 
     /**
@@ -183,6 +185,7 @@ class ProjectController extends Controller
                     'subtotal' => $request->subtotal[$index] ?? 0,
                     'discount' => $request->discount[$index] ?? 0,
                     'total' => $request->total[$index],
+                    'items_description' => $request->items_description[$index],
                 ]);
             }
     
@@ -297,13 +300,14 @@ class ProjectController extends Controller
             ->first();
 
         $units = Unit::where('status',1)->latest()->get();
+        $products = Product::where('status',1)->latest()->get();
 
         $companyInfo = get_company();
         
         $vat = $companyInfo->vat;
         $tax = $companyInfo->tax;
 
-        return view('backend.admin.inventory.project.edit',compact('pageTitle', 'clients', 'project','units','vat','tax'));
+        return view('backend.admin.inventory.project.edit',compact('pageTitle', 'clients', 'project','units','products','vat','tax'));
     }
 
     /**
@@ -401,6 +405,7 @@ class ProjectController extends Controller
                         'subtotal' => $request->subtotal[$index] ?? 0,
                         'discount' => $request->discount[$index] ?? 0,
                         'total' => $request->total[$index],
+                        'items_description' => $request->items_description[$index],
                     ]);
                 } else {
                     // Create new item
@@ -413,6 +418,7 @@ class ProjectController extends Controller
                         'subtotal' => $request->subtotal[$index] ?? 0,
                         'discount' => $request->discount[$index] ?? 0,
                         'total' => $request->total[$index],
+                        'items_description' => $request->items_description[$index],
                     ]);
                 }
             }

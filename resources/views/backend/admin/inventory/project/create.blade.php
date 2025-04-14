@@ -172,7 +172,8 @@
                                             <table id="product-table" class="table table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>Item Description</th>
+                                                        <th>Items</th>
+                                                        <th>Specifications</th>
                                                         <th>Order Unit</th>
                                                         <th>Quantity</th>
                                                         <th>Unit Price</th>
@@ -185,8 +186,18 @@
                                                 <tbody id="product-tbody">
                                                     <tr>
                                                         <td>
-                                                            <input type="text" name="items[]" class="form-control" placeholder="Enter Item Description" required>
+                                                            <select class="item-select form-control" name="items[]" required>
+                                                                <option value="">Select Item</option>
+                                                                @foreach($products as $product)
+                                                                    <option value="{{ $product->id }}" data-description="{{ $product->description }}">
+                                                                        {{ $product->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
                                                         </td>
+                                                        <td style="width:20%;">
+                                                            <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required></textarea>
+                                                        </td>                                                                                                                                                                     
                                                         <td>
                                                             <select name="order_unit[]" class="form-control" required>
                                                                 <option value="" disabled selected>Select Unit</option>
@@ -198,7 +209,7 @@
                                                         <td>
                                                             <input type="number" name="quantity[]" class="form-control quantity" placeholder="Enter Quantity" min="1" step="0.01" required>
                                                         </td>
-                                                        <td>
+                                                        <td style="width:15%">
                                                             <input type="number" name="unit_price[]" class="form-control unit-price" placeholder="Enter Unit Price" min="0" step="0.01" required style="text-align: right;">
                                                         </td>
                                                         {{-- <td>
@@ -207,7 +218,7 @@
                                                         <td>
                                                             <input type="number" name="discount[]" class="form-control discount" placeholder="Enter Discount" min="0" step="0.01">
                                                         </td> --}}
-                                                        <td>
+                                                        <td style="width:15%">
                                                             <input type="text" name="total[]" class="form-control total" readonly style="text-align: right;">
                                                         </td>
                                                         <td class="text-center">
@@ -417,11 +428,35 @@
         calculateTotal();
     });
 
-    // Add row
+    // Listen for changes on dynamically added or existing 'item-select' elements
+    $(document).on('change', '.item-select', function () {
+        // Get the selected option from the dropdown
+        const selectedOption = $(this).find('option:selected');
+
+        // Get the description from the data-description attribute
+        const description = selectedOption.data('description');
+
+        // Find the corresponding textarea in the same row and set the description
+        $(this).closest('tr').find('.item-description').val(description);
+    });
+
+    // Add row functionality
     $(document).on('click', '.add-row', function () {
         let newRow = `
             <tr>
-                <td><input type="text" name="items[]" class="form-control" placeholder="Enter Item Description" required></td>
+                <td>
+                    <select class="item-select form-control" name="items[]" required>
+                        <option value="">Select Item</option>
+                        @foreach($products as $product)
+                            <option value="{{ $product->id }}" data-description="{{ $product->description }}">
+                                {{ $product->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </td>
+                <td style="width:20%;">
+                    <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required></textarea>
+                </td>
                 <td>
                     <select name="order_unit[]" class="form-control" required>
                         <option value="" disabled selected>Select Unit</option>
@@ -437,8 +472,11 @@
                     <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>`;
+
+        // Append the new row to the table body
         $('#product-tbody').append(newRow);
     });
+
 
     // Remove row
     $(document).on('click', '.remove-row', function () {
@@ -534,4 +572,5 @@
         });
     });
 </script>
+
 @endpush

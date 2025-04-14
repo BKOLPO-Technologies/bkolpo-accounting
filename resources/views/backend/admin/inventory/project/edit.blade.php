@@ -175,7 +175,8 @@
                                             <table id="product-table" class="table table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>Item Description</th>
+                                                        <th>Items</th>
+                                                        <th>Specifications</th>
                                                         <th>Order Unit</th>
                                                         <th>Unit Price ({{ bdt() }})</th>
                                                         <th>Quantity</th>
@@ -190,9 +191,24 @@
                                                         <tr>
                                                             <input type="hidden" name="item_ids[]" value="{{ $item->id }}">
                                                             <td>
-                                                                <input type="text" name="items[]" class="form-control" 
-                                                                    value="{{ old('items.' . $loop->index, $item->items) }}" 
-                                                                    placeholder="Enter Item Description" required>
+                                                                <!-- Select Dropdown for Item Selection -->
+                                                                <select class="item-select form-control" name="items[]" required>
+                                                                    <option value="">Select Item</option>
+                                                                    @foreach($products as $product)
+                                                                        <option value="{{ $product->id }}" 
+                                                                            data-description="{{ $product->description }}"
+                                                                            @if($item->items == $product->id) selected @endif>
+                                                                            {{ $product->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </td>
+                                                            
+                                                            <td style="width:20%;">
+                                                                <!-- Textarea for Item Description -->
+                                                                <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required>
+                                                                    {{ old('items_description.' . $loop->index, $item->items_description) }}
+                                                                </textarea>
                                                             </td>
                                                             <td>
                                                                 <select name="order_unit[]" class="form-control" required>
@@ -491,11 +507,35 @@
         calculateTotal();
     });
 
+    // Listen for changes on dynamically added or existing 'item-select' elements
+    $(document).on('change', '.item-select', function () {
+        // Get the selected option from the dropdown
+        const selectedOption = $(this).find('option:selected');
+
+        // Get the description from the data-description attribute
+        const description = selectedOption.data('description');
+
+        // Find the corresponding textarea in the same row and set the description
+        $(this).closest('tr').find('.item-description').val(description);
+    });
+
     // Add row
     $(document).on('click', '.add-row', function () {
         let newRow = `
             <tr>
-                <td><input type="text" name="items[]" class="form-control" placeholder="Enter Item Description" required></td>
+                <td>
+                    <select class="item-select form-control" name="items[]" required>
+                        <option value="">Select Item</option>
+                        @foreach($products as $product)
+                            <option value="{{ $product->id }}" data-description="{{ $product->description }}">
+                                {{ $product->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </td>
+                <td style="width:20%;">
+                    <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required></textarea>
+                </td>
                 <td>
                     <select name="order_unit[]" class="form-control" required>
                         <option value="" disabled selected>Select Unit</option>

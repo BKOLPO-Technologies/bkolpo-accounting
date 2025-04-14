@@ -149,7 +149,8 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Item Name</th>
+                                                <th>Items</th>
+                                                <th>Specifications</th>
                                                 <th>Order Unit</th>
                                                 <th>Unit Price</th>
                                                 <th>Quantity</th>
@@ -171,7 +172,8 @@
                                                 @endphp
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
-                                                    <td>{{ $item->items }}</td>
+                                                    <td>{{ $item->product->name ?? '' }}</td>
+                                                    <td>{{ $item->items_description }}</td>
                                                     <td>{{ $item->unit->name ?? '' }}</td>
                                                     <td>{{ number_format($item->unit_price, 2) }}</td>
                                                     <td>{{ $item->quantity }}</td>
