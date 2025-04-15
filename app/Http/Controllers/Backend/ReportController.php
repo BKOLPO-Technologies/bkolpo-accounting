@@ -9,6 +9,7 @@ use App\Models\Project;
 use App\Models\Journal;
 use App\Models\JournalVoucher;
 use App\Models\LedgerGroup;
+use App\Models\LedgerSubGroup;
 use App\Models\JournalVoucherDetail;
 use App\Models\CompanyInformation;
 use Carbon\Carbon;
@@ -157,36 +158,22 @@ class ReportController extends Controller
     public function ledgerProfitLoss(Request $request)
     {
         $pageTitle = 'Profit & Loss Report';
+        
+        // Fetch the first subgroup for Sales Account
+        $salesAccount = LedgerSubGroup::where('subgroup_name', 'Sales Account')->with('ledgers')->get();
+    $cogsAccount = LedgerSubGroup::where('subgroup_name', 'Cost of Goods Sold')->with('ledgers')->get();
+    $operatingExpensesAccount = LedgerSubGroup::where('subgroup_name', 'Operating Expense')->with('ledgers')->get();
+    $nonOperatingItemsAccount = LedgerSubGroup::where('subgroup_name', 'Non-Operating Items')->with('ledgers')->get();
 
-        // Define date range
-        $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
-        $toDate = $request->input('to_date', now()->format('Y-m-d'));
+        
 
-        // Fetch Ledger Groups with their Ledgers and sum up debit & credit
-        $ledgerGroups = LedgerGroup::with([
-            'ledgers' => function ($query) use ($fromDate, $toDate) {
-                $query->withSum(['journalVoucherDetails as total_debit' => function ($query) use ($fromDate, $toDate) {
-                    $query->whereDate('created_at', '>=', $fromDate)
-                    ->whereDate('created_at', '<=', $toDate);
-                }], 'debit')
-                ->withSum(['journalVoucherDetails as total_credit' => function ($query) use ($fromDate, $toDate) {
-                    $query->whereDate('created_at', '>=', $fromDate)
-                    ->whereDate('created_at', '<=', $toDate);
-                }], 'credit');
-            }
-            
-        ])->orderBy('id', 'ASC')
-        ->get();
-
-        // Calculate total debit, credit, and net profit/loss
-        $totalDebit = $ledgerGroups->sum(fn($group) => $group->ledgers->sum('total_debit'));
-        $totalCredit = $ledgerGroups->sum(fn($group) => $group->ledgers->sum('total_credit'));
-        $netProfitLoss = $totalCredit - $totalDebit;
-
+        
         return view('backend.admin.report.account.profit_loss_report', compact(
-            'pageTitle', 'fromDate', 'toDate', 'ledgerGroups', 'totalDebit', 'totalCredit', 'netProfitLoss'
+            'pageTitle', 'salesAccount', 'cogsAccount', 'operatingExpensesAccount', 'nonOperatingItemsAccount'
         ));
     }
+
+    
 
     // project profit & loss report
 

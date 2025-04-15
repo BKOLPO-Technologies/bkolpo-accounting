@@ -86,8 +86,8 @@
                                                     <table id="example10" border="1" class="table-striped table-bordered" cellpadding="5" cellspacing="0" style="width: 100%;">
                                                         <thead>
                                                             <tr>
-                                                                <th style="width: 85%;">Name</th>
-                                                                <th style="width: 15%;">Amount</th>
+                                                                <th style="width: 80%;">Name</th>
+                                                                <th style="width: 20%;">Amount</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>

@@ -63,6 +63,10 @@ class LedgerSeeder extends Seeder
                     'ledgers' => ['Discounts', 'Sales'], // Discounts will have no type
                     'type' => null,
                 ],
+                'Non-Operating Items' => [
+                    'ledgers' => ['Interest Income', 'Intereset Expenses'], // Discounts will have no type
+                    'type' => null,
+                ],
             ],
             'Expense' => [
                 'Direct Expenses' => [
@@ -71,13 +75,25 @@ class LedgerSeeder extends Seeder
                 ],
                 'Indirect Expense' => [
                     'ledgers' => [
-                        'Cost of Goods Sold', 'Cost of Billed Expenses', 'Cost of Shipping & Handling',
+                        'Cost of Billed Expenses', 'Cost of Shipping & Handling',
                         'Advertising', 'Employee Benefits', 'Accident Insurance', 'Entertainment',
                         'Office Expenses & Postage', 'Printing', 'Shipping & Couriers', 'Stationery',
                         'Other Expenses', 'Bank Fees', 'Business Insurance', 'Commissions',
                         'Repairs & Maintenance', 'Labour Wages', 'Salary', 'Legal Fees', 'Rent or Lease',
                         'Taxi & Parking', 'Uncategorized Expenses', 'Utilities', 'Mobile Phone Bill',
                         'Sales Taxes Paid',
+                    ],
+                    'type' => null,
+                ],
+                'Cost of Goods Sold' => [
+                    'ledgers' => [
+                        'Cost of Goods Sold'
+                    ],
+                    'type' => null,
+                ],
+                'Operating Expense' => [
+                    'ledgers' => [
+                        'Operating Expense'
                     ],
                     'type' => null,
                 ],

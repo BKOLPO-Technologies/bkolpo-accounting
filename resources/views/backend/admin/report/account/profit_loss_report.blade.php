@@ -1,4 +1,5 @@
 @extends('layouts.admin', ['pageTitle' => 'Profit & Loss Report'])
+
 <!-- CSS to Hide Form on Print -->
 <style>
     @media print {
@@ -6,9 +7,17 @@
             display: none !important;
         }
     }
+
+    .collapse-icon {
+        cursor: pointer;
+        font-size: 16px;
+        margin-right: 10px;
+    }
 </style>
+
 @section('admin')
 <link rel="stylesheet" href="{{ asset('backend/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
+
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -34,11 +43,12 @@
                         <div class="card-header py-2">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h4 class="mb-0">{{ $pageTitle }}</h4>
-                                <a href="{{ route('report.balance.sheet')}}" class="btn btn-sm btn-danger rounded-0">
+                                <a href="{{ route('report.balance.sheet') }}" class="btn btn-sm btn-danger rounded-0">
                                     <i class="fa-solid fa-arrow-left"></i> Back To List
                                 </a>
                             </div>
                         </div>
+
                         <!-- Print Button -->
                         <div class="text-right mt-3 mr-4">
                             <button class="btn btn-primary" onclick="printProfitLoss()">
@@ -48,70 +58,171 @@
 
                         <div id="printable-area">
                             <div class="card-body">
-                                <!-- Balance Sheet Table -->
                                 <div class="card-header text-center mb-3">
-                                    <h2 class="mb-1">{{ get_company()->name ?? '' }}</h2> 
+                                    <h2 class="mb-1">{{ get_company()->name ?? '' }}</h2>
                                     <p class="mb-0"><strong>Profit & Loss Report</strong></p>
                                     <p class="mb-0">Date: {{ now()->format('d M, Y') }}</p>
                                 </div>
-                                <div class="card-body">
-                                    <!-- Date Filter Form -->
-                                    <div id="filter-form">
-                                        <form action="{{ route('report.ledger.profit.loss') }}" method="GET" class="mb-3">
-                                            <div class="row justify-content-center">
-                                                <div class="col-md-3 mt-3">
-                                                    <label for="from_date">From Date:</label>
-                                                    <input type="text" name="from_date" id="from_date" class="form-control" value="{{ request('from_date', $fromDate) }}">
-                                                </div>
-                                                <div class="col-md-3 mt-3">
-                                                    <label for="to_date">To Date:</label>
-                                                    <input type="text" name="to_date" id="to_date" class="form-control" value="{{ request('to_date', $toDate) }}">
-                                                </div>
-                                                <div class="col-md-1 mt-3 d-flex align-items-end">
-                                                    <button type="submit" class="btn btn-primary w-100">Filter</button>
-                                                </div>
-                                                <div class="col-md-1 mt-3 d-flex align-items-end">
-                                                    <a href="{{ route('report.ledger.profit.loss') }}"  class="btn btn-danger w-100">Clear</a>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="row mb-5">
-                                        <div class="col-lg-8 col-md-8 col-sm-12 mx-auto">
-                                            <!-- Profit & Loss Table -->
-                                            <div class="table-responsive mt-4">
-                                                <table class="table table-bordered">
-                                                    <thead>
+
+                                <!-- Profit & Loss Table -->
+                                <div class="row mb-5">
+                                    <div class="col-lg-8 col-md-8 col-sm-12 mx-auto">
+                                        <div class="table-responsive">
+                                            <table id="example10" border="1" class="table-striped table-bordered" cellpadding="5" cellspacing="0" style="width: 100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 80%;">Description</th>
+                                                        <th style="width: 20%;">Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @php 
+                                                        // Initialize values for calculation
+                                                        $sales = old('sales', 0); 
+                                                        $cogs = old('cogs', 0);
+                                                        $grossProfit = $sales - $cogs;
+                                                        $operatingExpenses = old('operating_expenses', 0); 
+                                                        $operatingIncome = $grossProfit - $operatingExpenses; 
+                                                        $nonOperatingItems = old('non_operating_items', 0); 
+                                                        $netIncome = $operatingIncome - $nonOperatingItems; 
+                                                    @endphp
+                                            
+                                                    <!-- Sales Account -->
+                                                    @foreach($salesAccount as $subgroup)
                                                         <tr>
-                                                            <th>Ledger Group</th>
-                                                            <th class="text-right">Debit (Expenses)</th>
-                                                            <th class="text-right">Credit (Income)</th>
+                                                            <td>
+                                                                <strong>
+                                                                    <a data-toggle="collapse" href="#salesAccount{{ $subgroup->id }}" role="button" aria-expanded="false" aria-controls="salesAccount{{ $subgroup->id }}">
+                                                                        <i class="fa fa-chevron-down collapse-icon" aria-hidden="true"></i> {{ $subgroup->subgroup_name }}
+                                                                    </a>
+                                                                </strong>
+                                                            </td>
+                                                            <td>
+                                                                <strong>{{ bdt() }} {{ number_format($subgroup->total_amount, 2) }}</strong>
+                                                            </td>
                                                         </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    @foreach ($ledgerGroups as $group)
-                                                        <tr class="table-secondary">
-                                                            <td><strong>{{ $group->group_name }}</strong></td>
-                                                            <td class="text-right"><strong>{{ bdt() }} {{ number_format($group->ledgers->sum('total_debit'), 2) }}</strong></td>
-                                                            <td class="text-right"><strong>{{ bdt() }} {{ number_format($group->ledgers->sum('total_credit'), 2) }}</strong></td>
-                                                        </tr>
+                                                        <tbody class="collapse" id="salesAccount{{ $subgroup->id }}">
+                                                            @foreach($subgroup->ledgers as $ledger)
+                                                                @php
+                                                                    $balance = abs($ledger->total_debit - $ledger->total_credit); // Calculate balance
+                                                                @endphp
+                                                                <tr>
+                                                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;{{ $ledger->name }}</td>
+                                                                    <td>{{ bdt() }} {{ number_format($balance, 2) }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
                                                     @endforeach
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr class="table-primary">
-                                                            <th colspan="1">Total</th>
-                                                            <th class="text-right">{{ bdt() }} {{ number_format($totalDebit, 2) }}</th>
-                                                            <th class="text-right">{{ bdt() }} {{ number_format($totalCredit, 2) }}</th>
+                                            
+                                                    <!-- Cost of Goods Sold -->
+                                                    @foreach($cogsAccount as $subgroup)
+                                                        <tr>
+                                                            <td>
+                                                                <strong>
+                                                                    <a data-toggle="collapse" href="#cogsAccount{{ $subgroup->id }}" role="button" aria-expanded="false" aria-controls="cogsAccount{{ $subgroup->id }}">
+                                                                        <i class="fa fa-chevron-down collapse-icon" aria-hidden="true"></i> {{ $subgroup->subgroup_name }}
+                                                                    </a>
+                                                                </strong>
+                                                            </td>
+                                                            <td>
+                                                                <strong>{{ bdt() }} {{ number_format($subgroup->total_amount, 2) }}</strong>
+                                                            </td>
                                                         </tr>
-                                                        <tr class="table-success">
-                                                            <th colspan="2">Net Profit / Loss</th>
-                                                            <th class="text-right">
-                                                                {{ bdt() }} {{ number_format($netProfitLoss, 2) }}
-                                                            </th>
+                                                        <tbody class="collapse" id="cogsAccount{{ $subgroup->id }}">
+                                                            @foreach($subgroup->ledgers as $ledger)
+                                                                @php
+                                                                    $balance = abs($ledger->total_debit - $ledger->total_credit); // Calculate balance
+                                                                @endphp
+                                                                <tr>
+                                                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;{{ $ledger->name }}</td>
+                                                                    <td>{{ bdt() }} {{ number_format($balance, 2) }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    @endforeach
+                                            
+                                                    <!-- Gross Profit -->
+                                                    <tr>
+                                                        <td><strong>Gross Profit (Sales - COGS)</strong></td>
+                                                        <td>
+                                                            <strong>{{ bdt() }} {{ number_format($grossProfit, 2) }}</strong>
+                                                        </td>
+                                                    </tr>
+                                            
+                                                    <!-- Operating Expenses -->
+                                                    @foreach($operatingExpensesAccount as $subgroup)
+                                                        <tr>
+                                                            <td>
+                                                                <strong>
+                                                                    <a data-toggle="collapse" href="#operatingExpensesAccount{{ $subgroup->id }}" role="button" aria-expanded="false" aria-controls="operatingExpensesAccount{{ $subgroup->id }}">
+                                                                        <i class="fa fa-chevron-down collapse-icon" aria-hidden="true"></i> {{ $subgroup->subgroup_name }}
+                                                                    </a>
+                                                                </strong>
+                                                            </td>
+                                                            <td>
+                                                                <strong>{{ bdt() }} {{ number_format($subgroup->total_amount, 2) }}</strong>
+                                                            </td>
                                                         </tr>
-                                                    </tfoot>
-                                                </table>
-                                            </div>
+                                                        <tbody class="collapse" id="operatingExpensesAccount{{ $subgroup->id }}">
+                                                            @foreach($subgroup->ledgers as $ledger)
+                                                                @php
+                                                                    $balance = abs($ledger->total_debit - $ledger->total_credit); // Calculate balance
+                                                                @endphp
+                                                                <tr>
+                                                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;{{ $ledger->name }}</td>
+                                                                    <td>{{ bdt() }} {{ number_format($balance, 2) }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    @endforeach
+                                            
+                                                    <!-- Operating Income -->
+                                                    <tr>
+                                                        {{-- <td><strong>Operating Income (Gross Profit - Operating Expenses)</strong></td> --}}
+                                                        <td><strong>Operating Income</strong></td>
+                                                        <td>
+                                                            <strong>{{ bdt() }} {{ number_format($operatingIncome, 2) }}</strong>
+                                                        </td>
+                                                    </tr>
+                                            
+                                                    <!-- Non-Operating Items -->
+                                                    @foreach($nonOperatingItemsAccount as $subgroup)
+                                                        <tr>
+                                                            <td>
+                                                                <strong>
+                                                                    <a data-toggle="collapse" href="#nonOperatingItemsAccount{{ $subgroup->id }}" role="button" aria-expanded="false" aria-controls="nonOperatingItemsAccount{{ $subgroup->id }}">
+                                                                        <i class="fa fa-chevron-down collapse-icon" aria-hidden="true"></i> {{ $subgroup->subgroup_name }}
+                                                                    </a>
+                                                                </strong>
+                                                            </td>
+                                                            <td>
+                                                                <strong>{{ bdt() }} {{ number_format($subgroup->total_amount, 2) }}</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tbody class="collapse" id="nonOperatingItemsAccount{{ $subgroup->id }}">
+                                                            @foreach($subgroup->ledgers as $ledger)
+                                                                @php
+                                                                    $balance = abs($ledger->total_debit - $ledger->total_credit); // Calculate balance
+                                                                @endphp
+                                                                    <tr>
+                                                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;{{ $ledger->name }}</td>
+                                                                        <td>{{ bdt() }} {{ number_format($balance, 2) }}</td>
+                                                                    </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    @endforeach
+                                            
+                                                    <!-- Net Income -->
+                                                    <tr>
+                                                        <!-- <td><strong>Net Income (Operating Income - Non-Operating Items)</strong></td> -->
+                                                        <td><strong>Net Income (Profit/Loss)</strong></td>
+                                                        <td>
+                                                            <strong>{{ bdt() }} {{ number_format($netIncome, 2) }}</strong>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -123,6 +234,7 @@
         </div>
     </section>
 </div>
+
 @endsection
 
 @push('js')
