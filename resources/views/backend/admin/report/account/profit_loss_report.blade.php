@@ -211,6 +211,13 @@
                                                             @endforeach
                                                         </tbody>
                                                     @endforeach
+
+                                                    <tr>
+                                                        <td><strong>Total Non Operating Items</strong></td>
+                                                        <td>
+                                                            <strong>{{ bdt() }} {{ number_format($balance, 2) }}</strong>
+                                                        </td>
+                                                    </tr>
                                             
                                                     <!-- Net Income -->
                                                     <tr>
