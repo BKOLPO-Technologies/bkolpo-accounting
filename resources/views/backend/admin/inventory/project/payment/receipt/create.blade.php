@@ -278,7 +278,7 @@
                 type: "GET",
                 data: { project_id: projectId },
                 success: function (response) {
-                    console.log(response);
+                    // console.log(response);
                     if (response.success) {
                         let options = '<option value="">Select Reference No</option>';
                         response.sales.forEach(sale => {
@@ -311,6 +311,18 @@
     $('#pay_amount').on('input', function () {
         let totalAmount = parseFloat($('#total_due_amount').val()) || 0;
         let payAmount = parseFloat($(this).val()) || 0;
+
+        if (payAmount > totalAmount) {
+            toastr.error('Pay amount cannot exceed the due amount!', {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 5000
+            });
+            $(this).val(totalAmount);
+            $('#due_amount').val("0.00");
+            return;
+        }
+
         let dueAmount = totalAmount - payAmount;
 
         $('#due_amount').val(dueAmount.toFixed(2));

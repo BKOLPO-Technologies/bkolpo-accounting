@@ -12,7 +12,7 @@ class ClientController extends Controller
 {
     public function AdminClientIndex()
     {
-        $clients = Client::all();
+        $clients = Client::orderBy('id', 'desc')->get();
 
         $pageTitle = 'Client List';
         return view('backend.admin.inventory.client.index',compact('pageTitle', 'clients'));

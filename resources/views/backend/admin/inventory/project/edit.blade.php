@@ -438,7 +438,7 @@
                             
                             <div class="row text-right">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> Submit</button>
+                                    <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> Update</button>
                                 </div>
                             </div>
                         </form>
@@ -517,6 +517,14 @@
 
         // Find the corresponding textarea in the same row and set the description
         $(this).closest('tr').find('.item-description').val(description);
+
+        // Get the description from the data-description attribute
+        const quantity = 1;
+
+        console.log(quantity);
+
+        // Find the corresponding textarea in the same row and set the description
+        $(this).closest('tr').find('.quantity').val(quantity);
     });
 
     // Add row
@@ -544,8 +552,8 @@
                         @endforeach
                     </select>
                 </td>
-                <td><input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required></td>
                 <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" required style="text-align: right;"></td>
+                <td><input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required></td>
                 <td><input type="text" name="total[]" class="form-control total" readonly style="text-align: right;"></td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>

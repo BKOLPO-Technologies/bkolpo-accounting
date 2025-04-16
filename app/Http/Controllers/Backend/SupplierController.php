@@ -13,7 +13,7 @@ class SupplierController extends Controller
 {
     public function AdminSupplierIndex() 
     {
-        $suppliers = Supplier::all();
+        $suppliers = Supplier::orderBy('id', 'desc')->get();
         $pageTitle = 'Vendor List';
         return view('backend.admin.supplier.index',compact('pageTitle', 'suppliers'));
     }

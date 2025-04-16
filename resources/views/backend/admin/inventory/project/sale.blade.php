@@ -225,7 +225,7 @@
                                         <th>Terms & Conditions</th>
                                         <td>{!! $project->terms_conditions ?? '' !!}</td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <th>Status</th>
                                         <td>
                                             @if($project->status == 'pending')
@@ -236,7 +236,7 @@
                                                 <span class="badge bg-warning">Partially Paid</span>
                                             @endif
                                         </td>
-                                    </tr>
+                                    </tr> --}}
                                 </table>
                             </div>
                             {{-- End Project details --}}

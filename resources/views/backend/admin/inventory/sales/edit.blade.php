@@ -154,7 +154,7 @@
                                             <tbody id="product-tbody">
                                                 @foreach ($sale->saleProducts as $product)
                                                 <tr>
-                                                    <td class="col-3">
+                                                    <td class="col-3" style="width: 17%">
                                                         <input type="text" name="description[]" class="form-control" value="{{ $product->item->items }}" placeholder="Enter Item Description" readonly required>
                                                         <input type="hidden" name="item_id[]" value="{{ $product->item->id }}">
                                                     </td>
@@ -173,11 +173,11 @@
                                                         <input type="text" name="specifications[]" class="form-control specifications" value="{{ $product->item->items_description }}" required readonly>
                                                     </td>
 
-                                                    <td>
+                                                    <td  style="width: 17%">
                                                         <input type="number" name="quantity[]" class="form-control quantity" value="{{ $product->quantity }}" min="1" step="1" required>
                                                     </td>
 
-                                                    <td style="width:7% !important;">
+                                                    <td style="width: 15% !important;">
                                                         <input type="number" name="unit_price[]" class="form-control unit-price" value="{{ $product->price }}" min="0" step="0.01" required style="text-align: right;">
                                                     </td>
                                                     <td>
@@ -214,7 +214,7 @@
                                                     <td><label for="total_discount">Discount</label></td>
                                                     <td>
                                                         <div class="col-12 col-lg-12">
-                                                            <input type="number" id="total_discount" name="total_discount" class="form-control" step="0.01" placeholder="Enter Discount" value="{{ $sale->discount }}" oninput="updateTotal()" style="text-align: right;"/>
+                                                            <input type="number" id="total_discount" name="total_discount" class="form-control" step="0.01" placeholder="Enter Discount" value="{{ $sale->discount }}" style="text-align: right;"/>
                                                         </div>
                                                     </td>
                                                 </tr>

@@ -23,9 +23,7 @@
         
       <div class="container-fluid">
         <div class="row">
-          
           <div class="col-md-12">
-            
             <div class="card card-primary card-outline shadow-lg">
 
                 <div class="card-header py-2">
@@ -36,211 +34,235 @@
                         </a>
                     </div>
                 </div>
-                <div class="card-body">
-                    <form role="form" action="{{ route('admin.supplier.store') }}" method="POST">
-                        @csrf
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Company Name
-                                            @error('name')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-heading"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" placeholder="Enter Company Name" name="name" required>
+
+                <form role="form" action="{{ route('admin.supplier.store') }}" method="POST">
+                    @csrf
+
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Company Name
+                                        @error('name')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-heading"></i></span>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Group Name
-                                            @error('company')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" placeholder="Enter Group Name" name="company" required>
-                                        </div>
+                                        <input type="text" class="form-control" placeholder="Enter Company Name" name="name" value="{{ old('name') }}" required>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Contact Person
-                                            @error('title')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" placeholder="Enter Contact Person Name" name="title" required>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Group Name
+                                        @error('company')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Designation
-                                            @error('designation')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" placeholder="Enter Designation" name="designation" required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Phone</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                                            </div>
-                                            <input type="number" class="form-control" placeholder="Phone" name="phone">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Email</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                            </div>
-                                            <input type="email" class="form-control" placeholder="Email Address" name="email">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Address</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" placeholder="Address" name="address">
-                                        </div>
-                                    </div>
-                                </div>
-                                {{-- <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Zip no</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-mail-bulk"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" placeholder="Zip no" name="zip">
-                                        </div>
-                                    </div>
-                                </div> --}}
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Bank Account Name</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-building"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" name="bank_account_name" placeholder="Enter Bank Account Name">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Bank Account Number</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-building"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" name="bank_account_number" placeholder="Enter Bank Account Number">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Routing Number</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-building"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" name="bank_routing_number" placeholder="Enter Roting Number">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{-- <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Country</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-flag"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" placeholder="Country" name="country">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>City</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-city"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" placeholder="City" name="city">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>BIN Number</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-building"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" placeholder="Enter BIN Number" name="bin">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>TAX ID</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-box"></i></span>
-                                            </div>
-                                            <input type="number" class="form-control" placeholder="Tax Id" name="taxid">
-                                        </div>
+                                        <input type="text" class="form-control" placeholder="Enter Group Name" name="company" value="{{ old('company') }}" required>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Contact Person
+                                        @error('title')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Enter Contact Person Name" name="title" value="{{ old('title') }}" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Designation
+                                        @error('designation')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Enter Designation" name="designation" value="{{ old('designation') }}" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Phone</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                        </div>
+                                        <input type="number" class="form-control" placeholder="Phone" name="phone" value="{{ old('phone') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                        </div>
+                                        <input type="email" class="form-control" placeholder="Email Address" name="email" value="{{ old('email') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Address" name="address" value="{{ old('address') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- 
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Zip no</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-mail-bulk"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Zip no" name="zip">
+                                    </div>
+                                </div>
+                            </div> 
+                            --}}
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Bank Account Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" name="bank_account_name" placeholder="Enter Bank Account Name" value="{{ old('bank_account_name') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Bank Account Number</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" name="bank_account_number" placeholder="Enter Bank Account Number" value="{{ old('bank_account_number') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Routing Number</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" name="bank_routing_number" placeholder="Enter Roting Number" value="{{ old('bank_routing_number') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        {{-- 
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Country</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-flag"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Country" name="country">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>City</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-city"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="City" name="city">
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                        --}}
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>BIN Number</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Enter BIN Number" name="bin" value="{{ old('bin') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>TAX ID</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-box"></i></span>
+                                        </div>
+                                        <input type="number" class="form-control" placeholder="Tax Id" name="taxid" value="{{ old('taxid') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
                         <div class="row mt-3">
                             <div class="col-lg-12">
                                 <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;">
@@ -248,8 +270,9 @@
                                 </button>
                             </div>
                         </div>
-                    </form>
-                </div>
+                        
+                    </div>
+                </form>
             </div>
           </div>
         </div>

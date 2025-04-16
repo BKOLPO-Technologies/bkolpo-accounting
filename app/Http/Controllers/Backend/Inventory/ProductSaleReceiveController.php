@@ -76,7 +76,7 @@ class ProductSaleReceiveController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
+        //dd($request->all());
         // Validate the incoming form data
         $request->validate([
             // 'client_id' => 'required|exists:clients,id',

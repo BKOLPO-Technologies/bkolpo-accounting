@@ -24,7 +24,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-12">
-          <div class="card card-primary card-outline shadow-lg">
+            <div class="card card-primary card-outline shadow-lg">
                 <div class="card-header py-2">
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
@@ -33,69 +33,83 @@
                         </a>
                     </div>
                 </div>
-              
                 <form role="form" action="{{ route('admin.client.store') }}" method="POST">
                     @csrf
 
                     <div class="card-body">
+
                         <div class="row">
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Company Name</label>
-                                    <input type="text" class="form-control" placeholder="Company Name" name="name" required>
+                                    <input type="text" class="form-control" placeholder="Company Name" name="name" value="{{ old('name') }}" required>
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Group Name</label>
-                                    <input type="text" class="form-control" placeholder="Group Name" name="company">
+                                    <input type="text" class="form-control" placeholder="Group Name" name="company" value="{{ old('company') }}">
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="row">
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Contact Person</label>
-                                    <input type="text" class="form-control" placeholder="Contact Person Name" name="title" required>
+                                    <input type="text" class="form-control" placeholder="Contact Person Name" name="title" value="{{ old('title') }}" required>
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Designation</label>
-                                    <input type="text" class="form-control" placeholder="Contact Person Designation" name="designation">
+                                    <input type="text" class="form-control" placeholder="Contact Person Designation" name="designation" value="{{ old('designation') }}">
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="row">
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Phone</label>
-                                    <input type="number" class="form-control" placeholder="Phone" name="phone">
+                                    <input type="number" class="form-control" placeholder="Phone" name="phone" value="{{ old('phone') }}">
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Email</label>
-                                    <input type="email" class="form-control" placeholder="Email Address" name="email">
+                                    <input type="email" class="form-control" placeholder="Email Address" name="email" value="{{ old('email') }}">
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="row">
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Address</label>
-                                    <input type="text" class="form-control" placeholder="Address" name="address">
+                                    <input type="text" class="form-control" placeholder="Address" name="address" value="{{ old('address') }}">
                                 </div>
                             </div>
-                            {{-- <div class="col-md-6">
+
+                            {{-- 
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Zip no</label>
                                     <input type="text" class="form-control" placeholder="Zip no" name="zip">
                                 </div>
-                            </div> --}}
+                            </div> 
+                            --}}
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Bank Account Name</label>
@@ -103,10 +117,11 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-building"></i></span>
                                         </div>
-                                        <input type="text" class="form-control" name="bank_account_name" placeholder="Enter Bank Account Name">
+                                        <input type="text" class="form-control" name="bank_account_name" placeholder="Enter Bank Account Name" value="{{ old('bank_account_name') }}">
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                         {{-- <div class="row">
@@ -126,6 +141,7 @@
                         </div> --}}
 
                         <div class="row">
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Bank Account Number</label>
@@ -133,10 +149,11 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-building"></i></span>
                                         </div>
-                                        <input type="text" class="form-control" name="bank_account_number" placeholder="Enter Bank Account Number">
+                                        <input type="text" class="form-control" name="bank_account_number" placeholder="Enter Bank Account Number" value="{{ old('bank_account_number') }}">
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Routing Number</label>
@@ -144,26 +161,31 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-building"></i></span>
                                         </div>
-                                        <input type="text" class="form-control" name="bank_routing_number" placeholder="Enter Roting Number">
+                                        <input type="text" class="form-control" name="bank_routing_number" placeholder="Enter Roting Number" value="{{ old('bank_routing_number') }}">
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="row">
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>BIN Number</label>
-                                    <input type="text" class="form-control" placeholder="Enter BIN Number" name="bin">
+                                    <input type="text" class="form-control" placeholder="Enter BIN Number" name="bin" value="{{ old('bin') }}">
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>TAX ID</label>
-                                    <input type="number" class="form-control" placeholder="Tax Id" name="taxid">
+                                    <input type="number" class="form-control" placeholder="Tax Id" name="taxid" value="{{ old('taxid') }}">
                                 </div>
                             </div>
+
                         </div>
+
                         <div class="row mt-3">
                             <div class="col-lg-12">
                                 <button type="submit" class="btn btn-primary bg-success text-light" style="float: right;"><i class="fas fa-plus"></i> Add Client</button>
@@ -172,7 +194,6 @@
 
                     </div>
                 </form>
-                
             </div>
           </div>
         </div>

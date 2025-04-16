@@ -46,17 +46,17 @@
                             <div class="row">
                                 <!-- Customer Select -->
                                 <div class="col-lg-4 col-md-6 mb-3">
-                                    <label for="supplier">Customer</label>
+                                    <label for="client">Customer</label>
                                     <div class="input-group">
                                         <select name="client" id="client" class="form-control select2 @error('client') is-invalid @enderror">
-                                            <option value="" disabled>Select Customer</option>
+                                            <option value="" disabled {{ old('client') ? '' : 'selected' }}>Select Customer</option>
                                             @foreach($clients as $client)
                                                 <option value="{{ $client->id }}" 
                                                     data-name="{{ $client->name }}" 
                                                     data-company="{{ $client->company }}" 
                                                     data-phone="{{ $client->phone }}" 
                                                     data-email="{{ $client->email }}"
-                                                    {{ old('supplier') == $client->id ? 'selected' : '' }}>
+                                                    {{ old('client') == $client->id ? 'selected' : '' }}>
                                                     {{ $client->name }}
                                                 </option>
                                             @endforeach
@@ -354,123 +354,125 @@
 
 <script>
     $(document).ready(function () {
-    // On project change
-    $('#project').on('change', function () {
-        const selectedOption = $(this).find(':selected');
-        const items = selectedOption.data('items');
+        // On project change
+        $('#project').on('change', function () {
+            const selectedOption = $(this).find(':selected');
+            const items = selectedOption.data('items');
 
-        //console.log(items);
+            //console.log(items);
 
-        if (!items || items.length === 0) {
-            toastr.warning('No items found for this project.');
-            return;
-        }
+            if (!items || items.length === 0) {
+                toastr.warning('No items found for this project.');
+                return;
+            }
 
-        $('#product-table tbody').empty();
+            $('#product-table tbody').empty();
 
-        items.forEach(item => {
-            const itemId = item.id;
-            const itemSpecifications = item.items_description || 'N/A';
-            const itemDesc = item.items || 'N/A';
-            const itemQuantity = parseFloat(item.quantity || 0);
-            const itemPrice = parseFloat(item.unit_price || 0);
-            const itemTotal = itemQuantity * itemPrice;
+            //console.log(items);
 
-            let unitOptions = '<option value="" disabled>Select Unit</option>';
-            units.forEach(unit => {
-                const selected = unit.id === item.unit_id ? 'selected' : '';
-                unitOptions += `<option value="${unit.id}" ${selected}>${unit.name}</option>`;
+            items.forEach(item => {
+                const itemId = item.id;
+                const itemSpecifications = item.items_description || 'N/A';
+                const itemDesc = item.items || 'N/A';
+                const itemQuantity = parseFloat(item.quantity || 0);
+                const itemPrice = parseFloat(item.unit_price || 0);
+                const itemTotal = itemQuantity * itemPrice;
+
+                let unitOptions = '<option value="" disabled>Select Unit</option>';
+                units.forEach(unit => {
+                    const selected = unit.id === item.unit_id ? 'selected' : '';
+                    unitOptions += `<option value="${unit.id}" ${selected}>${unit.name}</option>`;
+                });
+
+                const row = `
+                    <tr data-product-id="${itemId}">
+                        <td class="col-3">
+                            <input type="text" name="description[]" class="form-control" value="${itemDesc}" placeholder="Enter Item Description" readonly required>
+                            <input type="hidden" name="item_id[]" value="${itemId}">
+                        </td>
+                        <td class="col-2">
+                            <input type="text" name="specifications[]" class="form-control" value="${itemSpecifications}" readonly>
+                        </td>
+                        <td class="col-2">
+                            <select name="order_unit[]" class="form-control" required>
+                                ${unitOptions}
+                            </select>
+                        </td>
+                        <td class="col-2">
+                            <input type="number" name="quantity[]" class="form-control quantity" value="${itemQuantity}" min="1" step="1" required>
+                        </td>
+                        <td class="col-2">
+                            <input type="number" name="unit_price[]" class="form-control unit-price" value="${itemPrice}" min="0" step="0.01" required style="text-align: right;">
+                        </td>
+                        <td class="col-2">
+                            <input type="text" name="total[]" class="form-control total" readonly value="${itemTotal.toFixed(2)}" style="text-align: right;">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+
+                $('#product-table tbody').append(row);
             });
 
-            const row = `
-                <tr data-product-id="${itemId}">
-                    <td class="col-3">
-                        <input type="text" name="description[]" class="form-control" value="${itemDesc}" placeholder="Enter Item Description" readonly required>
-                        <input type="hidden" name="item_id[]" value="${itemId}">
-                    </td>
-                    <td class="col-2">
-                        <input type="text" name="specifications[]" class="form-control" value="${itemSpecifications}" readonly>
-                    </td>
-                    <td class="col-2">
-                        <select name="order_unit[]" class="form-control" required>
-                            ${unitOptions}
-                        </select>
-                    </td>
-                    <td class="col-2">
-                        <input type="number" name="quantity[]" class="form-control quantity" value="${itemQuantity}" min="1" step="1" required>
-                    </td>
-                    <td class="col-2">
-                        <input type="number" name="unit_price[]" class="form-control unit-price" value="${itemPrice}" min="0" step="0.01" required style="text-align: right;">
-                    </td>
-                    <td class="col-2">
-                        <input type="text" name="total[]" class="form-control total" readonly value="${itemTotal.toFixed(2)}" style="text-align: right;">
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `;
-
-            $('#product-table tbody').append(row);
+            updateTotal();
         });
 
-        updateTotal();
-    });
+        // Calculate totals
+        function updateTotal() {
+            let subtotal = 0;
 
-    // Calculate totals
-    function updateTotal() {
-        let subtotal = 0;
+            $('#product-table tbody tr').each(function () {
+                const quantity = parseFloat($(this).find('.quantity').val()) || 0;
+                const price = parseFloat($(this).find('.unit-price').val()) || 0;
+                const total = quantity * price;
 
-        $('#product-table tbody tr').each(function () {
-            const quantity = parseFloat($(this).find('.quantity').val()) || 0;
-            const price = parseFloat($(this).find('.unit-price').val()) || 0;
-            const total = quantity * price;
+                $(this).find('.total').val(total.toFixed(2));
+                subtotal += total;
+            });
 
-            $(this).find('.total').val(total.toFixed(2));
-            subtotal += total;
+            $('#subtotal').val(subtotal.toFixed(2));
+
+            const discount = parseFloat($('#total_discount').val()) || 0;
+            const netAmount = subtotal - discount;
+            $('#total_netamount').val(netAmount.toFixed(2));
+
+            // TAX
+            const includeTax = $('#include_tax').is(':checked');
+            const taxRate = parseFloat($('#tax').val()) || 0;
+            const taxAmount = includeTax ? (netAmount * taxRate / 100) : 0;
+            $('#tax_amount').val(includeTax ? taxAmount.toFixed(2) : '');
+
+            // Calculate the sum of net amount and tax amount
+            let netAmountWithTax = netAmount + taxAmount;
+
+            // VAT
+            const includeVAT = $('#include_vat').is(':checked');
+            const vatRate = parseFloat($('#vat').val()) || 0;
+            const vatAmount = includeVAT ? (netAmountWithTax * vatRate / 100) : 0;
+            $('#vat_amount').val(includeVAT ? vatAmount.toFixed(2) : '');
+
+            const grandTotal = netAmountWithTax + vatAmount;
+            $('#grand_total').val(grandTotal.toFixed(2));
+        }
+
+        // Update when quantity or price changes
+        $(document).on('input', '.quantity, .unit-price, #total_discount, #tax, #vat', updateTotal);
+
+        // Handle VAT and TAX checkbox toggle
+        $('#include_tax, #include_vat').on('change', function () {
+            $('#tax').prop('disabled', !$('#include_tax').is(':checked'));
+            $('#vat').prop('disabled', !$('#include_vat').is(':checked'));
+            updateTotal();
         });
 
-        $('#subtotal').val(subtotal.toFixed(2));
-
-        const discount = parseFloat($('#total_discount').val()) || 0;
-        const netAmount = subtotal - discount;
-        $('#total_netamount').val(netAmount.toFixed(2));
-
-        // TAX
-        const includeTax = $('#include_tax').is(':checked');
-        const taxRate = parseFloat($('#tax').val()) || 0;
-        const taxAmount = includeTax ? (netAmount * taxRate / 100) : 0;
-        $('#tax_amount').val(includeTax ? taxAmount.toFixed(2) : '');
-
-        // Calculate the sum of net amount and tax amount
-        let netAmountWithTax = netAmount + taxAmount;
-
-        // VAT
-        const includeVAT = $('#include_vat').is(':checked');
-        const vatRate = parseFloat($('#vat').val()) || 0;
-        const vatAmount = includeVAT ? (netAmountWithTax * vatRate / 100) : 0;
-        $('#vat_amount').val(includeVAT ? vatAmount.toFixed(2) : '');
-
-        const grandTotal = netAmountWithTax + vatAmount;
-        $('#grand_total').val(grandTotal.toFixed(2));
-    }
-
-    // Update when quantity or price changes
-    $(document).on('input', '.quantity, .unit-price, #total_discount, #tax, #vat', updateTotal);
-
-    // Handle VAT and TAX checkbox toggle
-    $('#include_tax, #include_vat').on('change', function () {
-        $('#tax').prop('disabled', !$('#include_tax').is(':checked'));
-        $('#vat').prop('disabled', !$('#include_vat').is(':checked'));
-        updateTotal();
+        // Remove product row
+        $('#product-table').on('click', '.remove-product', function () {
+            $(this).closest('tr').remove();
+            updateTotal();
+        });
     });
-
-    // Remove product row
-    $('#product-table').on('click', '.remove-product', function () {
-        $(this).closest('tr').remove();
-        updateTotal();
-    });
-});
 
 </script>
 @endpush

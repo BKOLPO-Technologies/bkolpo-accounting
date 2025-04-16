@@ -189,7 +189,7 @@
                                                             <select class="item-select form-control" name="items[]" required>
                                                                 <option value="">Select Item</option>
                                                                 @foreach($products as $product)
-                                                                    <option value="{{ $product->id }}" data-description="{{ $product->description }}">
+                                                                    <option value="{{ $product->name }}" data-description="{{ $product->description }}">
                                                                         {{ $product->name }}
                                                                     </option>
                                                                 @endforeach
@@ -359,7 +359,7 @@
                             </div>
                             <div class="row text-right">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> Submit</button>
+                                    <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> Add</button>
                                 </div>
                             </div>
                         </form>
@@ -466,8 +466,8 @@
                     </select>
                 </td>
                 <td><input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required></td>
-                <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" required></td>
-                <td><input type="text" name="total[]" class="form-control total" readonly></td>
+                <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" style="text-align: right;" required></td>
+                <td><input type="text" name="total[]" class="form-control total" readonly style="text-align: right;"></td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
                 </td>
