@@ -159,17 +159,42 @@ class ReportController extends Controller
     {
         $pageTitle = 'Profit & Loss Report';
         
-        // Fetch the first subgroup for Sales Account
-        $salesAccount = LedgerSubGroup::where('subgroup_name', 'Sales Account')->with('ledgers')->get();
-    $cogsAccount = LedgerSubGroup::where('subgroup_name', 'Cost of Goods Sold')->with('ledgers')->get();
-    $operatingExpensesAccount = LedgerSubGroup::where('subgroup_name', 'Operating Expense')->with('ledgers')->get();
-    $nonOperatingItemsAccount = LedgerSubGroup::where('subgroup_name', 'Non-Operating Items')->with('ledgers')->get();
+        $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
+        $toDate = $request->input('to_date', now()->format('Y-m-d'));
+
+        $withLedgers = [
+            'ledgers' => function ($query) use ($fromDate, $toDate) {
+                $query->withSum(['journalVoucherDetails as total_debit' => function ($q) use ($fromDate, $toDate) {
+                    $q->whereDate('created_at', '>=', $fromDate)
+                    ->whereDate('created_at', '<=', $toDate);
+                }], 'debit')
+                ->withSum(['journalVoucherDetails as total_credit' => function ($q) use ($fromDate, $toDate) {
+                    $q->whereDate('created_at', '>=', $fromDate)
+                    ->whereDate('created_at', '<=', $toDate);
+                }], 'credit');
+            }
+        ];
 
         
+        // Fetch the first subgroup for Sales Account
+        $salesAccount = LedgerSubGroup::where('subgroup_name', 'Sales Account')
+            ->with($withLedgers)
+            ->get();
 
+        $cogsAccount = LedgerSubGroup::where('subgroup_name', 'Cost of Goods Sold')
+            ->with($withLedgers)
+            ->get();
+
+        $operatingExpensesAccount = LedgerSubGroup::where('subgroup_name', 'Operating Expense')
+            ->with($withLedgers)
+            ->get();
+
+        $nonOperatingItemsAccount = LedgerSubGroup::where('subgroup_name', 'Non-Operating Items')
+            ->with($withLedgers)
+            ->get();
         
         return view('backend.admin.report.account.profit_loss_report', compact(
-            'pageTitle', 'salesAccount', 'cogsAccount', 'operatingExpensesAccount', 'nonOperatingItemsAccount'
+            'pageTitle','fromDate','toDate', 'salesAccount', 'cogsAccount', 'operatingExpensesAccount', 'nonOperatingItemsAccount'
         ));
     }
 

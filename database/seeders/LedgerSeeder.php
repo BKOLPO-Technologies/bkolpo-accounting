@@ -64,7 +64,7 @@ class LedgerSeeder extends Seeder
                     'type' => null,
                 ],
                 'Non-Operating Items' => [
-                    'ledgers' => ['Interest Income', 'Intereset Expenses'], // Discounts will have no type
+                    'ledgers' => ['Interest Income', 'Interest Expenses'], // Discounts will have no type
                     'type' => null,
                 ],
             ],
