@@ -79,7 +79,7 @@
                             @enderror
                         </div>
 
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>Price
                                     @error('price')
@@ -95,29 +95,33 @@
                             </div>
                         </div>
 
-                        {{-- <div class="col-md-6">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label>Quantity
-                                    @error('quantity')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </label>
+                                <label>Product Code</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-cogs"></i></span>
                                     </div>
-                                    <input type="number" class="form-control" value="{{ old('quantity', $product->quantity) }}" name="quantity">
-
+                                    <input type="text" class="form-control" value="{{ old('product_code', $product->product_code) }}" readonly>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
 
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Description</label>
-                                <textarea name="description" class="form-control">{{ old('description', $product->description) }}</textarea>
+
+                        <div class="col-md-6 mb-2">
+                            <label for="status" class="form-label">Status
+                                @error('status')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa fa-check-circle"></i></span>
+                                <select class="form-control" id="status" name="status">
+                                    <option value="1" {{ old('status', $product->status) == 1 ? 'selected' : '' }}>Active</option>
+                                    <option value="0" {{ old('status', $product->status) == 0 ? 'selected' : '' }}>Inactive</option>
+                                </select>
                             </div>
                         </div>
 
@@ -145,8 +149,17 @@
                         </div>
                     </div>
 
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea name="description" class="form-control">{{ old('description', $product->description) }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-11">
                             <div class="form-group">
                                 <label>Image</label>
                                 <input type="file" class="form-control" name="image" id="imageInput">
@@ -158,26 +171,10 @@
                                 @if($product->image)
                                     <img id="imagePreview" src="{{ asset('upload/inventory/products/' . $product->image) }}" alt="Image Preview" style="display:block; margin-top: 10px; height:80px; width: 80px;">
                                 @else
-                                    <img id="imagePreview" src="" alt="Image Preview" style="display:none; margin-top: 10px; height:80px; width: 80px;">
+                                    <img id="imagePreview" src="{{ asset('backend/logo.jpg') }}" alt="Image Preview" style="display:block; margin-top: 10px; height:80px; width: 80px;">
                                 @endif
                             </div>
                         </div>
-
-                        <div class="col-md-6 mb-2">
-                            <label for="status" class="form-label">Status
-                                @error('status')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fa fa-check-circle"></i></span>
-                                <select class="form-control" id="status" name="status">
-                                    <option value="1" {{ old('status', $product->status) == 1 ? 'selected' : '' }}>Active</option>
-                                    <option value="0" {{ old('status', $product->status) == 0 ? 'selected' : '' }}>Inactive</option>
-                                </select>
-                            </div>
-                        </div>
-
                     </div>
 
                 </div>

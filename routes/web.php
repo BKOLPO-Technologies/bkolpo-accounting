@@ -292,6 +292,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [ProductController::class, 'AdminProductIndex'])->name('admin.product.index');
         Route::get('/create', [ProductController::class, 'AdminProductCreate'])->name('admin.product.create');
         Route::post('/storeProduct', [ProductController::class, 'AdminProductStore'])->name('admin.product.store');
+        Route::get('/view/{id}', [ProductController::class, 'AdminProductView'])->name('admin.product.view');
         Route::get('/edit/{id}', [ProductController::class, 'AdminProductEdit'])->name('admin.product.edit');
         Route::put('/update/{id}', [ProductController::class, 'AdminProductUpdate'])->name('admin.product.update');
         Route::get('/delete/{id}', [ProductController::class, 'AdminProductDestroy'])->name('admin.product.destroy');

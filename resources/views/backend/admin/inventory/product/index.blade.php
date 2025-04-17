@@ -65,7 +65,7 @@
                                     </td>
 
                                     <td>
-                                        <a href="#" class="btn btn-success btn-sm">
+                                        <a href="{{ route('admin.product.view', $product->id) }}" class="btn btn-success btn-sm">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         <a href="{{ route('admin.product.edit', $product->id) }}" class="btn btn-primary btn-sm">
