@@ -14,7 +14,7 @@ class ProductController extends Controller
 {
     public function AdminProductIndex() 
     {
-        $products = Product::all();
+        $products = Product::orderBy('id', 'desc')->get();
         $pageTitle = 'Admin Product';
         return view('backend.admin.inventory.product.index',compact('pageTitle', 'products'));
     }
@@ -24,8 +24,9 @@ class ProductController extends Controller
         $pageTitle = 'Admin Product Create';
         $categories = Category::where('status',1)->latest()->get();
         $units = Unit::where('status',1)->latest()->get();
+        $productCode = 'PRD' . strtoupper(Str::random(5));
         //dd($categories);
-        return view('backend.admin.inventory.product.create',compact('pageTitle','categories', 'units'));
+        return view('backend.admin.inventory.product.create',compact('pageTitle','categories', 'units', 'productCode'));
     }
 
     public function AdminProductStore(Request $request)
@@ -41,12 +42,12 @@ class ProductController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $productCode = 'PRD' . strtoupper(Str::random(5));
+        //$productCode = 'PRD' . strtoupper(Str::random(5));
 
         // Store the product with the validated data
         $product =  Product::create([
             'name' => $request->name,
-            'product_code' => $productCode,
+            'product_code' => $request->code,
             'price' => $request->price ?? 0, // Store null if not provided
             'description' => $request->description ?? null, // Store null if not provided
             //'quantity' => $request->quantity,

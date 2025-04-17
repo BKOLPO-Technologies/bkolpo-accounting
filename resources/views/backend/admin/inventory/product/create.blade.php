@@ -86,7 +86,7 @@
                             @enderror
                         </div>
 
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>Price
                                     @error('price')
@@ -103,10 +103,10 @@
                             </div>
                         </div>
 
-                        {{-- <div class="col-md-6">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label>Quantity
-                                    @error('quantity')
+                                <label>Product Code
+                                    @error('code')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </label>
@@ -114,11 +114,11 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-cogs"></i></span>
                                     </div>
-                                    <input type="number" class="form-control" placeholder="Enter Product Quantity" name="quantity" value="{{ old('quantity') }}">
+                                    <input type="text" class="form-control" name="code" value="{{ old('code', $productCode) }}">
 
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
 
                     </div>
 

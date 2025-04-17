@@ -189,7 +189,11 @@
                                                             <select class="item-select form-control" name="items[]" required>
                                                                 <option value="">Select Item</option>
                                                                 @foreach($products as $product)
-                                                                    <option value="{{ $product->name }}" data-description="{{ $product->description }}">
+                                                                    <option 
+                                                                        value="{{ $product->name }}" 
+                                                                        data-description="{{ $product->description }}"
+                                                                        data-unit="{{ $product->unit_id }}"
+                                                                    >
                                                                         {{ $product->name }}
                                                                     </option>
                                                                 @endforeach
@@ -199,7 +203,7 @@
                                                             <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required></textarea>
                                                         </td>                                                                                                                                                                     
                                                         <td>
-                                                            <select name="order_unit[]" class="form-control" required>
+                                                            <select name="order_unit[]" class="unit-select form-control" required>
                                                                 <option value="" disabled selected>Select Unit</option>
                                                                 @foreach($units as $unit)
                                                                     <option value="{{ $unit->id }}">{{ $unit->name }}</option>
@@ -432,6 +436,12 @@
     $(document).on('change', '.item-select', function () {
         // Get the selected option from the dropdown
         const selectedOption = $(this).find('option:selected');
+
+        // Get unit ID
+        const unitId = selectedOption.data('unit');
+
+        // Set unit select
+        $(this).closest('tr').find('.unit-select').val(unitId);
 
         // Get the description from the data-description attribute
         const description = selectedOption.data('description');
