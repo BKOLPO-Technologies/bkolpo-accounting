@@ -190,7 +190,7 @@
                                                                 <option value="">Select Item</option>
                                                                 @foreach($products as $product)
                                                                     <option 
-                                                                        value="{{ $product->name }}" 
+                                                                        value="{{ $product->id }}" 
                                                                         data-description="{{ $product->description }}"
                                                                         data-unit="{{ $product->unit_id }}"
                                                                     >

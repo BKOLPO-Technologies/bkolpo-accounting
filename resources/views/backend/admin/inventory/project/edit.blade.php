@@ -197,21 +197,24 @@
                                                                     @foreach($products as $product)
                                                                         <option value="{{ $product->id }}" 
                                                                             data-description="{{ $product->description }}"
+                                                                            data-unit="{{ $product->unit_id }}"
                                                                             @if($item->items == $product->id) selected @endif>
                                                                             {{ $product->name }}
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
                                                             </td>
-                                                            
+
                                                             <td style="width:20%;">
                                                                 <!-- Textarea for Item Description -->
-                                                                <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required>
+                                                                {{-- <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required>
                                                                     {{ old('items_description.' . $loop->index, $item->items_description) }}
-                                                                </textarea>
+                                                                </textarea> --}}
+                                                                <input type="text" class="item-description form-control" name="items_description[]" value={{ old('items_description.' . $loop->index, $item->items_description) }}>
                                                             </td>
+
                                                             <td>
-                                                                <select name="order_unit[]" class="form-control" required>
+                                                                <select name="order_unit[]" class="unit-select form-control" required>
                                                                     <option value="" disabled selected>Select Unit</option>
                                                                     @foreach($units as $unit)
                                                                         <option value="{{ $unit->id }}" 
@@ -518,10 +521,16 @@
         // Find the corresponding textarea in the same row and set the description
         $(this).closest('tr').find('.item-description').val(description);
 
+        // Get unit ID
+        const unitId = selectedOption.data('unit');
+
+        // Set unit select
+        $(this).closest('tr').find('.unit-select').val(unitId);
+
         // Get the description from the data-description attribute
         const quantity = 1;
 
-        console.log(quantity);
+        //console.log(quantity);
 
         // Find the corresponding textarea in the same row and set the description
         $(this).closest('tr').find('.quantity').val(quantity);
@@ -535,7 +544,7 @@
                     <select class="item-select form-control" name="items[]" required>
                         <option value="">Select Item</option>
                         @foreach($products as $product)
-                            <option value="{{ $product->id }}" data-description="{{ $product->description }}">
+                            <option value="{{ $product->id }}" data-description="{{ $product->description }}" data-unit="{{ $product->unit_id }}">
                                 {{ $product->name }}
                             </option>
                         @endforeach
@@ -545,7 +554,7 @@
                     <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required></textarea>
                 </td>
                 <td>
-                    <select name="order_unit[]" class="form-control" required>
+                    <select name="order_unit[]" class="unit-select form-control" required>
                         <option value="" disabled selected>Select Unit</option>
                         @foreach($units as $unit)
                             <option value="{{ $unit->id }}">{{ $unit->name }}</option>
