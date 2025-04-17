@@ -458,7 +458,7 @@
                     <select class="item-select form-control" name="items[]" required>
                         <option value="">Select Item</option>
                         @foreach($products as $product)
-                            <option value="{{ $product->id }}" data-description="{{ $product->description }}">
+                            <option value="{{ $product->id }}" data-description="{{ $product->description }}" data-unit="{{ $product->unit_id }}">
                                 {{ $product->name }}
                             </option>
                         @endforeach
@@ -468,7 +468,7 @@
                     <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required></textarea>
                 </td>
                 <td>
-                    <select name="order_unit[]" class="form-control" required>
+                    <select name="order_unit[]" class="unit-select form-control" required>
                         <option value="" disabled selected>Select Unit</option>
                         @foreach($units as $unit)
                             <option value="{{ $unit->id }}">{{ $unit->name }}</option>
