@@ -350,7 +350,7 @@
 
             <!-- Invoice/Bill -->
             <li class="nav-item">
-              <a href="#" onclick="comingSoon()" class="nav-link">
+              <a href="{{ route('admin.sale.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Invoice/Bill</p>
               </a>
@@ -414,82 +414,82 @@
           </ul>
         </li>
 
-      <!-- Purchase -->
-      <li class="nav-item">
-        <a href="#" class="nav-link">
-          <i class="nav-icon fas fa-shopping-bag"></i>
-          <p>
-            Purchase
-            <i class="fas fa-angle-left right"></i>
-          </p>
-        </a>
+        <!-- Purchase -->
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-shopping-bag"></i>
+            <p>
+              Purchase
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
 
-        <ul class="nav nav-treeview">
-          <!-- Purchase Requisition -->
-          <li class="nav-item">
-            <a href="#" onclick="comingSoon()" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Purchase Requisition</p>
-            </a>
-          </li>
+          <ul class="nav nav-treeview">
+            <!-- Purchase Requisition -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Purchase Requisition</p>
+              </a>
+            </li>
 
-          <!-- Purchase Quotation -->
-          <li class="nav-item">
-            <a href="#" onclick="comingSoon()" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Purchase Quotation</p>
-            </a>
-          </li>
+            <!-- Purchase Quotation -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Purchase Quotation</p>
+              </a>
+            </li>
 
-          <!-- Purchase Order -->
-          <li class="nav-item">
-            <a href="#" onclick="comingSoon()" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Purchase Order</p>
-            </a>
-          </li>
+            <!-- Purchase Order -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Purchase Order</p>
+              </a>
+            </li>
 
-          <!-- Receipt Note -->
-          <li class="nav-item">
-            <a href="#" onclick="comingSoon()" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Receipt Note</p>
-            </a>
-          </li>
+            <!-- Receipt Note -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Receipt Note</p>
+              </a>
+            </li>
 
-          <!-- Purchase Invoice -->
-          <li class="nav-item">
-            <a href="#" onclick="comingSoon()" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Purchase Invoice</p>
-            </a>
-          </li>
+            <!-- Purchase Invoice -->
+            <li class="nav-item">
+              <a href="{{ route('admin.purchase.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Purchase Invoice</p>
+              </a>
+            </li>
 
-          <!-- Purchase Return -->
-          <li class="nav-item">
-            <a href="#" onclick="comingSoon()" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Purchase Return</p>
-            </a>
-          </li>
+            <!-- Purchase Return -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Purchase Return</p>
+              </a>
+            </li>
 
-          <!-- Purchase Import -->
-          <li class="nav-item">
-            <a href="#" onclick="comingSoon()" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Purchase Import</p>
-            </a>
-          </li>
+            <!-- Purchase Import -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Purchase Import</p>
+              </a>
+            </li>
 
-          <!-- Vendors -->
-          <li class="nav-item">
-            <a href="#" onclick="comingSoon()" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Vendors</p>
-            </a>
-          </li>
-        </ul>
-      </li>
+            <!-- Vendors -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Vendors</p>
+              </a>
+            </li>
+          </ul>
+        </li>
 
 
 
