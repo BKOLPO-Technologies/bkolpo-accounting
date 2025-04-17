@@ -336,74 +336,74 @@
           <ul class="nav nav-treeview">
             <!-- Accounts Submenu -->
             @can('report-menu')  
-            <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
+            <li class="nav-item">
+              <a href="{{ route('report.trial.balance') }}" class="nav-link {{ Route::is('report.trial.balance') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Trial Balance</p>
               </a>
             </li>
-            <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
+            <li class="nav-item">
+              <a href="{{ route('report.balance.sheet') }}" class="nav-link {{ Route::is('report.balance.sheet') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Balance Sheet</p>
               </a>
             </li>
-            <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
+            <li class="nav-item">
+              <a href="{{ route('report.ledger.profit.loss') }}" class="nav-link {{ Route::is('report.ledger.profit.loss') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Profit and Loss</p>
               </a>
             </li>
-            <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
+            <li class="nav-item">
+              <a href="#"  onclick="comingSoon()" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Receipts & Payments</p>
               </a>
             </li>
-            <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
+            <li class="nav-item">
+              <a href="#"  onclick="comingSoon()" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Daybook</p>
               </a>
             </li>
-            <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
+            <li class="nav-item">
+              <a href="#"  onclick="comingSoon()" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Statement</p>
               </a>
             </li>
-            <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
+            <li class="nav-item">
+              <a href="#"  onclick="comingSoon()" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Groupwise Statement</p>
               </a>
             </li>
-            <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
+            <li class="nav-item">
+              <a href="#"  onclick="comingSoon()" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Bills Receivable</p>
               </a>
             </li>
-            <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
+            <li class="nav-item">
+              <a href="#"  onclick="comingSoon()" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Bills Payable</p>
               </a>
             </li>
-            <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
+            <li class="nav-item">
+              <a href="#"  onclick="comingSoon()" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Purchase And Sales</p>
               </a>
             </li>
-            <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
+            <li class="nav-item">
+              <a href="#"  onclick="comingSoon()" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Sales Report</p>
               </a>
             </li>
-            <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
+            <li class="nav-item">
+              <a href="#"  onclick="comingSoon()" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Purchase Report</p>
               </a>

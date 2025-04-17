@@ -267,6 +267,17 @@
 
 <!-- sweetalerat link -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+  function comingSoon() {
+      Swal.fire({
+          icon: 'warning',
+          title: 'Working!',
+          text: 'Please be patient.',
+      });
+  }
+</script>
+
 <!-- sweetalerat delete data -->
 <script type="text/javascript">
   $(function(){
