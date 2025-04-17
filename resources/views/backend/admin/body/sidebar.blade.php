@@ -329,7 +329,7 @@
           <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
             <i class="nav-icon fas fa-chart-line"></i>
             <p>
-                Report
+                Accounting Report
                 <i class="fas fa-angle-left right"></i>
             </p>
           </a>
