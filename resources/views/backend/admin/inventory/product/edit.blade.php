@@ -97,12 +97,16 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Product Code</label>
+                                <label>Product Code
+                                    @error('product_code')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-cogs"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" value="{{ old('product_code', $product->product_code) }}" readonly>
+                                    <input type="text" class="form-control" value="{{ old('product_code', $product->product_code) }}" name="product_code">
                                 </div>
                             </div>
                         </div>
@@ -180,9 +184,8 @@
                 </div>
 
                 <div class="card-footer d-flex justify-content-end">
-                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="submit" class="btn btn-success">Update</button>
                 </div>
-
 
               </form>
             </div>

@@ -125,6 +125,7 @@ class ProductController extends Controller
             'status' => $request->has('status') ? $request->input('status') : $product->status, // Keep existing status
             'category_id' => $request->input('category_id'),
             'unit_id' => $request->input('unit_id'),
+            'product_code' => $request->input('product_code'),
         ]);
 
         // Redirect back to the product index with a success message
