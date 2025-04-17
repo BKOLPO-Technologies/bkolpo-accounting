@@ -339,109 +339,73 @@
             <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>
-                      Trial Balance
-                      <i class="fas fa-angle-left right"></i>
-                  </p>
+                  <p>Trial Balance</p>
               </a>
             </li>
             <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>
-                      Balance Sheet
-                      <i class="fas fa-angle-left right"></i>
-                  </p>
+                  <p>Balance Sheet</p>
               </a>
             </li>
             <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>
-                      Profit and Loss
-                      <i class="fas fa-angle-left right"></i>
-                  </p>
+                  <p>Profit and Loss</p>
               </a>
             </li>
             <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>
-                      Receipts & Payments / Cash Flow
-                      <i class="fas fa-angle-left right"></i>
-                  </p>
+                  <p>Receipts & Payments</p>
               </a>
             </li>
             <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>
-                      Daybook
-                      <i class="fas fa-angle-left right"></i>
-                  </p>
+                  <p>Daybook</p>
               </a>
             </li>
             <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>
-                      Statement
-                      <i class="fas fa-angle-left right"></i>
-                  </p>
+                  <p>Statement</p>
               </a>
             </li>
             <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>
-                      Groupwise Statement
-                      <i class="fas fa-angle-left right"></i>
-                  </p>
+                  <p>Groupwise Statement</p>
               </a>
             </li>
             <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>
-                      Bills Receivable
-                      <i class="fas fa-angle-left right"></i>
-                  </p>
+                  <p>Bills Receivable</p>
               </a>
             </li>
             <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>
-                      Bills Payable
-                      <i class="fas fa-angle-left right"></i>
-                  </p>
+                  <p>Bills Payable</p>
               </a>
             </li>
             <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>
-                      Purchase And Sales
-                      <i class="fas fa-angle-left right"></i>
-                  </p>
+                  <p>Purchase And Sales</p>
               </a>
             </li>
             <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>
-                      Sales Report
-                      <i class="fas fa-angle-left right"></i>
-                  </p>
+                  <p>Sales Report</p>
               </a>
             </li>
             <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>
-                      Purchase Report
-                      <i class="fas fa-angle-left right"></i>
-                  </p>
+                  <p>Purchase Report</p>
               </a>
             </li>
             @endcan
