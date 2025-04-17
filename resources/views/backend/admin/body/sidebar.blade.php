@@ -4,10 +4,12 @@
   $isSupplierActive = Route::is('admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit','admin.supplier.products','admin.supplier.transactions');
   $isClientActive = Route::is('admin.client.index','admin.client.create','admin.client.view','admin.client.edit','admin.client.products','admin.client.transactions');
   $isProjectActive = Route::is('projects.index', 'projects.create', 'projects.show', 'projects.edit', 'projects.sales');
-  $isInvoiceActive = Route::is('project.receipt.payment.index', 'project.receipt.payment.create', 'project.receipt.payment.show','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit', 'project.receipt.payment.show');
-  $isSalesActive = Route::is('admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit','quotations.index','quotations.create','quotations.edit','quotations.show','outcoming.chalan.index','outcoming.chalan.create','outcoming.chalan.show','outcoming.chalan.edit','receipt.payment.index','receipt.payment.create','stock.out','stock.out.view');
-  $isPurchaseActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.show','admin.purchase.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create','stock.in','stock.in.view', 'sale.payment.show');
+  $isInvoiceActive = Route::is('project.receipt.payment.show');
+  $isSalesActive = Route::is('quotations.index','quotations.create','quotations.edit','quotations.show','outcoming.chalan.index','outcoming.chalan.create','outcoming.chalan.show','outcoming.chalan.edit','receipt.payment.index','receipt.payment.create','stock.out','stock.out.view');
+  $isPurchaseActive = Route::is('workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit');
   $isAccountMasterActive = Route::is('journal-voucher.*', 'chart_of_accounts.*', 'ledger.*', 'ledger.group.*', 'ledger.sub.group.*', 'admin.client.index','admin.client.create','admin.client.view','admin.client.edit','admin.client.products','admin.client.transactions', 'admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit','admin.supplier.products','admin.supplier.transactions');
+  // new
+  $isTransactionsActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.show','admin.purchase.edit','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create','stock.in','stock.in.view', 'sale.payment.show','project.receipt.payment.index', 'project.receipt.payment.create', 'project.receipt.payment.show');
 @endphp
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -255,75 +257,243 @@
           </ul>
         </li> --}}
 
-        <li class="nav-item {{ $isInvoiceActive ? 'menu-open' : '' }}">
-          <a href="#" class="nav-link {{ $isInvoiceActive ? 'active' : '' }}">
-              <i class="nav-icon fas fa-folder"></i> <!-- Updated Icon -->
+        <!-- Transactions -->
+        <li class="nav-item {{ $isTransactionsActive ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ $isTransactionsActive ? 'active' : '' }}">
+            <i class="nav-icon fas fa-shopping-cart"></i>
               <p>
-                  Invoice
-                  <i class="fas fa-angle-left right"></i>
-              </p>
-          </a>
-          
-          <ul class="nav nav-treeview">
-              <li class="nav-item">
-                  <a href="{{ route('admin.sale.index') }}" class="nav-link {{ Route::is('admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit') ? 'active' : '' }}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Bill</p>
-                  </a>
-              </li>
-
-              <li class="nav-item">
-                <a href="{{ route('project.receipt.payment.index') }}"
-                  class="nav-link {{ Route::is('project.receipt.payment.index', 'project.receipt.payment.create', 'project.receipt.payment.show') ? 'active' : '' }}">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Bill Received</p>
-                </a>
-              </li>
-          </ul>
-        </li>
-
-        <!-- Purchase -->
-        <li class="nav-item {{ $isPurchaseActive ? 'menu-open' : '' }}">
-          <a href="#" class="nav-link {{ $isPurchaseActive ? 'active' : '' }}">
-              <i class="nav-icon fas fa-shopping-bag"></i>
-              <p>
-                  Purchase
+                  Transactions
                   <i class="fas fa-angle-left right"></i>
               </p>
           </a>
           
           <ul class="nav nav-treeview">
             <li class="nav-item">
-                <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index','admin.purchase.create', 'admin.purchase.show', 'admin.purchase.edit') ? 'active' : '' }}">
+                <a href="{{ route('project.receipt.payment.index') }}" class="nav-link {{ Route::is('project.receipt.payment.index','project.receipt.payment.create') ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Purchase Order</p>
+                    <p>Receipt</p>
                 </a>
             </li>
-            {{--       
             <li class="nav-item">
-              <a href="{{ route('incoming.chalan.index') }}" class="nav-link {{ Route::is('incoming.chalan.index','incoming.chalan.create', 'incoming.chalan.show', 'incoming.chalan.edit') ? 'active' : '' }}">
+                <a href="{{ route('sale.payment.index') }}" class="nav-link {{ Route::is('sale.payment.index','sale.payment.create') ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Payment</p>
+                </a>
+            </li>
+            <li class="nav-item">
+              <a href="#"  onclick="comingSoon()" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Incoming Chalan List</p>
+                  <p>Contra</p>
               </a>
             </li>
-            --}}
             <li class="nav-item">
-              <a href="{{ route('sale.payment.index') }}" 
-                class="nav-link {{ Route::is('sale.payment.index', 'sale.payment.create', 'sale.payment.show') ? 'active' : '' }}">
+              <a href="#"  onclick="comingSoon()" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Make Payment List</p>
+                  <p>Journal</p>
               </a>
             </li>
-            {{-- <li class="nav-item">
-              <a href="{{ route('stock.in') }}" 
-                class="nav-link {{ Route::is('stock.in', 'stock.in.view') ? 'active' : '' }}">
+            <li class="nav-item">
+              <a href="#"  onclick="comingSoon()" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Stock In List</p>
+                  <p>Stock Journal</p>
               </a>
-            </li> --}}
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index','admin.purchase.create', 'admin.purchase.show', 'admin.purchase.edit') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Purchase Invoice</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('admin.sale.index') }}" class="nav-link {{ Route::is('admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Sales Invoice</p>
+              </a>
+            </li>
           </ul>
         </li>
 
+        <!-- Sales -->
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-shopping-cart"></i>
+            <p>
+              Sales
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+
+          <ul class="nav nav-treeview">
+            <!-- Proforma Invoice -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Proforma Invoice</p>
+              </a>
+            </li>
+
+            <!-- Sales Order -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Sales Order</p>
+              </a>
+            </li>
+
+            <!-- Delivery Note -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Delivery Note</p>
+              </a>
+            </li>
+
+            <!-- Invoice/Bill -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Invoice/Bill</p>
+              </a>
+            </li>
+
+            <!-- Sales Return -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Sales Return</p>
+              </a>
+            </li>
+
+            <!-- Warranty In -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Warranty In</p>
+              </a>
+            </li>
+
+            <!-- Customers -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Customers</p>
+              </a>
+            </li>
+
+            <!-- Salesman Performance -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Salesman Performance</p>
+              </a>
+            </li>
+
+            <!-- Salesman-wise Receivable -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Salesman Receivable</p>
+              </a>
+            </li>
+
+            <!-- Sales Import -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Sales Import</p>
+              </a>
+            </li>
+
+            <!-- Team -->
+            <li class="nav-item">
+              <a href="#" onclick="comingSoon()" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Team</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+      <!-- Purchase -->
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <i class="nav-icon fas fa-shopping-bag"></i>
+          <p>
+            Purchase
+            <i class="fas fa-angle-left right"></i>
+          </p>
+        </a>
+
+        <ul class="nav nav-treeview">
+          <!-- Purchase Requisition -->
+          <li class="nav-item">
+            <a href="#" onclick="comingSoon()" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Purchase Requisition</p>
+            </a>
+          </li>
+
+          <!-- Purchase Quotation -->
+          <li class="nav-item">
+            <a href="#" onclick="comingSoon()" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Purchase Quotation</p>
+            </a>
+          </li>
+
+          <!-- Purchase Order -->
+          <li class="nav-item">
+            <a href="#" onclick="comingSoon()" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Purchase Order</p>
+            </a>
+          </li>
+
+          <!-- Receipt Note -->
+          <li class="nav-item">
+            <a href="#" onclick="comingSoon()" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Receipt Note</p>
+            </a>
+          </li>
+
+          <!-- Purchase Invoice -->
+          <li class="nav-item">
+            <a href="#" onclick="comingSoon()" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Purchase Invoice</p>
+            </a>
+          </li>
+
+          <!-- Purchase Return -->
+          <li class="nav-item">
+            <a href="#" onclick="comingSoon()" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Purchase Return</p>
+            </a>
+          </li>
+
+          <!-- Purchase Import -->
+          <li class="nav-item">
+            <a href="#" onclick="comingSoon()" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Purchase Import</p>
+            </a>
+          </li>
+
+          <!-- Vendors -->
+          <li class="nav-item">
+            <a href="#" onclick="comingSoon()" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Vendors</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+
+
+        <!-- Report Menu -->
         @can('report-menu')  
         <li class="nav-item {{ $isReportActive ? 'menu-open' : '' }}">
           <a href="#" class="nav-link {{ $isReportActive ? 'active' : '' }}">
