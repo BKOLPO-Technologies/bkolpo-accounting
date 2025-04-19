@@ -397,7 +397,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/projects/sales/{id}', [ProjectController::class, 'projectsSales'])->name('projects.sales');
     Route::get('/project/details', [ProjectController::class, 'getProjectDetails'])->name('project.get.details');
     Route::post('/product/store2', [ProjectController::class, 'AdminProductStore2'])->name('admin.Product2.store');
-
+    Route::get('/product/modal', [ProjectController::class, 'AdminProductModal'])->name('admin.product.modal');
 
     /* ==================== Project Payment Receipt Controller =================== */
     Route::prefix('project/payment/receipt')->group(function () {

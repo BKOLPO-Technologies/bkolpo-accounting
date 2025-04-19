@@ -185,7 +185,6 @@
                                                     <tr>
                                                         <td style="width:20%;">
                                                             <div class="input-group">
-                                                                {{-- <select class="item-select select2 form-control" name="items[]" id="product_id" required> --}}
                                                                 <select class="item-select select2 form-control" name="items[]" required>
                                                                     <option value="">Select Item</option>
                                                                     @foreach($products as $product)
@@ -193,6 +192,7 @@
                                                                             value="{{ $product->id }}" 
                                                                             data-description="{{ $product->description }}"
                                                                             data-unit="{{ $product->unit_id }}"
+                                                                            data-price="{{ $product->price }}"
                                                                         >
                                                                             {{ $product->name }}
                                                                         </option>
@@ -386,11 +386,17 @@
 
 <!-- Modal for creating a new product -->
 @include('backend.admin.inventory.project.product_modal')
+{{-- <div id="modalContainer"></div> --}}
 
 @endsection
 @push('js')
 <script>
     let activeProductSelect = null;
+
+    function generateProductCode() {
+        const randomStr = Math.random().toString(36).substring(2, 7).toUpperCase();
+        return 'PRD' + randomStr;
+    }
 
     $(document).ready(function () {
         $('.select2').select2();
@@ -451,18 +457,13 @@
 
             // Get unit ID
             const unitId = selectedOption.data('unit');
-
-            //console.log('Selected unit ID:', unitId);
-            //console.log('Available unit options:', row.find('.unit-select').html());
-
-            // Set unit select
-            $(this).closest('tr').find('.unit-select').val(unitId);
-
-            // Get the description from the data-description attribute
             const description = selectedOption.data('description');
-
-            // Find the corresponding textarea in the same row and set the description
+            const price = selectedOption.data('price');
+            
+            $(this).closest('tr').find('.unit-select').val(unitId);
             $(this).closest('tr').find('.item-description').val(description);
+            $(this).closest('tr').find('.unit-price').val(price);
+            calculateTotal();
         });
 
         // Add row functionality
@@ -479,6 +480,7 @@
                                         value="{{ $product->id }}" 
                                         data-description="{{ $product->description }}"
                                         data-unit="{{ $product->unit_id }}"
+                                        data-price="{{ $product->price }}"
                                     >
                                         {{ $product->name }}
                                     </option>
@@ -614,6 +616,11 @@
 
     $(document).on('click', '.open-product-modal', function () {
         activeProductSelect = $(this).closest('tr').find('.item-select');
+
+        // Generate code with JS instead of backend
+        const generatedCode = generateProductCode();
+        $('#new_product_code').val(generatedCode);
+        
         $('#createProductModal').modal('show');
     });
 
@@ -627,7 +634,7 @@
             type: 'POST',
             data: formData,
             success: function(response) {
-                console.log(response);
+                //console.log(response);
                 if (response.success) {
                     // Close the modal
                     $('#createProductModal').modal('hide');
@@ -642,23 +649,8 @@
                         'data-name': response.product.name,
                         'data-description': response.product.description,
                         'data-unit': response.product.unit_id,
+                        'data-price': response.product.price,
                     });
-
-                    // // // Insert new Product AFTER "Select product" option
-                    // // $('#product_id option:first').after(newOption);
-
-                    // // // Select the newly added product
-                    // // $('#product_id').val(response.product.id).trigger('change');
-
-                    // // Insert new Product AFTER "Select product" option
-                    // let selectElement = $('#product_id');
-                    // selectElement.find('option:first').after(newOption);
-
-                    // // Select the newly added product and trigger change
-                    // selectElement.val(response.product.id).trigger('change');
-
-                    // // Re-initialize select2 if necessary (optional)
-                    // selectElement.select2();
 
                     // ✅ Use the dynamically tracked dropdown
                     if (activeProductSelect) {

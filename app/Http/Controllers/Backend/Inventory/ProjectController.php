@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\Category;
 use App\Models\Purchase;
 use App\Models\ProjectItem;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\JournalVoucher;
 use App\Traits\ProjectSalesTrait;
@@ -97,8 +98,9 @@ class ProjectController extends Controller
       
         $vat = $companyInfo->vat;
         $tax = $companyInfo->tax;
+        $productCode = 'PRD' . strtoupper(Str::random(5));
 
-        return view('backend.admin.inventory.project.create',compact('pageTitle','clients','referance_no','units','products','vat','tax', 'categories')); 
+        return view('backend.admin.inventory.project.create',compact('pageTitle','clients','referance_no','units','products','vat','tax', 'categories', 'productCode')); 
     }
 
     /**
@@ -376,6 +378,16 @@ class ProjectController extends Controller
         $tax = $companyInfo->tax;
 
         return view('backend.admin.inventory.project.edit',compact('pageTitle', 'clients', 'project','units','products','vat','tax', 'categories'));
+    }
+
+    public function AdminProductModal()
+    {
+        Log::info('Hello');
+        $categories = Category::where('status', 1)->latest()->get();
+        $units = Unit::where('status', 1)->latest()->get();
+        $productCode = 'PRD' . strtoupper(Str::random(5));
+
+        return view('backend.admin.inventory.project.product_modal', compact('categories', 'units', 'productCode'));
     }
 
     /**
