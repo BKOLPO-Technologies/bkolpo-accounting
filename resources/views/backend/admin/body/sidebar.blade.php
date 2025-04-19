@@ -287,7 +287,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="#"  onclick="comingSoon()" class="nav-link">
+              <a href="{{ route('journal-voucher.index') }}" class="nav-link {{ Route::is('journal-voucher.index', 'journal-voucher.create', 'journal-voucher.manually.capital.create') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Journal</p>
               </a>
