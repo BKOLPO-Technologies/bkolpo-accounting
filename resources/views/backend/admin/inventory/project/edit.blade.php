@@ -190,7 +190,7 @@
                                                     @foreach($project->items as $item)
                                                         <tr>
                                                             <input type="hidden" name="item_ids[]" value="{{ $item->id }}">
-                                                            <td style="width:20%;">
+                                                            <td style="width: 25%;">
                                                                 <div class="input-group">
                                                                     <select class="item-select select2 form-control" name="items[]" required>
                                                                         <option value="">Select Item</option>
