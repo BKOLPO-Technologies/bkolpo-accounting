@@ -5,8 +5,9 @@ use Carbon\Carbon;
 use App\Models\Sale;
 use App\Models\Unit;
 use App\Models\Client;
-use App\Models\Project;
 use App\Models\Product;
+use App\Models\Project;
+use App\Models\Category;
 use App\Models\Purchase;
 use App\Models\ProjectItem;
 use Illuminate\Http\Request;
@@ -57,6 +58,7 @@ class ProjectController extends Controller
         // // Combine the timestamp, random number, and full date
         // $referance_no = 'BCL-PR-'.$fullDate.' - '.$randomNumber;
         $units = Unit::where('status',1)->latest()->get();
+        $categories = Category::all();
         $products = Product::where('status',1)->latest()->get();
 
         $companyInfo = get_company(); // Fetch company info
@@ -96,7 +98,7 @@ class ProjectController extends Controller
         $vat = $companyInfo->vat;
         $tax = $companyInfo->tax;
 
-        return view('backend.admin.inventory.project.create',compact('pageTitle','clients','referance_no','units','products','vat','tax')); 
+        return view('backend.admin.inventory.project.create',compact('pageTitle','clients','referance_no','units','products','vat','tax', 'categories')); 
     }
 
     /**
@@ -201,6 +203,71 @@ class ProjectController extends Controller
             DB::rollBack(); // Rollback transaction on error
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
+    }
+
+    public function AdminProductStore2(Request $request)
+    {
+        //dd($request->all());
+        //Log::info('AdminProductStore2 called with request:', $request->all());
+
+        DB::beginTransaction(); // Start a database transaction
+
+        try {
+            // Validate the incoming request
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'category_id' => 'required',
+                'unit_id' => 'required',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
+            //Log::info('AdminProductStore2 2nd time:', $request->all());
+
+            //$productCode = 'PRD' . strtoupper(Str::random(5));
+
+            // Store the product with the validated data
+            $product =  Product::create([
+                'name' => $request->name,
+                'product_code' => $request->code,
+                'price' => $request->price ?? 0, // Store null if not provided
+                'description' => $request->description ?? null, // Store null if not provided
+                'status' => $request->status ?? 1, // Default to active if not provided
+                'category_id' => $request->category_id,
+                'unit_id' => $request->unit_id,
+            ]);
+
+            //Log::info('AdminProductStore2 3rd time:', $product->toArray());
+
+            // if ($request->hasFile('image')) {
+            //     @unlink(public_path('upload/inventory/products' . $product->image)); // Delete old logo
+            //     $file = $request->file('image');
+            //     $filename = date('YmdHi') . $file->getClientOriginalName();
+            //     $file->move(public_path('upload/inventory/products'), $filename);
+            //     $product->image = $filename;
+            // }
+            
+            $product->save();
+
+            //Log::info('Product:', $product->toArray());
+
+            DB::commit();
+
+            return response()->json([
+                'success'  => true,
+                'message'  => 'Product created successfully!',
+                'product' => $product,
+            ]);
+    
+        } catch (QueryException $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'success'  => false,
+                'message'  => 'Database error: ' . $e->getMessage(),
+            ]);
+        }
+        
     }
 
     /**

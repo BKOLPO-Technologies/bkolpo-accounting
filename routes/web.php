@@ -396,7 +396,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/projects/delete/{id}', [ProjectController::class, 'destroy'])->name('projects.destroy');
     Route::get('/projects/sales/{id}', [ProjectController::class, 'projectsSales'])->name('projects.sales');
     Route::get('/project/details', [ProjectController::class, 'getProjectDetails'])->name('project.get.details');
-
+    Route::post('/product/store2', [ProjectController::class, 'AdminProductStore2'])->name('admin.Product2.store');
 
 
     /* ==================== Project Payment Receipt Controller =================== */
