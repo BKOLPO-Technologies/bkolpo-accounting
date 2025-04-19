@@ -190,22 +190,28 @@
                                                     @foreach($project->items as $item)
                                                         <tr>
                                                             <input type="hidden" name="item_ids[]" value="{{ $item->id }}">
-                                                            <td>
-                                                                <!-- Select Dropdown for Item Selection -->
-                                                                <select class="item-select form-control" name="items[]" required>
-                                                                    <option value="">Select Item</option>
-                                                                    @foreach($products as $product)
-                                                                        <option value="{{ $product->id }}" 
-                                                                            data-description="{{ $product->description }}"
-                                                                            data-unit="{{ $product->unit_id }}"
-                                                                            @if($item->items == $product->id) selected @endif>
-                                                                            {{ $product->name }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
+                                                            <td style="width:20%;">
+                                                                <div class="input-group">
+                                                                    <select class="item-select select2 form-control" name="items[]" required>
+                                                                        <option value="">Select Item</option>
+                                                                        @foreach($products as $product)
+                                                                            <option value="{{ $product->id }}" 
+                                                                                data-description="{{ $product->description }}"
+                                                                                data-unit="{{ $product->unit_id }}"
+                                                                                @if($item->items == $product->id) selected @endif>
+                                                                                {{ $product->name }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                    <div class="input-group-append">
+                                                                        <button type="button" class="btn btn-danger open-product-modal" data-toggle="modal" data-target="#createProductModal">
+                                                                            <i class="fas fa-plus"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
                                                             </td>
 
-                                                            <td style="width:20%;">
+                                                            <td style="width: 15%;">
                                                                 <!-- Textarea for Item Description -->
                                                                 {{-- <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required>
                                                                     {{ old('items_description.' . $loop->index, $item->items_description) }}
@@ -213,7 +219,7 @@
                                                                 <input type="text" class="item-description form-control" name="items_description[]" value={{ old('items_description.' . $loop->index, $item->items_description) }}>
                                                             </td>
 
-                                                            <td>
+                                                            <td style="width: 20%;">
                                                                 <select name="order_unit[]" class="unit-select form-control" required>
                                                                     <option value="" disabled selected>Select Unit</option>
                                                                     @foreach($units as $unit)
@@ -224,12 +230,12 @@
                                                                     @endforeach
                                                                 </select>
                                                             </td>                                                            
-                                                            <td>
+                                                            <td style="width:15%;">
                                                                 <input type="number" name="unit_price[]" class="form-control unit-price" 
                                                                     value="{{ old('unit_price.' . $loop->index, $item->unit_price) }}" 
                                                                     placeholder="Enter Unit Price" min="0" required style="text-align: right;">
                                                             </td>
-                                                            <td>
+                                                            <td style="width:15%;">
                                                                 <input type="number" name="quantity[]" class="form-control quantity" 
                                                                     value="{{ old('quantity.' . $loop->index, $item->quantity) }}" 
                                                                     placeholder="Enter Quantity" min="1" required>
@@ -244,7 +250,7 @@
                                                                     value="{{ old('discount.' . $loop->index, $item->discount) }}" 
                                                                     placeholder="Enter Discount" min="0">
                                                             </td> --}}
-                                                            <td>
+                                                            <td style="width:15%;">
                                                                 <input type="text" name="total[]" class="form-control total" 
                                                                     value="{{ old('total.' . $loop->index, $item->total) }}" 
                                                                     readonly style="text-align: right;">
@@ -258,7 +264,7 @@
                                                                 @else
                                                                     <!-- Other rows get the "-" button -->
                                                                     <button type="button" class="btn btn-danger btn-sm remove-row">
-                                                                        <i class="fas fa-minus"></i>
+                                                                        <i class="fas fa-trash"></i>
                                                                     </button>
                                                                 @endif
                                                             </td>
@@ -455,156 +461,169 @@
 <!-- Modal for creating a new client -->
 @include('backend.admin.inventory.client.client_modal')
 
+<!-- Modal for creating a new product -->
+@include('backend.admin.inventory.project.product_modal')
+
 @endsection
 @push('js')
 <script>
-   $(document).ready(function () {
-    $('.select2').select2();
+    $(document).ready(function () {
+        $('.select2').select2();
 
-    function calculateTotal() {
-        let subtotal = 0;
-        let totalDiscount = parseFloat($('#total_discount').val()) || 0;
-        let transportCost = parseFloat($('#transport_cost').val()) || 0;
-        let carryingCharge = parseFloat($('#carrying_charge').val()) || 0;
+        function calculateTotal() {
+            let subtotal = 0;
+            let totalDiscount = parseFloat($('#total_discount').val()) || 0;
+            let transportCost = parseFloat($('#transport_cost').val()) || 0;
+            let carryingCharge = parseFloat($('#carrying_charge').val()) || 0;
 
-        // Loop through product rows to calculate subtotal
-        $('#product-tbody tr').each(function () {
-            let price = parseFloat($(this).find('.unit-price').val()) || 0;
-            let quantity = parseFloat($(this).find('.quantity').val()) || 0;
-            let discount = parseFloat($(this).find('.discount').val()) || 0;
+            // Loop through product rows to calculate subtotal
+            $('#product-tbody tr').each(function () {
+                let price = parseFloat($(this).find('.unit-price').val()) || 0;
+                let quantity = parseFloat($(this).find('.quantity').val()) || 0;
+                let discount = parseFloat($(this).find('.discount').val()) || 0;
 
-            let rowSubtotal = price * (quantity || 1);
-            let rowTotal = rowSubtotal - discount;
+                let rowSubtotal = price * (quantity || 1);
+                let rowTotal = rowSubtotal - discount;
 
-            subtotal += rowTotal;
-            $(this).find('.subtotal').val(rowSubtotal.toFixed(2));
-            $(this).find('.total').val(rowTotal.toFixed(2));
+                subtotal += rowTotal;
+                $(this).find('.subtotal').val(rowSubtotal.toFixed(2));
+                $(this).find('.total').val(rowTotal.toFixed(2));
+            });
+
+            $('#subtotal').val(subtotal.toFixed(2));
+
+            // Calculate Net Amount (subtotal - discount + transport cost + carrying charge)
+            let netAmount = subtotal - totalDiscount + transportCost + carryingCharge;
+            $('#total_netamount').val(netAmount.toFixed(2));
+
+            // Calculate Tax on the net amount
+            let taxPercent = $('#include_tax').is(':checked') ? (parseFloat($('#tax').val()) || 0) : 0;
+            let taxAmount = (netAmount * taxPercent) / 100;
+            $('#tax_amount').val(taxAmount.toFixed(2)); // Display TAX amount
+
+            // Calculate the sum of net amount and tax amount
+            let netAmountWithTax = netAmount + taxAmount;
+
+            // Calculate VAT on the sum of net amount + tax amount
+            let vatPercent = $('#include_vat').is(':checked') ? (parseFloat($('#vat').val()) || 0) : 0;
+            let vatAmount = (netAmountWithTax * vatPercent) / 100;
+            $('#vat_amount').val(vatAmount.toFixed(2)); // Display VAT amount
+
+            // Calculate final Grand Total
+            let grandTotal = netAmountWithTax + vatAmount;
+            $('#grand_total').val(grandTotal.toFixed(2)); // Display Grand Total
+        }
+
+        // Trigger calculation on input changes
+        $(document).on('input keyup change', '.unit-price, .quantity, .discount, #transport_cost, #carrying_charge, #vat, #tax, #total_discount', function () {
+            calculateTotal();
         });
 
-        $('#subtotal').val(subtotal.toFixed(2));
+        // Listen for changes on dynamically added or existing 'item-select' elements
+        $(document).on('change', '.item-select', function () {
+            // Get the selected option from the dropdown
+            const selectedOption = $(this).find('option:selected');
 
-        // Calculate Net Amount (subtotal - discount + transport cost + carrying charge)
-        let netAmount = subtotal - totalDiscount + transportCost + carryingCharge;
-        $('#total_netamount').val(netAmount.toFixed(2));
+            // Get the description from the data-description attribute
+            const description = selectedOption.data('description');
 
-        // Calculate Tax on the net amount
-        let taxPercent = $('#include_tax').is(':checked') ? (parseFloat($('#tax').val()) || 0) : 0;
-        let taxAmount = (netAmount * taxPercent) / 100;
-        $('#tax_amount').val(taxAmount.toFixed(2)); // Display TAX amount
+            // Find the corresponding textarea in the same row and set the description
+            $(this).closest('tr').find('.item-description').val(description);
 
-        // Calculate the sum of net amount and tax amount
-        let netAmountWithTax = netAmount + taxAmount;
+            // Get unit ID
+            const unitId = selectedOption.data('unit');
 
-        // Calculate VAT on the sum of net amount + tax amount
-        let vatPercent = $('#include_vat').is(':checked') ? (parseFloat($('#vat').val()) || 0) : 0;
-        let vatAmount = (netAmountWithTax * vatPercent) / 100;
-        $('#vat_amount').val(vatAmount.toFixed(2)); // Display VAT amount
+            // Set unit select
+            $(this).closest('tr').find('.unit-select').val(unitId);
 
-        // Calculate final Grand Total
-        let grandTotal = netAmountWithTax + vatAmount;
-        $('#grand_total').val(grandTotal.toFixed(2)); // Display Grand Total
-    }
+            // Get the description from the data-description attribute
+            const quantity = 1;
 
-    // Trigger calculation on input changes
-    $(document).on('input keyup change', '.unit-price, .quantity, .discount, #transport_cost, #carrying_charge, #vat, #tax, #total_discount', function () {
+            //console.log(quantity);
+
+            // Find the corresponding textarea in the same row and set the description
+            $(this).closest('tr').find('.quantity').val(quantity);
+        });
+
+        // Add row
+        $(document).on('click', '.add-row', function () {
+            let newRow = `
+                <tr>
+                    <td style="width:20%;">
+                        <div class="input-group">
+                            <select class="item-select form-control" name="items[]" required>
+                                <option value="">Select Item</option>
+                                @foreach($products as $product)
+                                    <option value="{{ $product->id }}" data-description="{{ $product->description }}" data-unit="{{ $product->unit_id }}">
+                                        {{ $product->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-danger open-product-modal" data-toggle="modal" data-target="#createProductModal">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="width:15%;">
+                        <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required></textarea>
+                    </td>
+                    <td style="width:20%;">
+                        <select name="order_unit[]" class="unit-select form-control" required>
+                            <option value="" disabled selected>Select Unit</option>
+                            @foreach($units as $unit)
+                                <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td style="width:15%;">
+                        <input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" required style="text-align: right;">
+                    </td>
+                    <td style="width:15%;">
+                        <input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required>
+                    </td>
+                    <td style="width:15%;">
+                        <input type="text" name="total[]" class="form-control total" readonly style="text-align: right;">
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            $('#product-tbody').append(newRow);
+            $('#product-tbody .item-select').last().select2();
+        });
+
+        // Remove row
+        $(document).on('click', '.remove-row', function () {
+            $(this).closest('tr').remove();
+            calculateTotal();
+        });
+
+        // VAT/TAX checkbox toggles
+        $('#include_vat').on('change', function () {
+            $('#vat').prop('disabled', !this.checked);
+            calculateTotal();
+        });
+
+        $('#include_tax').on('change', function () {
+            $('#tax').prop('disabled', !this.checked);
+            calculateTotal();
+        });
+
+        // Manual change in VAT/TAX input triggers calculation
+        $('#vat, #tax').on('input keyup change', function () {
+            calculateTotal();
+        });
+
+        // Initialize states
+        $('#vat').prop('disabled', !$('#include_vat').is(':checked'));
+        $('#tax').prop('disabled', !$('#include_tax').is(':checked'));
+
+        // Initial calculation
         calculateTotal();
     });
 
-    // Listen for changes on dynamically added or existing 'item-select' elements
-    $(document).on('change', '.item-select', function () {
-        // Get the selected option from the dropdown
-        const selectedOption = $(this).find('option:selected');
-
-        // Get the description from the data-description attribute
-        const description = selectedOption.data('description');
-
-        // Find the corresponding textarea in the same row and set the description
-        $(this).closest('tr').find('.item-description').val(description);
-
-        // Get unit ID
-        const unitId = selectedOption.data('unit');
-
-        // Set unit select
-        $(this).closest('tr').find('.unit-select').val(unitId);
-
-        // Get the description from the data-description attribute
-        const quantity = 1;
-
-        //console.log(quantity);
-
-        // Find the corresponding textarea in the same row and set the description
-        $(this).closest('tr').find('.quantity').val(quantity);
-    });
-
-    // Add row
-    $(document).on('click', '.add-row', function () {
-        let newRow = `
-            <tr>
-                <td>
-                    <select class="item-select form-control" name="items[]" required>
-                        <option value="">Select Item</option>
-                        @foreach($products as $product)
-                            <option value="{{ $product->id }}" data-description="{{ $product->description }}" data-unit="{{ $product->unit_id }}">
-                                {{ $product->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </td>
-                <td style="width:20%;">
-                    <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required></textarea>
-                </td>
-                <td>
-                    <select name="order_unit[]" class="unit-select form-control" required>
-                        <option value="" disabled selected>Select Unit</option>
-                        @foreach($units as $unit)
-                            <option value="{{ $unit->id }}">{{ $unit->name }}</option>
-                        @endforeach
-                    </select>
-                </td>
-                <td><input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" required style="text-align: right;"></td>
-                <td><input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required></td>
-                <td><input type="text" name="total[]" class="form-control total" readonly style="text-align: right;"></td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
-                </td>
-            </tr>`;
-        $('#product-tbody').append(newRow);
-    });
-
-    // Remove row
-    $(document).on('click', '.remove-row', function () {
-        $(this).closest('tr').remove();
-        calculateTotal();
-    });
-
-    // VAT/TAX checkbox toggles
-    $('#include_vat').on('change', function () {
-        $('#vat').prop('disabled', !this.checked);
-        calculateTotal();
-    });
-
-    $('#include_tax').on('change', function () {
-        $('#tax').prop('disabled', !this.checked);
-        calculateTotal();
-    });
-
-    // Manual change in VAT/TAX input triggers calculation
-    $('#vat, #tax').on('input keyup change', function () {
-        calculateTotal();
-    });
-
-    // Initialize states
-    $('#vat').prop('disabled', !$('#include_vat').is(':checked'));
-    $('#tax').prop('disabled', !$('#include_tax').is(':checked'));
-
-    // Initial calculation
-    calculateTotal();
-});
-
-</script>
-
-
-<script> 
     $('#createClientForm').on('submit', function(e) {
         e.preventDefault(); // Prevent default form submission
 
@@ -664,5 +683,75 @@
             }
         });
     });
+
+    $(document).on('click', '.open-product-modal', function () {
+        activeProductSelect = $(this).closest('tr').find('.item-select');
+        $('#createProductModal').modal('show');
+    });
+
+    $('#createProductForm').on('submit', function(e) {
+        e.preventDefault();
+
+        let formData = $(this).serialize();
+
+        $.ajax({
+            url: '{{ route('admin.Product2.store') }}',
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                console.log(response);
+                if (response.success) {
+                    // Close the modal
+                    $('#createProductModal').modal('hide');
+                    
+                    // Clear form inputs
+                    $('#createProductForm')[0].reset();
+
+                    // Create a new option with data attributes
+                    let newOption = $('<option>', {
+                        value: response.product.id,
+                        text: response.product.name,
+                        'data-name': response.product.name,
+                        'data-description': response.product.description,
+                        'data-unit': response.product.unit_id,
+                    });
+
+                    // // // Insert new Product AFTER "Select product" option
+                    // // $('#product_id option:first').after(newOption);
+
+                    // // // Select the newly added product
+                    // // $('#product_id').val(response.product.id).trigger('change');
+
+                    // // Insert new Product AFTER "Select product" option
+                    // let selectElement = $('#product_id');
+                    // selectElement.find('option:first').after(newOption);
+
+                    // // Select the newly added product and trigger change
+                    // selectElement.val(response.product.id).trigger('change');
+
+                    // // Re-initialize select2 if necessary (optional)
+                    // selectElement.select2();
+
+                    // ✅ Use the dynamically tracked dropdown
+                    if (activeProductSelect) {
+                        activeProductSelect.find('option:first').after(newOption);
+                        activeProductSelect.val(response.product.id).trigger('change');
+
+                        // Re-initialize Select2 if needed
+                        activeProductSelect.select2();
+                    }
+
+                    // Show success message
+                    toastr.success('Product added successfully!');
+                } else {
+                    toastr.error('Something went wrong. Please try again.');
+                }
+            },
+            error: function(response) {
+            }
+        });
+    });
+
 </script>
+
 @endpush

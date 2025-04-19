@@ -361,6 +361,7 @@ class ProjectController extends Controller
         $pageTitle = 'Project Edit';
 
         $clients = Client::latest()->get();
+        $categories = Category::all();
 
         $project = Project::where('id', $id)
             ->with(['client', 'items']) 
@@ -374,7 +375,7 @@ class ProjectController extends Controller
         $vat = $companyInfo->vat;
         $tax = $companyInfo->tax;
 
-        return view('backend.admin.inventory.project.edit',compact('pageTitle', 'clients', 'project','units','products','vat','tax'));
+        return view('backend.admin.inventory.project.edit',compact('pageTitle', 'clients', 'project','units','products','vat','tax', 'categories'));
     }
 
     /**

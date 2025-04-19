@@ -103,7 +103,7 @@
                         <i class="fas fa-times"></i> Close
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Save Client
+                        <i class="fas fa-save"></i> Create Product
                     </button>
                 </div>
             </form>
