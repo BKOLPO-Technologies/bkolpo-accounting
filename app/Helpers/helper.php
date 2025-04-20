@@ -40,6 +40,13 @@ function number2word($number)
         return $numto->bnMoney($number) . ' মাত্র';
     }
 }
+
+function convertNumberToWords($number)
+{
+    $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+    return ucfirst($f->format($number)) . ' only';
+}
+
 function en2bn($number)
 {
     $lang = 'en';

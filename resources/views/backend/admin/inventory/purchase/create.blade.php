@@ -170,7 +170,7 @@
                                                 <tr>
                                                     <th>Category</th>
                                                     <th>Item</th>
-                                                    <th>Speciphication</th>
+                                                    <th>Specifications</th>
                                                     <th>Price</th>
                                                     <th>Quantity</th>
                                                     <th>Unit</th>
