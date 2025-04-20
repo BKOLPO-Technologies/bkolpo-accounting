@@ -155,7 +155,8 @@
                                                 @foreach ($sale->saleProducts as $product)
                                                 <tr>
                                                     <td class="col-3" style="width: 17%">
-                                                        <input type="text" name="description[]" class="form-control" value="{{ $product->item->items }}" placeholder="Enter Item Description" readonly required>
+                                                        {{-- <input type="text" name="description[]" class="form-control" value="{{ $product->item->items }}" placeholder="Enter Item Description" readonly required> --}}
+                                                        <input type="text" name="description[]" class="form-control" value="{{ $product->item->product->name }}" placeholder="Enter Item Description" readonly required>
                                                         <input type="hidden" name="item_id[]" value="{{ $product->item->id }}">
                                                     </td>
                                                     
