@@ -208,10 +208,11 @@
                                                         </td>
 
                                                         <td style="width:15%;">
-                                                            <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required></textarea>
+                                                            {{-- <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required></textarea> --}}
+                                                            <input type="text" class="item-description form-control" name="items_description[]" >
                                                         </td>
 
-                                                        <td style="width:20%;">
+                                                        <td style="width: 11%;">
                                                             <select name="order_unit[]" class="unit-select form-control" required>
                                                                 <option value="" disabled selected>Select Unit</option>
                                                                 @foreach($units as $unit)
@@ -493,11 +494,10 @@
                             </div>
                         </div>
                     </td>
-
                     <td style="width:15%;">
-                        <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required></textarea>
+                        <input type="text" class="item-description form-control" name="items_description[]" required>
                     </td>
-                    <td style="width:20%;">
+                     <td style="width: 11%;">
                         <select name="order_unit[]" class="unit-select form-control" required>
                             <option value="" disabled selected>Select Unit</option>
                             @foreach($units as $unit)

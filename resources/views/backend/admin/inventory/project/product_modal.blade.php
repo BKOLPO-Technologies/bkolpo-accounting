@@ -33,7 +33,7 @@
 
                             <!-- Unit Name -->
                             <div class="form-group">
-                                <label for="unit_id">Unit</label>
+                                <label for="unit_id">Unit Name</label>
                                 <select name="unit_id" id="unit_id" class="form-control select2" required>
                                     <option value="">Select Unit</option>
                                     @foreach($units as $unit)
@@ -42,6 +42,14 @@
                                         </option>
                                     @endforeach
                                 </select>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="form-group">
+                                <label for="new_description">Description</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="new_description" name="description" placeholder="Enter Short Description">
+                                </div>
                             </div>
 
                         </div>
@@ -69,12 +77,24 @@
                                 </div>
                             </div>
 
-                            <!-- Description -->
+                            <!-- Group Name -->
                             <div class="form-group">
-                                <label for="new_description">Description</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="new_description" name="description" placeholder="Enter Short Description">
-                                </div>
+                                <label for="group_name">Group Name</label>
+                                <select name="group_name" id="group_name" class="form-control select2">
+                                    <option value="">Select Group</option>
+                                    <option value="sales" {{ old('group_name') == 'sales' ? 'selected' : '' }}>Sales</option>
+                                    <option value="purchases" {{ old('group_name') == 'purchases' ? 'selected' : '' }}>Purchases</option>
+                                </select>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="form-group">
+                                <label for="status">Status</label>
+                                <select name="status" id="status" class="form-control select2">
+                                    <option value="">Select Group</option>
+                                    <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Active</option>
+                                    <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Inactive</option>
+                                </select>
                             </div>
                             
                         </div>

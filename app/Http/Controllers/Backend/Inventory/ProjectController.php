@@ -237,6 +237,7 @@ class ProjectController extends Controller
                 'status' => $request->status ?? 1, // Default to active if not provided
                 'category_id' => $request->category_id,
                 'unit_id' => $request->unit_id,
+                'group_name' => $request->group_name,
             ]);
 
             //Log::info('AdminProductStore2 3rd time:', $product->toArray());
