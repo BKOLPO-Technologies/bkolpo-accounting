@@ -166,7 +166,7 @@ class ProductController extends Controller
             $products = Product::all();
         } else {
             // Filter products by selected category
-            $products = Product::where('category_id', $categoryId)->with('unit')->get();
+            $products = Product::where('category_id', $categoryId)->where('group_name', 'purchases')->with('unit')->get();
         }
 
         $category = Category::find($categoryId);

@@ -35,7 +35,7 @@ class PurchaseController extends Controller
     {
         $suppliers = Supplier::orderBy('id', 'desc')->get();
 
-        $products = Product::where('status',1)->with('unit')->latest()->get();
+        $products = Product::where('status',1)->where('group_name', 'purchases')->with('unit')->latest()->get();
         $categories = Category::where('status',1)->latest()->get();
         $projects = Project::where('project_type','Running')->latest()->get();
         $pageTitle = 'Purchase';

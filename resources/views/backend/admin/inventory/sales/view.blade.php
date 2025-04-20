@@ -145,7 +145,7 @@
                                         <div class="col-lg-8">
                                             <div class="mt-4">
                                                 <strong>Amount in Words:</strong>
-                                                <em>{{ convertNumberToWords($sale->grand_total) }}</em>
+                                                <strong><em>{{ convertNumberToWords($sale->grand_total) }}</em></strong>
                                             </div>                                            
                                         </div>
                                         <div class="col-lg-4">
