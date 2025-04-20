@@ -146,16 +146,16 @@ class ProjectsSeeder extends Seeder
 
         $itemsMap = [
             'Project Titan' => [
-                ['items' => 'Titan Beam', 'unit_id' => 1, 'unit_price' => 120, 'quantity' => 8],
-                ['items' => 'Titan Panel', 'unit_id' => 2, 'unit_price' => 90, 'quantity' => 12],
+                ['items' => 1, 'unit_id' => 1, 'unit_price' => 120, 'quantity' => 8],
+                ['items' => 2, 'unit_id' => 2, 'unit_price' => 90, 'quantity' => 12],
             ],
             'Project Everest' => [
-                ['items' => 'Everest Steel', 'unit_id' => 1, 'unit_price' => 140, 'quantity' => 5],
-                ['items' => 'Everest Bolt', 'unit_id' => 2, 'unit_price' => 75, 'quantity' => 15],
+                ['items' => 3, 'unit_id' => 3, 'unit_price' => 140, 'quantity' => 5],
+                ['items' => 4, 'unit_id' => 4, 'unit_price' => 75, 'quantity' => 15],
             ],
             'Project Horizon' => [
-                ['items' => 'Horizon Glass', 'unit_id' => 3, 'unit_price' => 200, 'quantity' => 6],
-                ['items' => 'Horizon Frame', 'unit_id' => 1, 'unit_price' => 110, 'quantity' => 10],
+                ['items' => 5, 'unit_id' => 5, 'unit_price' => 200, 'quantity' => 6],
+                ['items' => 6, 'unit_id' => 6, 'unit_price' => 110, 'quantity' => 10],
             ],
         ];
 

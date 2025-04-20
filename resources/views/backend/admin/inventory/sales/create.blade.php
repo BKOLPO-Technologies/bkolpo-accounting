@@ -133,7 +133,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Item</th>
-                                                    <th>Speciphication</th>
+                                                    <th>Speciphications</th>
                                                     <th>Order Unit</th>
                                                     <th>Quantity</th>
                                                     <th>Unit Price</th>
@@ -349,7 +349,7 @@
 
 <script>
     const units = @json($units);
-    console.log(units);
+    //console.log(units);
 </script>
 
 <script>
@@ -368,12 +368,13 @@
 
             $('#product-table tbody').empty();
 
-            //console.log(items);
+            // console.log(items);
 
             items.forEach(item => {
                 const itemId = item.id;
                 const itemSpecifications = item.items_description || 'N/A';
-                const itemDesc = item.items || 'N/A';
+                // const itemDesc = item.items || 'N/A';
+                const itemDesc = item.product?.name || 'N/A';
                 const itemQuantity = parseFloat(item.quantity || 0);
                 const itemPrice = parseFloat(item.unit_price || 0);
                 const itemTotal = itemQuantity * itemPrice;
@@ -386,25 +387,25 @@
 
                 const row = `
                     <tr data-product-id="${itemId}">
-                        <td class="col-3">
+                        <td style="width: 15%;">
                             <input type="text" name="description[]" class="form-control" value="${itemDesc}" placeholder="Enter Item Description" readonly required>
                             <input type="hidden" name="item_id[]" value="${itemId}">
                         </td>
-                        <td class="col-2">
+                        <td style="width: 15%;">
                             <input type="text" name="specifications[]" class="form-control" value="${itemSpecifications}" readonly>
                         </td>
-                        <td class="col-2">
+                        <td style="width: 15%;">
                             <select name="order_unit[]" class="form-control" required>
                                 ${unitOptions}
                             </select>
                         </td>
-                        <td class="col-2">
+                        <td style="width: 15%;">
                             <input type="number" name="quantity[]" class="form-control quantity" value="${itemQuantity}" min="1" step="1" required>
                         </td>
-                        <td class="col-2">
+                        <td style="width: 15%;">
                             <input type="number" name="unit_price[]" class="form-control unit-price" value="${itemPrice}" min="0" step="0.01" required style="text-align: right;">
                         </td>
-                        <td class="col-2">
+                        <td style="width: 15%;">
                             <input type="text" name="total[]" class="form-control total" readonly value="${itemTotal.toFixed(2)}" style="text-align: right;">
                         </td>
                         <td>

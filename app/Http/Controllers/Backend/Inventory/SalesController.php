@@ -43,7 +43,7 @@ class SalesController extends Controller
 
         $products = Product::where('status',1)->latest()->get();
         $categories = Category::where('status',1)->latest()->get();
-        $projects = Project::where('project_type','Running')->with('items')->latest()->get();
+        $projects = Project::where('project_type','Running')->with(['items.product'])->latest()->get();
         //dd($projects);
         $pageTitle = 'Invoice';
 
