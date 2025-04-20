@@ -497,7 +497,7 @@
                     <td style="width:15%;">
                         <input type="text" class="item-description form-control" name="items_description[]" required>
                     </td>
-                     <td style="width: 11%;">
+                    <td style="width: 11%;">
                         <select name="order_unit[]" class="unit-select form-control" required>
                             <option value="" disabled selected>Select Unit</option>
                             @foreach($units as $unit)
@@ -505,12 +505,16 @@
                             @endforeach
                         </select>
                     </td>
-                    <td style="width:15%;"><input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required></td>
-                    <td style="width:15%;"><input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" style="text-align: right;" required></td>
+                    <td style="width:15%;">
+                        <input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required>
+                    </td>
+                    <td style="width:15%;">
+                        <input type="number" name="unit_price[]" class="form-control unit-price" min="0" step="0.01" placeholder="Enter Unit Price" style="text-align: right;" required>
+                    </td>
                     <td style="width:15%;">
                         <input type="text" name="total[]" class="form-control total" readonly style="text-align: right;">
                     </td>
-                   <td class="col-1">
+                    <td class="col-1">
                         <button type="button" class="btn btn-success btn-sm me-1 add-row">
                             <i class="fas fa-plus"></i>
                         </button>
@@ -614,15 +618,15 @@
         });
     });
 
-    $(document).on('click', '.open-product-modal', function () {
-        activeProductSelect = $(this).closest('tr').find('.item-select');
+    // $(document).on('click', '.open-product-modal', function () {
+    //     activeProductSelect = $(this).closest('tr').find('.item-select');
 
-        // Generate code with JS instead of backend
-        const generatedCode = generateProductCode();
-        $('#new_product_code').val(generatedCode);
+    //     // Generate code with JS instead of backend
+    //     const generatedCode = generateProductCode();
+    //     $('#new_product_code').val(generatedCode);
         
-        $('#createProductModal').modal('show');
-    });
+    //     $('#createProductModal').modal('show');
+    // });
 
     $('#createProductForm').on('submit', function(e) {
         e.preventDefault();

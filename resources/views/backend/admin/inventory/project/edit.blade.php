@@ -190,7 +190,7 @@
                                                     @foreach($project->items as $item)
                                                         <tr>
                                                             <input type="hidden" name="item_ids[]" value="{{ $item->id }}">
-                                                            <td style="width: 25%;">
+                                                            <td style="width: 20%;">
                                                                 <div class="input-group">
                                                                     <select class="item-select select2 form-control" name="items[]" required>
                                                                         <option value="">Select Item</option>
@@ -198,6 +198,7 @@
                                                                             <option value="{{ $product->id }}" 
                                                                                 data-description="{{ $product->description }}"
                                                                                 data-unit="{{ $product->unit_id }}"
+                                                                                data-price="{{ $product->price }}"
                                                                                 @if($item->items == $product->id) selected @endif>
                                                                                 {{ $product->name }}
                                                                             </option>
@@ -216,10 +217,11 @@
                                                                 {{-- <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required>
                                                                     {{ old('items_description.' . $loop->index, $item->items_description) }}
                                                                 </textarea> --}}
-                                                                <input type="text" class="item-description form-control" name="items_description[]" value={{ old('items_description.' . $loop->index, $item->items_description) }}>
+                                                                {{-- <input type="text" class="item-description form-control" name="items_description[]" value={{ old('items_description.' . $loop->index, $item->items_description) }}> --}}
+                                                                <input type="text" class="item-description form-control" name="items_description[]" value="{{ old('items_description.' . $loop->index, $item->items_description ?? '') }}">
                                                             </td>
 
-                                                            <td style="width: 20%;">
+                                                            <td style="width: 11%;">
                                                                 <select name="order_unit[]" class="unit-select form-control" required>
                                                                     <option value="" disabled selected>Select Unit</option>
                                                                     @foreach($units as $unit)
@@ -240,31 +242,22 @@
                                                                     value="{{ old('quantity.' . $loop->index, $item->quantity) }}" 
                                                                     placeholder="Enter Quantity" min="1" required>
                                                             </td>
-                                                            {{-- <td>
-                                                                <input type="text" name="subtotal[]" class="form-control subtotal" 
-                                                                    value="{{ old('subtotal.' . $loop->index, $item->subtotal) }}" 
-                                                                    readonly>
-                                                            </td> --}}
-                                                            {{-- <td>
-                                                                <input type="number" name="discount[]" class="form-control discount" 
-                                                                    value="{{ old('discount.' . $loop->index, $item->discount) }}" 
-                                                                    placeholder="Enter Discount" min="0">
-                                                            </td> --}}
                                                             <td style="width:15%;">
                                                                 <input type="text" name="total[]" class="form-control total" 
                                                                     value="{{ old('total.' . $loop->index, $item->total) }}" 
                                                                     readonly style="text-align: right;">
                                                             </td>
-                                                            <td class="text-center">
+                                                            <td class="col-1">
                                                                 @if($loop->first)
-                                                                    <!-- First row gets the "+" button -->
                                                                     <button type="button" class="btn btn-success btn-sm add-row">
                                                                         <i class="fas fa-plus"></i>
                                                                     </button>
                                                                 @else
-                                                                    <!-- Other rows get the "-" button -->
-                                                                    <button type="button" class="btn btn-danger btn-sm remove-row">
-                                                                        <i class="fas fa-trash"></i>
+                                                                    <button type="button" class="btn btn-success btn-sm me-1 add-row">
+                                                                        <i class="fas fa-plus"></i>
+                                                                    </button>
+                                                                    <button type="button" class="btn btn-danger btn-sm me-1 remove-row">
+                                                                        <i class="fas fa-minus"></i>
                                                                     </button>
                                                                 @endif
                                                             </td>
@@ -533,36 +526,33 @@
             const selectedOption = $(this).find('option:selected');
 
             // Get the description from the data-description attribute
-            const description = selectedOption.data('description');
-
-            // Find the corresponding textarea in the same row and set the description
-            $(this).closest('tr').find('.item-description').val(description);
-
-            // Get unit ID
             const unitId = selectedOption.data('unit');
-
-            // Set unit select
-            $(this).closest('tr').find('.unit-select').val(unitId);
-
-            // Get the description from the data-description attribute
+            const description = selectedOption.data('description');
             const quantity = 1;
-
-            //console.log(quantity);
+            const price = selectedOption.data('price');
 
             // Find the corresponding textarea in the same row and set the description
             $(this).closest('tr').find('.quantity').val(quantity);
+            $(this).closest('tr').find('.item-description').val(description);
+            $(this).closest('tr').find('.unit-select').val(unitId);
+            $(this).closest('tr').find('.unit-price').val(price);
+            calculateTotal();
         });
 
         // Add row
         $(document).on('click', '.add-row', function () {
             let newRow = `
                 <tr>
-                    <td style="width:25%;">
+                    <td style="width:20%;">
                         <div class="input-group">
-                            <select class="item-select form-control" name="items[]" required>
+                            <select class="item-select select2 form-control" name="items[]" required>
                                 <option value="">Select Item</option>
                                 @foreach($products as $product)
-                                    <option value="{{ $product->id }}" data-description="{{ $product->description }}" data-unit="{{ $product->unit_id }}">
+                                    <option value="{{ $product->id }}" 
+                                        data-description="{{ $product->description }}" 
+                                        data-unit="{{ $product->unit_id }}"
+                                        data-price="{{ $product->price }}"
+                                    >
                                         {{ $product->name }}
                                     </option>
                                 @endforeach
@@ -575,9 +565,9 @@
                         </div>
                     </td>
                     <td style="width:15%;">
-                        <textarea class="item-description form-control" name="items_description[]" rows="1" cols="2" placeholder="Enter Item Description" required></textarea>
+                        <input type="text" class="item-description form-control" name="items_description[]" placeholder="Enter Item Description">
                     </td>
-                    <td style="width:20%;">
+                    <td style="width: 11%;">
                         <select name="order_unit[]" class="unit-select form-control" required>
                             <option value="" disabled selected>Select Unit</option>
                             @foreach($units as $unit)
@@ -598,7 +588,7 @@
                         <button type="button" class="btn btn-success btn-sm me-1 add-row">
                             <i class="fas fa-plus"></i>
                         </button>
-                        <button type="button" class="btn btn-danger btn-sm mt-1 remove-row">
+                        <button type="button" class="btn btn-danger btn-sm me-1 remove-row">
                             <i class="fas fa-minus"></i>
                         </button>
                     </td>
