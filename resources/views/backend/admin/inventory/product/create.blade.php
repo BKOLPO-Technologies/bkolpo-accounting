@@ -124,6 +124,56 @@
 
                     <div class="row">
                         <div class="col-md-6">
+                            <label for="unit_id" class="form-label">Unit Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa fa-network-wired"></i></span>
+                    
+                                <select name="unit_id" id="unit_id" class="form-control select2">
+                                    <option value="">Select unit</option>
+                                    @foreach($units as $unit)
+                                        <option value="{{ $unit->id }}" {{ old('unit_id') == $unit->id ? 'selected' : '' }}>
+                                            {{ $unit->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                    
+                                <div class="input-group-append">
+                                    <button class="btn btn-danger" type="button" id="addUnitBtn" data-toggle="modal" data-target="#createUnitModal">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                    
+                            </div>
+                    
+                            @error('unit_id')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    
+                        <div class="col-md-6">
+                            <label for="group_name" class="form-label">Group Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa fa-users"></i></span>
+                    
+                                <select name="group_name" id="group_name" class="form-control select2">
+                                    <option value="">Select Group</option>
+                                    <option value="sales" {{ old('group_name') == 'sales' ? 'selected' : '' }}>Sales</option>
+                                    <option value="purchases" {{ old('group_name') == 'purchases' ? 'selected' : '' }}>Purchases</option>
+                                </select>
+                    
+                                <div class="input-group-append">
+                                  
+                                </div>
+                            </div>
+                    
+                            @error('group_name')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>                    
+
+                    <div class="row mt-2">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label>Description
                                     @error('description')
@@ -133,34 +183,6 @@
                                 <textarea name="description" placeholder="Enter Product Description" class="form-control">{{ old('description') }}</textarea>
 
                             </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="unit_id" class="form-label">Unit Name</label>
-
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fa fa-network-wired"></i></span>
-
-                                <select name="unit_id" id="unit_id" class="form-control select2">
-                                    <option value="">Select unit</option>
-                                    @foreach($units as $unit)
-                                        <option value="{{ $unit->id }}" {{ old('unit_id') == $unit->id ? 'selected' : '' }}>
-                                            {{ $unit->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-
-                                <div class="input-group-append">
-                                    <button class="btn btn-danger" type="button" id="addUnitBtn" data-toggle="modal" data-target="#createUnitModal">
-                                        <i class="fas fa-plus"></i>
-                                    </button>
-                                </div>
-
-                            </div>
-
-                            @error('unit_id')
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
                         </div>
                     </div>
 

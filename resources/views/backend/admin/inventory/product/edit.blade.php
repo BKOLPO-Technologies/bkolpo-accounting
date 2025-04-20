@@ -113,22 +113,6 @@
 
                     </div>
                     <div class="row">
-
-                        <div class="col-md-6 mb-2">
-                            <label for="status" class="form-label">Status
-                                @error('status')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fa fa-check-circle"></i></span>
-                                <select class="form-control" id="status" name="status">
-                                    <option value="1" {{ old('status', $product->status) == 1 ? 'selected' : '' }}>Active</option>
-                                    <option value="0" {{ old('status', $product->status) == 0 ? 'selected' : '' }}>Inactive</option>
-                                </select>
-                            </div>
-                        </div>
-
                         <div class="col-md-6">
                             <label for="unit_id" class="form-label">Unit Name</label>
 
@@ -151,19 +135,40 @@
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
+                        <div class="col-md-6">
+                            <label for="group_name" class="form-label">Group Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa fa-users"></i></span>
+                    
+                                <select name="group_name" id="group_name" class="form-control select2">
+                                    <option value="">Select Group</option>
+                                    <option value="sales" {{ old('group_name', $product->group_name) == 'sales' ? 'selected' : '' }}>Sales</option>
+                                    <option value="purchases" {{ old('group_name', $product->group_name) == 'purchases' ? 'selected' : '' }}>Purchases</option>
+                                </select>
+                    
+                                <div class="input-group-append">
+                                  
+                                </div>
+                            </div>
+                    
+                            @error('group_name')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>    
+                   
 
                     <div class="row mt-2">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Description</label>
-                                <textarea name="description" class="form-control">{{ old('description', $product->description) }}</textarea>
+                                <textarea name="description" class="form-control" placeholder="Enter Description">{{ old('description', $product->description) }}</textarea>
                             </div>
                         </div>
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-11">
+                        <div class="col-md-5">
                             <div class="form-group">
                                 <label>Image</label>
                                 <input type="file" class="form-control" name="image" id="imageInput">
@@ -179,7 +184,23 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="col-md-6 mb-2">
+                            <label for="status" class="form-label">Status
+                                @error('status')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa fa-check-circle"></i></span>
+                                <select class="form-control" id="status" name="status">
+                                    <option value="1" {{ old('status', $product->status) == 1 ? 'selected' : '' }}>Active</option>
+                                    <option value="0" {{ old('status', $product->status) == 0 ? 'selected' : '' }}>Inactive</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
+                </div>
 
                 </div>
 
