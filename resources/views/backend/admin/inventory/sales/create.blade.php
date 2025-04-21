@@ -392,7 +392,7 @@
                             <input type="hidden" name="item_id[]" value="${itemId}">
                         </td>
                         <td style="width: 15%;">
-                            <input type="text" name="specifications[]" class="form-control" value="${itemSpecifications}" readonly>
+                            <input type="text" name="specifications[]" class="form-control" value="${!! $itemSpecifications !!}" readonly>
                         </td>
                         <td style="width: 15%;">
                             <select name="order_unit[]" class="form-control" required>
