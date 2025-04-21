@@ -391,11 +391,12 @@
                 }
 
                 const sanitizedItemSpecifications = removeSpecialCharacters(itemSpecifications);
+                const sanitizedItemDescSpecifications = removeSpecialCharacters(itemDesc);
 
                 const row = `
                     <tr data-product-id="${itemId}">
                         <td style="width: 15%;">
-                            <input type="text" name="description[]" class="form-control" value="${itemDesc}" placeholder="Enter Item Description" readonly required>
+                            <input type="text" name="description[]" class="form-control" value="${sanitizedItemDescSpecifications}" placeholder="Enter Item Description" readonly required>
                             <input type="hidden" name="item_id[]" value="${itemId}">
                         </td>
                         <td style="width: 15%;">
