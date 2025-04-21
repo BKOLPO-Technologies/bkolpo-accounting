@@ -391,6 +391,7 @@
                 }
 
                 const sanitizedItemSpecifications = removeSpecialCharacters(itemSpecifications);
+                
                 const sanitizedItemDescSpecifications = removeSpecialCharacters(itemDesc);
 
                 const row = `
