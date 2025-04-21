@@ -385,14 +385,21 @@
                     unitOptions += `<option value="${unit.id}" ${selected}>${unit.name}</option>`;
                 });
 
+                function removeSpecialCharacters(str) {
+                    return str.replace(/["]/g, '')  
+                            .replace(/[^\w\s.,!?-]/g, '');  
+                }
+
+                const sanitizedItemSpecifications = removeSpecialCharacters(itemSpecifications);
+
                 const row = `
                     <tr data-product-id="${itemId}">
                         <td style="width: 15%;">
                             <input type="text" name="description[]" class="form-control" value="${itemDesc}" placeholder="Enter Item Description" readonly required>
                             <input type="hidden" name="item_id[]" value="${itemId}">
-                        </td> 
-                        <td style="width: 16%;">
-                            <input type="text" name="specifications[]" class="form-control" value="${!! itemSpecifications !!}" readonly>
+                        </td>
+                        <td style="width: 15%;">
+                            <input type="text" name="specifications[]" class="form-control" value="${sanitizedItemSpecifications}" readonly>
                         </td>
                         <td style="width: 15%;">
                             <select name="order_unit[]" class="form-control" required>
