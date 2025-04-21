@@ -390,8 +390,8 @@
                         <td style="width: 15%;">
                             <input type="text" name="description[]" class="form-control" value="${itemDesc}" placeholder="Enter Item Description" readonly required>
                             <input type="hidden" name="item_id[]" value="${itemId}">
-                        </td>
-                        <td style="width: 15%;">
+                        </td> 
+                        <td style="width: 16%;">
                             <input type="text" name="specifications[]" class="form-control" value="${!! itemSpecifications !!}" readonly>
                         </td>
                         <td style="width: 15%;">
