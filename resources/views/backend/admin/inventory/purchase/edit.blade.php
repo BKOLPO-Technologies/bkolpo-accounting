@@ -130,9 +130,9 @@
                                                     <th>Category</th>
                                                     <th>Item</th>
                                                     <th>Speciphication</th>
+                                                    <th>Unit</th>
                                                     <th>Price</th>
                                                     <th>Quantity</th>
-                                                    <th>Unit</th>
                                                     {{-- <th>Subtotal</th>
                                                     <th>Discount</th> --}}
                                                     <th>Total</th>
@@ -168,13 +168,13 @@
                                                         <input type="text" name="speciphictions[]" class="form-control speciphictions" readonly value="{{ $product->product->description }}">
                                                     </td>
                                                     <td style="width:14% !important;">
-                                                        <input type="number" name="unit_price[]" class="form-control unit-price" readonly value="{{ $product->price }}" style="text-align: right;">
+                                                        <input type="text" name="order_unit[]" class="form-control unit-input" value="{{ $product->product->unit->name }}" required readonly>
+                                                    </td>
+                                                    <td style="width:14% !important;">
+                                                        <input type="number" name="unit_price[]" class="form-control unit-price" value="{{ $product->price }}" style="text-align: right;">
                                                     </td>
                                                     <td style="width:11% !important;">
                                                         <input type="number" name="quantity[]" class="form-control quantity" min="1" value="{{ $product->quantity }}" required>
-                                                    </td>
-                                                    <td style="width:14% !important;">
-                                                        <input type="text" name="order_unit[]" class="form-control unit-input" value="{{ $product->product->unit->name }}" required readonly>
                                                     </td>
                                                     <td style="width:14% !important;">
                                                         <input type="text" name="total[]" class="form-control subtotal" value="{{ $product->price * $product->quantity }}" readonly style="text-align: right;">
@@ -446,7 +446,7 @@
                     if (Array.isArray(response.products) && response.products.length > 0) {
                         
                         response.products.forEach(function(product) {
-                            let unitName = product.unit && product.unit.name ? product.unit.name : 'N/A'; 
+                            let unitName = product.unit && product.unit.name ? product.unit.name : ''; 
 
                             $productSelect.append(`
                                 <option value="${product.id}" 
@@ -503,9 +503,9 @@
                     <td style="width:14% !important;">
                         <input type="text" name="speciphictions[]" class="form-control speciphictions" readonly>
                     </td>
-                    <td><input type="number" name="unit_price[]" class="form-control unit-price" readonly style="text-align: right;"></td>
-                    <td><input type="number" name="quantity[]" class="form-control quantity" value="{{ 1 }}"></td>
                     <td><input type="text" name="order_unit[]" class="form-control unit-input" readonly></td>
+                    <td><input type="number" name="unit_price[]" class="form-control unit-price"  style="text-align: right;"></td>
+                    <td><input type="number" name="quantity[]" class="form-control quantity" value="{{ 1 }}"></td>
                     <td><input type="text" name="total[]" class="form-control subtotal" readonly style="text-align: right;"></td>
                    <td class="col-1">
                         <button type="button" class="btn btn-success btn-sm me-1 add-row">
@@ -589,11 +589,15 @@
 
         // Calculate total for each row
         function calculateRowTotal(row) {
-            const quantity = parseFloat(row.find('.quantity').val()) || 0;
             const unitPrice = parseFloat(row.find('.unit-price').val()) || 0;
-            const subtotal = (quantity * unitPrice).toFixed(2);
-            row.find('.subtotal').val(subtotal);
-            updateSubtotal();
+            const quantity = parseFloat(row.find('.quantity').val()) || 1;
+            const discount = parseFloat(row.find('.product-discount').val()) || 0;
+
+            const subtotal = unitPrice * quantity;
+            const total = subtotal - discount;
+
+            row.find('.subtotal').val(subtotal.toFixed(2));
+            row.find('.total').val(total.toFixed(2));
         }
 
         // Update subtotal and grand total

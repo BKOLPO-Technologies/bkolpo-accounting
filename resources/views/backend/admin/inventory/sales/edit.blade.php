@@ -415,7 +415,7 @@
 
         items.forEach(item => {
             const itemId = item.id;
-            const itemDesc = item.items || 'N/A';
+            const itemDesc = item.items || '';
             const itemQuantity = parseFloat(item.quantity || 0);
             const itemPrice = parseFloat(item.unit_price || 0);
             const itemTotal = itemQuantity * itemPrice;

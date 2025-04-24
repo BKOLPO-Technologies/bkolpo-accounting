@@ -171,9 +171,9 @@
                                                     <th>Category</th>
                                                     <th>Item</th>
                                                     <th>Specifications</th>
+                                                    <th>Unit</th>
                                                     <th>Price</th>
                                                     <th>Quantity</th>
-                                                    <th>Unit</th>
                                                     {{-- <th>Subtotal</th> --}}
                                                     {{-- <th>Discount</th> --}}
                                                     <th>Total</th>
@@ -200,17 +200,17 @@
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <td>
+                                                    <td style="width:7% !important;">
                                                         <input type="text" name="speciphictions[]" class="form-control speciphictions" readonly>
-                                                    </td>
-                                                    <td>
-                                                        <input type="number" name="unit_price[]" class="form-control unit-price" min="0" required readonly style="text-align: right;">
-                                                    </td>
-                                                    <td style="width:15% !important;">
-                                                        <input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required>
                                                     </td>
                                                     <td style="width:7% !important;">
                                                         <input type="text" name="order_unit[]" class="form-control unit-input" required readonly>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" name="unit_price[]" class="form-control unit-price" min="0" required style="text-align: right;">
+                                                    </td>
+                                                    <td style="width:15% !important;">
+                                                        <input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required>
                                                     </td>
                                                     <td>
                                                         <input type="text" name="total[]" class="form-control total" readonly style="text-align: right;">
@@ -478,7 +478,7 @@
                     $productSelect.empty().append('<option value="">Select Product</option>');
                     if (Array.isArray(response.products) && response.products.length > 0) {
                         response.products.forEach(function (product) {
-                            let unitName = product.unit && product.unit.name ? product.unit.name : 'N/A';
+                            let unitName = product.unit && product.unit.name ? product.unit.name : '';
                             $productSelect.append(`
                                 <option value="${product.id}" 
                                         data-id="${product.id}" 
@@ -561,7 +561,7 @@
             calculateTotal();
         });
 
-        $(document).on('input', '.quantity, .product-discount', function () {
+        $(document).on('input', '.quantity, .product-discount, .unit-price', function () {
             let row = $(this).closest('tr');
             let productId = row.find('.product-select').val();
             let unitPrice = parseFloat(row.find('.unit-price').val()) || 0;
@@ -578,6 +578,7 @@
 
             calculateTotal();
         });
+
 
         function calculateTotal() {
             let subtotal = 0;
@@ -650,12 +651,12 @@
                             @endforeach
                         </select>
                     </td>
-                    <td>
+                    <td style="width:7% !important;">
                         <input type="text" name="speciphictions[]" class="form-control speciphictions" readonly>
                     </td>
-                    <td><input type="number" name="unit_price[]" class="form-control unit-price" readonly style="text-align: right;"></td>
-                    <td><input type="number" name="quantity[]" class="form-control quantity" value="1"></td>
                     <td><input type="text" name="order_unit[]" class="form-control unit-input" readonly></td>
+                    <td><input type="number" name="unit_price[]" class="form-control unit-price" style="text-align: right;"></td>
+                    <td><input type="number" name="quantity[]" class="form-control quantity" value="1"></td>
                     <td><input type="text" name="total[]" class="form-control total" readonly style="text-align: right;"></td>
                     <td class="col-1">
                         <button type="button" class="btn btn-success btn-sm me-1 add-row">

@@ -8,14 +8,14 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">{{ $pageTitle ?? 'N/A'}}</h1>
+                    <h1 class="m-0">{{ $pageTitle ?? ''}}</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item">
                             <a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: black;">Home</a>
                         </li>
-                        <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A'}}</li>
+                        <li class="breadcrumb-item active">{{ $pageTitle ?? ''}}</li>
                     </ol>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                 <div class="card card-primary card-outline shadow-lg">
                     <div class="card-header py-2">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                            <h4 class="mb-0">{{ $pageTitle ?? '' }}</h4>
                             <a href="{{ route('admin.sale.index')}}" class="btn btn-sm btn-danger rounded-0">
                                 <i class="fa-solid fa-arrow-left"></i> Back To List
                             </a>
@@ -372,9 +372,9 @@
 
             items.forEach(item => {
                 const itemId = item.id;
-                const itemSpecifications = item.items_description || 'N/A';
+                const itemSpecifications = item.items_description || '';
                 // const itemDesc = item.items || 'N/A';
-                const itemDesc = item.product?.name || 'N/A';
+                const itemDesc = item.product?.name || '';
                 const itemQuantity = parseFloat(item.quantity || 0);
                 const itemPrice = parseFloat(item.unit_price || 0);
                 const itemTotal = itemQuantity * itemPrice;

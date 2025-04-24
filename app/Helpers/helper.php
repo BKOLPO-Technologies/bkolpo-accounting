@@ -41,11 +41,55 @@ function number2word($number)
     }
 }
 
+// function convertNumberToWords($number)
+// {
+//     $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+//     return ucfirst($f->format($number)) . ' only';
+// }
+
 function convertNumberToWords($number)
 {
+    $number = number_format((float)$number, 2, '.', '');
+    $parts = explode('.', $number);
+    $intPart = (int)$parts[0];
+    $decimalPart = isset($parts[1]) ? (int)$parts[1] : 0;
+
+    $crore = floor($intPart / 10000000);
+    $lakh = floor(($intPart % 10000000) / 100000);
+    $thousand = floor(($intPart % 100000) / 1000);
+    $hundred = floor(($intPart % 1000) / 100);
+    $rest = $intPart % 100;
+
     $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
-    return ucfirst($f->format($number)) . ' only';
+
+    $words = [];
+
+    if ($crore) {
+        $words[] = ucfirst($f->format($crore)) . ' crore';
+    }
+    if ($lakh) {
+        $words[] = $f->format($lakh) . ' lakh';
+    }
+    if ($thousand) {
+        $words[] = $f->format($thousand) . ' thousand';
+    }
+    if ($hundred) {
+        $words[] = $f->format($hundred) . ' hundred';
+    }
+    if ($rest) {
+        $words[] = $f->format($rest);
+    }
+
+    $taka = implode(' ', $words) . ' taka';
+
+    if ($decimalPart > 0) {
+        $poisha = $f->format($decimalPart) . ' poisha';
+        $taka .= ' and ' . $poisha;
+    }
+
+    return $taka . ' only';
 }
+
 
 function en2bn($number)
 {
