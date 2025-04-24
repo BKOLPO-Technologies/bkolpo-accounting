@@ -91,11 +91,32 @@
                             </div>
                         </div>
 
+                        <div class="row mt-2 mr-2 text-right">
+                            <div class="col-12">
+                                <button class="btn btn-primary ml-3 mb-3" onclick="printBalanceSheet()">
+                                    <i class="fa fa-print"></i> Print
+                                </button>
+                            </div>
+                        </div>
+
                         <div id="printable-area">
 
                             <h4 class="ml-3 mb-0 print-only">{{ $pageTitle ?? 'N/A' }}</h4>
 
                             <div class="card-body">
+                                <!-- Trial Balance Table -->
+                                <div class="card-header text-center mb-3">
+                                    <h2 class="mb-1">
+                                        <img 
+                                            src="{{ !empty(get_company()->logo) ? url('upload/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
+                                            alt="Company Logo" 
+                                            style="height: 40px; vertical-align: middle; margin-right: 10px;"
+                                        >
+                                        {{ get_company()->name ?? '' }}
+                                    </h2>
+                                    <p class="mb-0"><strong>Project Details</strong></p>
+                                    <p class="mb-0">Date: {{ now()->format('d M, Y') }}</p>
+                                </div>
                                 <table class="table table-bordered">
                                     <tr>
                                         <th>Project Name</th>
@@ -131,7 +152,7 @@
                                     </tr>
                                     <tr>
                                         <th>Terms & Conditions</th>
-                                        <td>{{ $project->terms_conditions ?? 'N/A' }}</td>
+                                        <td>{!! $project->terms_conditions ?? '' !!}</td>
                                     </tr>
                                     {{-- <tr>
                                         <th>Status</th>
@@ -232,6 +253,14 @@
                                             </tr>
                                         </table>
                                     </div>
+                                    
+                                </div>
+                                <div class="col-12 pl-4">
+                                    <!-- Amount in Words: Bottom Left with margin -->
+                                    <div style="margin-top: 20px;">
+                                        <strong>Amount in Words:</strong>
+                                        <strong><em>{{ convertNumberToWords($grandTotal) }}</em></strong>
+                                    </div>
                                 </div>
                             </div>
 
@@ -239,13 +268,7 @@
 
                         <hr/>
 
-                        <div class="row no-print">
-                            <div class="col-12">
-                                <button class="btn btn-primary ml-3 mb-3" onclick="printBalanceSheet()">
-                                    <i class="fa fa-print"></i> Print
-                                </button>
-                            </div>
-                        </div>
+                        
 
                     </div>
                 </div>

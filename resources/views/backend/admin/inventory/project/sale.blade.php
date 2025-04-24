@@ -93,6 +93,26 @@
                         </div>
                         
                         <div class="card-body">
+                            <div class="row text-right">
+                                <div class="col-12">
+                                    <button class="btn btn-primary ml-3 mb-3" onclick="printBalanceSheet()">
+                                        <i class="fa fa-print"></i> Print
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Trial Balance Table -->
+                            <div class="card-header text-center mb-3">
+                                <h2 class="mb-1">
+                                    <img 
+                                        src="{{ !empty(get_company()->logo) ? url('upload/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
+                                        alt="Company Logo" 
+                                        style="height: 40px; vertical-align: middle; margin-right: 10px;"
+                                    >
+                                    {{ get_company()->name ?? '' }}
+                                </h2>
+                                <p class="mb-0"><strong>Project Details</strong></p>
+                                <p class="mb-0">Date: {{ now()->format('d M, Y') }}</p>
+                            </div>
                             <!-- Small boxes (Stat box) -->
                             <div class="row">
                                 <div class="col-lg-3 col-6">
@@ -343,6 +363,11 @@
                                         </table>
                                     </div>
                                 </div>
+                                <!-- Amount in Words: Bottom Left with margin -->
+                                <div class="pl-3" style="margin-top: 20px;">
+                                    <strong>Amount in Words:</strong>
+                                    <strong><em>{{ convertNumberToWords($paidAmount) }}</em></strong>
+                                </div>
                             </div>
                             {{-- End Expense List --}}
 
@@ -491,13 +516,7 @@
 
                         <hr/>
 
-                        <div class="row no-print">
-                            <div class="col-12">
-                                <button class="btn btn-primary ml-3 mb-3" onclick="printBalanceSheet()">
-                                    <i class="fa fa-print"></i> Print
-                                </button>
-                            </div>
-                        </div>
+                        
 
                     </div>
                 </div>

@@ -302,6 +302,10 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
+                                                <div style="margin-top: 10px;">
+                                                    <strong>Amount in Words:</strong>
+                                                    <strong><em>{{ convertNumberToWords($netIncome) }}</em></strong>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

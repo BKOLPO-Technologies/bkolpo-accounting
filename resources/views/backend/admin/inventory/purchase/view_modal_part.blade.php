@@ -1,16 +1,29 @@
-<div class="invoice p-3 mb-3">
+<!-- Print Button -->
+<div class="text-right mb-3">
+    <button onclick="printInvoice()" class="btn btn-primary">
+        <i class="fas fa-print"></i> Print
+    </button>
+</div>
+
+<!-- Printable Invoice -->
+<div class="invoice p-3 mb-3" id="printableArea">
     <div class="row">
         <div class="col-12">
             <h4>
-                <i class="fas fa-globe"></i> Bkolpo Constructions Ltd.
-                {{-- <small class="float-right">{{ now()->format('d M Y') }}</small> --}}
-            </h4>
+                <img 
+                    src="{{ !empty(get_company()->logo) ? url('upload/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
+                    alt="Company Logo" 
+                    style="height: 40px; vertical-align: middle; margin-right: 10px;"
+                >
+                {{ get_company()->name ?? '' }}
+                <small class="float-right" id="current-date"></small>
+            </h4>  
         </div>
     </div>
     <hr>
     <div class="row invoice-info">
         <div class="col-sm-4 invoice-col">
-            <strong>Supplier:</strong><br>
+            <strong>Vendor:</strong><br>
             {{ $purchase->supplier->name }}<br>
             {{ $purchase->supplier->address }}, {{ $purchase->supplier->city }}<br>
             Phone: {{ $purchase->supplier->phone }}<br>
@@ -26,12 +39,7 @@
 
     <!-- Purchase Details -->
     <div style="border: 1px solid #dbdbdb;">
-        <h4 class="text-center mt-2 mb-3" style="
-            text-decoration: underline; 
-            text-decoration-color: #3498db; /* Change underline color */
-            text-decoration-thickness: 3px; /* Adjust underline thickness */
-            text-decoration-skip-ink: auto; /* Ensures the underline doesn't go through descenders like 'g', 'j' */
-        ">
+        <h4 class="text-center mt-2 mb-3" style="text-decoration: underline; text-decoration-color: #3498db; text-decoration-thickness: 3px;">
             <strong>Purchase Details</strong>
         </h4>
         <div class="table-responsive">
@@ -40,17 +48,14 @@
                     <tr>
                         <th>Product</th>
                         <th>Product Code</th>
-                        <th>Speciphication</th>
+                        <th>Specifications</th>
                         <th>Unit Price</th>
                         <th>Quantity</th>
                         <th>Subtotal</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php 
-                        $total = 0; 
-                    @endphp
-
+                    @php $total = 0; @endphp
                     @foreach ($purchase->products as $product)
                         @php
                             $subtotal = (($product->pivot->price * $product->pivot->quantity) - $product->pivot->discount);
@@ -67,13 +72,11 @@
                     @endforeach
 
                     @php
-                        // Fetch additional costs from the purchase table
                         $transportCost = $purchase->transport_cost ?? 0;
                         $carryingCharge = $purchase->carrying_charge ?? 0;
                         $vat = $purchase->vat_amount ?? 0;
                         $tax = $purchase->tax_amount ?? 0;
                         $totalDiscount = $purchase->discount ?? 0;
-
                         $totalVatTax = ($transportCost + $carryingCharge + $vat + $tax) - $totalDiscount;
                         $totalTotal = $total + $totalVatTax;
                     @endphp
@@ -83,14 +86,6 @@
                         <th colspan="5" class="text-right">Subtotal:</th>
                         <th>{{ number_format($total, 2) }}</th>
                     </tr>
-                    {{-- <tr>
-                        <th colspan="3" class="text-right">Transport Cost:</th>
-                        <th>{{ number_format($transportCost, 2) }}</th>
-                    </tr>
-                    <tr>
-                        <th colspan="3" class="text-right">Carrying Charge:</th>
-                        <th>{{ number_format($carryingCharge, 2) }}</th>
-                    </tr> --}}
                     <tr>
                         <th colspan="5" class="text-right">VAT:</th>
                         <th>{{ number_format($vat, 2) }}</th>
@@ -109,20 +104,18 @@
                     </tr>
                 </tfoot>
             </table>
+            <div class="pl-2 pb-2" style="margin-top: 10px;">
+                <strong>Amount in Words:</strong>
+                <strong><em>{{ convertNumberToWords($totalTotal) }}</em></strong>
+            </div>
         </div>
     </div>
-
 
     <br>
 
     <!-- Payment Details -->
     <div style="border: 1px solid #dbdbdb;">
-        <h4 class="text-center mt-2 mb-3" style="
-            text-decoration: underline; 
-            text-decoration-color: #3498db; /* Change underline color */
-            text-decoration-thickness: 3px; /* Adjust underline thickness */
-            text-decoration-skip-ink: auto; /* Ensures the underline doesn't go through descenders like 'g', 'j' */
-        ">
+        <h4 class="text-center mt-2 mb-3" style="text-decoration: underline; text-decoration-color: #3498db; text-decoration-thickness: 3px;">
             <strong>Payment Details</strong>
         </h4>
         <div class="table-responsive">
@@ -166,12 +159,7 @@
 
     <!-- Summary Calculation -->
     <div style="border: 1px solid #dbdbdb;">
-        <h4 class="text-center mt-2 mb-3" style="
-            text-decoration: underline; 
-            text-decoration-color: #3498db; /* Change underline color */
-            text-decoration-thickness: 3px; /* Adjust underline thickness */
-            text-decoration-skip-ink: auto; /* Ensures the underline doesn't go through descenders like 'g', 'j' */
-        ">
+        <h4 class="text-center mt-2 mb-3" style="text-decoration: underline; text-decoration-color: #3498db; text-decoration-thickness: 3px;">
             <strong>Summary</strong>
         </h4>
         <div class="table-responsive">
@@ -191,7 +179,23 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="pl-2 pb-2" style="margin-top: 10px;">
+                <strong>Amount in Words:</strong>
+                <strong><em>{{ convertNumberToWords(number_format($totalTotal - $totalPayment, 2, '.', '')) }}</em></strong>
+            </div>
         </div>
     </div>
-
 </div>
+
+<!-- Print Script -->
+<script>
+    function printInvoice() {
+        const printContents = document.getElementById('printableArea').innerHTML;
+        const originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        location.reload(); // Optional: reload the page to restore state
+    }
+</script>

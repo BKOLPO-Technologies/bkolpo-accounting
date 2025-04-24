@@ -142,14 +142,8 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-8">
-                                            <div class="mt-4">
-                                                <strong>Amount in Words:</strong>
-                                                <strong><em>{{ convertNumberToWords($sale->grand_total) }}</em></strong>
-                                            </div>                                            
-                                        </div>
+                                        <div class="col-lg-8"></div>
                                         <div class="col-lg-4">
-
                                             <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-top: 20px;">
                                                 <tbody>
                                                     <tr>
@@ -178,9 +172,15 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            
                                         </div>
                                     </div>
+                                    
+                                    <!-- Amount in Words: Bottom Left with margin -->
+                                    <div style="margin-top: 20px;">
+                                        <strong>Amount in Words:</strong>
+                                        <strong><em>{{ convertNumberToWords($sale->grand_total) }}</em></strong>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>

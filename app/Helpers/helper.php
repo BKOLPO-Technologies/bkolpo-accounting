@@ -49,7 +49,8 @@ function number2word($number)
 
 function convertNumberToWords($number)
 {
-    $number = number_format((float)$number, 2, '.', '');
+    $number = (float) preg_replace('/[^\d.]/', '', $number); 
+    $number = number_format($number, 2, '.', '');
     $parts = explode('.', $number);
     $intPart = (int)$parts[0];
     $decimalPart = isset($parts[1]) ? (int)$parts[1] : 0;
@@ -61,7 +62,6 @@ function convertNumberToWords($number)
     $rest = $intPart % 100;
 
     $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
-
     $words = [];
 
     if ($crore) {
@@ -89,6 +89,7 @@ function convertNumberToWords($number)
 
     return $taka . ' only.';
 }
+
 
 
 function en2bn($number)

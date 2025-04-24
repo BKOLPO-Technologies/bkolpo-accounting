@@ -50,7 +50,14 @@
                             <div class="card-body">
                                 <!-- Balance Sheet Table -->
                                 <div class="card-header text-center mb-3">
-                                    <h2 class="mb-1">{{ get_company()->name ?? '' }}</h2> 
+                                    <h2 class="mb-1">
+                                        <img 
+                                            src="{{ !empty(get_company()->logo) ? url('upload/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
+                                            alt="Company Logo" 
+                                            style="height: 40px; vertical-align: middle; margin-right: 10px;"
+                                        >
+                                        {{ get_company()->name ?? '' }}
+                                    </h2> 
                                     <p class="mb-0"><strong>Balance Sheet Report</strong></p>
                                     <p class="mb-0">Date: {{ now()->format('d M, Y') }}</p>
                                 </div>
@@ -130,6 +137,11 @@
                                                             </tr>
                                                         </tfoot>
                                                     </table>
+                                                    <!-- Amount in Words: Bottom Left with margin -->
+                                                    <div style="margin-top: 10px;">
+                                                        <strong>Amount in Words:</strong>
+                                                        <strong><em>{{ convertNumberToWords($totalBalance) }}</em></strong>
+                                                    </div>
                                                 </div>
                                             @endforeach
                                         </div>

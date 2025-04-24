@@ -55,7 +55,14 @@
 
                             <!-- Trial Balance Table -->
                             <div class="card-header text-center mb-3">
-                                <h2 class="mb-1">{{ get_company()->name ?? '' }}</h2>
+                                <h2 class="mb-1">
+                                    <img 
+                                        src="{{ !empty(get_company()->logo) ? url('upload/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
+                                        alt="Company Logo" 
+                                        style="height: 40px; vertical-align: middle; margin-right: 10px;"
+                                    >
+                                    {{ get_company()->name ?? '' }}
+                                </h2>
                                 <p class="mb-0"><strong>Trial Balance Report</strong></p>
                                 <p class="mb-0">Date: {{ now()->format('d M, Y') }}</p>
                             </div>
@@ -91,6 +98,11 @@
                                                     </tr>
                                                 </tfoot>
                                             </table>
+                                            <!-- Amount in Words: Bottom Left with margin -->
+                                            <div id="amountInWordsPrint" style="margin-top: 10px;">
+                                                <strong>Amount in Words:</strong>
+                                                <strong><em>{{ convertNumberToWords(number_format($trialBalances->sum('debit'), 2)) }}</em></strong>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -182,6 +194,18 @@
                         "text-align": "center",
                         "font-weight": "bold",
                         "border-top": "2px solid black"
+                    });
+
+                    // Clone and append the "Amount in Words" section
+                    var amountInWordsHtml = $('#amountInWordsPrint').clone();
+                    $(win.document.body).append(amountInWordsHtml);
+
+                    // Style the amount section for print
+                    $(win.document.body).find('#amountInWordsPrint').css({
+                        "margin-top": "20px",
+                        "font-size": "16px",
+                        "font-weight": "bold",
+                        "text-align": "left"
                     });
                 }
             },
