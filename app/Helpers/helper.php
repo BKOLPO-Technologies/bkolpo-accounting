@@ -68,7 +68,7 @@ function convertNumberToWords($number)
         $words[] = ucfirst($f->format($crore)) . ' crore';
     }
     if ($lakh) {
-        $words[] = $f->format($lakh) . ' lakh';
+        $words[] = $f->format($lakh) . ' lac';
     }
     if ($thousand) {
         $words[] = $f->format($thousand) . ' thousand';
@@ -87,7 +87,7 @@ function convertNumberToWords($number)
         $taka .= ' and ' . $poisha;
     }
 
-    return $taka . ' only';
+    return $taka . ' only.';
 }
 
 
