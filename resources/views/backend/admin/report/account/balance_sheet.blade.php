@@ -140,7 +140,7 @@
                                                     <!-- Amount in Words: Bottom Left with margin -->
                                                     <div style="margin-top: 10px;">
                                                         <strong>Amount in Words:</strong>
-                                                        <strong><em>{{ convertNumberToWords($totalBalance) }}</em></strong>
+                                                        <strong class="text-uppercase">{{ convertNumberToWords($totalBalance) }}</strong>
                                                     </div>
                                                 </div>
                                             @endforeach

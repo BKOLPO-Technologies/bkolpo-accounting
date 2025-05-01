@@ -101,7 +101,7 @@
                                             <!-- Amount in Words: Bottom Left with margin -->
                                             <div id="amountInWordsPrint" style="margin-top: 10px;">
                                                 <strong>Amount in Words:</strong>
-                                                <strong><em>{{ convertNumberToWords(number_format($trialBalances->sum('debit'), 2)) }}</em></strong>
+                                                <strong class="text-uppercase">{{ convertNumberToWords(number_format($trialBalances->sum('debit'), 2)) }}</strong>
                                             </div>
                                         </div>
                                     </div>

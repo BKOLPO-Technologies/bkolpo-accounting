@@ -129,7 +129,7 @@
                                                             //$amountInWords = number2word($sale->grand_total);
                                                         @endphp
                                                         <tr data-product-id="{{ $product->id }}">
-                                                            <td style="border: 1px solid black; padding: 8px;">{{ $product->item->product->name }}</td>
+                                                            <td style="border: 1px solid black; padding: 8px;">{{ $product->item->product->name ?? '' }}</td>
                                                             <td style="border: 1px solid black; padding: 8px;">{{ $product->item->items_description }}</td>
                                                             <td style="border: 1px solid black; padding: 8px;">{{ $product->item->unit->name ?? '' }}</td>
                                                             <td style="border: 1px solid black; padding: 8px;">{{ $product->quantity }}</td>
@@ -178,7 +178,7 @@
                                     <!-- Amount in Words: Bottom Left with margin -->
                                     <div style="margin-top: 20px;">
                                         <strong>Amount in Words:</strong>
-                                        <strong><em>{{ convertNumberToWords($sale->grand_total) }}</em></strong>
+                                        <strong class="text-uppercase">{{ convertNumberToWords($sale->grand_total) }}</strong>
                                     </div>
                                     
                                 </div>

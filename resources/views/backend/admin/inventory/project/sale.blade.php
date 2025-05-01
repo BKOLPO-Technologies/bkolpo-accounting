@@ -366,7 +366,7 @@
                                 <!-- Amount in Words: Bottom Left with margin -->
                                 <div class="pl-3" style="margin-top: 20px;">
                                     <strong>Amount in Words:</strong>
-                                    <strong><em>{{ convertNumberToWords($paidAmount) }}</em></strong>
+                                    <strong class="text-uppercase">{{ convertNumberToWords($paidAmount) }}</strong>
                                 </div>
                             </div>
                             {{-- End Expense List --}}

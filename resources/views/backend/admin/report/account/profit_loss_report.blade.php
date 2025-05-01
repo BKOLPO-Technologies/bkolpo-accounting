@@ -304,7 +304,7 @@
                                                 </table>
                                                 <div style="margin-top: 10px;">
                                                     <strong>Amount in Words:</strong>
-                                                    <strong><em>{{ convertNumberToWords($netIncome) }}</em></strong>
+                                                    <strong class="text-uppercase">{{ convertNumberToWords($netIncome) }}</strong>
                                                 </div>
                                             </div>
                                         </div>

@@ -171,7 +171,7 @@
                                                         <input type="text" name="order_unit[]" class="form-control unit-input" value="{{ $product->product->unit->name }}" required readonly>
                                                     </td>
                                                     <td style="width:14% !important;">
-                                                        <input type="number" name="unit_price[]" class="form-control unit-price" value="{{ $product->price }}" style="text-align: right;">
+                                                        <input type="number" name="unit_price[]" class="form-control unit-price" step="0.01" value="{{ $product->price }}" style="text-align: right;">
                                                     </td>
                                                     <td style="width:11% !important;">
                                                         <input type="number" name="quantity[]" class="form-control quantity" min="1" value="{{ $product->quantity }}" required>
@@ -504,7 +504,7 @@
                         <input type="text" name="speciphictions[]" class="form-control speciphictions" readonly>
                     </td>
                     <td><input type="text" name="order_unit[]" class="form-control unit-input" readonly></td>
-                    <td><input type="number" name="unit_price[]" class="form-control unit-price"  style="text-align: right;"></td>
+                    <td><input type="number" name="unit_price[]" class="form-control unit-price" step="0.01"  style="text-align: right;"></td>
                     <td><input type="number" name="quantity[]" class="form-control quantity" value="{{ 1 }}"></td>
                     <td><input type="text" name="total[]" class="form-control subtotal" readonly style="text-align: right;"></td>
                    <td class="col-1">

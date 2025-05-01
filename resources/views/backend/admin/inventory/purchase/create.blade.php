@@ -207,7 +207,7 @@
                                                         <input type="text" name="order_unit[]" class="form-control unit-input" required readonly>
                                                     </td>
                                                     <td>
-                                                        <input type="number" name="unit_price[]" class="form-control unit-price" min="0" required style="text-align: right;">
+                                                        <input type="number" name="unit_price[]" class="form-control unit-price"  min="0" step="0.01" required style="text-align: right;">
                                                     </td>
                                                     <td style="width:15% !important;">
                                                         <input type="number" name="quantity[]" class="form-control quantity" min="1" placeholder="Enter Quantity" required>

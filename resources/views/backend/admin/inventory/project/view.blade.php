@@ -259,7 +259,7 @@
                                     <!-- Amount in Words: Bottom Left with margin -->
                                     <div style="margin-top: 20px;">
                                         <strong>Amount in Words:</strong>
-                                        <strong><em>{{ convertNumberToWords($grandTotal) }}</em></strong>
+                                        <strong class="text-uppercase">{{ convertNumberToWords($grandTotal) }}</strong>
                                     </div>
                                 </div>
                             </div>

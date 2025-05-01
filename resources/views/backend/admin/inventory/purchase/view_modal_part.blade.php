@@ -106,7 +106,7 @@
             </table>
             <div class="pl-2 pb-2" style="margin-top: 10px;">
                 <strong>Amount in Words:</strong>
-                <strong><em>{{ convertNumberToWords($totalTotal) }}</em></strong>
+                <strong class="text-uppercase">{{ convertNumberToWords($totalTotal) }}</strong>
             </div>
         </div>
     </div>
@@ -181,7 +181,7 @@
             </table>
             <div class="pl-2 pb-2" style="margin-top: 10px;">
                 <strong>Amount in Words:</strong>
-                <strong><em>{{ convertNumberToWords(number_format($totalTotal - $totalPayment, 2, '.', '')) }}</em></strong>
+                <strong class="text-uppercase">{{ convertNumberToWords(number_format($totalTotal - $totalPayment, 2, '.', '')) }}</strong>
             </div>
         </div>
     </div>
