@@ -11,7 +11,7 @@
                 <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                    <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A'}}</li>
+                    <li class="breadcrumb-item active">{{ $pageTitle ?? ''}}</li>
                   </ol>
                 </div><!-- /.col -->
               </div><!-- /.row -->
@@ -25,7 +25,7 @@
                         <div class="card card-primary card-outline shadow-lg">
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                                    <h4 class="mb-0">{{ $pageTitle ?? '' }}</h4>
                                     @can('company-create')
                                     <a href="{{ route('company.create') }}" class="btn btn-sm btn-success rounded-0">
                                         <i class="fas fa-plus fa-sm"></i> Add New Company 
@@ -49,7 +49,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td> 
                                                 <td>{{ $company->name }}</td>
-                                                <td>{{ $company->branch->name ?? 'N/A' }}</td> 
+                                                <td>{{ $company->branch->name ?? '' }}</td> 
                                                 <td>
                                                     @if($company->status == 1)
                                                         <a href="#" class="badge badge-success">

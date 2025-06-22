@@ -340,10 +340,10 @@
         $('#supplier').on('change', function () {
             const selectedOption = $(this).find(':selected');
             const supplierId = selectedOption.val();
-            const supplierName = selectedOption.data('name') || 'N/A';
-            const supplierCompany = selectedOption.data('company') || 'N/A';
-            const supplierPhone = selectedOption.data('phone') || 'N/A';
-            const supplierEmail = selectedOption.data('email') || 'N/A';
+            const supplierName = selectedOption.data('name') || '';
+            const supplierCompany = selectedOption.data('company') || '';
+            const supplierPhone = selectedOption.data('phone') || '';
+            const supplierEmail = selectedOption.data('email') || '';
 
             if (supplierId) {
                 $('#supplier-details-table').show();

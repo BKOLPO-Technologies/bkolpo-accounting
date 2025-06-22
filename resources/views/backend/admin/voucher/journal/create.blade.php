@@ -6,12 +6,12 @@
             <div class="container-fluid">
               <div class="row mb-2">
                 <div class="col-sm-6">
-                  <h1 class="m-0">{{ $pageTitle ?? 'N/A'}}</h1>
+                  <h1 class="m-0">{{ $pageTitle ?? ''}}</h1>
                 </div>
                 <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                    <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A'}}</li>
+                    <li class="breadcrumb-item active">{{ $pageTitle ?? ''}}</li>
                   </ol>
                 </div>
               </div>
@@ -26,7 +26,7 @@
 
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                                    <h4 class="mb-0">{{ $pageTitle ?? '' }}</h4>
                                     
                                     <!-- Capital Accounts Button -->
                                     <a href="{{ route('journal-voucher.manually.capital.create') }}" class="btn btn-sm btn-primary rounded-0">

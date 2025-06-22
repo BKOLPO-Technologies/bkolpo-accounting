@@ -11,7 +11,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A' }}</li>
+                        <li class="breadcrumb-item active">{{ $pageTitle ?? '' }}</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -25,7 +25,7 @@
                     <div class="card card-primary card-outline shadow-lg">
                         <div class="card-header py-2">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                                <h4 class="mb-0">{{ $pageTitle ?? '' }}</h4>
                                 <a href="{{ route('bank.index')}}" class="btn btn-sm btn-danger rounded-0">
                                     <i class="fa-solid fa-arrow-left"></i> Back To List
                                 </a>
@@ -36,15 +36,15 @@
                                 <tbody>
                                     <tr>
                                         <th>Name</th>
-                                        <td>{{ $bank->name ?? 'N/A' }}</td>
+                                        <td>{{ $bank->name ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Account Number</th>
-                                        <td>{{ $bank->account_number ?? 'N/A' }}</td>
+                                        <td>{{ $bank->account_number ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Description</th>
-                                        <td>{{ $bank->description ?? 'N/A' }}</td>
+                                        <td>{{ $bank->description ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Status</th>

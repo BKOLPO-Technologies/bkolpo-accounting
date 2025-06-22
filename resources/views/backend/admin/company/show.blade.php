@@ -6,12 +6,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">{{ $pageTitle ?? 'N/A' }}</h1>
+                    <h1 class="m-0">{{ $pageTitle ?? '' }}</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A' }}</li>
+                        <li class="breadcrumb-item active">{{ $pageTitle ?? '' }}</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -25,7 +25,7 @@
                     <div class="card card-primary card-outline shadow-lg">
                         <div class="card-header py-2">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                                <h4 class="mb-0">{{ $pageTitle ?? '' }}</h4>
                                 <a href="{{ route('company.index')}}" class="btn btn-sm btn-danger rounded-0">
                                     <i class="fa-solid fa-arrow-left"></i> Back To List
                                 </a>
@@ -36,59 +36,59 @@
                                 <tbody>
                                     <tr>
                                         <th>Name</th>
-                                        <td>{{ $company->name ?? 'N/A' }}</td>
+                                        <td>{{ $company->name ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Branch</th>
-                                        <td>{{ $company->branch->name ?? 'N/A' }}</td>
+                                        <td>{{ $company->branch->name ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Address</th>
-                                        <td>{{ $company->address ?? 'N/A' }}</td>
+                                        <td>{{ $company->address ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>City</th>
-                                        <td>{{ $company->city ?? 'N/A' }}</td>
+                                        <td>{{ $company->city ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Country</th>
-                                        <td>{{ $company->country ?? 'N/A' }}</td>
+                                        <td>{{ $company->country ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>State</th>
-                                        <td>{{ $company->state ?? 'N/A' }}</td>
+                                        <td>{{ $company->state ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Post Code</th>
-                                        <td>{{ $company->post_code ?? 'N/A' }}</td>
+                                        <td>{{ $company->post_code ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Phone</th>
-                                        <td>{{ $company->phone ?? 'N/A' }}</td>
+                                        <td>{{ $company->phone ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Email</th>
-                                        <td>{{ $company->email ?? 'N/A' }}</td>
+                                        <td>{{ $company->email ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Description</th>
-                                        <td>{{ $company->description ?? 'N/A' }}</td>
+                                        <td>{{ $company->description ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Currency Symbol</th>
-                                        <td>{{ $company->currency_symbol ?? 'N/A' }}</td>
+                                        <td>{{ $company->currency_symbol ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Fiscal Year</th>
-                                        <td>{{ $company->fiscal_year ?? 'N/A' }}</td>
+                                        <td>{{ $company->fiscal_year ?? '' }}</td>
                                     </tr>
                                     <tr>
                                         <th>VAT</th>
-                                        <td>{{ $company->vat ?? 'N/A' }} %</td>
+                                        <td>{{ $company->vat ?? '' }} %</td>
                                     </tr>
                                     <tr>
                                         <th>TAX</th>
-                                        <td>{{ $company->tax ?? 'N/A' }} %</td>
+                                        <td>{{ $company->tax ?? '' }} %</td>
                                     </tr>
                                     <tr>
                                         <th>Company Logo</th>

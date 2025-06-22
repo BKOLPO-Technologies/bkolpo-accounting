@@ -5,12 +5,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">{{ $pageTitle ?? 'N/A'}}</h1>
+                    <h1 class="m-0">{{ $pageTitle ?? ''}}</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A'}}</li>
+                        <li class="breadcrumb-item active">{{ $pageTitle ?? ''}}</li>
                     </ol>
                 </div>
             </div>
@@ -24,7 +24,7 @@
                 <div class="card card-primary card-outline shadow-lg">
                     <div class="card-header py-2">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                            <h4 class="mb-0">{{ $pageTitle ?? '' }}</h4>
                             @can('ledger-group-create')
                             <a href="{{ route('admin.supplier.create') }}" class="btn btn-sm btn-success rounded-0">
                                 <i class="fas fa-plus fa-sm"></i> Add New Vendor
@@ -50,11 +50,11 @@
                                 @foreach ($suppliers as $supplier)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td> 
-                                    <td>{{ $supplier->name }}</td>
-                                    <td>{{ $supplier->address }}</td>
-                                    <td>{{ $supplier->email }}</td>
-                                    <td>{{ $supplier->phone }}</td>
-                                    <td>{{ $supplier->title }}</td>
+                                    <td>{{ $supplier->name ?? '' }}</td>
+                                    <td>{{ $supplier->address ?? '' }}</td>
+                                    <td>{{ $supplier->email ?? '' }}</td>
+                                    <td>{{ $supplier->phone ?? '' }}</td>
+                                    <td>{{ $supplier->title ?? '' }}</td>
                                     <td>
                                         <a href="{{ route('admin.supplier.view', $supplier->id) }}" class="btn btn-success btn-sm">
                                             <i class="fas fa-eye"></i>

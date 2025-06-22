@@ -11,7 +11,7 @@
                 <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                    <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A'}}</li>
+                    <li class="breadcrumb-item active">{{ $pageTitle ?? ''}}</li>
                   </ol>
                 </div><!-- /.col -->
               </div><!-- /.row -->
@@ -25,7 +25,7 @@
                         <div class="card card-primary card-outline shadow-lg">
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
+                                    <h4 class="mb-0">{{ $pageTitle ?? '' }}</h4>
                                     <a href="{{ route('bank.create') }}" class="btn btn-sm btn-success rounded-0">
                                         <i class="fas fa-plus fa-sm"></i> Add New Bank
                                     </a>
