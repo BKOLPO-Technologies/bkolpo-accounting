@@ -1,6 +1,6 @@
 @php
   // Determine active state for menu items
-  $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet','report.ledger.report','report.ledger.single.report','report.ledger.group.report','report.ledger.group.single.report','report.ledger.profit.loss','report.project.profit.loss');
+  $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet','report.ledger.report','report.ledger.single.report','report.ledger.group.report','report.ledger.group.single.report','report.ledger.profit.loss','report.project.profit.loss','report.daybook');
   $isSupplierActive = Route::is('admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit','admin.supplier.products','admin.supplier.transactions');
   $isClientActive = Route::is('admin.client.index','admin.client.create','admin.client.view','admin.client.edit','admin.client.products','admin.client.transactions');
   $isProjectActive = Route::is('projects.index', 'projects.create', 'projects.show', 'projects.edit', 'projects.sales');
@@ -9,7 +9,7 @@
   $isPurchaseActive = Route::is('workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit');
   $isAccountMasterActive = Route::is('journal-voucher.*', 'chart_of_accounts.*', 'ledger.*', 'ledger.group.*', 'ledger.sub.group.*', 'admin.client.index','admin.client.create','admin.client.view','admin.client.edit','admin.client.products','admin.client.transactions', 'admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit','admin.supplier.products','admin.supplier.transactions');
   // new
-  $isTransactionsActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.show','admin.purchase.edit','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create','stock.in','stock.in.view', 'sale.payment.show','project.receipt.payment.index', 'project.receipt.payment.create', 'project.receipt.payment.show');
+  $isTransactionsActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.show','admin.purchase.edit','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create','stock.in','stock.in.view', 'sale.payment.show','project.receipt.payment.index', 'project.receipt.payment.create', 'project.receipt.payment.show','journal-voucher.contracreate');
 @endphp
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -281,7 +281,7 @@
                 </a>
             </li>
             <li class="nav-item">
-              <a href="#"  onclick="comingSoon()" class="nav-link">
+              <a href="{{ route('journal-voucher.contracreate') }}" class="nav-link {{ Route::is('journal-voucher.contracreate') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Contra</p>
               </a>
@@ -531,7 +531,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="#"  onclick="comingSoon()" class="nav-link">
+              <a href="{{ route('report.daybook') }}" class="nav-link {{ Route::is('report.daybook') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Daybook</p>
               </a>

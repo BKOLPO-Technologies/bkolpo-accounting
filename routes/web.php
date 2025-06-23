@@ -138,6 +138,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [JournalController::class, 'index'])->name('index')->middleware('can:journal-list');
         Route::get('/excel', [JournalController::class, 'excel'])->name('excel');
         Route::get('/create', [JournalController::class, 'create'])->name('create')->middleware('can:journal-create');
+        Route::get('/contra/create', [JournalController::class, 'contracreate'])->name('contracreate')->middleware('can:journal-create');
         Route::get('/create-manual', [JournalController::class, 'manuallyCreate'])->name('manually.create');
         Route::get('/create-manual-capital', [JournalController::class, 'manuallyCapitalCreate'])->name('manually.capital.create');
         Route::post('/store', [JournalController::class, 'store'])->name('store');
@@ -165,6 +166,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/ledger/pay-slip/{id}', [ReportController::class, 'getLedgerPaySlip'])->name('ledger.pay.slip');
         Route::get('/ledger/profit/loss', [ReportController::class, 'ledgerProfitLoss'])->name('ledger.profit.loss');
         Route::get('/project/profit/loss', [ReportController::class, 'ProjectProfitLoss'])->name('project.profit.loss');
+        Route::get('/daybook', [ReportController::class, 'showDayBook'])->name('daybook');
 
     });
 

@@ -114,6 +114,24 @@ class JournalController extends Controller
         
     }
 
+    public function contracreate()
+    {
+        $pageTitle = 'Contra Entry';
+        $branches = Branch::where('status',1)->latest()->get();
+        $companies = Company::where('status',1)->latest()->get();
+        $ledgers = Ledger::where('status',1)->latest()->get();
+
+        // Get current timestamp in 'dmyHis' format (day, month, year)
+        $randomNumber = rand(100000, 999999);
+        $fullDate = now()->format('d/m/y');
+
+        // Combine the timestamp, random number, and full date
+        $transactionCode = 'BCL-V-'.$fullDate.' - '.$randomNumber;
+
+        return view('backend.admin.voucher.journal.contracreate',compact('pageTitle','branches','ledgers','transactionCode','companies'));
+        
+    }
+
     public function manuallyCreate(){
         $pageTitle = 'Journal Entry';
         $branches = Branch::where('status',1)->latest()->get();

@@ -242,6 +242,29 @@ class ReportController extends Controller
     ));
 }
 
+    public function showDayBook(Request $request)
+    {
+        $pageTitle = 'Day Book Report';
+
+        $transactions = JournalVoucher::with('details.ledger')
+            ->whereDate('transaction_date', now())
+            ->orderBy('created_at')
+            ->get();
+
+        return view('backend.admin.report.account.daybook_report', compact(
+            'pageTitle','transactions'
+        ));
+    }
+
+    public function showContra(Request $request)
+    {
+        $pageTitle = 'Contra Report';
+
+        return view('backend.admin.report.account.contra_report', compact(
+            'pageTitle'
+        ));
+    }
+
 
     /**
      * Display a listing of the resource.
