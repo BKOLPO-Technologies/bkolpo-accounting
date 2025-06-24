@@ -108,7 +108,7 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
 
         DB::beginTransaction(); // Start a database transaction
 
@@ -148,7 +148,7 @@ class ProjectController extends Controller
                 'total.*' => 'required|numeric|min:0',
             ]);
 
-            //dd($request->all());
+           
 
             $tax = $request->include_tax ? $request->tax : 0; 
             $vat = $request->include_vat ? $request->vat : 0; 
@@ -177,6 +177,8 @@ class ProjectController extends Controller
                 'description' => $request->description,
                 'terms_conditions' => $request->terms_conditions,
             ]);
+
+         
     
             // Store project items
             foreach ($request->items as $index => $item) {
@@ -189,9 +191,10 @@ class ProjectController extends Controller
                     'subtotal' => $request->subtotal[$index] ?? 0,
                     'discount' => $request->discount[$index] ?? 0,
                     'total' => $request->total[$index],
-                    'items_description' => $request->items_description[$index],
+                    'items_description' => $request->items_description[$index] ?? '',
                 ]);
             }
+
     
             DB::commit(); // Commit transaction if everything is successful
     
