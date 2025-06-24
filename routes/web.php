@@ -29,6 +29,7 @@ use App\Http\Controllers\Backend\Inventory\ProjectController;
 use App\Http\Controllers\Backend\CompanyInformationController;
 use App\Http\Controllers\Backend\Inventory\CategoryController;
 use App\Http\Controllers\Backend\Inventory\PurchaseController;
+use App\Http\Controllers\Backend\Inventory\PurchaseOrderController;
 use App\Http\Controllers\Backend\Inventory\QuotationController;
 use App\Http\Controllers\Backend\Inventory\WorkOrderController;
 use App\Http\Controllers\Backend\Inventory\SalePaymentController;
@@ -328,6 +329,14 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/get-invoice-details/{id}', [PurchaseController::class, 'getInvoiceDetails']);
         Route::get('/print', [PurchaseController::class, 'Print'])->name('admin.purchase.print');
         Route::get('/view', [PurchaseController::class, 'AdminPurchaseView2'])->name('admin.purchase.view');
+        // purchase order
+        Route::get('/order/list', [PurchaseOrderController::class, 'index'])->name('admin.purchase.order.index');
+        Route::get('/order/create', [PurchaseOrderController::class, 'create'])->name('admin.purchase.order.create');
+        Route::post('/order/store', [PurchaseOrderController::class, 'store'])->name('admin.purchase.order.store');
+        Route::get('/order/edit/{id}', [PurchaseOrderController::class, 'edit'])->name('admin.purchase.order.edit');
+        Route::put('/order/update/{id}', [PurchaseOrderController::class, 'update'])->name('admin.purchase.order.update');
+        Route::get('/order/delete/{id}', [PurchaseOrderController::class, 'destroy'])->name('admin.purchase.order.destroy');
+        Route::get('/order/view', [PurchaseOrderController::class, 'show'])->name('admin.purchase.order.view');
     });
     
     /* ==================== Sales Payment Controller =================== */
