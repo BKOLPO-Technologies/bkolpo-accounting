@@ -66,7 +66,7 @@
                                                     <th>Description</th>
                                                     <th>Account</th>
                                                     <th>Debit</th>
-                                                    <th>Credit</th>
+                                                    {{-- <th>Credit</th> --}}
                                                     <th>Balance</th>
                                                 </tr>
                                             </thead>
@@ -89,7 +89,7 @@
                                                             <td>{{ $detail->description ?? '-' }}</td>
                                                             <td>{{ $detail->ledger->name ?? '-' }}</td>
                                                             <td>{{ number_format($detail->debit, 2) }}</td>
-                                                            <td>{{ number_format($detail->credit, 2) }}</td>
+                                                            {{-- <td>{{ number_format($detail->credit, 2) }}</td> --}}
                                                             <td>{{ number_format($running_balance, 2) }}</td>
                                                         </tr>
                                                     @endforeach
@@ -104,7 +104,7 @@
                                                 <tr>
                                                     <th colspan="3" class="text-end">Total</th>
                                                     <th>{{ number_format($totalDebit, 2) }}</th>
-                                                    <th>{{ number_format($totalCredit, 2) }}</th>
+                                                    {{-- <th>{{ number_format($totalCredit, 2) }}</th> --}}
                                                     <th>{{ number_format($totalDebit, 2) }}</th>
                                                 </tr>
                                             </tfoot>
