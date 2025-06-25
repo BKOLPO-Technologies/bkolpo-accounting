@@ -74,44 +74,6 @@
                                     @enderror
                                 </div>
 
-                                <!-- Category Select with Search Feature -->
-                                {{-- <div class="col-lg-2 col-md-6 mb-3">
-                                    <label for="category_id">Category</label>
-                                    <div class="input-group">
-                                        <select name="category_id" id="category_id" class="form-control select2 @error('category_id') is-invalid @enderror" style="width: 100%;">
-                                            <option value="all">All Categories</option>
-                                            @foreach($categories as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    @error('category_id')
-                                        <div class="invalid-feedback">
-                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div> --}}
-
-                                <!-- Product Select with Search Feature -->
-                                {{-- <div class="col-lg-2 col-md-6 mb-3">
-                                    <label for="products">Product</label>
-                                    <div class="input-group">
-                                        <select name="products" id="product" class="form-control select2 @error('products') is-invalid @enderror" style="width: 100%;">
-                                            <option value="">Select Product</option>
-                                            @foreach($products as $product)
-                                                <option value="{{ $product->id }}" data-category="{{ $product->category_id }}" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-unit="{{ $product->unit->name }}">
-                                                    {{ $product->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    @error('products')
-                                        <div class="invalid-feedback">
-                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div> --}}
-
                                 <!-- Project Select with Search Feature -->
                                 <div class="col-lg-4 col-md-6 mb-3">
                                     <label for="project_id">Project</label>
