@@ -329,6 +329,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/get-invoice-details/{id}', [PurchaseController::class, 'getInvoiceDetails']);
         Route::get('/print', [PurchaseController::class, 'Print'])->name('admin.purchase.print');
         Route::get('/view', [PurchaseController::class, 'AdminPurchaseView2'])->name('admin.purchase.view');
+        // routes/web.php অথবা api.php
+        Route::get('/get-purchases-by-project/{project_id}', [PurchaseController::class, 'getPurchasesByProject']);
+        Route::get('/get-products-by-purchase/{purchase_id}', [PurchaseController::class, 'getProductsByPurchase']);
+
         // purchase order
         Route::get('/order/list', [PurchaseOrderController::class, 'index'])->name('admin.purchase.order.index');
         Route::get('/order/create', [PurchaseOrderController::class, 'create'])->name('admin.purchase.order.create');

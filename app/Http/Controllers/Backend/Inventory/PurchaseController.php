@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend\Inventory;
 
 use Carbon\Carbon;
+use App\Models\Unit;
 use App\Models\Ledger;
 use App\Models\Payment;
 use App\Models\Product;
@@ -86,6 +87,11 @@ class PurchaseController extends Controller
         // $randomNumber = mt_rand(100000, 999999);
 
         // $invoice_no = 'BKOLPO-'. $randomNumber;
+        $vat = $companyInfo->vat;
+        $tax = $companyInfo->tax;
+        $units = Unit::where('status',1)->latest()->get();
+        
+        $purchases = Purchase::latest()->get();
 
         return view('backend.admin.inventory.purchase.create', compact(
             'pageTitle', 
@@ -93,7 +99,11 @@ class PurchaseController extends Controller
             'products',
             'categories',
             'projects',
-            'invoice_no'
+            'purchases',
+            'invoice_no',
+            'vat',
+            'tax',
+            'units'
         )); 
     }
 
@@ -531,5 +541,20 @@ class PurchaseController extends Controller
             'products' => $products,
         ]);
     }
+
+    public function getPurchasesByProject($project_id)
+    {
+        $purchases = Purchase::where('project_id', $project_id)->get();
+
+        return response()->json($purchases);
+    }
+
+    public function getProductsByPurchase($purchase_id)
+    {
+       $purchase = Purchase::with('purchaseProducts.product.unit', 'purchaseProducts.product.category')->find($purchase_id);
+
+        return response()->json($purchase->purchaseProducts);
+    }
+
 
 }

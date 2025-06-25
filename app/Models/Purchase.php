@@ -37,5 +37,10 @@ class Purchase extends Model
         return $this->belongsTo(Project::class);
     }
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
 
 }
