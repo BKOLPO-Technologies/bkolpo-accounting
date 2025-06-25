@@ -144,19 +144,6 @@
                                     </div>
                                     @enderror
                                 </div>
-
-                                <!-- Invoice Date -->
-                                {{-- <div class="col-lg-3 col-md-6 mb-3">
-                                    <label for="invoice_date">Invoice Date</label>
-
-                                    <input type="date" id="invoice_date" name="invoice_date" class="form-control @error('invoice_date') is-invalid @enderror" value="{{ old('invoice_date', $purchase->invoice_date->format('Y-m-d')) }}" readonly />
-
-                                    @error('invoice_date')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div> --}}
                             </div>
 
                             <!-- Supplier Details Table -->
