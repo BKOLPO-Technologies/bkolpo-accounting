@@ -80,7 +80,7 @@
                                             <table class="table table-bordered" id="supplier-details-table" style="display: none;">
                                                 <thead class="thead-light">
                                                     <tr>
-                                                        <th>Supplier Name</th>
+                                                        <th>Vendor Name</th>
                                                         <th>Company</th>
                                                         <th>Phone</th>
                                                         <th>Email</th>
