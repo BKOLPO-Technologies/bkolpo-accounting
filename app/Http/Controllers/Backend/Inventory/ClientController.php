@@ -219,7 +219,7 @@ class ClientController extends Controller
                                     ->with('products') // Assuming Purchase has a relation with products
                                     ->get();
 
-        //dd($purchasedProducts);
+        // dd($purchasedProducts);
 
         $pageTitle = 'Saled Products History';
 

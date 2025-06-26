@@ -11,10 +11,11 @@ class Sale extends Model
     // Define the relationship with the Product model
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'sale_product') // Pivot table name
-                    ->withPivot('quantity', 'price','discount') // Access pivot data (quantity, price, discount)
-                    ->withTimestamps(); // Automatically handle created_at and updated_at
+        return $this->belongsToMany(Product::class, 'sale_product', 'sale_id', 'item_id') 
+                    ->withPivot('quantity', 'price', 'discount')
+                    ->withTimestamps();
     }
+
 
     public function client()
     {
