@@ -30,6 +30,7 @@ use App\Http\Controllers\Backend\CompanyInformationController;
 use App\Http\Controllers\Backend\Inventory\CategoryController;
 use App\Http\Controllers\Backend\Inventory\PurchaseController;
 use App\Http\Controllers\Backend\Inventory\PurchaseOrderController;
+use App\Http\Controllers\Backend\Inventory\PurchaseInvoiceController;
 use App\Http\Controllers\Backend\Inventory\QuotationController;
 use App\Http\Controllers\Backend\Inventory\WorkOrderController;
 use App\Http\Controllers\Backend\Inventory\SalePaymentController;
@@ -329,10 +330,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/get-invoice-details/{id}', [PurchaseController::class, 'getInvoiceDetails']);
         Route::get('/print', [PurchaseController::class, 'Print'])->name('admin.purchase.print');
         Route::get('/view', [PurchaseController::class, 'AdminPurchaseView2'])->name('admin.purchase.view');
-        // routes/web.php অথবা api.php
-        Route::get('/get-purchases-by-project/{project_id}', [PurchaseController::class, 'getPurchasesByProject']);
-        Route::get('/get-products-by-purchase/{purchase_id}', [PurchaseController::class, 'getProductsByPurchase']);
-
         // purchase order
         Route::get('/order/list', [PurchaseOrderController::class, 'index'])->name('admin.purchase.order.index');
         Route::get('/order/create', [PurchaseOrderController::class, 'create'])->name('admin.purchase.order.create');
@@ -341,6 +338,22 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::put('/order/update/{id}', [PurchaseOrderController::class, 'update'])->name('admin.purchase.order.update');
         Route::get('/order/delete/{id}', [PurchaseOrderController::class, 'destroy'])->name('admin.purchase.order.destroy');
         Route::get('/order/view', [PurchaseOrderController::class, 'show'])->name('admin.purchase.order.view');
+
+        // purchase invoice
+        Route::get('/invoice/list', [PurchaseInvoiceController::class, 'index'])->name('admin.purchase.invoice.index');
+        Route::get('/invoice/create', [PurchaseInvoiceController::class, 'create'])->name('admin.purchase.invoice.create');
+        Route::post('/invoice/store', [PurchaseInvoiceController::class, 'store'])->name('admin.purchase.invoice.store');
+        Route::get('/invoice/edit/{id}', [PurchaseInvoiceController::class, 'edit'])->name('admin.purchase.invoice.edit');
+        Route::put('/invoice/update/{id}', [PurchaseInvoiceController::class, 'update'])->name('admin.purchase.invoice.update');
+        Route::get('/invoice/delete/{id}', [PurchaseInvoiceController::class, 'destroy'])->name('admin.purchase.invoice.destroy');
+        Route::get('/invoice/view', [PurchaseInvoiceController::class, 'AdminPurchaseInvoiceView2'])->name('admin.purchase.invoice.view');
+        // AJAX data routes
+        Route::get('/get-purchases-by-project/{projectId}', [PurchaseInvoiceController::class, 'getPurchasesByProject'])
+            ->name('admin.purchase.get.purchases.by.project');
+        Route::get('/get-products-by-purchase/{purchaseId}', [PurchaseInvoiceController::class, 'getProductsByPurchase'])
+            ->name('admin.purchase.get.products.by.purchase');
+
+        
     });
     
     /* ==================== Sales Payment Controller =================== */

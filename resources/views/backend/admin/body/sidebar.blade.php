@@ -9,7 +9,7 @@
   $isPurchaseActive = Route::is('workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit');
   $isAccountMasterActive = Route::is('journal-voucher.*', 'chart_of_accounts.*', 'ledger.*', 'ledger.group.*', 'ledger.sub.group.*', 'admin.client.index','admin.client.create','admin.client.view','admin.client.edit','admin.client.products','admin.client.transactions', 'admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit','admin.supplier.products','admin.supplier.transactions');
   // new
-  $isTransactionsActive = Route::is('admin.purchase.index','admin.purchase.create','admin.purchase.show','admin.purchase.edit','admin.purchase.order.index','admin.purchase.order.create','admin.purchase.order.edit','admin.purchase.order.create','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create','stock.in','stock.in.view', 'sale.payment.show','project.receipt.payment.index', 'project.receipt.payment.create', 'project.receipt.payment.show','journal-voucher.contracreate');
+  $isTransactionsActive = Route::is('admin.purchase.invoice.index','admin.purchase.invoice.create','admin.purchase.invoice.show','admin.purchase.invoice.edit','admin.purchase.order.index','admin.purchase.order.create','admin.purchase.order.edit','admin.purchase.order.create','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create','stock.in','stock.in.view', 'sale.payment.show','project.receipt.payment.index', 'project.receipt.payment.create', 'project.receipt.payment.show','journal-voucher.contracreate');
 @endphp
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -305,7 +305,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('admin.purchase.index') }}" class="nav-link {{ Route::is('admin.purchase.index','admin.purchase.create', 'admin.purchase.show', 'admin.purchase.edit') ? 'active' : '' }}">
+              <a href="{{ route('admin.purchase.invoice.index') }}" class="nav-link {{ Route::is('admin.purchase.invoice.index','admin.purchase.invoice.create', 'admin.purchase.invoice.show', 'admin.purchase.invoice.edit') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Purchase Invoice</p>
               </a>

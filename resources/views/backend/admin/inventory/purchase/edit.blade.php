@@ -1,663 +1,556 @@
-{{-- with vat tax checkable option --}}
-@extends('layouts.admin', ['pageTitle' => 'Purchase'])
+@extends('layouts.admin', ['pageTitle' => 'Edit Purchase Invoice'])
 @section('admin')
-<div class="content-wrapper">
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">{{ $pageTitle ?? 'N/A'}}</h1>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Edit Purchase Invoice: {{ $invoice->invoice_no }}</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: black;">Home</a>
+                            </li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.purchase.index') }}">Purchase Invoices</a></li>
+                            <li class="breadcrumb-item active">Edit</li>
+                        </ol>
+                    </div>
                 </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item">
-                            <a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: black;">Home</a>
-                        </li>
-                        <li class="breadcrumb-item active">{{ $pageTitle ?? 'N/A'}}</li>
-                    </ol>
+            </div>
+        </section>
+
+        <section class="content">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-primary card-outline shadow-lg">
+                        <div class="card-header py-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="mb-0">Edit Purchase Invoice</h4>
+                                <a href="{{ route('admin.purchase.invoice.index') }}" class="btn btn-sm btn-danger rounded-0">
+                                    <i class="fa-solid fa-arrow-left"></i> Back To List
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ route('admin.purchase.invoice.update', $invoice->id) }}" enctype="multipart/form-data" id="purchaseInvoiceForm">
+                                @csrf
+                                @method('PUT')
+
+                                <input type="hidden" name="product_ids" id="product_ids" value="{{ json_encode($invoice->items->pluck('product_id')) }}">
+                                <input type="hidden" name="quantities" id="quantities">
+                                <input type="hidden" name="prices" id="prices">
+                                <input type="hidden" name="discounts" id="discounts">
+                                <input type="hidden" name="grand_total" id="grand_total_hidden" value="{{ $invoice->grand_total }}">
+                                <input type="hidden" name="purchase_id" id="purchase_id_hidden" value="{{ $invoice->purchase_id }}">
+
+                                <div class="row">
+                                    <!-- Supplier Select -->
+                                    <div class="col-lg-4 col-md-6 mb-3">
+                                        <label for="supplier">Vendor <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <select name="supplier" id="supplier"
+                                                class="form-control select2 @error('supplier') is-invalid @enderror"
+                                                required>
+                                                <option value="" disabled>Select Vendor</option>
+                                                @foreach ($suppliers as $supplier)
+                                                    <option value="{{ $supplier->id }}" 
+                                                        data-name="{{ $supplier->name }}"
+                                                        data-company="{{ $supplier->company }}"
+                                                        data-phone="{{ $supplier->phone }}"
+                                                        data-email="{{ $supplier->email }}"
+                                                        {{ $invoice->supplier_id == $supplier->id ? 'selected' : '' }}>
+                                                        {{ $supplier->name }} ({{ $supplier->company }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @error('supplier')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Project Select -->
+                                    <div class="col-lg-4 col-md-6 mb-3">
+                                        <label for="project">Project</label>
+                                        <div class="input-group">
+                                            <select name="projects" id="project"
+                                                class="form-control select2 @error('project') is-invalid @enderror"
+                                                style="width: 100%;">
+                                                <option value="">Select Project</option>
+                                                @foreach ($projects as $project)
+                                                    <option value="{{ $project->id }}"
+                                                        {{ $invoice->project_id == $project->id ? 'selected' : '' }}>
+                                                        {{ $project->project_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @error('project')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Invoice Date -->
+                                    <div class="col-lg-4 col-md-6 mb-3">
+                                        <label for="invoice_date">Invoice Date <span class="text-danger">*</span></label>
+                                        <input type="date" name="invoice_date" id="invoice_date"
+                                            class="form-control @error('invoice_date') is-invalid @enderror"
+                                           value="{{ old('invoice_date', \Carbon\Carbon::parse($invoice->invoice_date)->format('Y-m-d')) }}" required>
+                                        @error('invoice_date')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Supplier Details Table -->
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div class="callout callout-info">
+                                            <h5><i class="fas fa-info-circle"></i> Vendor Details</h5>
+                                            <table class="table table-bordered" id="supplier-details-table">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Company</th>
+                                                        <th>Phone</th>
+                                                        <th>Email</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="supplier-details-body">
+                                                    <tr>
+                                                        <td>{{ $invoice->supplier->name }}</td>
+                                                        <td>{{ $invoice->supplier->company }}</td>
+                                                        <td>{{ $invoice->supplier->phone }}</td>
+                                                        <td>{{ $invoice->supplier->email }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Product Table -->
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Purchase Items</h3>
+                                                <button type="button" class="btn btn-primary btn-sm float-right" id="addProductBtn">
+                                                    <i class="fas fa-plus"></i> Add Item
+                                                </button>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <div class="table-responsive">
+                                                    <table id="product-table" class="table table-bordered table-hover">
+                                                        <thead class="bg-primary">
+                                                            <tr>
+                                                                <th width="15%">Category</th>
+                                                                <th width="20%">Item</th>
+                                                                <th width="20%">Specifications</th>
+                                                                <th width="10%">Unit</th>
+                                                                <th width="10%">Quantity</th>
+                                                                <th width="10%">Price</th>
+                                                                <th width="10%">Total</th>
+                                                                <th width="5%">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach($invoice->items as $item)
+                                                            <tr class="product-row" data-product-id="{{ $item->product_id }}">
+                                                                <td><strong>{{ $item->product->category->name ?? 'N/A' }}</strong></td>
+                                                                <td>{{ $item->product->name }}</td>
+                                                                <td>{{ $item->product->description ?? 'N/A' }}</td>
+                                                                <td>{{ $item->product->unit->name ?? 'pcs' }}</td>
+                                                                <td><input type="number" class="form-control qty" value="{{ $item->quantity }}" min="0" step="1"></td>
+                                                                <td><input type="number" class="form-control unit_price" value="{{ $item->price }}" min="0" step="0.01"></td>
+                                                                <td><input type="text" class="form-control row_total" value="{{ number_format($item->quantity * $item->price, 2) }}" readonly></td>
+                                                                <td><button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button></td>
+                                                            </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Summary Section -->
+                                <div class="row mt-4">
+                                    <div class="col-md-6">
+                                        <!-- Description -->
+                                        <div class="form-group">
+                                            <label for="description">Notes</label>
+                                            <textarea id="description" name="description" class="form-control" rows="3"
+                                                placeholder="Enter any additional notes or description">{{ old('description', $invoice->description) }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                    <!-- Subtotal -->
+                                                    <tr>
+                                                        <th class="text-right">Subtotal:</th>
+                                                        <td class="text-right" width="30%">
+                                                            <input type="text" id="subtotal" name="subtotal"
+                                                                class="form-control text-right" value="{{ number_format($invoice->subtotal, 2) }}" readonly />
+                                                        </td>
+                                                    </tr>
+                                                    <!-- Discount -->
+                                                    <tr>
+                                                        <th class="text-right">Discount:</th>
+                                                        <td class="text-right">
+                                                            <div class="input-group">
+                                                                <input type="number" id="total_discount" name="total_discount"
+                                                                    class="form-control text-right" value="{{ $invoice->discount }}"
+                                                                    min="0" step="0.01" placeholder="0.00" />
+                                                                <div class="input-group-append">
+                                                                    <span class="input-group-text">BDT</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- Net Amount -->
+                                                    <tr>
+                                                        <th class="text-right">Net Amount:</th>
+                                                        <td class="text-right">
+                                                            <input type="text" id="total_netamount" name="total_netamount"
+                                                                class="form-control text-right" value="{{ number_format($invoice->subtotal - $invoice->discount, 2) }}" readonly />
+                                                        </td>
+                                                    </tr>
+                                                    <!-- Tax -->
+                                                    <tr>
+                                                        <th class="text-right">
+                                                            <div class="icheck-success d-inline">
+                                                                <input class="form-check-input" type="checkbox" name="include_tax"
+                                                                    id="include_tax" value="1" {{ $invoice->tax_rate > 0 ? 'checked' : '' }}>
+                                                                <label class="form-check-label" for="include_tax">Tax (%):</label>
+                                                            </div>
+                                                        </th>
+                                                        <td class="text-right">
+                                                            <div class="input-group">
+                                                                <input type="number" id="tax" name="tax"
+                                                                    class="form-control text-right" value="{{ $invoice->tax_rate }}"
+                                                                    min="0" step="0.01" placeholder="0.00" {{ $invoice->tax_rate > 0 ? '' : 'disabled' }} />
+                                                                <div class="input-group-append">
+                                                                    <span class="input-group-text">%</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- Tax Amount -->
+                                                    <tr id="tax_amount_row" style="{{ $invoice->tax_rate > 0 ? '' : 'display: none;' }}">
+                                                        <th class="text-right">Tax Amount:</th>
+                                                        <td class="text-right">
+                                                            <input type="text" id="tax_amount" name="tax_amount"
+                                                                class="form-control text-right" value="{{ number_format($invoice->tax_amount, 2) }}" readonly />
+                                                        </td>
+                                                    </tr>
+                                                    <!-- VAT -->
+                                                    <tr>
+                                                        <th class="text-right">
+                                                            <div class="icheck-success d-inline">
+                                                                <input class="form-check-input" type="checkbox" name="include_vat"
+                                                                    id="include_vat" value="1" {{ $invoice->vat_rate > 0 ? 'checked' : '' }}>
+                                                                <label class="form-check-label" for="include_vat">VAT (%):</label>
+                                                            </div>
+                                                        </th>
+                                                        <td class="text-right">
+                                                            <div class="input-group">
+                                                                <input type="number" id="vat" name="vat"
+                                                                    class="form-control text-right" value="{{ $invoice->vat_rate }}"
+                                                                    min="0" step="0.01" placeholder="0.00" {{ $invoice->vat_rate > 0 ? '' : 'disabled' }} />
+                                                                <div class="input-group-append">
+                                                                    <span class="input-group-text">%</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- VAT Amount -->
+                                                    <tr id="vat_amount_row" style="{{ $invoice->vat_rate > 0 ? '' : 'display: none;' }}">
+                                                        <th class="text-right">VAT Amount:</th>
+                                                        <td class="text-right">
+                                                            <input type="text" id="vat_amount" name="vat_amount"
+                                                                class="form-control text-right" value="{{ number_format($invoice->vat_amount, 2) }}" readonly />
+                                                        </td>
+                                                    </tr>
+                                                    <!-- Grand Total -->
+                                                    <tr class="table-active">
+                                                        <th class="text-right"><h5>Grand Total:</h5></th>
+                                                        <td class="text-right">
+                                                            <input type="text" id="grand_total" name="grand_total"
+                                                                class="form-control text-right font-weight-bold" value="{{ number_format($invoice->grand_total, 2) }}" readonly />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-12 text-right">
+
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-save"></i> Update Invoice
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Product Selection Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Select Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered table-hover" id="productsTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Unit</th>
+                                <th>Price</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($products as $product)
+                                <tr>
+                                    <td>{{ $product->name }}</td>
+                                    <td>{{ $product->category->name ?? 'N/A' }}</td>
+                                    <td>{{ $product->unit->name ?? 'pcs' }}</td>
+                                    <td>{{ number_format($product->cost_price, 2) }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-primary select-product"
+                                            data-id="{{ $product->id }}"
+                                            data-name="{{ $product->name }}"
+                                            data-category="{{ $product->category->name ?? 'N/A' }}"
+                                            data-description="{{ $product->description ?? 'N/A' }}"
+                                            data-unit="{{ $product->unit->name ?? 'pcs' }}"
+                                            data-price="{{ $product->cost_price }}">
+                                            Select
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </section>
-
-    <section class="content">
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-primary card-outline shadow-lg">
-                    <div class="card-header py-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h4 class="mb-0">{{ $pageTitle ?? 'N/A' }}</h4>
-                            <a href="{{ route('admin.purchase.index')}}" class="btn btn-sm btn-danger rounded-0">
-                                <i class="fa-solid fa-arrow-left"></i> Back To List
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('admin.purchase.update', $purchase->id) }}" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
-
-                            <input type="hidden" name="product_ids" id="product_ids" value="{{ $product_ids }}">
-                            <input type="hidden" name="quantities" id="quantities" value="{{ $quantities }}">
-                            <input type="hidden" name="prices" id="prices" value="{{ $prices }}">
-                            <input type="hidden" name="discounts" id="discounts" value="{{ $discounts }}">
-
-
-                            <div class="row">
-                               
-                                <div class="col-lg-4 col-md-6 mb-3">
-                                    <label for="supplier">Vendor</label>
-                                    <div class="input-group">
-                                        <select name="supplier" id="supplier" class="form-control select2 @error('supplier') is-invalid @enderror">
-                                            <option value="" disabled>Select Vendor</option>
-                                            @foreach($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}" 
-                                                    data-name="{{ $supplier->name }}" 
-                                                    data-company="{{ $supplier->company }}" 
-                                                    data-phone="{{ $supplier->phone }}" 
-                                                    data-email="{{ $supplier->email }}"
-                                                    {{ (old('supplier') ?? $purchase->supplier_id) == $supplier->id ? 'selected' : '' }}>
-                                                    {{ $supplier->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <div class="input-group-append">
-                                            <button class="btn btn-danger" type="button" id="addSupplierBtn" data-toggle="modal" data-target="#createSupplierModal">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    @error('supplier')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-4 col-md-6 mb-3">
-                                    <label for="project_id">Project</label>
-                                    <div class="input-group">
-                                        <select name="project_id" id="project_id" class="form-control select2 @error('project_id') is-invalid @enderror" style="width: 100%;">
-                                            <option value="">Select Project</option>
-                                            @foreach($projects as $project)
-                                                <option value="{{ $project->id }}"
-                                                    {{ (old('project_id') ?? $purchase->project_id) == $project->id ? 'selected' : '' }}>
-                                                    {{ $project->project_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    @error('project_id')
-                                        <div class="invalid-feedback">
-                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-4 col-md-6 mb-3">
-                                    <label for="invoice_no">PO No</label>
-                                    <input type="text" id="invoice_no" name="invoice_no" class="form-control @error('invoice_no') is-invalid @enderror" value="{{ old('invoice_no', $purchase->invoice_no) }}" readonly />
-                                    @error('invoice_no')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="row mt-3">
-                                <div class="col-12">
-                                    <table class="table table-bordered" id="supplier-details-table" style="display: none;">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th>Company Name</th>
-                                                <th>Group Name</th>
-                                                <th>Phone</th>
-                                                <th>Email</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="supplier-details-body"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="table-responsive">
-                                        <table id="product-table" class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>Category</th>
-                                                    <th>Item</th>
-                                                    <th>Speciphication</th>
-                                                    <th>Unit</th>
-                                                    <th>Price</th>
-                                                    <th>Quantity</th>
-                                                    {{-- <th>Subtotal</th>
-                                                    <th>Discount</th> --}}
-                                                    <th>Total</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="product-tbody">
-                                                @foreach ($purchase->purchaseProducts as $product)
-                                                <tr>
-                                                    <td style="width:14% !important;">
-                                                        <select name="category_id" id="category_id" class="form-control select2 category-select @error('category_id') is-invalid @enderror" style="width: 100%;">
-                                                            <option value="all">All Categories</option>
-                                                            @foreach($categories as $category)
-                                                                <option value="{{ $category->id }}"
-                                                                    {{ (old('category_id') ?? $product->product->category_id) == $category->id ? 'selected' : '' }}>
-                                                                    {{ $category->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </td>
-                                                    <td style="width:20% !important;">
-                                                        <select name="aproducts[]" id="product" class="form-control select2 @error('products') is-invalid @enderror product-select" style="width: 100%;">
-                                                            <option value="">Select Product</option>
-                                                            @foreach($aproducts as $aproduct)
-                                                                <option value="{{ $aproduct->id }}" data-category="{{ $aproduct->category_id }}" data-id="{{ $aproduct->id }}" data-name="{{ $aproduct->name }}" data-price="{{ $aproduct->price }}" data-unit="{{ $aproduct->unit->name }}"
-                                                                    {{ (old('aproduct_id') ?? $product->product_id) == $aproduct->id ? 'selected' : '' }}>
-                                                                    {{ $aproduct->name }}{{ $aproduct->product_code ? ' (' . $aproduct->product_code . ')' : '' }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </td>
-                                                    <td style="width:14% !important;">
-                                                        <input type="text" name="speciphictions[]" class="form-control speciphictions" readonly value="{{ $product->product->description }}">
-                                                    </td>
-                                                    <td style="width:14% !important;">
-                                                        <input type="text" name="order_unit[]" class="form-control unit-input" value="{{ $product->product->unit->name }}" required readonly>
-                                                    </td>
-                                                    <td style="width:14% !important;">
-                                                        <input type="number" name="unit_price[]" class="form-control unit-price" step="0.01" value="{{ $product->price }}" style="text-align: right;">
-                                                    </td>
-                                                    <td style="width:11% !important;">
-                                                        <input type="number" name="quantity[]" class="form-control quantity" min="1" value="{{ $product->quantity }}" required>
-                                                    </td>
-                                                    <td style="width:14% !important;">
-                                                        <input type="text" name="total[]" class="form-control subtotal" value="{{ $product->price * $product->quantity }}" readonly style="text-align: right;">
-                                                    </td>
-                                                    <td class="text-center" style="width:8% !important;">
-                                                        @if ($loop->first)
-                                                            <button type="button" class="btn btn-success btn-sm add-row"><i class="fas fa-plus"></i></button>
-                                                        @else
-                                                            <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-end flex-column align-items-end">
-
-                                <div class="row w-100">
-                                    <div class="col-12 col-lg-6 mb-2"></div>
-                                    <div class="col-12 col-lg-6 mb-2">
-                                        <table class="table table-bordered">
-                                            <tbody>
-                                                <!-- Subtotal -->
-                                                <tr>
-                                                    <td><label for="subtotal">Total Amount</label></td>
-                                                    <td class="text-end">
-                                                        <input type="text" id="subtotal" name="subtotal" class="form-control" value="{{ $subtotal }}" readonly style="text-align: right;"/>
-                                                    </td>
-                                                </tr>
-                            
-                                                <!-- Discount -->
-                                                <tr>
-                                                    <td><label for="total_discount">Discount</label></td>
-                                                    <td class="text-end">
-                                                        <input type="number" id="total_discount" name="total_discount" class="form-control" step="0.01" placeholder="Enter Discount" value="{{ $purchase->discount }}" style="text-align: right;"/>
-                                                    </td>
-                                                </tr>
-                            
-                                                <!-- Net Amount -->
-                                                <tr>
-                                                    <td><label for="total_netamount">Net Amount</label></td>
-                                                    <td>
-                                                        <input type="number" id="total_netamount" name="total_netamount" value="{{ $purchase->total_netamount }}" style="text-align: right;" class="form-control" readonly/>
-                                                    </td>
-                                                </tr>
-                            
-                                                <!-- TAX -->
-                                                <tr>
-                                                    <td>
-                                                        <div class="icheck-success d-inline">
-                                                            <input type="checkbox" name="include_tax" id="include_tax" {{ $purchase->tax > 0 ? 'checked' : '' }}>
-                                                            <label for="include_tax" class="me-3">
-                                                                Include TAX (%)
-                                                                <input type="number" name="tax" id="tax" value="{{ $purchase->tax }}" min="0"
-                                                                    class="form-control form-control-sm d-inline-block text-end"
-                                                                    step="0.01" placeholder="TAX" style="width: 70px; margin-left: 10px;"/>
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <input type="text" id="tax_amount" name="tax_amount" class="form-control text-end" readonly placeholder="TAX Amount" value="{{ $purchase->tax_amount }}" readonly style="text-align: right;"/>
-                                                    </td>
-                                                </tr>
-                            
-                                                <!-- VAT -->
-                                                <tr>
-                                                    <td>
-                                                        <div class="icheck-success d-inline">
-                                                            <input type="checkbox" name="include_vat" id="include_vat"  {{ $purchase->vat > 0 ? 'checked' : '' }}>
-                                                            <label for="include_vat">
-                                                                Include VAT (%)
-                                                                <input type="number" id="vat" name="vat" value="{{ $purchase->vat }}" min="0"
-                                                                       class="form-control form-control-sm vat-input text-end"
-                                                                       step="0.01" placeholder="VAT"
-                                                                       style="width: 70px; display: inline-block; margin-left: 10px;"/>
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <input type="text" id="vat_amount" name="vat_amount" value="{{ $purchase->vat_amount }}" class="form-control text-end" readonly placeholder="VAT Amount" style="text-align: right;"/>
-                                                    </td>
-                                                </tr>
-                            
-                                                <!-- Grand Total -->
-                                                <tr>
-                                                    <td><label for="grand_total">Grand Total</label></td>
-                                                    <td class="text-end">
-                                                        <input type="text" id="grand_total" name="grand_total" class="form-control text-end" value="{{ $purchase->grand_total }}" readonly  style="text-align: right;"/>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                            </div>
-                            
-                            <hr>
-
-                            <div class="col-lg-12 col-md-12 mb-3">
-                                <label for="description">Description</label>
-                                <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter the description"></textarea>
-                            </div>
-                            <div class="row text-right">
-                                <div class="col-12">
-                                    <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> Submit</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div> 
-        </div>
-    </section>
-</div>
-
-@include('backend.admin.supplier.supplier_modal')
-
+    </div>
 @endsection
 
+@push('css')
+    <style>
+        .select2-container--default .select2-selection--single {
+            height: calc(2.25rem + 2px) !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: calc(2.25rem + 2px) !important;
+        }
+        .table th {
+            white-space: nowrap;
+        }
+        input[readonly] {
+            background-color: #f8f9fa !important;
+        }
+        #itemsTableBody tr td {
+            vertical-align: middle !important;
+        }
+    </style>
+@endpush
+
 @push('js')
+    <script>
+        $(document).ready(function() {
+            // Initialize Select2
+            $('.select2').select2({
+                width: '100%',
+                placeholder: function() {
+                    return $(this).data('placeholder');
+                }
+            });
 
-<script>
+            // Supplier selection event
+            $('#supplier').on('change', function() {
+                const selectedOption = $(this).find(':selected');
+                const supplierId = selectedOption.val();
+                const supplierName = selectedOption.data('name') || '';
+                const supplierCompany = selectedOption.data('company') || '';
+                const supplierPhone = selectedOption.data('phone') || '';
+                const supplierEmail = selectedOption.data('email') || '';
 
-    $(document).ready(function() {
-        $('.select2').select2();
+                if (supplierId) {
+                    $('#supplier-details-table').show();
+                    $('#supplier-details-body').html(`  
+                        <tr>
+                            <td>${supplierName}</td>
+                            <td>${supplierCompany}</td>
+                            <td>${supplierPhone}</td>
+                            <td>${supplierEmail}</td>
+                        </tr>
+                    `);
+                }
+            });
 
-        $('#supplier').on('change', function () {
-            const selectedOption = $(this).find(':selected');
-            const supplierId = selectedOption.val();
-            const supplierName = selectedOption.data('name') || 'N/A';
-            const supplierCompany = selectedOption.data('company') || 'N/A';
-            const supplierPhone = selectedOption.data('phone') || 'N/A';
-            const supplierEmail = selectedOption.data('email') || 'N/A';
+            // Add product button click
+            $('#addProductBtn').click(function() {
+                $('#productModal').modal('show');
+            });
 
-            if (supplierId) {
-                $('#supplier-details-table').show();
-                $('#supplier-details-body').empty();
+            // Product selection from modal
+            $(document).on('click', '.select-product', function() {
+                const productId = $(this).data('id');
+                const productName = $(this).data('name');
+                const category = $(this).data('category');
+                const description = $(this).data('description');
+                const unit = $(this).data('unit');
+                const price = $(this).data('price');
 
-                const supplierRow = `
-                    <tr id="supplier-row">
-                        <td>${supplierName}</td>
-                        <td>${supplierCompany}</td>
-                        <td>${supplierPhone}</td>
-                        <td>${supplierEmail}</td>
+                // Check if product already exists in table
+                if ($(`.product-row[data-product-id="${productId}"]`).length > 0) {
+                    toastr.error('This product is already added to the invoice');
+                    return;
+                }
+
+                // Add new row
+                const newRow = `
+                    <tr class="product-row" data-product-id="${productId}">
+                        <td><strong>${category}</strong></td>
+                        <td>${productName}</td>
+                        <td>${description}</td>
+                        <td>${unit}</td>
+                        <td><input type="number" class="form-control qty" value="1" min="1" step="1"></td>
+                        <td><input type="number" class="form-control unit_price" value="${price}" min="0" step="0.01"></td>
+                        <td><input type="text" class="form-control row_total" value="${price}" readonly></td>
+                        <td><button type="button" class="btn btn-danger btn-sm remove-row"><i class="fas fa-trash"></i></button></td>
                     </tr>
                 `;
-
-                $('#supplier-details-body').append(supplierRow);
-            } else {
-                $('#supplier-details-table').hide();
-            }
-        });
-        
-    });
-</script>
-
-<script> 
-    $('#createSupplierForm').on('submit', function(e) {
-        e.preventDefault(); 
-
-        let formData = $(this).serialize(); 
-
-        $.ajax({
-            url: '{{ route('admin.supplier2.store') }}',
-            type: 'POST',
-            data: formData,
-            success: function(response) {
-                
-                if (response.success) {
-                    
-                    $('#createSupplierModal').modal('hide');
-                    
-                    $('#createSupplierForm')[0].reset();
-
-                    $('#supplier').append(new Option(response.supplier.name, response.supplier.id));
-
-                    $('#supplier').trigger('change');
-
-                    toastr.success('Supplier added successfully!');
-                } else {
-                    toastr.error('Something went wrong. Please try again.');
-                }
-            },
-            error: function(response) {
-                
-                let errors = response.responseJSON.errors;
-                for (let field in errors) {
-                    $(`#new_supplier_${field}`).addClass('is-invalid');
-                    $(`#new_supplier_${field}`).after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
-                }
-            }
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function () {
-        // Initialize select2
-        $('.select2').select2();
-
-        function addToHiddenFields(productId, quantity, price, discount) {
-            let productIds = $('#product_ids').val() ? $('#product_ids').val().split(',') : [];
-            let quantities = $('#quantities').val() ? $('#quantities').val().split(',') : [];
-            let prices = $('#prices').val() ? $('#prices').val().split(',') : [];
-            let discounts = $('#discounts').val() ? $('#discounts').val().split(',') : [];
-
-            let index = productIds.indexOf(productId);
-
-            if (index !== -1) {
-                quantities[index] = quantity;
-                prices[index] = price;
-                discounts[index] = discount;
-            } else {
-                productIds.push(productId);
-                quantities.push(quantity);
-                prices.push(price);
-                discounts.push(discount);
-            }
-
-            $('#product_ids').val(productIds.join(','));
-            $('#quantities').val(quantities.join(','));
-            $('#prices').val(prices.join(','));
-            $('#discounts').val(discounts.join(','));
-        }
-
-        function removeFromHiddenFields(productId) {
-            let productIds = $('#product_ids').val().split(',');
-            let quantities = $('#quantities').val().split(',');
-            let prices = $('#prices').val().split(',');
-            let discounts = $('#discounts').val().split(',');
-
-            let index = productIds.indexOf(productId);
-            if (index !== -1) {
-                productIds.splice(index, 1);
-                quantities.splice(index, 1);
-                prices.splice(index, 1);
-                discounts.splice(index, 1);
-            }
-
-            $('#product_ids').val(productIds.join(','));
-            $('#quantities').val(quantities.join(','));
-            $('#prices').val(prices.join(','));
-            $('#discounts').val(discounts.join(','));
-        }
-
-        function loadProductsByCategory(categoryId, row) {
-            var $productSelect = row.find('.product-select'); 
-
-            if (!categoryId) {
-                $productSelect.empty().append('<option value="">Select a category first</option>');
-                return;
-            }
-
-            $productSelect.empty().append('<option value="">Loading products...</option>');
-
-            $.ajax({
-                url: '/admin/product/products-by-category/' + encodeURIComponent(categoryId), 
-                method: 'GET',
-                dataType: 'json', 
-                success: function(response) {
-
-                    $productSelect.empty().append('<option value="">Select Product</option>');
-
-                    if (Array.isArray(response.products) && response.products.length > 0) {
-                        
-                        response.products.forEach(function(product) {
-                            let unitName = product.unit && product.unit.name ? product.unit.name : ''; 
-
-                            $productSelect.append(`
-                                <option value="${product.id}" 
-                                        data-id="${product.id}" 
-                                        data-speciphiction="${product.description}"
-                                        data-name="${product.name}" 
-                                        data-price="${product.price}" 
-                                        data-unit="${unitName}">
-                                    ${product.name}
-                                </option>
-                            `);
-                        });
-                    } else {
-                        $productSelect.append('<option value="">No products found</option>');
-                    }
-
-                    $productSelect.trigger('change');
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX Error:', status, error);
-                    $productSelect.empty().append('<option value="">Error fetching products</option>');
-                }
+                $('#product-table tbody').append(newRow);
+                $('#productModal').modal('hide');
+                updateProductIds();
+                calculateTotals();
             });
-        }
 
-        $(document).on('change', '.category-select', function () {
-            var categoryId = $(this).val();
-            var row = $(this).closest('tr');
-            loadProductsByCategory(categoryId, row);
-        });
-
-        // Add new row (HTML string like in create page)
-        $(document).on('click', '.add-row', function () {
-            let newRow = `
-                <tr>
-                    <td>
-                        <select name="category_id" class="form-control category-select select2" style="width: 100%;">
-                            <option value="all">All Categories</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td style="width:17% !important;">
-                        <select name="aproducts[]" class="form-control select2 product-select" style="width: 100%;">
-                            <option value="">Select Product</option>
-                            @foreach($aproducts as $aproduct)
-                                <option value="{{ $aproduct->id }}" data-price="{{ $aproduct->price }}" data-unit="{{ $aproduct->unit->name }}">
-                                    {{ $aproduct->name }}{{ $aproduct->product_code ? ' (' . $aproduct->product_code . ')' : '' }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td style="width:14% !important;">
-                        <input type="text" name="speciphictions[]" class="form-control speciphictions" readonly>
-                    </td>
-                    <td><input type="text" name="order_unit[]" class="form-control unit-input" readonly></td>
-                    <td><input type="number" name="unit_price[]" class="form-control unit-price" step="0.01"  style="text-align: right;"></td>
-                    <td><input type="number" name="quantity[]" class="form-control quantity" value="{{ 1 }}"></td>
-                    <td><input type="text" name="total[]" class="form-control subtotal" readonly style="text-align: right;"></td>
-                   <td class="col-1">
-                        <button type="button" class="btn btn-success btn-sm me-1 add-row">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                        <button type="button" class="btn btn-danger btn-sm remove-row">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </td>
-                </tr>`;
-
-            $('#product-tbody').append(newRow);
-            $('.select2').select2(); // Re-initialize select2 for new elements
-        });
-
-
-        // Remove row
-        $(document).on('click', '.remove-row', function () {
-            $(this).closest('tr').remove();
-            updateSubtotal();
-        });
-
-        // On product select, set unit price and unit
-        $(document).on('change', '.product-select', function () {
-            const selected = $(this).find(':selected');
-            const row = $(this).closest('tr');
-            // row.find('.unit-price').val(selected.data('price'));
-            // row.find('.unit-input').val(selected.data('unit'));
-            let productPrice = selected.data('price') || 0;
-            let productUnit = selected.data('unit') || '';
-            let productQuantity = selected.data('quantity') || 1;
-            let productId = selected.val();
-            let productSpeciphiction = selected.data('speciphiction') || "N";
-            //console.log(productId);
-            //console.log(productQuantity);
-
-            let isDuplicate = false;
-            $('.product-select').not(this).each(function () {
-                if ($(this).val() === productId) {
-                    isDuplicate = true;
-                    return false;
+            // Remove row
+            $(document).on('click', '.remove-row', function() {
+                $(this).closest('tr').remove();
+                updateProductIds();
+                calculateTotals();
+                
+                // If no rows left, show the no products message
+                if ($('.product-row').length === 0) {
+                    $('#product-table tbody').html('<tr id="no-products-row"><td colspan="8" class="text-center py-4">No items added yet</td></tr>');
                 }
             });
 
-            if (isDuplicate) {
-                toastr.error('This product is already added!', {
-                    closeButton: true,
-                    progressBar: true,
-                    timeOut: 5000
+            // Quantity/price change
+            $(document).on('input', '.qty, .unit_price', function() {
+                const row = $(this).closest('tr');
+                const qty = parseFloat(row.find('.qty').val()) || 0;
+                const price = parseFloat(row.find('.unit_price').val()) || 0;
+                const total = (qty * price).toFixed(2);
+                row.find('.row_total').val(total);
+                calculateTotals();
+            });
+
+            // Discount change
+            $('#total_discount, #tax, #vat').on('input', calculateTotals);
+
+            // Include tax checkbox
+            $('#include_tax').on('change', function() {
+                $('#tax').prop('disabled', !$(this).is(':checked'));
+                $('#tax_amount_row').toggle($(this).is(':checked'));
+                calculateTotals();
+            });
+
+            // Include vat checkbox
+            $('#include_vat').on('change', function() {
+                $('#vat').prop('disabled', !$(this).is(':checked'));
+                $('#vat_amount_row').toggle($(this).is(':checked'));
+                calculateTotals();
+            });
+
+            // Form submission handler
+            $('#purchaseInvoiceForm').on('submit', function() {
+                updateProductIds();
+                return true;
+            });
+
+            // Calculate totals
+            function calculateTotals() {
+                // Calculate subtotal
+                let subtotal = 0;
+                $('.row_total').each(function() {
+                    subtotal += parseFloat($(this).val().replace(/,/g, '')) || 0;
                 });
-                $(this).val('').trigger('change'); 
-                return;
-            }
+                $('#subtotal').val(subtotal.toFixed(2));
 
-            if (productId) {
-                let row = $(this).closest('tr');
-                row.find('.speciphictions').val(productSpeciphiction);
-                row.find('.unit-price').val(productPrice);
-                row.find('.quantity').val(productQuantity);
-                row.find('.subtotal').val(productPrice);
-                row.find('.total').val(productPrice);
-                row.find('.unit-input').val(productUnit);
-                row.find('.product-discount').val(0);
 
-                //console.log(productPrice);
+                // Get discount and tax rates
+                const discount = parseFloat($('#total_discount').val()) || 0;
+                const taxRate = $('#include_tax').is(':checked') ? parseFloat($('#tax').val()) || 0 : 0;
+                const vatRate = $('#include_vat').is(':checked') ? parseFloat($('#vat').val()) || 0 : 0;
 
-                addToHiddenFields(productId, productQuantity, productPrice, 0);
+                // Calculate net amount
+                const netAmount = subtotal - discount;
 
-            } else {
-                //console.log("productId not found1");
-            }
+                // Calculate taxes
+                const taxAmount = (netAmount * taxRate) / 100;
+                const vatAmount = (netAmount * vatRate) / 100;
 
-            calculateRowTotal(row);
-        });
+                // Calculate grand total
+                const grandTotal = netAmount + taxAmount + vatAmount;
 
-        // Quantity change
-        $(document).on('input', '.quantity', function () {
-            const row = $(this).closest('tr');
-            calculateRowTotal(row);
-        });
-
-        // Calculate total for each row
-        function calculateRowTotal(row) {
-            const unitPrice = parseFloat(row.find('.unit-price').val()) || 0;
-            const quantity = parseFloat(row.find('.quantity').val()) || 1;
-            const discount = parseFloat(row.find('.product-discount').val()) || 0;
-
-            const subtotal = unitPrice * quantity;
-            const total = subtotal - discount;
-
-            row.find('.subtotal').val(subtotal.toFixed(2));
-            row.find('.total').val(total.toFixed(2));
-        }
-
-        // Update subtotal and grand total
-        function updateSubtotal() {
-            let subtotal = 0;
-            $('.subtotal').each(function () {
-                subtotal += parseFloat($(this).val()) || 0;
-            });
-
-            $('#subtotal').val(subtotal.toFixed(2));
-
-            const discount = parseFloat($('#total_discount').val()) || 0;
-            const netAmount = subtotal - discount;
-            $('#total_netamount').val(netAmount.toFixed(2));
-
-            let taxAmount = 0;
-            let vatAmount = 0;
-
-            if ($('#include_tax').is(':checked')) {
-                const taxRate = parseFloat($('#tax').val()) || 0;
-                taxAmount = (netAmount * taxRate / 100);
+                // Update fields
+                $('#total_netamount').val(netAmount.toFixed(2));
                 $('#tax_amount').val(taxAmount.toFixed(2));
-            } else {
-                $('#tax_amount').val('');
-            }
-
-            if ($('#include_vat').is(':checked')) {
-                const vatRate = parseFloat($('#vat').val()) || 0;
-                vatAmount = (netAmount * vatRate / 100);
                 $('#vat_amount').val(vatAmount.toFixed(2));
-            } else {
-                $('#vat_amount').val('');
+                $('#grand_total').val(grandTotal.toFixed(2));
+                $('#grand_total_hidden').val(grandTotal.toFixed(2));
             }
 
-            const grandTotal = netAmount + taxAmount + vatAmount;
-            $('#grand_total').val(grandTotal.toFixed(2));
-        }
+            // Update product IDs array
+            function updateProductIds() {
+                const productIds = [];
+                const quantities = [];
+                const prices = [];
 
-        // Discount / Tax / VAT change
-        $('#total_discount, #tax, #vat').on('input', function () {
-            updateSubtotal();
+                $('.product-row').each(function() {
+                    productIds.push($(this).data('product-id'));
+                    quantities.push($(this).find('.qty').val());
+                    prices.push($(this).find('.unit_price').val());
+                });
+
+                $('#product_ids').val(JSON.stringify(productIds));
+                $('#quantities').val(JSON.stringify(quantities));
+                $('#prices').val(JSON.stringify(prices));
+            }
+
+            // Initialize calculations
+            calculateTotals();
+            updateProductIds();
         });
-
-        // Enable tax input
-        $('#include_tax').change(function () {
-            $('#tax').prop('disabled', !this.checked);
-            updateSubtotal();
-        });
-
-        // Enable vat input
-        $('#include_vat').change(function () {
-            $('#vat').prop('disabled', !this.checked);
-            updateSubtotal();
-        });
-
-        // Trigger initial calculations
-        $('#product-tbody tr').each(function () {
-            calculateRowTotal($(this));
-        });
-    });
-</script>
-
+    </script>
 @endpush

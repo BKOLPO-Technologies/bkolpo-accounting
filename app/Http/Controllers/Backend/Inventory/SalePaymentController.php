@@ -345,7 +345,7 @@ class SalePaymentController extends Controller
             // dd($purchase);
             // Journal Voucher খুঁজে বের করুন
             $journalVoucher = JournalVoucher::where('transaction_code', $payment->invoice_no)->first();
-            dd($journalVoucher);
+            // dd($journalVoucher);
 
             if ($journalVoucher) {
                 // Journal Entry খুঁজে বের করুন
@@ -381,8 +381,8 @@ class SalePaymentController extends Controller
             //     'line' => $e->getLine(),
             // ]);
 
-            // return redirect()->back()->with('error', 'Failed to delete payment receipt! ' . $e->getMessage());
-            return redirect()->back()->with('success', 'Payment receipt deleted successfully, and journal entry updated!');
+            return redirect()->back()->with('error', 'Failed to delete payment receipt! ' . $e->getMessage());
+            // return redirect()->back()->with('success', 'Payment receipt deleted successfully, and journal entry updated!');
         }
     }
 
