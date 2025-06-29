@@ -27,7 +27,7 @@
             <div class="col-12">
                 <div class="card card-outline card-primary shadow">
                     <div class="card-header">
-                        <h3 class="card-title">All Products</h3>
+                        <h3 class="card-title">All Products <span class="badge badge-danger">{{ count($products) }}</span></h3>
                         <a href="{{ route('admin.product.create') }}" class="btn btn-success float-right">
                             <i class="fas fa-plus fa-sm"></i> Add Product
                         </a>
