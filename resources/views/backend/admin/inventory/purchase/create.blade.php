@@ -122,18 +122,20 @@
                                     <div class="col-12">
                                         <div class="callout callout-info">
                                             <h5><i class="fas fa-info-circle"></i> Vendor Details</h5>
-                                            <table class="table table-bordered" id="supplier-details-table"
-                                                style="display: none;">
-                                                <thead class="thead-light">
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Company</th>
-                                                        <th>Phone</th>
-                                                        <th>Email</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="supplier-details-body"></tbody>
-                                            </table>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered" id="supplier-details-table"
+                                                    style="display: none;">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Company</th>
+                                                            <th>Phone</th>
+                                                            <th>Email</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="supplier-details-body"></tbody>
+                                                </table>
+                                            </div>
                                             <div id="no-supplier-selected" class="text-muted">
                                                 No vendor selected. Please select a vendor from the dropdown above.
                                             </div>

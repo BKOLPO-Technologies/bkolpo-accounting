@@ -114,24 +114,26 @@
                                     <div class="col-12">
                                         <div class="callout callout-info">
                                             <h5><i class="fas fa-info-circle"></i> Vendor Details</h5>
-                                            <table class="table table-bordered" id="supplier-details-table">
-                                                <thead class="thead-light">
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Company</th>
-                                                        <th>Phone</th>
-                                                        <th>Email</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="supplier-details-body">
-                                                    <tr>
-                                                        <td>{{ $invoice->supplier->name }}</td>
-                                                        <td>{{ $invoice->supplier->company }}</td>
-                                                        <td>{{ $invoice->supplier->phone }}</td>
-                                                        <td>{{ $invoice->supplier->email }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered" id="supplier-details-table">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Company</th>
+                                                            <th>Phone</th>
+                                                            <th>Email</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="supplier-details-body">
+                                                        <tr>
+                                                            <td>{{ $invoice->supplier->name }}</td>
+                                                            <td>{{ $invoice->supplier->company }}</td>
+                                                            <td>{{ $invoice->supplier->phone }}</td>
+                                                            <td>{{ $invoice->supplier->email }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

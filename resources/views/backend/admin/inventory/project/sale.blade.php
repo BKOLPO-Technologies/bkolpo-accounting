@@ -208,56 +208,58 @@
 
                             {{-- Project details --}}
                             <div class="card-body">
-                                <table class="table table-bordered">
-                                    <tr>
-                                        <th>Project Name</th>
-                                        <td>{{ $project->project_name }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Location</th>
-                                        <td>{{ $project->project_location }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Coordinator</th>
-                                        <td>{{ $project->project_coordinator }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Customer</th>
-                                        <td>{{ $project->client->name ?? 'N/A' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Reference No</th>
-                                        <td>{{ $project->reference_no }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Schedule Date</th>
-                                        <td>{{ $project->schedule_date ?? 'N/A' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Project Type</th>
-                                        <td>{{ ucfirst($project->project_type) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Description</th>
-                                        <td>{{ $project->description ?? 'N/A' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Terms & Conditions</th>
-                                        <td>{!! $project->terms_conditions ?? '' !!}</td>
-                                    </tr>
-                                    {{-- <tr>
-                                        <th>Status</th>
-                                        <td>
-                                            @if($project->status == 'pending')
-                                                <span class="badge bg-danger">Pending</span>
-                                            @elseif($project->status == 'paid')
-                                                <span class="badge bg-success">Paid</span>
-                                            @else
-                                                <span class="badge bg-warning">Partially Paid</span>
-                                            @endif
-                                        </td>
-                                    </tr> --}}
-                                </table>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>Project Name</th>
+                                            <td>{{ $project->project_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Location</th>
+                                            <td>{{ $project->project_location }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Coordinator</th>
+                                            <td>{{ $project->project_coordinator }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Customer</th>
+                                            <td>{{ $project->client->name ?? 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Reference No</th>
+                                            <td>{{ $project->reference_no }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Schedule Date</th>
+                                            <td>{{ $project->schedule_date ?? 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Project Type</th>
+                                            <td>{{ ucfirst($project->project_type) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Description</th>
+                                            <td>{{ $project->description ?? 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Terms & Conditions</th>
+                                            <td>{!! $project->terms_conditions ?? '' !!}</td>
+                                        </tr>
+                                        {{-- <tr>
+                                            <th>Status</th>
+                                            <td>
+                                                @if($project->status == 'pending')
+                                                    <span class="badge bg-danger">Pending</span>
+                                                @elseif($project->status == 'paid')
+                                                    <span class="badge bg-success">Paid</span>
+                                                @else
+                                                    <span class="badge bg-warning">Partially Paid</span>
+                                                @endif
+                                            </td>
+                                        </tr> --}}
+                                    </table>
+                                </div>
                             </div>
                             {{-- End Project details --}}
 
@@ -291,52 +293,54 @@
                                             <h4 class="mb-0">Expense</h4>
                                         </div>
                                         <div class="card-body">
-                                            <table id="example12" class="table table-bordered table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Sl</th>
-                                                        <th>Reference No</th>
-                                                        <th>Reference Date</th>
-                                                        <th>Subtotal</th>
-                                                        <th>Discount</th>
-                                                        <th>Total</th>
-                                                        <th>Paid Amount</th>
-                                                        <th>Status</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php
-                                                        $total = 0;
-                                                        $paidAmount = 0;
-                                                    @endphp
-                                                    {{-- @foreach ($project->purchases as $index => $purchase) --}}
-                                                    @foreach ($purchases as $index => $purchase)
-                                                        @php
-                                                        $productTotal = $purchase->total;
-                                                        $total += $productTotal;
-                                                        $individualPaidAmount = $purchase->paid_amount;
-                                                        $paidAmount += $individualPaidAmount;
-                                                        @endphp
+                                            <div class="table-responsive">
+                                                <table id="example12" class="table table-bordered table-striped">
+                                                    <thead>
                                                         <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $purchase->invoice_no }}</td>
-                                                            <td>{{ $purchase->invoice_date }}</td>
-                                                            <td>{{ $purchase->subtotal }}</td>
-                                                            <td>{{ $purchase->discount }}</td>
-                                                            <td>{{ $purchase->total }}</td>
-                                                            <td>{{ $purchase->paid_amount }}</td>
-                                                            <td>{{ $purchase->status }}</td>
-                                                            <td>
-                                                                {{-- <button class="btn btn-success" type="button" id="purchaseDetailsBtn" data-toggle="modal" data-target="#purchaseDetailsModal" data-id="{{ $purchase->id }}"> --}}
-                                                                <button class="btn btn-success purchaseDetailsBtn" type="button" data-toggle="modal" data-target="#purchaseDetailsModal" data-id="{{ $purchase->id }}">
-                                                                    <i class="fas fa-eye"></i>
-                                                                </button>
-                                                            </td>
+                                                            <th>Sl</th>
+                                                            <th>Reference No</th>
+                                                            <th>Reference Date</th>
+                                                            <th>Subtotal</th>
+                                                            <th>Discount</th>
+                                                            <th>Total</th>
+                                                            <th>Paid Amount</th>
+                                                            <th>Status</th>
+                                                            <th>Action</th>
                                                         </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                        @php
+                                                            $total = 0;
+                                                            $paidAmount = 0;
+                                                        @endphp
+                                                        {{-- @foreach ($project->purchases as $index => $purchase) --}}
+                                                        @foreach ($purchases as $index => $purchase)
+                                                            @php
+                                                            $productTotal = $purchase->total;
+                                                            $total += $productTotal;
+                                                            $individualPaidAmount = $purchase->paid_amount;
+                                                            $paidAmount += $individualPaidAmount;
+                                                            @endphp
+                                                            <tr>
+                                                                <td>{{ $index + 1 }}</td>
+                                                                <td>{{ $purchase->invoice_no }}</td>
+                                                                <td>{{ $purchase->invoice_date }}</td>
+                                                                <td>{{ $purchase->subtotal }}</td>
+                                                                <td>{{ $purchase->discount }}</td>
+                                                                <td>{{ $purchase->total }}</td>
+                                                                <td>{{ $purchase->paid_amount }}</td>
+                                                                <td>{{ $purchase->status }}</td>
+                                                                <td>
+                                                                    {{-- <button class="btn btn-success" type="button" id="purchaseDetailsBtn" data-toggle="modal" data-target="#purchaseDetailsModal" data-id="{{ $purchase->id }}"> --}}
+                                                                    <button class="btn btn-success purchaseDetailsBtn" type="button" data-toggle="modal" data-target="#purchaseDetailsModal" data-id="{{ $purchase->id }}">
+                                                                        <i class="fas fa-eye"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

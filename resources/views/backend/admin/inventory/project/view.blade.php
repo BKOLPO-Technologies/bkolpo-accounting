@@ -166,45 +166,47 @@
                                     <h4>Project Items</h4>
                                 </div>
                                 <div class="card-body">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Items</th>
-                                                <th>Specifications</th>
-                                                <th>Order Unit</th>
-                                                <th>Unit Price</th>
-                                                <th>Quantity</th>
-                                                {{-- <th>Subtotal</th> --}}
-                                                {{-- <th>Discount</th> --}}
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @php
-                                                $subtotal = 0;
-                                                $grandTotal = 0;
-                                            @endphp
-                                            @foreach ($project->items as $index => $item)
-                                                @php
-                                                $productTotal = ($item->unit_price * $item->quantity) - $item->discount;
-                                                $subtotal += $productTotal;
-                                                $grandTotal = $subtotal - $project->total_discount + $project->transport_cost + $project->carrying_charge + $project->vat + $project->tax;
-                                                @endphp
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
                                                 <tr>
-                                                    <td>{{ $index + 1 }}</td>
-                                                    <td>{{ $item->product->name ?? '' }}</td>
-                                                    <td>{{ $item->items_description }}</td>
-                                                    <td>{{ $item->unit->name ?? '' }}</td>
-                                                    <td>{{ number_format($item->unit_price, 2) }}</td>
-                                                    <td>{{ $item->quantity }}</td>
-                                                    {{-- <td>{{ number_format($item->subtotal, 2) }}</td> --}}
-                                                    {{-- <td>{{ number_format($item->discount, 2) }}</td> --}}
-                                                    <td>{{ number_format($item->total, 2) }}</td>
+                                                    <th>#</th>
+                                                    <th>Items</th>
+                                                    <th>Specifications</th>
+                                                    <th>Order Unit</th>
+                                                    <th>Unit Price</th>
+                                                    <th>Quantity</th>
+                                                    {{-- <th>Subtotal</th> --}}
+                                                    {{-- <th>Discount</th> --}}
+                                                    <th>Total</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    $subtotal = 0;
+                                                    $grandTotal = 0;
+                                                @endphp
+                                                @foreach ($project->items as $index => $item)
+                                                    @php
+                                                    $productTotal = ($item->unit_price * $item->quantity) - $item->discount;
+                                                    $subtotal += $productTotal;
+                                                    $grandTotal = $subtotal - $project->total_discount + $project->transport_cost + $project->carrying_charge + $project->vat + $project->tax;
+                                                    @endphp
+                                                    <tr>
+                                                        <td>{{ $index + 1 }}</td>
+                                                        <td>{{ $item->product->name ?? '' }}</td>
+                                                        <td>{{ $item->items_description }}</td>
+                                                        <td>{{ $item->unit->name ?? '' }}</td>
+                                                        <td>{{ number_format($item->unit_price, 2) }}</td>
+                                                        <td>{{ $item->quantity }}</td>
+                                                        {{-- <td>{{ number_format($item->subtotal, 2) }}</td> --}}
+                                                        {{-- <td>{{ number_format($item->discount, 2) }}</td> --}}
+                                                        <td>{{ number_format($item->total, 2) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
 
@@ -216,7 +218,7 @@
                                 <div class="col-6">
                             
                                     <div class="table-responsive">
-                                        <table class="table">
+                                        <table class="table table-bordered">
                                             <tr>
                                                 <th style="width:50%">Total Amount:</th>
                                                 <td>{{ bdt() }} {{ number_format($subtotal, 2) }}</td>

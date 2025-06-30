@@ -237,46 +237,49 @@
                         <hr/>
 
                         <h5>Purchase Details</h5>
-
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Product Name</th>
-                                    <th>Quantity</th>
-                                    <th>Unit Price</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="purchase-products"></tbody>
-                            <tfoot>
-                                <tr>
-                                    <th colspan="1" class="text-end">Total:</th>
-                                    <th id="total_quantity">0</th>
-                                    <th></th>
-                                    <th id="total_purchase_amount">0.00</th>
-                                </tr>
-                            </tfoot>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="purchase-products"></tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="1" class="text-end">Total:</th>
+                                        <th id="total_quantity">0</th>
+                                        <th></th>
+                                        <th id="total_purchase_amount">0.00</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
 
                         <hr/>
 
                         <h5>Payment Details</h5>
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>Payment Date</th>
-                                <th>Payment Method</th>
-                                <th>Bank Account No</th>
-                                <th>Cheque No</th>
-                                <th>Pay Amount</th>
-                            </tr>
-                            <tbody id="payment-details"></tbody>
-                            <tfoot>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
                                 <tr>
-                                    <th colspan="4" class="text-end">Total Paid:</th>
-                                    <th id="total_paid_amount">0.00</th>
+                                    <th>Payment Date</th>
+                                    <th>Payment Method</th>
+                                    <th>Bank Account No</th>
+                                    <th>Cheque No</th>
+                                    <th>Pay Amount</th>
                                 </tr>
-                            </tfoot>
-                        </table>
+                                <tbody id="payment-details"></tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="4" class="text-end">Total Paid:</th>
+                                        <th id="total_paid_amount">0.00</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
 
                         <hr/>
                         <!-- Grand Total -->

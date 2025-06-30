@@ -114,24 +114,24 @@
                             <!-- Supplier Details Table -->
                             <div class="row mt-3">
                                 <div class="col-12">
-                                    
-                                    <table class="table table-bordered" id="sale-details-table">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th>Company Name</th>
-                                                <th>Group Name</th>
-                                                <th>Phone</th>
-                                                <th>Email</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="sale-details-body">
-                                            <td>{{ $sale->client->name }}</td>
-                                            <td>{{ $sale->client->company }}</td>
-                                            <td>{{ $sale->client->phone }}</td>
-                                            <td>{{ $sale->client->email }}</td>
-                                        </tbody>
-                                    </table>
-
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="sale-details-table">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Company Name</th>
+                                                    <th>Group Name</th>
+                                                    <th>Phone</th>
+                                                    <th>Email</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="sale-details-body">
+                                                <td>{{ $sale->client->name }}</td>
+                                                <td>{{ $sale->client->company }}</td>
+                                                <td>{{ $sale->client->phone }}</td>
+                                                <td>{{ $sale->client->email }}</td>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                                 

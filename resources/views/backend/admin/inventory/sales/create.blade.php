@@ -111,17 +111,19 @@
                             <!-- Customer Details Table -->
                             <div class="row mt-3">
                                 <div class="col-12">
-                                    <table class="table table-bordered" id="client-details-table" style="display: none;">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Company</th>
-                                                <th>Phone</th>
-                                                <th>Email</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="client-details-body"></tbody>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="client-details-table" style="display: none;">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Company</th>
+                                                    <th>Phone</th>
+                                                    <th>Email</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="client-details-body"></tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                             

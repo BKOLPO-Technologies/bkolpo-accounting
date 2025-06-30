@@ -62,10 +62,10 @@ class AdminSeeder extends Seeder
         $user->assignRole($adminRole);
 
         $nazrulUser = User::updateOrCreate(
-            ['email' => 'nazrul@gmail.com'],
+            ['email' => 'nsuzon02@gmail.com'],
             [
-                'name' => 'Nazrul',
-                'email' => 'nazrul@gmail.com',
+                'name' => 'Nazrul Islam',
+                'email' => 'nsuzon02@gmail.com',
                 'password' => Hash::make('12345678'),
                 'show_password' => '12345678',
                 'created_at' => Carbon::now(),
