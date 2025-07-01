@@ -9,6 +9,7 @@ use App\Models\Ledger;
 use App\Models\Payment;
 use App\Models\Project;
 use App\Models\Purchase;
+use App\Models\PurchaseInvoice;
 use App\Models\Supplier;
 use App\Models\LedgerGroup;
 use Illuminate\Http\Request;
@@ -88,7 +89,7 @@ class SalePaymentController extends Controller
     {
         //dd($request->supplier_id);
         // Step 1: Find Purchase where supplier_id matches
-        $purchases = Purchase::where('supplier_id', $request->supplier_id)
+        $purchases = PurchaseInvoice::where('supplier_id', $request->supplier_id)
             ->where('status', '!=', 'paid')
             ->get(['id', 'invoice_no', 'grand_total', 'paid_amount']);
         //dd($purchase);
@@ -115,7 +116,7 @@ class SalePaymentController extends Controller
         //Log::info($invoiceId);
 
         // Fetch purchase details
-        $purchase = Purchase::where('invoice_no', $invoiceId)->with(['purchaseProducts.product', 'supplier'])->first();
+        $purchase = PurchaseInvoice::where('invoice_no', $invoiceId)->with(['items.product', 'supplier'])->first();
 
         //Log::info($purchase);
         
@@ -216,7 +217,7 @@ class SalePaymentController extends Controller
             
             // ******************* Here beed to query invoice_no ***************************** //
             // $purchases = Purchase::where('supplier_id', $request->input('supplier_id'))->first();
-            $purchase = Purchase::where('supplier_id', $request->input('supplier_id'))
+            $purchase = PurchaseInvoice::where('supplier_id', $request->input('supplier_id'))
                      ->where('invoice_no', $request->input('invoice_no'))
                      ->first();
 
@@ -341,7 +342,7 @@ class SalePaymentController extends Controller
             //dd($payment);
 
             // সম্পর্কিত Project খুঁজে বের করুন
-            $purchase = Purchase::where('invoice_no', $payment->invoice_no)->first();
+            $purchase = PurchaseInvoice::where('invoice_no', $payment->invoice_no)->first();
             // dd($purchase);
             // Journal Voucher খুঁজে বের করুন
             $journalVoucher = JournalVoucher::where('transaction_code', $payment->invoice_no)->first();
@@ -395,7 +396,7 @@ class SalePaymentController extends Controller
 
         $pageTitle = 'Payment Details';
 
-        $purchase = Purchase::where('invoice_no', $invoice_no)
+        $purchase = PurchaseInvoice::where('invoice_no', $invoice_no)
             ->with(['products', 'supplier'])
             ->first();
 

@@ -69,7 +69,7 @@
                                         </tr>
                                         <tr>
                                             <th>Terms & Conditions</th>
-                                            <td>{ !! $project->terms_conditions ?? '' !!}</td>
+                                            <td>{!! $project->terms_conditions ?? '' !!}</td>
                                         </tr>
                                         {{-- <tr>
                                             <th>Status</th>
@@ -272,8 +272,8 @@
                                 
                                                         <!-- Bank Account No, Cheque No, and Cheque Date only show for "Bank" payment method -->
                                                         @if($receipt->payment_method === 'bank')
-                                                            <td>{{ $receipt->bank_account_no ?? 'N/A' }}</td>
-                                                            <td>{{ $receipt->cheque_no ?? 'N/A' }}</td>
+                                                            <td>{{ $receipt->bank_account_no ?? '' }}</td>
+                                                            <td>{{ $receipt->cheque_no ?? '' }}</td>
                                     
                                                             <td>{{ \Carbon\Carbon::parse($receipt->cheque_date)->format('d F Y') }}</td>
                                                         @else

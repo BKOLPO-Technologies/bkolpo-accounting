@@ -373,7 +373,7 @@
                         //console.log(response);
 
                         if (response.success) {
-                            let products = response.purchase.purchase_products;
+                            let products = response.purchase.items;
                             let purchase = response.purchase;
                             // console.log(purchase);
                             let payments = response.payments;
