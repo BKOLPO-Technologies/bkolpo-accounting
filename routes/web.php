@@ -14,6 +14,7 @@ use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\Backend\CompanyController;
 use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\JournalController;
+use App\Http\Controllers\Backend\ContraController;
 use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\EmployeeController;
 use App\Http\Controllers\Backend\SupplierController;
@@ -149,6 +150,23 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::post('/update/{id}', [JournalController::class, 'update'])->name('update');
         Route::get('/delete/{id}', [JournalController::class, 'destroy'])->name('delete')->middleware('can:journal-delete');
         Route::get('/view/{id}', [JournalController::class, 'show'])->name('show')->middleware('can:journal-view');
+        Route::get('/get-branches/{companyId}', [JournalController::class, 'getBranchesByCompany']);
+        Route::get('/import/format', [JournalController::class, 'downloadFormat'])->name('import.format');
+        Route::post('/import', [JournalController::class, 'import'])->name('import');
+        Route::post('/update-status', [JournalController::class, 'updateStatus'])->name('update-status');
+
+    }); 
+
+    /* ==================== contra voucher  =================== */
+    Route::prefix('contra-voucher')->as('contra-voucher.')->group(function () {
+        Route::get('/', [ContraController::class, 'index'])->name('index');
+        Route::get('/excel', [ContraController::class, 'excel'])->name('excel');
+        Route::get('/create', [ContraController::class, 'create'])->name('create');
+        Route::post('/store', [ContraController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [ContraController::class, 'edit'])->name('edit')->middleware('can:journal-edit');
+        Route::post('/update/{id}', [ContraController::class, 'update'])->name('update');
+        Route::get('/delete/{id}', [ContraController::class, 'destroy'])->name('delete')->middleware('can:journal-delete');
+        Route::get('/view/{id}', [ContraController::class, 'show'])->name('show')->middleware('can:journal-view');
         Route::get('/get-branches/{companyId}', [JournalController::class, 'getBranchesByCompany']);
         Route::get('/import/format', [JournalController::class, 'downloadFormat'])->name('import.format');
         Route::post('/import', [JournalController::class, 'import'])->name('import');

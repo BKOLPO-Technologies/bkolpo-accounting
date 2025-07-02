@@ -42,6 +42,7 @@ class JournalController extends Controller
         // Fetch journal vouchers with related company, branch, and ledger details
         $journalVouchers = JournalVoucher::with(['company', 'branch', 'details.ledger'])
             ->orderBy('id', 'desc')
+            ->where('type',1) // Type 1=>Contra Voucher
             ->where('status',1) // Status 1=>Pending Voucher
             ->latest()->get();
 
@@ -121,6 +122,9 @@ class JournalController extends Controller
         $companies = Company::where('status',1)->latest()->get();
         $ledgers = Ledger::where('status',1)->latest()->get();
 
+        $cashBankAccounts = Ledger::whereIn('type', ['Cash', 'Bank'])->where('status',1)->get();
+        // dd($cashBankAccounts);
+
         // Get current timestamp in 'dmyHis' format (day, month, year)
         $randomNumber = rand(100000, 999999);
         $fullDate = now()->format('d/m/y');
@@ -128,7 +132,7 @@ class JournalController extends Controller
         // Combine the timestamp, random number, and full date
         $transactionCode = 'BCL-V-'.$fullDate.' - '.$randomNumber;
 
-        return view('backend.admin.voucher.journal.contracreate',compact('pageTitle','branches','ledgers','transactionCode','companies'));
+        return view('backend.admin.voucher.journal.contracreate',compact('pageTitle','branches','ledgers','transactionCode','companies','cashBankAccounts'));
         
     }
 

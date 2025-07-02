@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('branch_id')->nullable()->constrained()->onDelete('cascade');
             $table->date('transaction_date'); 
             $table->text('description')->nullable();
+            $table->tinyInteger('type')->default(1)->comment('1 => Journal, 2 => Contra');
             $table->tinyInteger('status')->default(1)->comment('0 => Draft, 1 => Pending, 2 => Approved');
             $table->timestamps();
         });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Models\Project;
 use App\Models\Purchase;
+use App\Models\PurchaseInvoice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -82,7 +83,7 @@ class AdminController extends Controller
         $projectTotalAmountDue = $projectTotalAmount - $projectTotalAmountPaid;
 
         // ✅ Corrected: Fetch total purchase amount from `purchases` table
-        $purchaseTotalAmount = Purchase::sum('total');
+        $purchaseTotalAmount = PurchaseInvoice::sum('total');
 
         // Get database connection driver
         $dbDriver = DB::getDriverName();
