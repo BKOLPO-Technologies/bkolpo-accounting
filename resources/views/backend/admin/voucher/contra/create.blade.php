@@ -28,11 +28,6 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? '' }}</h4>
                                     
-                                    <!-- Capital Accounts Button -->
-                                    <a href="{{ route('journal-voucher.manually.capital.create') }}" class="btn btn-sm btn-primary rounded-0">
-                                        <i class="fa-solid fa-plus"></i> Capital Accounts
-                                    </a>
-                                    
                                     <!-- Back to List Button -->
                                     <a href="{{ route('journal-voucher.index')}}" class="btn btn-sm btn-danger rounded-0">
                                         <i class="fa-solid fa-arrow-left"></i> Back To List
@@ -294,40 +289,39 @@
         });
 
         function calculateTotals() {
-            let totalDebit = 0;
-            $(".debit").each(function () {
-                totalDebit += parseFloat($(this).val()) || 0;
-            });
-
-            totalDebit = parseFloat(totalDebit.toFixed(2));
-
-            let creditRows = $("#creditSection tr");
-
-            if (creditRows.length > 0) {
-                let remainingAmount = totalDebit;
-                creditRows.each(function (index) {
-                    if (index === creditRows.length - 1) {
-                        // Ensure the last credit value is never negative
-                        //$(this).find(".credit").val(Math.max(remainingAmount, 0));
-                        $(this).find(".credit").val(remainingAmount.toFixed(2));
-                    } else {
-                        //remainingAmount -= parseFloat($(this).find(".credit").val()) || 0;
-                        let currentCredit = parseFloat($(this).find(".credit").val()) || 0;
-                        remainingAmount -= currentCredit;
-                        remainingAmount = Math.max(remainingAmount, 0); // Prevent negative accumulation
-                    }
-                });
-            }
-
             let totalCredit = 0;
             $(".credit").each(function () {
                 totalCredit += parseFloat($(this).val()) || 0;
             });
 
             totalCredit = parseFloat(totalCredit.toFixed(2));
+            // console.log(totalCredit)
 
-            $("#debitTotal").text(formatCurrency(totalDebit));
+            let debitRows = $("#debitSection tr");
+
+            if (debitRows.length > 0) {
+                let remainingAmount = totalCredit;
+                debitRows.each(function (index) {
+                    if (index === debitRows.length - 1) {
+                        // Set the last debit value to the remaining amount
+                        $(this).find(".debit").val(remainingAmount.toFixed(2));
+                    } else {
+                        let currentDebit = parseFloat($(this).find(".debit").val()) || 0;
+                        remainingAmount -= currentDebit;
+                        remainingAmount = Math.max(remainingAmount, 0); // Prevent negative accumulation
+                    }
+                });
+            }
+
+            let totalDebit = 0;
+            $(".debit:visible").each(function () {
+                totalDebit += parseFloat($(this).val()) || 0;
+            });
+
+            // console.log(totalCredit,totalDebit)
+
             $("#creditTotal").text(formatCurrency(totalCredit));
+            $("#debitTotal").text(formatCurrency(totalDebit));
 
             checkTotals(totalDebit, totalCredit);
         }
@@ -339,77 +333,29 @@
             }).format(amount);
         }
 
-        $(document).on("keyup", ".debit", function () {
+        $(document).on("keyup", ".credit", function () {
             calculateTotals();
         });
 
-        $(document).on("keyup", ".credit", function () {
-
-            // If credit is manually updated, we don't want the automatic calculation of debit to happen
-            // But still need to check totals
-            let totalDebit = 0;
-            $(".debit").each(function () {
-                totalDebit += parseFloat($(this).val()) || 0;
-            });
-            
-            // adjustFirstCredit(totalDebit);
-
+        $(document).on("keyup", ".debit", function () {
             let totalCredit = 0;
-            $(".credit").each(function () {
+            $(".credit.visible").each(function () {
                 totalCredit += parseFloat($(this).val()) || 0;
             });
-            $("#creditTotal").text(formatCurrency(totalCredit));
+            
+            let totalDebit = 0;
+            $(".debit:visible").each(function () {
+                totalDebit += parseFloat($(this).val()) || 0;
+            });
+            $("#debitTotal").text(formatCurrency(totalDebit));
             
             checkTotals(totalDebit, totalCredit);
         });
 
-        function adjustFirstCredit(totalDebit) {
-            let creditRows = $("#creditSection tr");
-            let firstCreditField = $("#creditSection tr:first .credit");
-            let lastCreditField = $("#creditSection tr:last .credit");
-
-            if (creditRows.length > 1) {
-                let remainingAmount = totalDebit;
-
-                // Check if C1 is manually edited
-                let isC1Edited = firstCreditField.is(":focus");
-
-                if (isC1Edited) {
-                    // If C1 is being edited, adjust the last credit field instead
-                    let totalFixedCredit = 0;
-                    
-                    creditRows.each(function (index) {
-                        if (index !== creditRows.length - 1) { // Exclude last credit field
-                            totalFixedCredit += parseFloat($(this).find(".credit").val()) || 0;
-                        }
-                    });
-
-                    let lastCreditValue = totalDebit - totalFixedCredit;
-                    // lastCreditField.val(Math.max(lastCreditValue, 0));
-                    lastCreditField.val(lastCreditValue > 0 ? lastCreditValue : ""); // Set empty if 0
-
-                } else {
-                    // If any other field is edited, adjust C1
-                    creditRows.each(function (index) {
-                        if (index !== 0) {
-                            remainingAmount -= parseFloat($(this).find(".credit").val()) || 0;
-                        }
-                    });
-
-                    //firstCreditField.val(Math.max(remainingAmount, 0));
-                    firstCreditField.val(remainingAmount > 0 ? remainingAmount : ""); // Set empty if 0
-                }
-            }
-        }
-
-
         function checkTotals(debitTotal, creditTotal) {
-
             // Round totals to avoid precision issues
             debitTotal = Math.round(debitTotal * 100) / 100;
             creditTotal = Math.round(creditTotal * 100) / 100;
-
-            //console.log("Debit Total:", debitTotal, "Credit Total:", creditTotal);  // Debugging output
             
             // Check if totals are equal
             if (debitTotal !== creditTotal) {

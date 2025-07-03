@@ -150,7 +150,7 @@ class ContraController extends Controller
 
             // Debugging: Check if $details is being populated correctly
             if (empty($details)) {
-                return back()->withErrors(['error' => 'No valid ledger entries found.']);
+                return back()->with(['error' => 'No valid ledger entries found.']);
             }
 
             //dd($details);
