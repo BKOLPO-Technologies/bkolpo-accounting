@@ -730,7 +730,7 @@
             <li class="nav-item">
               <a href="{{ route('company-information.index') }}" class="nav-link {{ Route::is('company-information.index') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Database Backup</p> 
+                  <p>Configuration</p> 
               </a>
             </li>
           </ul>
