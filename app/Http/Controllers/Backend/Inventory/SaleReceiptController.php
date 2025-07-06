@@ -32,6 +32,7 @@ class SaleReceiptController extends Controller
             ->orderBy('payment_date', 'desc')
             //->whereNotNull('outcoming_chalan_id')
             ->get();
+            
         
         return view('backend.admin.inventory.sales.receipt.index', compact('pageTitle', 'receipts'));
     }

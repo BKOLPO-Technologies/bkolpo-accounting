@@ -263,47 +263,35 @@ class ProductSaleReceiveController extends Controller
 
     public function destroy($id)
     {
-        DB::beginTransaction(); // ট্রান্সাকশন শুরু
+        DB::beginTransaction();
 
         try {
-            // রিসিপ্ট খুঁজে বের করুন
             $receipt = ProjectReceipt::findOrFail($id);
 
-            // সম্পর্কিত Project খুঁজে বের করুন
             $project = Sale::where('invoice_no', $receipt->invoice_no)->first();
             // dd($project);
 
-            // Journal Voucher খুঁজে বের করুন
             $journalVoucher = JournalVoucher::where('transaction_code', $receipt->invoice_no)->first();
             // dd($journalVoucher);
 
             if ($journalVoucher) {
-                // Journal Entry খুঁজে বের করুন
                 JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)->delete();
-
-                // Journal Voucher ও মুছে ফেলুন
                 // $journalVoucher->delete();
             }
-
-            // প্রকল্পের পরিশোধিত পরিমাণ হালনাগাদ করুন
             if ($project) {
                 $project->paid_amount -= $receipt->pay_amount;
                 $project->status = ($project->paid_amount >= $project->total) ? 'paid' : 'pending';
                 $project->save();
             }
 
-            // রিসিপ্ট ডিলিট করুন
             $receipt->delete();
-
-
-
             // dd('ok');
 
-            DB::commit(); // ট্রান্সাকশন সফল হলে কমিট
+            DB::commit();
 
             return redirect()->back()->with('success', 'Payment receipt deleted successfully, and journal entry updated!');
         } catch (\Exception $e) {
-            DB::rollBack(); // কোনো সমস্যা হলে রোলব্যাক
+            DB::rollBack();
 
             Log::error('Error deleting payment receipt', [
                 'error' => $e->getMessage(),
