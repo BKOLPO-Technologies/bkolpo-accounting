@@ -119,11 +119,11 @@
                                                                 <tr>
                                                                     <td><input type="text" class="form-control transaction-type" name="transaction_type[]" value="Credit" readonly></td>
                                                                     <td>
-                                                                        <select class="form-control" name="ledger_id[]" required>
-                                                                            <option value="">Select Account</option>
-                                                                            @foreach($ledgers as $ledger)
-                                                                                <option value="{{ $ledger->id }}" {{ $detail->ledger_id == $ledger->id ? 'selected' : '' }}>
-                                                                                    {{ $ledger->name }}
+                                                                        <select class="form-control cash-bank-select" name="ledger_id[]" required>
+                                                                            <option value="">Select Cash/Bank Account</option>
+                                                                            @foreach($cashBankAccounts as $account)
+                                                                                <option value="{{ $account->id }}" {{ $detail->ledger_id == $account->id ? 'selected' : '' }}>
+                                                                                    {{ $account->name }}
                                                                                 </option>
                                                                             @endforeach
                                                                         </select>
@@ -131,7 +131,7 @@
                                                                     <td><input type="text" class="form-control" name="reference_no[]" value="{{ $detail->reference_no }}" required></td>
                                                                     <td><textarea class="form-control" name="description[]" rows="1">{{ $detail->description }}</textarea></td>
                                                                     <td>
-                                                                        <input type="hidden" class="form-control text-end debit" name="debit[]" value="0">
+                                                                        <input type="hidden" class="form-control text-end credit" name="debit[]" value="0">
                                                                     </td>
                                                                     <td>
                                                                         <input type="number" class="form-control text-end credit" name="credit[]" value="{{ $detail->credit }}" required step="0.01">
@@ -151,11 +151,11 @@
                                                                 <tr>
                                                                     <td><input type="text" class="form-control transaction-type" name="transaction_type[]" value="Debit" readonly></td>
                                                                     <td>
-                                                                        <select class="form-control" name="ledger_id[]" required>
-                                                                            <option value="">Select Account</option>
-                                                                            @foreach($ledgers as $ledger)
-                                                                                <option value="{{ $ledger->id }}" {{ $detail->ledger_id == $ledger->id ? 'selected' : '' }}>
-                                                                                    {{ $ledger->name }}
+                                                                        <select class="form-control cash-bank-select" name="ledger_id[]" required>
+                                                                            <option value="">Select Cash/Bank Account</option>
+                                                                            @foreach($cashBankAccounts as $account)
+                                                                                <option value="{{ $account->id }}" {{ $detail->ledger_id == $account->id ? 'selected' : '' }}>
+                                                                                    {{ $account->name }}
                                                                                 </option>
                                                                             @endforeach
                                                                         </select>
@@ -257,7 +257,6 @@
         });
     });
 
-    // 
     $(document).ready(function () { 
         function updateRowControls(sectionClass) {
             let rows = $(sectionClass + " tr");
@@ -305,40 +304,41 @@
         });
 
         function calculateTotals() {
-            let totalDebit = 0;
-            $(".debit").each(function () {
-                totalDebit += parseFloat($(this).val()) || 0;
-            });
-
-            totalDebit = parseFloat(totalDebit.toFixed(2));
-
-            let creditRows = $("#creditSection tr");
-
-            if (creditRows.length > 0) {
-                let remainingAmount = totalDebit;
-                creditRows.each(function (index) {
-                    if (index === creditRows.length - 1) {
-                        // Ensure the last credit value is never negative
-                        //$(this).find(".credit").val(Math.max(remainingAmount, 0));
-                        $(this).find(".credit").val(remainingAmount.toFixed(2));
-                    } else {
-                        //remainingAmount -= parseFloat($(this).find(".credit").val()) || 0;
-                        let currentCredit = parseFloat($(this).find(".credit").val()) || 0;
-                        remainingAmount -= currentCredit;
-                        remainingAmount = Math.max(remainingAmount, 0); // Prevent negative accumulation
-                    }
-                });
-            }
-
             let totalCredit = 0;
             $(".credit").each(function () {
                 totalCredit += parseFloat($(this).val()) || 0;
             });
 
             totalCredit = parseFloat(totalCredit.toFixed(2));
+            // console.log(totalCredit)
 
-            $("#debitTotal").text(formatCurrency(totalDebit));
+            let debitRows = $("#debitSection tr");
+
+            if (debitRows.length > 0) {
+                let remainingAmount = totalCredit;
+                debitRows.each(function (index) {
+                    if (index === debitRows.length - 1) {
+                        // Set the last debit value to the remaining amount
+                        $(this).find(".debit").val(remainingAmount.toFixed(2));
+                    } else {
+                        let currentDebit = parseFloat($(this).find(".debit").val()) || 0;
+                        remainingAmount -= currentDebit;
+                        remainingAmount = Math.max(remainingAmount, 0); // Prevent negative accumulation
+                    }
+                });
+            }
+
+            let totalDebit = 0;
+            $(".debit:visible").each(function () {
+                totalDebit += parseFloat($(this).val()) || 0;
+            });
+
+            totalDebit = parseFloat(totalDebit.toFixed(2));
+
+            // console.log(totalCredit,totalDebit)
+
             $("#creditTotal").text(formatCurrency(totalCredit));
+            $("#debitTotal").text(formatCurrency(totalDebit));
 
             checkTotals(totalDebit, totalCredit);
         }
@@ -350,77 +350,29 @@
             }).format(amount);
         }
 
-        $(document).on("keyup", ".debit", function () {
+        $(document).on("keyup", ".credit", function () {
             calculateTotals();
         });
 
-        $(document).on("keyup", ".credit", function () {
-
-            // If credit is manually updated, we don't want the automatic calculation of debit to happen
-            // But still need to check totals
-            let totalDebit = 0;
-            $(".debit").each(function () {
-                totalDebit += parseFloat($(this).val()) || 0;
-            });
-            
-            // adjustFirstCredit(totalDebit);
-
+        $(document).on("keyup", ".debit", function () {
             let totalCredit = 0;
             $(".credit").each(function () {
                 totalCredit += parseFloat($(this).val()) || 0;
             });
-            $("#creditTotal").text(formatCurrency(totalCredit));
+            
+            let totalDebit = 0;
+            $(".debit").each(function () {
+                totalDebit += parseFloat($(this).val()) || 0;
+            });
+            $("#debitTotal").text(formatCurrency(totalDebit));
             
             checkTotals(totalDebit, totalCredit);
         });
 
-        function adjustFirstCredit(totalDebit) {
-            let creditRows = $("#creditSection tr");
-            let firstCreditField = $("#creditSection tr:first .credit");
-            let lastCreditField = $("#creditSection tr:last .credit");
-
-            if (creditRows.length > 1) {
-                let remainingAmount = totalDebit;
-
-                // Check if C1 is manually edited
-                let isC1Edited = firstCreditField.is(":focus");
-
-                if (isC1Edited) {
-                    // If C1 is being edited, adjust the last credit field instead
-                    let totalFixedCredit = 0;
-                    
-                    creditRows.each(function (index) {
-                        if (index !== creditRows.length - 1) { // Exclude last credit field
-                            totalFixedCredit += parseFloat($(this).find(".credit").val()) || 0;
-                        }
-                    });
-
-                    let lastCreditValue = totalDebit - totalFixedCredit;
-                    // lastCreditField.val(Math.max(lastCreditValue, 0));
-                    lastCreditField.val(lastCreditValue > 0 ? lastCreditValue : ""); // Set empty if 0
-
-                } else {
-                    // If any other field is edited, adjust C1
-                    creditRows.each(function (index) {
-                        if (index !== 0) {
-                            remainingAmount -= parseFloat($(this).find(".credit").val()) || 0;
-                        }
-                    });
-
-                    //firstCreditField.val(Math.max(remainingAmount, 0));
-                    firstCreditField.val(remainingAmount > 0 ? remainingAmount : ""); // Set empty if 0
-                }
-            }
-        }
-
-
         function checkTotals(debitTotal, creditTotal) {
-
             // Round totals to avoid precision issues
             debitTotal = Math.round(debitTotal * 100) / 100;
             creditTotal = Math.round(creditTotal * 100) / 100;
-
-            //console.log("Debit Total:", debitTotal, "Credit Total:", creditTotal);  // Debugging output
             
             // Check if totals are equal
             if (debitTotal !== creditTotal) {
@@ -440,6 +392,33 @@
 
         updateRowControls("#debitSection");
         updateRowControls("#creditSection");
+    });
+
+    // Account selection validation
+    $(document).on("change", ".cash-bank-select", function() {
+        let debitAccounts = [];
+        let creditAccounts = [];
+        
+        // Get all debit account values
+        $("#debitSection select.cash-bank-select").each(function() {
+            if ($(this).val()) debitAccounts.push($(this).val());
+        });
+        
+        // Get all credit account values
+        $("#creditSection select.cash-bank-select").each(function() {
+            if ($(this).val()) creditAccounts.push($(this).val());
+        });
+        
+        // Check for duplicates within debit or credit sections
+        let hasDuplicateDebit = new Set(debitAccounts).size !== debitAccounts.length;
+        let hasDuplicateCredit = new Set(creditAccounts).size !== creditAccounts.length;
+
+        if (hasDuplicateDebit || hasDuplicateCredit) {
+            toastr.error('Duplicate accounts are not allowed in the same section');
+            $(this).val('');
+        }
+        
+        calculateTotals();
     });
 </script>
 @endpush

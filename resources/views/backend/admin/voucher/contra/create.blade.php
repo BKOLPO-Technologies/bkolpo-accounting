@@ -125,7 +125,7 @@
                                                             <td><input type="text" class="form-control" name="reference_no[]" placeholder="Enter Reference No" required></td>
                                                             <td><textarea class="form-control" name="description[]" rows="1" placeholder="Enter Description"></textarea></td>
                                                             <td>
-                                                                <input type="hidden" class="form-control text-end debit" name="debit[]" value="0">
+                                                                <input type="hidden" class="form-control text-end credit" name="debit[]" value="0">
                                                             </td>
                                                             <td><input type="number" class="form-control text-end credit" name="credit[]" placeholder="Enter Credit Amount" required step="0.01" min="0"></td>
 
@@ -153,7 +153,7 @@
                                                                 <input type="number" class="form-control text-end debit" name="debit[]" placeholder="Enter Debit Amount" required step="0.01">
                                                             </td>
                                                             <td>
-                                                                <input type="hidden" class="form-control text-end debit" name="credit[]" value="0">
+                                                                <input type="hidden" class="form-control text-end credit" name="credit[]" value="0">
                                                             </td>
 
                                                             <td>
@@ -318,6 +318,8 @@
                 totalDebit += parseFloat($(this).val()) || 0;
             });
 
+            totalDebit = parseFloat(totalDebit.toFixed(2));
+
             // console.log(totalCredit,totalDebit)
 
             $("#creditTotal").text(formatCurrency(totalCredit));
@@ -339,12 +341,12 @@
 
         $(document).on("keyup", ".debit", function () {
             let totalCredit = 0;
-            $(".credit.visible").each(function () {
+            $(".credit").each(function () {
                 totalCredit += parseFloat($(this).val()) || 0;
             });
             
             let totalDebit = 0;
-            $(".debit:visible").each(function () {
+            $(".debit").each(function () {
                 totalDebit += parseFloat($(this).val()) || 0;
             });
             $("#debitTotal").text(formatCurrency(totalDebit));

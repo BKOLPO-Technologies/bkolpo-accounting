@@ -209,8 +209,9 @@ class ContraController extends Controller
         $companies = Company::where('status',1)->latest()->get();
         $branch = Branch::where('status',1)->where('id', $journal->branch_id)->first();
         $ledgers = Ledger::where('status',1)->latest()->get();
+        $cashBankAccounts = Ledger::whereIn('type', ['Cash', 'Bank'])->where('status',1)->get();
 
-        return view('backend.admin.voucher.contra.edit', compact('pageTitle', 'companies', 'branch', 'journal', 'ledgers'));
+        return view('backend.admin.voucher.contra.edit', compact('pageTitle', 'companies', 'branch', 'journal', 'ledgers','cashBankAccounts'));
     }
 
     /**
@@ -279,9 +280,8 @@ class ContraController extends Controller
             }
 
             if ($totalDebit !== $totalCredit) {
-                return back()
-                    ->withErrors(['error' => 'Total Debit (৳' . number_format($totalDebit, 2) . ') and Total Credit (৳' . number_format($totalCredit, 2) . ') must be equal.'])
-                    ->withInput();
+                // dd('ok');
+                return redirect()->back()->with('error', 'Total Debit (৳' . number_format($totalDebit, 2) . ') and Total Credit (৳' . number_format($totalCredit, 2) . ') must be equal.');
             }
 
             // Remove details that are no longer in the request
