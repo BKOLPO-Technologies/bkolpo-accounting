@@ -187,6 +187,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/ledger/profit/loss', [ReportController::class, 'ledgerProfitLoss'])->name('ledger.profit.loss');
         Route::get('/project/profit/loss', [ReportController::class, 'ProjectProfitLoss'])->name('project.profit.loss');
         Route::get('/daybook', [ReportController::class, 'showDayBook'])->name('daybook');
+        Route::get('/sales', [ReportController::class, 'salesReport'])->name('sales');
+        Route::get('/purchases', [ReportController::class, 'purchasesReport'])->name('purchases');
 
     });
 

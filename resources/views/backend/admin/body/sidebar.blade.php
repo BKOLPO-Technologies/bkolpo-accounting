@@ -1,6 +1,6 @@
 @php
   // Determine active state for menu items
-  $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet','report.ledger.report','report.ledger.single.report','report.ledger.group.report','report.ledger.group.single.report','report.ledger.profit.loss','report.project.profit.loss','report.daybook');
+  $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet','report.ledger.report','report.ledger.single.report','report.ledger.group.report','report.ledger.group.single.report','report.ledger.profit.loss','report.project.profit.loss','report.daybook','report.sales','report.purchases');
   $isSupplierActive = Route::is('admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit','admin.supplier.products','admin.supplier.transactions');
   $isClientActive = Route::is('admin.client.index','admin.client.create','admin.client.view','admin.client.edit','admin.client.products','admin.client.transactions');
   $isProjectActive = Route::is('projects.index', 'projects.create', 'projects.show', 'projects.edit', 'projects.sales');
@@ -573,13 +573,13 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="#"  onclick="comingSoon()" class="nav-link">
+              <a href="{{ route('report.sales') }}" class="nav-link {{ Route::is('report.sales') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Sales Report</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="#"  onclick="comingSoon()" class="nav-link">
+              <a href="{{ route('report.purchases') }}" class="nav-link {{ Route::is('report.purchases') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Purchase Report</p>
               </a>

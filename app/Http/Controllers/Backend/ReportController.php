@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Sale;
 use App\Models\Ledger;
 use App\Models\Project;
 use App\Models\Journal;
@@ -16,11 +17,15 @@ use Carbon\Carbon;
 use Auth;
 use App\Traits\TrialBalanceTrait;
 use App\Traits\ProjectProfitLossTrait;
+use App\Traits\SalesReportTrait;
+use App\Traits\PurchasesReportTrait;
 
 class ReportController extends Controller
 {
     use TrialBalanceTrait;
     use ProjectProfitLossTrait;
+    use SalesReportTrait;
+    use PurchasesReportTrait;
 
     /**
      * Display a listing of the resource.
@@ -50,6 +55,32 @@ class ReportController extends Controller
         // Fetch the trial balance data based on the date range
         $trialBalances = $this->getTrialBalance($fromDate, $toDate);
         return view('backend.admin.report.account.trial_balance', compact('pageTitle', 'trialBalances', 'fromDate', 'toDate'));
+    }
+
+    // sales report
+    public function salesReport(Request $request)
+    {
+        $pageTitle = 'Sales Report';
+
+        $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
+        $toDate = $request->input('to_date', now()->format('Y-m-d'));
+
+        $salesReports = $this->getSalesReport($fromDate, $toDate);
+
+        return view('backend.admin.report.account.sales_report', compact('pageTitle', 'salesReports', 'fromDate', 'toDate'));
+    }
+
+    // sales report
+    public function purchasesReport(Request $request)
+    {
+        $pageTitle = 'Purchases Report';
+
+        $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
+        $toDate = $request->input('to_date', now()->format('Y-m-d'));
+
+        $purchasesReports = $this->getpurchasesReport($fromDate, $toDate);
+
+        return view('backend.admin.report.account.purchases_report', compact('pageTitle', 'purchasesReports', 'fromDate', 'toDate'));
     }
 
     // balance Sheet report

@@ -43,7 +43,7 @@ class PurchaseInvoiceController extends Controller
      */
     public function create()
     {
-         $suppliers = Supplier::orderBy('id', 'desc')->get();
+        $suppliers = Supplier::orderBy('id', 'desc')->get();
 
         $products = Product::where('status',1)->where('group_name', 'purchases')->with('unit')->latest()->get();
         $categories = Category::where('status',1)->latest()->get();
