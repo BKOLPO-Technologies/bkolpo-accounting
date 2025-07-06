@@ -60,7 +60,7 @@
                                     >
                                     {{ get_company()->name ?? '' }}
                                 </h2>
-                                <p class="mb-0"><strong>Sales Report</strong></p>
+                                <p class="mb-0"><strong>Purchases Report</strong></p>
                                 <p class="mb-0">Date: {{ now()->format('d M, Y') }}</p>
                             </div>
                             <div clas="card-body">
