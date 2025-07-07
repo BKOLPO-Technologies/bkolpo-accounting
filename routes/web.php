@@ -189,6 +189,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/daybook', [ReportController::class, 'showDayBook'])->name('daybook');
         Route::get('/sales', [ReportController::class, 'salesReport'])->name('sales');
         Route::get('/purchases', [ReportController::class, 'purchasesReport'])->name('purchases');
+        Route::get('/purchases/sales', [ReportController::class, 'purchasesSalesReport'])->name('purchases.sales');
 
     });
 

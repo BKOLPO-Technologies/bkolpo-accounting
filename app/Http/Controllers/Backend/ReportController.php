@@ -19,6 +19,7 @@ use App\Traits\TrialBalanceTrait;
 use App\Traits\ProjectProfitLossTrait;
 use App\Traits\SalesReportTrait;
 use App\Traits\PurchasesReportTrait;
+use App\Traits\PurchaseSalesReportTrait;
 
 class ReportController extends Controller
 {
@@ -26,6 +27,7 @@ class ReportController extends Controller
     use ProjectProfitLossTrait;
     use SalesReportTrait;
     use PurchasesReportTrait;
+    use PurchaseSalesReportTrait;
 
     /**
      * Display a listing of the resource.
@@ -81,6 +83,32 @@ class ReportController extends Controller
         $purchasesReports = $this->getpurchasesReport($fromDate, $toDate);
 
         return view('backend.admin.report.account.purchases_report', compact('pageTitle', 'purchasesReports', 'fromDate', 'toDate'));
+    }
+    
+    // purchases and sales report
+    public function purchasesSalesReport(Request $request)
+    {
+        $pageTitle = 'Purchases & Sales Report';
+
+        $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
+        $toDate = $request->input('to_date', now()->format('Y-m-d'));
+
+        $purchases = $this->getPurchasesReport2($fromDate, $toDate);
+        $sales = $this->getSalesReport2($fromDate, $toDate);
+
+        // $purchasesSalesReports = $purchases->merge($sales)->sortBy('invoice_date');
+
+        $purchasesSalesReports = $purchases->merge($sales)->sortBy([
+            ['type', 'asc'],
+            ['invoice_date', 'asc'],
+        ]);
+
+        return view('backend.admin.report.account.purchases_sales_report', compact(
+            'pageTitle',
+            'purchasesSalesReports',
+            'fromDate',
+            'toDate'
+        ));
     }
 
     // balance Sheet report
