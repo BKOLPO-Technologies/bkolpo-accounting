@@ -192,6 +192,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/purchases/sales', [ReportController::class, 'purchasesSalesReport'])->name('purchases.sales');
         Route::get('/bills/payable', [ReportController::class, 'billsPayableReport'])->name('bills.payable');
         Route::get('/bills/receivable', [ReportController::class, 'billsReceivableReport'])->name('bills.receivable');
+        Route::get('/group/wise', [ReportController::class, 'groupwiseReport'])->name('groupwise.statement');
 
     });
 

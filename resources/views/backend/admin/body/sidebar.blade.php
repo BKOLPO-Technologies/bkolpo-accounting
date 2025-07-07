@@ -1,15 +1,15 @@
 @php
   // Determine active state for menu items
-  $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet','report.ledger.report','report.ledger.single.report','report.ledger.group.report','report.ledger.group.single.report','report.ledger.profit.loss','report.project.profit.loss','report.daybook','report.sales','report.purchases','report.purchases.sales','report.bills.payable','report.bills.receivable');
+  $isReportActive = Route::is('report.index','report.trial.balance','report.balance.sheet','report.ledger.report','report.ledger.single.report','report.ledger.group.report','report.ledger.group.single.report','report.ledger.profit.loss','report.project.profit.loss','report.daybook','report.sales','report.purchases','report.purchases.sales','report.bills.payable','report.bills.receivable','report.groupwise.statement');
   $isSupplierActive = Route::is('admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit','admin.supplier.products','admin.supplier.transactions');
   $isClientActive = Route::is('admin.client.index','admin.client.create','admin.client.view','admin.client.edit','admin.client.products','admin.client.transactions');
   $isProjectActive = Route::is('projects.index', 'projects.create', 'projects.show', 'projects.edit', 'projects.sales');
   $isInvoiceActive = Route::is('project.receipt.payment.show');
   $isSalesActive = Route::is('quotations.index','quotations.create','quotations.edit','quotations.show','outcoming.chalan.index','outcoming.chalan.create','outcoming.chalan.show','outcoming.chalan.edit','receipt.payment.index','receipt.payment.create','stock.out','stock.out.view');
   $isPurchaseActive = Route::is('workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit');
-  $isAccountMasterActive = Route::is('journal-voucher.*', 'chart_of_accounts.*', 'ledger.*', 'ledger.group.*', 'ledger.sub.group.*', 'admin.client.index','admin.client.create','admin.client.view','admin.client.edit','admin.client.products','admin.client.transactions', 'admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit','admin.supplier.products','admin.supplier.transactions');
+  $isAccountMasterActive = Route::is('chart_of_accounts.*', 'ledger.*', 'ledger.group.*', 'ledger.sub.group.*', 'admin.client.index','admin.client.create','admin.client.view','admin.client.edit','admin.client.products','admin.client.transactions', 'admin.supplier.index','admin.supplier.create','admin.supplier.view','admin.supplier.edit','admin.supplier.products','admin.supplier.transactions');
   // new
-  $isTransactionsActive = Route::is('admin.purchase.invoice.index','admin.purchase.invoice.create','admin.purchase.invoice.show','admin.purchase.invoice.edit','admin.purchase.order.index','admin.purchase.order.create','admin.purchase.order.edit','admin.purchase.order.create','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create','stock.in','stock.in.view', 'sale.payment.show','project.receipt.payment.index', 'project.receipt.payment.create', 'project.receipt.payment.show','contra-voucher.create','contra-voucher.index','contra-voucher.edit');
+  $isTransactionsActive = Route::is('journal-voucher.*','admin.purchase.invoice.index','admin.purchase.invoice.create','admin.purchase.invoice.show','admin.purchase.invoice.edit','admin.purchase.order.index','admin.purchase.order.create','admin.purchase.order.edit','admin.purchase.order.create','admin.sale.index','admin.sale.create','admin.sale.show','admin.sale.edit','workorders.index','workorders.create','workorders.edit','workorders.show','incoming.chalan.index','incoming.chalan.create','incoming.chalan.show','incoming.chalan.edit','sale.payment.index','sale.payment.create','stock.in','stock.in.view', 'sale.payment.show','project.receipt.payment.index', 'project.receipt.payment.create', 'project.receipt.payment.show','contra-voucher.create','contra-voucher.index','contra-voucher.edit');
 @endphp
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -97,7 +97,7 @@
           </a>
 
           <!-- === Journal Submenu === -->
-          @can('journal-menu')  
+          {{-- @can('journal-menu')  
           <ul class="nav nav-treeview shadow-lg">
             <li class="nav-item {{ Route::is('journal-voucher.*') ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ Route::is('journal-voucher.*') ? 'active' : '' }}">
@@ -116,16 +116,10 @@
                   </a>
                 </li>
                 @endcan
-                {{-- <li class="nav-item">
-                  <a href="{{ route('journal-voucher.excel') }}" class="nav-link {{ Route::is('journal-voucher.excel') ? 'active' : '' }}">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Journal Excel Entry List</p>
-                  </a>
-                </li> --}}
               </ul>
             </li>
           </ul>
-          @endcan
+          @endcan --}}
           <!-- === End Journal Submenu === -->
 
           <!-- === Chart of Accounts Submenu === -->
@@ -355,12 +349,12 @@
             </li>
 
             <!-- Invoice/Bill -->
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a href="{{ route('admin.sale.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Invoice/Bill</p>
               </a>
-            </li>
+            </li> --}}
 
             <!-- Sales Return -->
             <li class="nav-item">
@@ -448,12 +442,12 @@
             </li>
 
             <!-- Purchase Order -->
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a href="{{ route('admin.purchase.order.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Purchase Order</p>
               </a>
-            </li>
+            </li> --}}
 
             <!-- Receipt Note -->
             <li class="nav-item">
@@ -464,12 +458,12 @@
             </li>
 
             <!-- Purchase Invoice -->
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a href="{{ route('admin.purchase.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Purchase Invoice</p>
               </a>
-            </li>
+            </li> --}}
 
             <!-- Purchase Return -->
             <li class="nav-item">
@@ -543,13 +537,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="#"  onclick="comingSoon()" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Statement</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#"  onclick="comingSoon()" class="nav-link">
+              <a href="{{ route('report.groupwise.statement') }}" class="nav-link {{ Route::is('report.groupwise.statement') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Groupwise Statement</p>
               </a>

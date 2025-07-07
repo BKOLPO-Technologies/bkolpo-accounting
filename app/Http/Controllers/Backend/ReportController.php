@@ -151,6 +151,22 @@ class ReportController extends Controller
         ));
     }
 
+    public function groupwiseReport(Request $request)
+    {
+        $pageTitle = 'Ledger Group wise Statement';
+
+        $fromDate = $request->input('from_date', now()->startOfMonth()->toDateString());
+        $toDate = $request->input('to_date', now()->toDateString());
+
+        $groups = LedgerGroup::with(['ledgers.journalVoucherDetails' => function ($q) use ($fromDate, $toDate) {
+            $q->whereHas('journalVoucher', function ($query) use ($fromDate, $toDate) {
+                $query->whereBetween('transaction_date', [$fromDate, $toDate]);
+            });
+        }])->get();
+
+        return view('backend.admin.report.account.groupwise_statement', compact('pageTitle', 'groups', 'fromDate', 'toDate'));
+    }
+
     
 
     // balance Sheet report
