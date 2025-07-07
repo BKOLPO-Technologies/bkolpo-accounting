@@ -20,6 +20,8 @@ use App\Traits\ProjectProfitLossTrait;
 use App\Traits\SalesReportTrait;
 use App\Traits\PurchasesReportTrait;
 use App\Traits\PurchaseSalesReportTrait;
+use App\Traits\BillsPayableReportTrait;
+use App\Traits\BillsReceivableReportTrait;
 
 class ReportController extends Controller
 {
@@ -28,6 +30,8 @@ class ReportController extends Controller
     use SalesReportTrait;
     use PurchasesReportTrait;
     use PurchaseSalesReportTrait;
+    use BillsPayableReportTrait;
+    use BillsReceivableReportTrait;
 
     /**
      * Display a listing of the resource.
@@ -110,6 +114,44 @@ class ReportController extends Controller
             'toDate'
         ));
     }
+
+    // bills payable
+    public function billsPayableReport(Request $request)
+    {
+        $pageTitle = 'Bills Payable Report';
+
+        $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
+        $toDate = $request->input('to_date', now()->format('Y-m-d'));
+
+        $billspayableReports = $this->getBillsPayableReport($fromDate, $toDate);
+
+        return view('backend.admin.report.account.billspayable_report', compact(
+            'pageTitle',
+            'billspayableReports',
+            'fromDate',
+            'toDate'
+        ));
+    }
+
+    // bills receivable
+    public function billsReceivableReport(Request $request)
+    {
+        $pageTitle = 'Bills Receivable Report';
+
+        $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
+        $toDate = $request->input('to_date', now()->format('Y-m-d'));
+
+        $billsReceivableReports = $this->getBillsReceivableReport($fromDate, $toDate);
+
+        return view('backend.admin.report.account.billsreceivable_report', compact(
+            'pageTitle',
+            'billsReceivableReports',
+            'fromDate',
+            'toDate'
+        ));
+    }
+
+    
 
     // balance Sheet report
     public function balanceSheet(Request $request)
