@@ -359,19 +359,28 @@ class ReportController extends Controller
     ));
 }
 
-    public function showDayBook(Request $request)
+   public function showDayBook(Request $request)
     {
         $pageTitle = 'Day Book Report';
 
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
+
+        if (!$fromDate || !$toDate) {
+            // Default to today's report
+            $fromDate = $toDate = now()->toDateString();
+        }
+
         $transactions = JournalVoucher::with('details.ledger')
-            ->whereDate('transaction_date', now())
-            ->orderBy('created_at')
+            ->whereBetween('transaction_date', [$fromDate, $toDate])
+            ->orderBy('transaction_date')
             ->get();
 
         return view('backend.admin.report.account.daybook_report', compact(
-            'pageTitle','transactions'
+            'pageTitle', 'transactions', 'fromDate', 'toDate'
         ));
     }
+
 
     public function showContra(Request $request)
     {

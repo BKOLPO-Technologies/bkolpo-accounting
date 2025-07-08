@@ -68,11 +68,11 @@
                                     <div class="col-lg-8 col-md-8 col-sm-12 mx-auto">
                                         <!-- Group-wise Statement Table -->
                                         <div class="table-responsive">
-                                            <table id="example3" class="table-striped table-bordered" style="width: 100%;">
+                                           <table id="example3" class="table-striped table-bordered" style="width: 100%;">
                                                 <thead style="border-bottom: 2px solid black;">
                                                     <tr>
-                                                        <th style="width: 5%;">Sl</th>
-                                                        <th style="width: 20%;">Group Name</th>
+                                                        {{-- <th style="width: 5%;">Sl</th> --}}
+                                                        <th style="width: 30%;">Group / Ledger Name</th>
                                                         <th class="text-end">Total Debit</th>
                                                         <th class="text-end">Total Credit</th>
                                                         <th class="text-end">Balance</th>
@@ -83,39 +83,57 @@
                                                         $grandDebit = 0;
                                                         $grandCredit = 0;
                                                     @endphp
+
                                                     @foreach($groups as $key => $group)
                                                         @php
-                                                            $totalDebit = $group->ledgers->sum(fn($ledger) => $ledger->journalVoucherDetails->sum('debit'));
-                                                            $totalCredit = $group->ledgers->sum(fn($ledger) => $ledger->journalVoucherDetails->sum('credit'));
-                                                            $balance = $totalDebit - $totalCredit;
+                                                            $groupTotalDebit = $group->ledgers->sum(fn($ledger) => $ledger->journalVoucherDetails->sum('debit'));
+                                                            $groupTotalCredit = $group->ledgers->sum(fn($ledger) => $ledger->journalVoucherDetails->sum('credit'));
+                                                            $groupBalance = $groupTotalDebit - $groupTotalCredit;
 
-                                                            $grandDebit += $totalDebit;
-                                                            $grandCredit += $totalCredit;
+                                                            $grandDebit += $groupTotalDebit;
+                                                            $grandCredit += $groupTotalCredit;
                                                         @endphp
-                                                        <tr>
-                                                            <td>{{ $key + 1 }}</td>
-                                                            <td>{{ $group->group_name }}</td>
-                                                            <td class="text-end">{{ number_format($totalDebit, 2) }}</td>
-                                                            <td class="text-end">{{ number_format($totalCredit, 2) }}</td>
-                                                            <td class="text-end">
-                                                                {{ number_format(abs($balance), 2) }} {{ $balance >= 0 ? 'Dr' : 'Cr' }}
-                                                            </td>
+
+                                                        <!-- Group Row -->
+                                                        <tr style="background-color: #f0f0f0;">
+                                                            {{-- <td><strong>{{ $key + 1 }}</strong></td> --}}
+                                                            <td><strong>{{ $group->group_name }}</strong></td>
+                                                            <td class="text-end"><strong>{{ number_format($groupTotalDebit, 2) }}</strong></td>
+                                                            <td class="text-end"><strong>{{ number_format($groupTotalCredit, 2) }}</strong></td>
+                                                            <td class="text-end"><strong>{{ number_format(abs($groupBalance), 2) }} {{ $groupBalance >= 0 ? 'Dr' : 'Cr' }}</strong></td>
                                                         </tr>
+
+                                                        <!-- Ledger Rows -->
+                                                        @foreach($group->ledgers as $ledger)
+                                                            @php
+                                                                $ledgerDebit = $ledger->journalVoucherDetails->sum('debit');
+                                                                $ledgerCredit = $ledger->journalVoucherDetails->sum('credit');
+                                                                $ledgerBalance = $ledgerDebit - $ledgerCredit;
+                                                            @endphp
+                                                            <tr>
+                                                                {{-- <td></td> --}}
+                                                                <td class="ps-4">↳ {{ $ledger->name ?? 'Unnamed Ledger' }}</td>
+                                                                <td class="text-end">{{ number_format($ledgerDebit, 2) }}</td>
+                                                                <td class="text-end">{{ number_format($ledgerCredit, 2) }}</td>
+                                                                <td class="text-end">{{ number_format(abs($ledgerBalance), 2) }} {{ $ledgerBalance >= 0 ? 'Dr' : 'Cr' }}</td>
+                                                            </tr>
+                                                        @endforeach
+
                                                     @endforeach
                                                 </tbody>
+
                                                 <tfoot>
                                                     @php
                                                         $grandBalance = $grandDebit - $grandCredit;
                                                     @endphp
                                                     <tr class="fw-bold">
-                                                        <td colspan="2" class="text-end">Grand Total</td>
+                                                        <td colspan="1" class="text-end">Grand Total</td>
                                                         <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($grandDebit, 2) }}</td>
                                                         <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($grandCredit, 2) }}</td>
                                                         <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format(abs($grandBalance), 2) }} {{ $grandBalance >= 0 ? 'Dr' : 'Cr' }}</td>
                                                     </tr>
                                                 </tfoot>
                                             </table>
-
                                             <!-- Amount in Words -->
                                             <div id="amountInWordsPrint" style="margin-top: 10px;">
                                                 <strong>Amount in Words:</strong>
@@ -200,7 +218,7 @@
                             $(this).css('width', '40%'); // Larger Ledger Name column
                         }
                         if ($(this).text().includes('Debit') || $(this).text().includes('Credit')) {
-                            $(this).css('width', '10%'); // Smaller Debit and Credit columns
+                            $(this).css('width', '20%'); // Smaller Debit and Credit columns
                         }
                     });
 
@@ -209,7 +227,7 @@
                         "position": "relative",
                         "bottom": "0px",
                         "width": "100%",
-                        "text-align": "center",
+                        "text-align": "left",
                         "font-weight": "bold",
                         "border-top": "2px solid black"
                     });
