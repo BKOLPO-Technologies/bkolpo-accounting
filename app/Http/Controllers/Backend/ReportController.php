@@ -153,19 +153,35 @@ class ReportController extends Controller
 
     public function groupwiseReport(Request $request)
     {
-        $pageTitle = 'Ledger Group wise Statement';
+        $pageTitle = 'Ledger Group → Subgroup → Ledger Statement';
 
         $fromDate = $request->input('from_date', now()->startOfMonth()->toDateString());
         $toDate = $request->input('to_date', now()->toDateString());
+        $nameSearch = trim($request->input('name'));
 
-        $groups = LedgerGroup::with(['ledgers.journalVoucherDetails' => function ($q) use ($fromDate, $toDate) {
+        $groupsQuery = LedgerGroup::with(['subGroups.ledgers.journalVoucherDetails' => function ($q) use ($fromDate, $toDate) {
             $q->whereHas('journalVoucher', function ($query) use ($fromDate, $toDate) {
                 $query->whereBetween('transaction_date', [$fromDate, $toDate]);
             });
-        }])->get();
+        }]);
+
+        if ($nameSearch) {
+            $groupsQuery->where(function ($query) use ($nameSearch) {
+                $query->where('group_name', 'LIKE', "%{$nameSearch}%")
+                    ->orWhereHas('subGroups', function ($subQuery) use ($nameSearch) {
+                        $subQuery->where('subgroup_name', 'LIKE', "%{$nameSearch}%")
+                            ->orWhereHas('ledgers', function ($ledgerQuery) use ($nameSearch) {
+                                $ledgerQuery->where('name', 'LIKE', "%{$nameSearch}%");
+                            });
+                    });
+            });
+        }
+
+        $groups = $groupsQuery->get();
 
         return view('backend.admin.report.account.groupwise_statement', compact('pageTitle', 'groups', 'fromDate', 'toDate'));
     }
+
 
     
 

@@ -33,13 +33,17 @@
                             <!-- Date Filter Form -->
                             <form action="{{ route('report.groupwise.statement') }}" method="GET" class="mb-3">
                                 <div class="row justify-content-center">
-                                    <div class="col-md-3 mt-3">
+                                    <div class="col-md-2 mt-3">
                                         <label for="from_date">From Date:</label>
                                         <input type="text" name="from_date" id="from_date" class="form-control" value="{{ request('from_date', $fromDate) }}">
                                     </div>
-                                    <div class="col-md-3 mt-3">
+                                    <div class="col-md-2 mt-3">
                                         <label for="to_date">To Date:</label>
                                         <input type="text" name="to_date" id="to_date" class="form-control" value="{{ request('to_date', $toDate) }}">
+                                    </div>
+                                    <div class="col-md-2 mt-3">
+                                        <label for="name">Name:</label>
+                                        <input type="text" name="name" id="name" class="form-control" value="{{ request('name', $nameSearch ?? '') }}" placeholder="Enter name">
                                     </div>
                                     <div class="col-md-1 mt-3 d-flex align-items-end">
                                         <button type="submit" class="btn btn-primary w-100">Filter</button>
@@ -84,50 +88,77 @@
                                                         $grandCredit = 0;
                                                     @endphp
 
-                                                    @foreach($groups as $key => $group)
+                                                    @foreach($groups as $group)
                                                         @php
-                                                            $groupTotalDebit = $group->ledgers->sum(fn($ledger) => $ledger->journalVoucherDetails->sum('debit'));
-                                                            $groupTotalCredit = $group->ledgers->sum(fn($ledger) => $ledger->journalVoucherDetails->sum('credit'));
-                                                            $groupBalance = $groupTotalDebit - $groupTotalCredit;
-
-                                                            $grandDebit += $groupTotalDebit;
-                                                            $grandCredit += $groupTotalCredit;
+                                                            $groupDebit = 0;
+                                                            $groupCredit = 0;
                                                         @endphp
 
-                                                        <!-- Group Row -->
                                                         <tr style="background-color: #f0f0f0;">
-                                                            {{-- <td><strong>{{ $key + 1 }}</strong></td> --}}
-                                                            <td><strong>{{ $group->group_name }}</strong></td>
-                                                            <td class="text-end"><strong>{{ number_format($groupTotalDebit, 2) }}</strong></td>
-                                                            <td class="text-end"><strong>{{ number_format($groupTotalCredit, 2) }}</strong></td>
-                                                            <td class="text-end"><strong>{{ number_format(abs($groupBalance), 2) }} {{ $groupBalance >= 0 ? 'Dr' : 'Cr' }}</strong></td>
+                                                            <td colspan="4"><strong>{{ $group->group_name }}</strong></td>
                                                         </tr>
 
-                                                        <!-- Ledger Rows -->
-                                                        @foreach($group->ledgers as $ledger)
+                                                        @foreach($group->subGroups as $subGroup)
                                                             @php
-                                                                $ledgerDebit = $ledger->journalVoucherDetails->sum('debit');
-                                                                $ledgerCredit = $ledger->journalVoucherDetails->sum('credit');
-                                                                $ledgerBalance = $ledgerDebit - $ledgerCredit;
+                                                                $subGroupDebit = 0;
+                                                                $subGroupCredit = 0;
                                                             @endphp
+
+                                                            <tr style="background-color: #e9e9e9;">
+                                                                <td class="ps-2"><strong>↳ {{ $subGroup->subgroup_name }}</strong></td>
+                                                                <td colspan="3"></td>
+                                                            </tr>
+
+                                                            @foreach($subGroup->ledgers as $ledger)
+                                                                @php
+                                                                    $ledgerDebit = $ledger->journalVoucherDetails->sum('debit');
+                                                                    $ledgerCredit = $ledger->journalVoucherDetails->sum('credit');
+                                                                    $ledgerBalance = $ledgerDebit - $ledgerCredit;
+
+                                                                    $subGroupDebit += $ledgerDebit;
+                                                                    $subGroupCredit += $ledgerCredit;
+                                                                    $groupDebit += $ledgerDebit;
+                                                                    $groupCredit += $ledgerCredit;
+                                                                @endphp
+                                                                <tr>
+                                                                    <td class="ps-4">↳ {{ $ledger->name ?? 'Unnamed Ledger' }}</td>
+                                                                    <td class="text-end">{{ number_format($ledgerDebit, 2) }}</td>
+                                                                    <td class="text-end">{{ number_format($ledgerCredit, 2) }}</td>
+                                                                    <td class="text-end">{{ number_format(abs($ledgerBalance), 2) }} {{ $ledgerBalance >= 0 ? 'Dr' : 'Cr' }}</td>
+                                                                </tr>
+                                                            @endforeach
+
+                                                            {{-- Subgroup total (optional) --}}
                                                             <tr>
-                                                                {{-- <td></td> --}}
-                                                                <td class="ps-4">↳ {{ $ledger->name ?? 'Unnamed Ledger' }}</td>
-                                                                <td class="text-end">{{ number_format($ledgerDebit, 2) }}</td>
-                                                                <td class="text-end">{{ number_format($ledgerCredit, 2) }}</td>
-                                                                <td class="text-end">{{ number_format(abs($ledgerBalance), 2) }} {{ $ledgerBalance >= 0 ? 'Dr' : 'Cr' }}</td>
+                                                                <td class="text-end"><em>Subgroup Total</em></td>
+                                                                <td class="text-end">{{ number_format($subGroupDebit, 2) }}</td>
+                                                                <td class="text-end">{{ number_format($subGroupCredit, 2) }}</td>
+                                                                <td class="text-end">{{ number_format(abs($subGroupDebit - $subGroupCredit), 2) }} {{ ($subGroupDebit - $subGroupCredit) >= 0 ? 'Dr' : 'Cr' }}</td>
                                                             </tr>
                                                         @endforeach
 
+                                                        @php
+                                                            $groupBalance = $groupDebit - $groupCredit;
+                                                            $grandDebit += $groupDebit;
+                                                            $grandCredit += $groupCredit;
+                                                        @endphp
+
+                                                        {{-- Group total row --}}
+                                                        <tr style="background-color: #f5f5f5;">
+                                                            <td class="text-end"><strong>{{ $group->group_name }} Total</strong></td>
+                                                            <td class="text-end"><strong>{{ number_format($groupDebit, 2) }}</strong></td>
+                                                            <td class="text-end"><strong>{{ number_format($groupCredit, 2) }}</strong></td>
+                                                            <td class="text-end"><strong>{{ number_format(abs($groupBalance), 2) }} {{ $groupBalance >= 0 ? 'Dr' : 'Cr' }}</strong></td>
+                                                        </tr>
                                                     @endforeach
                                                 </tbody>
 
-                                                <tfoot>
+                                               <tfoot>
                                                     @php
                                                         $grandBalance = $grandDebit - $grandCredit;
                                                     @endphp
                                                     <tr class="fw-bold">
-                                                        <td colspan="1" class="text-end">Grand Total</td>
+                                                        <td class="text-end">Grand Total</td>
                                                         <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($grandDebit, 2) }}</td>
                                                         <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($grandCredit, 2) }}</td>
                                                         <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format(abs($grandBalance), 2) }} {{ $grandBalance >= 0 ? 'Dr' : 'Cr' }}</td>
