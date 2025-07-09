@@ -195,6 +195,8 @@ class ReportController extends Controller
 
         $transactions = $this->getReceiptPaymentTransactions($fromDate, $toDate);
 
+        // dd($transactions);
+
         return view('backend.admin.report.account.receiptpayment_report', compact(
             'pageTitle',
             'transactions',

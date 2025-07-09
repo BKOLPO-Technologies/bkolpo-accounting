@@ -8,8 +8,8 @@ trait HasReceiptPaymentReport
 {
     public function getReceiptPaymentTransactions($fromDate, $toDate)
     {
-        $receipts = ProjectReceipt::with('ledger')
-            ->whereBetween('payment_date', [$fromDate, $toDate])
+        $receipts = ProjectReceipt::
+            whereBetween('payment_date', [$fromDate, $toDate])
             ->get()
             ->each(function ($receipt) {
                 $receipt->type = 'Receipt';
