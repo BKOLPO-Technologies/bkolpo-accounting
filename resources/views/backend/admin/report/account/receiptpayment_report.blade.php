@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['pageTitle' => 'Ledger Gruop Wise Report'])
+@extends('layouts.admin', ['pageTitle' => 'Day Book Report'])
 
 @section('admin')
 <link rel="stylesheet" href="{{ asset('backend/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
@@ -31,25 +31,21 @@
                         </div>
                         <div class="card-body mt-3">
                             <!-- Date Filter Form -->
-                            <form action="{{ route('report.groupwise.statement') }}" method="GET" class="mb-3">
+                            <form action="{{ route('report.receipts.payments') }}" method="GET" class="mb-3">
                                 <div class="row justify-content-center">
-                                    <div class="col-md-2 mt-3">
+                                    <div class="col-md-3 mt-3">
                                         <label for="from_date">From Date:</label>
                                         <input type="text" name="from_date" id="from_date" class="form-control" value="{{ request('from_date', $fromDate) }}">
                                     </div>
-                                    <div class="col-md-2 mt-3">
+                                    <div class="col-md-3 mt-3">
                                         <label for="to_date">To Date:</label>
                                         <input type="text" name="to_date" id="to_date" class="form-control" value="{{ request('to_date', $toDate) }}">
-                                    </div>
-                                    <div class="col-md-2 mt-3">
-                                        <label for="name">Name:</label>
-                                        <input type="text" name="name" id="name" class="form-control" value="{{ request('name', $nameSearch ?? '') }}" placeholder="Enter name">
                                     </div>
                                     <div class="col-md-1 mt-3 d-flex align-items-end">
                                         <button type="submit" class="btn btn-primary w-100">Filter</button>
                                     </div>
                                     <div class="col-md-1 mt-3 d-flex align-items-end">
-                                        <a href="{{ route('report.groupwise.statement') }}"  class="btn btn-danger w-100">Clear</a>
+                                        <a href="{{ route('report.receipts.payments') }}"  class="btn btn-danger w-100">Clear</a>
                                     </div>
                                 </div>
                             </form>
@@ -64,7 +60,7 @@
                                     >
                                     {{ get_company()->name ?? '' }}
                                 </h2>
-                                <p class="mb-0"><strong>Ledger Group Wise Report</strong></p>
+                                <p class="mb-0"><strong>Receipt & Payment Report</strong></p>
                                 <p class="mb-0">Date: {{ now()->format('d M, Y') }}</p>
                             </div>
                             <div clas="card-body">
@@ -75,100 +71,56 @@
                                            <table id="example3" class="table-striped table-bordered" style="width: 100%;">
                                                 <thead style="border-bottom: 2px solid black;">
                                                     <tr>
-                                                        {{-- <th style="width: 5%;">Sl</th> --}}
-                                                        <th style="width: 30%;">Group / Ledger Name</th>
-                                                        <th class="text-end">Total Debit</th>
-                                                        <th class="text-end">Total Credit</th>
-                                                        <th class="text-end">Balance</th>
+                                                        <th style="width: 10%;">Type</th>
+                                                        <th style="width: 15%;">Invoice No</th>
+                                                        <th style="width: 10%;">Date</th>
+                                                        <th class="text-end">Total</th>
+                                                        <th class="text-end">Paid</th>
+                                                        <th class="text-end">Due</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @php
-                                                        $grandDebit = 0;
-                                                        $grandCredit = 0;
+                                                        $totalAmount = 0;
+                                                        $totalPaid = 0;
+                                                        $totalDue = 0;
                                                     @endphp
 
-                                                    @foreach($groups as $group)
+                                                    @forelse($transactions as $txn)
                                                         @php
-                                                            $groupDebit = 0;
-                                                            $groupCredit = 0;
+                                                            $totalAmount += $txn->total_amount;
+                                                            $totalPaid += $txn->pay_amount;
+                                                            $totalDue += $txn->due_amount;
                                                         @endphp
-
-                                                        <tr style="background-color: #f0f0f0;">
-                                                            <td colspan="4"><strong>{{ $group->group_name }}</strong></td>
+                                                        <tr>
+                                                            <td>{{ $txn->type }}</td>
+                                                            <td>{{ $txn->invoice_no }}</td>
+                                                            <td>{{ \Carbon\Carbon::parse($txn->payment_date)->format('d M Y') }}</td>
+                                                            <td class="text-end">{{ number_format($txn->total_amount, 2) }}</td>
+                                                            <td class="text-end">{{ number_format($txn->pay_amount, 2) }}</td>
+                                                            <td class="text-end">{{ number_format($txn->due_amount, 2) }}</td>
                                                         </tr>
-
-                                                        @foreach($group->subGroups as $subGroup)
-                                                            @php
-                                                                $subGroupDebit = 0;
-                                                                $subGroupCredit = 0;
-                                                            @endphp
-
-                                                            <tr style="background-color: #e9e9e9;">
-                                                                <td class="ps-2"><strong>↳ {{ $subGroup->subgroup_name }}</strong></td>
-                                                                <td colspan="3"></td>
-                                                            </tr>
-
-                                                            @foreach($subGroup->ledgers as $ledger)
-                                                                @php
-                                                                    $ledgerDebit = $ledger->journalVoucherDetails->sum('debit');
-                                                                    $ledgerCredit = $ledger->journalVoucherDetails->sum('credit');
-                                                                    $ledgerBalance = $ledgerDebit - $ledgerCredit;
-
-                                                                    $subGroupDebit += $ledgerDebit;
-                                                                    $subGroupCredit += $ledgerCredit;
-                                                                    $groupDebit += $ledgerDebit;
-                                                                    $groupCredit += $ledgerCredit;
-                                                                @endphp
-                                                                <tr>
-                                                                    <td class="ps-4">↳ {{ $ledger->name ?? 'Unnamed Ledger' }}</td>
-                                                                    <td class="text-end">{{ number_format($ledgerDebit, 2) }}</td>
-                                                                    <td class="text-end">{{ number_format($ledgerCredit, 2) }}</td>
-                                                                    <td class="text-end">{{ number_format(abs($ledgerBalance), 2) }} {{ $ledgerBalance >= 0 ? '' : '' }}</td>
-                                                                </tr>
-                                                            @endforeach
-
-                                                            {{-- Subgroup total (optional) --}}
-                                                            <tr>
-                                                                <td class="text-end"><em>Subgroup Total</em></td>
-                                                                <td class="text-end">{{ number_format($subGroupDebit, 2) }}</td>
-                                                                <td class="text-end">{{ number_format($subGroupCredit, 2) }}</td>
-                                                                <td class="text-end">{{ number_format(abs($subGroupDebit - $subGroupCredit), 2) }} {{ ($subGroupDebit - $subGroupCredit) >= 0 ? '' : '' }}</td>
-                                                            </tr>
-                                                        @endforeach
-
-                                                        @php
-                                                            $groupBalance = $groupDebit - $groupCredit;
-                                                            $grandDebit += $groupDebit;
-                                                            $grandCredit += $groupCredit;
-                                                        @endphp
-
-                                                        {{-- Group total row --}}
-                                                        <tr style="background-color: #f5f5f5;">
-                                                            <td class="text-end"><strong>{{ $group->group_name }} Total</strong></td>
-                                                            <td class="text-end"><strong>{{ number_format($groupDebit, 2) }}</strong></td>
-                                                            <td class="text-end"><strong>{{ number_format($groupCredit, 2) }}</strong></td>
-                                                            <td class="text-end"><strong>{{ number_format(abs($groupBalance), 2) }} {{ $groupBalance >= 0 ? '' : '' }}</strong></td>
+                                                    @empty
+                                                        <tr>
+                                                            <td colspan="6" class="text-center text-muted">No data found</td>
                                                         </tr>
-                                                    @endforeach
+                                                    @endforelse
                                                 </tbody>
 
-                                               <tfoot>
-                                                    @php
-                                                        $grandBalance = $grandDebit - $grandCredit;
-                                                    @endphp
+                                                <tfoot>
                                                     <tr class="fw-bold">
-                                                        <td class="text-end">Grand Total</td>
-                                                        <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($grandDebit, 2) }}</td>
-                                                        <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($grandCredit, 2) }}</td>
-                                                        <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format(abs($grandBalance), 2) }} {{ $grandBalance >= 0 ? '' : '' }}</td>
+                                                        <td colspan="3" class="text-end">Grand Total</td>
+                                                        <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($totalAmount, 2) }}</td>
+                                                        <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($totalPaid, 2) }}</td>
+                                                        <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($totalDue, 2) }}</td>
                                                     </tr>
                                                 </tfoot>
+
                                             </table>
                                             <!-- Amount in Words -->
-                                            <div id="amountInWordsPrint" style="margin-top: 10px;">
+                                            <div id="amountInWordsPrint" class="mt-2">
                                                 <strong>Amount in Words:</strong>
-                                                <strong class="text-uppercase">{{ convertNumberToWords(number_format(abs($grandBalance), 2)) }} {{ $grandBalance >= 0 ? '' : '' }}</strong>
+                                                <strong class="text-uppercase">{{ convertNumberToWords(number_format(abs($totalPaid), 2)) }}</strong>
                                             </div>
                                         </div>
                                     </div>
@@ -228,7 +180,7 @@
                     $(win.document.body).prepend(`
                         <div class="text-center mb-3">
                             <h2 class="mb-1">{{ get_company()->name ?? '' }}</h2>
-                            <p class="mb-0"><strong>Ledger Group Wise Report</strong></p>
+                            <p class="mb-0"><strong>Receipt & Payment Report</strong></p>
                             <p class="mb-0">Date: {{ now()->format('d M, Y') }}</p>
                         </div>
                     `);
