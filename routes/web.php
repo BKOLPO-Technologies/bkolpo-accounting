@@ -197,10 +197,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     });
 
     /* ==================== Chart of account =================== */
-    Route::prefix('chart_of_accounts')->as('chart_of_accounts.')->group(function () {
-        Route::get('/', [ChartOfAccountController::class, 'index'])->name('index');
-        Route::get('/create', [ChartOfAccountController::class, 'create'])->name('create');
-    }); 
+    // Route::prefix('chart_of_accounts')->as('chart_of_accounts.')->group(function () {
+    //     Route::get('/', [ChartOfAccountController::class, 'index'])->name('index');
+    //     Route::get('/create', [ChartOfAccountController::class, 'create'])->name('create');
+    // }); 
 
     /* ==================== Invoice =================== */
     Route::prefix('invoices')->group(function () {
@@ -254,13 +254,13 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     });
 
     /* ==================== Transactions =================== */
-    Route::prefix('transactions')->group(function () {
-        Route::get('/', [TransactionController::class, 'AdminTransactionIndex'])->name('admin.transaction.index');
-        Route::get('/add', [TransactionController::class, 'AdminTransactionAdd'])->name('admin.transaction.add');
-        Route::get('/transfer', [TransactionController::class, 'AdminTransactionTransfer'])->name('admin.transaction.transfer');
-        Route::get('/income', [TransactionController::class, 'AdminTransactionIncome'])->name('admin.transaction.income');
-        Route::get('/expense', [TransactionController::class, 'AdminTransactionExpense'])->name('admin.transaction.expense');
-    });
+    // Route::prefix('transactions')->group(function () {
+    //     Route::get('/', [TransactionController::class, 'AdminTransactionIndex'])->name('admin.transaction.index');
+    //     Route::get('/add', [TransactionController::class, 'AdminTransactionAdd'])->name('admin.transaction.add');
+    //     Route::get('/transfer', [TransactionController::class, 'AdminTransactionTransfer'])->name('admin.transaction.transfer');
+    //     Route::get('/income', [TransactionController::class, 'AdminTransactionIncome'])->name('admin.transaction.income');
+    //     Route::get('/expense', [TransactionController::class, 'AdminTransactionExpense'])->name('admin.transaction.expense');
+    // });
 
     /* ==================== Company Information =================== */
     Route::prefix('company-information')->as('company-information.')->group(function () {
