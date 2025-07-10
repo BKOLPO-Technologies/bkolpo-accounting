@@ -71,9 +71,10 @@
                                            <table id="example3" class="table-striped table-bordered" style="width: 100%;">
                                                 <thead style="border-bottom: 2px solid black;">
                                                     <tr>
+                                                        <th style="width: 10%;">Date</th>
+                                                        <th style="width: 20%;">Client/Supplier Name</th>
                                                         <th style="width: 10%;">Type</th>
                                                         <th style="width: 15%;">Invoice No</th>
-                                                        <th style="width: 10%;">Date</th>
                                                         <th class="text-end">Total</th>
                                                         <th class="text-end">Paid</th>
                                                         <th class="text-end">Due</th>
@@ -84,6 +85,7 @@
                                                         $totalAmount = 0;
                                                         $totalPaid = 0;
                                                         $totalDue = 0;
+                                                        $transactions = $transactions ?? collect(); 
                                                     @endphp
 
                                                     @forelse($transactions as $txn)
@@ -93,23 +95,24 @@
                                                             $totalDue += $txn->due_amount;
                                                         @endphp
                                                         <tr>
+                                                            <td>{{ \Carbon\Carbon::parse($txn->payment_date)->format('d M Y') }}</td>
+                                                            <td>{{ $txn->client ?? ''}}</td>
                                                             <td>{{ $txn->type }}</td>
                                                             <td>{{ $txn->invoice_no }}</td>
-                                                            <td>{{ \Carbon\Carbon::parse($txn->payment_date)->format('d M Y') }}</td>
                                                             <td class="text-end">{{ number_format($txn->total_amount, 2) }}</td>
                                                             <td class="text-end">{{ number_format($txn->pay_amount, 2) }}</td>
                                                             <td class="text-end">{{ number_format($txn->due_amount, 2) }}</td>
                                                         </tr>
                                                     @empty
                                                         <tr>
-                                                            <td colspan="6" class="text-center text-muted">No data found</td>
+                                                            <td colspan="7" class="text-center text-muted">No data found</td>
                                                         </tr>
                                                     @endforelse
                                                 </tbody>
 
                                                 <tfoot>
                                                     <tr class="fw-bold">
-                                                        <td colspan="3" class="text-end">Grand Total</td>
+                                                        <td colspan="4" class="text-end">Grand Total</td>
                                                         <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($totalAmount, 2) }}</td>
                                                         <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($totalPaid, 2) }}</td>
                                                         <td class="text-end font-weight-bolder">{{ bdt() }} {{ number_format($totalDue, 2) }}</td>
