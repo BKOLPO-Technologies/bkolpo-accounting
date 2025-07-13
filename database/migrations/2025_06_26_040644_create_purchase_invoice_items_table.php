@@ -23,7 +23,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->timestamps();
             
-            $table->index('purchase_id');
+            $table->index('purchase_invoice_id');
             $table->index('product_id');
         });
     }
