@@ -83,67 +83,139 @@
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="row mb-5">
+                                      <div class="row mb-5">
                                         <div class="col-lg-8 col-md-8 col-sm-12 mx-auto">
-                                            <!-- Balance Sheet Table -->
-                                            @foreach ($ledgerGroups as $group)
-                                                <h2 class="{{ $loop->first ? '' : 'mt-3' }}">{{ $group->group_name ?? 'N/A' }}</h2>
-                                        
-                                                <div class="table-responsive">
-                                                    <table id="example10" border="1" class="table-striped table-bordered" cellpadding="5" cellspacing="0" style="width: 100%;">
-                                                        <thead>
-                                                            <tr>
-                                                                <th style="width: 80%;">Name</th>
-                                                                <th style="width: 20%;">Amount</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @php $totalBalance = 0; @endphp
-                                        
-                                                            <!-- Loop Through Sub Groups -->
-                                                            @foreach ($group->subGroups as $subGroup)
-                                                                @php
-                                                                    $subGroupTotal = 0;
-                                                                    foreach ($subGroup->ledgers as $ledger) {
-                                                                        $subGroupTotal += abs($ledger->total_debit - $ledger->total_credit);
-                                                                    }
-                                                                    $totalBalance += $subGroupTotal;
-                                                                @endphp
-                                                                
-                                                                <!-- Sub Group Row (Clickable for Collapse) -->
-                                                                <tr data-toggle="collapse" data-target="#subgroup-{{ $subGroup->id }}" aria-expanded="false" style="cursor: pointer; background-color: #f2f2f2;">
-                                                                    <td><strong>{{ $subGroup->subgroup_name }}</strong></td>
-                                                                    <td><strong>{{ bdt() }} {{ number_format($subGroupTotal, 2) }}</strong></td>
-                                                                </tr>
-                                        
-                                                                <!-- Ledgers (Initially Collapsed) -->
-                                                                <tbody id="subgroup-{{ $subGroup->id }}" class="collapse">
-                                                                    @foreach ($subGroup->ledgers as $ledger)
+                                            <div class="row">
+                                                <!-- Liabilities Column -->
+                                                <div class="col-md-6">
+                                                    @foreach ($ledgerGroups->where('group_name', 'Liabilities') as $group)
+                                                        <h2>{{ $group->group_name ?? 'N/A' }}</h2>
+                                                        
+                                                        <div class="table-responsive">
+                                                            <table border="1" class="table-striped table-bordered" cellpadding="5" cellspacing="0" style="width: 100%;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="width: 55%;">Name</th>
+                                                                        <th style="width: 45%;">Amount</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @php $groupTotal = 0; @endphp
+                                                                    
+                                                                    @foreach ($group->subGroups as $subGroup)
                                                                         @php
-                                                                            $balance = abs($ledger->total_debit - $ledger->total_credit);
+                                                                            $subGroupTotal = 0;
+                                                                            foreach ($subGroup->ledgers as $ledger) {
+                                                                                $subGroupTotal += abs($ledger->total_debit - $ledger->total_credit);
+                                                                            }
+                                                                            $groupTotal += $subGroupTotal;
                                                                         @endphp
-                                                                        <tr>
-                                                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;{{ $ledger->name }}</td>
-                                                                            <td>{{ bdt() }} {{ number_format($balance, 2) }}</td>
+                                                                        
+                                                                        <tr data-toggle="collapse" data-target="#subgroup-{{ $subGroup->id }}" aria-expanded="false" style="cursor: pointer; background-color: #f2f2f2;">
+                                                                            <td><strong>{{ $subGroup->subgroup_name }}</strong></td>
+                                                                            <td><strong>{{ bdt() }} {{ number_format($subGroupTotal, 2) }}</strong></td>
                                                                         </tr>
+                                                    
+                                                                        <tbody id="subgroup-{{ $subGroup->id }}" class="collapse">
+                                                                            @foreach ($subGroup->ledgers as $ledger)
+                                                                                @php
+                                                                                    $balance = abs($ledger->total_debit - $ledger->total_credit);
+                                                                                @endphp
+                                                                                <tr>
+                                                                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;{{ $ledger->name }}</td>
+                                                                                    <td>{{ bdt() }} {{ number_format($balance, 2) }}</td>
+                                                                                </tr>
+                                                                            @endforeach
+                                                                        </tbody>
                                                                     @endforeach
                                                                 </tbody>
-                                                            @endforeach
-                                                        </tbody>
-                                                        <tfoot>
-                                                            <tr>
-                                                                <th>Total</th>
-                                                                <th>{{ bdt() }} {{ number_format($totalBalance, 2) }}</th>
-                                                            </tr>
-                                                        </tfoot>
-                                                    </table>
-                                                    <!-- Amount in Words: Bottom Left with margin -->
-                                                    <div style="margin-top: 10px;">
-                                                        <strong>Amount in Words:</strong>
-                                                        <strong class="text-uppercase">{{ convertNumberToWords($totalBalance) }}</strong>
-                                                    </div>
+                                                                <tfoot>
+                                                                    @if($showDifferenceOn == 'Liabilities' && $absDifference > 0)
+                                                                    <tr>
+                                                                        <th>Balance (Difference)</th>
+                                                                        <th class="text-danger">{{ bdt() }} {{ number_format($absDifference, 2) }}</th>
+                                                                    </tr>
+                                                                    @endif
+                                                                    <tr>
+                                                                        <th>Total {{ $group->group_name }}</th>
+                                                                        <th>{{ bdt() }} {{ number_format($showDifferenceOn == 'Liabilities' ? $groupTotal + $absDifference : $groupTotal, 2) }}</th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                    @endforeach
                                                 </div>
-                                            @endforeach
+                                                <!-- Assets Column -->
+                                                <div class="col-md-6">
+                                                    @foreach ($ledgerGroups->where('group_name', 'Asset') as $group)
+                                                        <h2>{{ $group->group_name ?? 'N/A' }}</h2>
+                                                        
+                                                        <div class="table-responsive">
+                                                            <table border="1" class="table-striped table-bordered" cellpadding="5" cellspacing="0" style="width: 100%;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="width: 60%;">Name</th>
+                                                                        <th style="width: 40%;">Amount</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @php $groupTotal = 0; @endphp
+                                                                    
+                                                                    @foreach ($group->subGroups as $subGroup)
+                                                                        @php
+                                                                            $subGroupTotal = 0;
+                                                                            foreach ($subGroup->ledgers as $ledger) {
+                                                                                $subGroupTotal += abs($ledger->total_debit - $ledger->total_credit);
+                                                                            }
+                                                                            $groupTotal += $subGroupTotal;
+                                                                        @endphp
+                                                                        
+                                                                        <tr data-toggle="collapse" data-target="#subgroup-{{ $subGroup->id }}" aria-expanded="false" style="cursor: pointer; background-color: #f2f2f2;">
+                                                                            <td><strong>{{ $subGroup->subgroup_name }}</strong></td>
+                                                                            <td><strong>{{ bdt() }} {{ number_format($subGroupTotal, 2) }}</strong></td>
+                                                                        </tr>
+                                                    
+                                                                        <tbody id="subgroup-{{ $subGroup->id }}" class="collapse">
+                                                                            @foreach ($subGroup->ledgers as $ledger)
+                                                                                @php
+                                                                                    $balance = abs($ledger->total_debit - $ledger->total_credit);
+                                                                                @endphp
+                                                                                <tr>
+                                                                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;{{ $ledger->name }}</td>
+                                                                                    <td>{{ bdt() }} {{ number_format($balance, 2) }}</td>
+                                                                                </tr>
+                                                                            @endforeach
+                                                                        </tbody>
+                                                                    @endforeach
+                                                                </tbody>
+                                                                <tfoot>
+                                                                    @if($showDifferenceOn == 'Asset' && $absDifference > 0)
+                                                                    <tr>
+                                                                        <th>Balance (Difference)</th>
+                                                                        <th>{{ bdt() }} {{ number_format($absDifference, 2) }}</th>
+                                                                    </tr>
+                                                                    @endif
+                                                                    <tr>
+                                                                        <th>Total {{ $group->group_name }}</th>
+                                                                        <th>{{ bdt() }} {{ number_format($showDifferenceOn == 'Asset' ? $groupTotal + $absDifference : $groupTotal, 2) }}</th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Grand Total -->
+                                            <div class="row mt-3">
+                                                <div class="col-md-12 text-center">
+                                                    @php
+                                                        $grandTotal = max($totalAssets, $totalLiabilities);
+                                                    @endphp
+                                                    <h4>Grand Total: {{ bdt() }} {{ number_format($grandTotal, 2) }}</h4>
+                                                    <p><strong>Amount in Words:</strong> {{ convertNumberToWords($grandTotal) }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

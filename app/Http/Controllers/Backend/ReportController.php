@@ -216,20 +216,58 @@ class ReportController extends Controller
         $fromDate = $request->input('from_date', now()->subMonth()->format('Y-m-d'));
         $toDate = $request->input('to_date', now()->format('Y-m-d'));
 
-        $ledgerGroups = LedgerGroup::with([
-            'subGroups.ledgers' => function ($query) use ($fromDate, $toDate) {
-                $query->withSum(['journalVoucherDetails as total_debit' => function ($query) use ($fromDate, $toDate) {
-                    $query->whereDate('created_at', '>=', $fromDate)
-                        ->whereDate('created_at', '<=', $toDate);
-                }], 'debit')
-                ->withSum(['journalVoucherDetails as total_credit' => function ($query) use ($fromDate, $toDate) {
-                    $query->whereDate('created_at', '>=', $fromDate)
-                        ->whereDate('created_at', '<=', $toDate);
-                }], 'credit');
-            }
-        ])->orderBy('id', 'ASC')->get();
+        // Get only Asset and Liability groups
+        $ledgerGroups = LedgerGroup::whereIn('group_name', ['Asset', 'Liabilities'])
+            ->with([
+                'subGroups.ledgers' => function ($query) use ($fromDate, $toDate) {
+                    $query->withSum(['journalVoucherDetails as total_debit' => function ($query) use ($fromDate, $toDate) {
+                        $query->whereDate('created_at', '>=', $fromDate)
+                            ->whereDate('created_at', '<=', $toDate);
+                    }], 'debit')
+                    ->withSum(['journalVoucherDetails as total_credit' => function ($query) use ($fromDate, $toDate) {
+                        $query->whereDate('created_at', '>=', $fromDate)
+                            ->whereDate('created_at', '<=', $toDate);
+                    }], 'credit');
+                }
+            ])
+            ->orderByRaw("FIELD(group_name, 'Asset', 'Liabilities')")
+            ->get();
 
-        return view('backend.admin.report.account.balance_sheet', compact('pageTitle', 'ledgerGroups', 'fromDate', 'toDate'));
+        // Calculate totals
+        $totalAssets = 0;
+        $totalLiabilities = 0;
+
+        foreach ($ledgerGroups as $group) {
+            foreach ($group->subGroups as $subGroup) {
+                foreach ($subGroup->ledgers as $ledger) {
+                    $balance = abs($ledger->total_debit - $ledger->total_credit);
+                    if ($group->group_name == 'Asset') {
+                        $totalAssets += $balance;
+                    } else {
+                        $totalLiabilities += $balance;
+                    }
+                }
+            }
+        }
+
+        // Calculate difference (positive if assets > liabilities)
+        $difference = $totalAssets - $totalLiabilities;
+
+        // Determine which side needs the difference
+        $showDifferenceOn = $difference > 0 ? 'Liabilities' : 'Asset';
+        $absDifference = abs($difference);
+
+        return view('backend.admin.report.account.balance_sheet', compact(
+            'pageTitle',
+            'ledgerGroups',
+            'fromDate',
+            'toDate',
+            'totalAssets',
+            'totalLiabilities',
+            'difference',
+            'showDifferenceOn',
+            'absDifference'
+        ));
     }
 
 
