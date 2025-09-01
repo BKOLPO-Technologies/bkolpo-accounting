@@ -116,7 +116,6 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         // Validate input
         $validated = $request->validate([
             'client'      => 'required|exists:clients,id',
@@ -124,14 +123,18 @@ class SalesController extends Controller
             'quantity'    => 'required|array|min:1',
             'unit_price'  => 'required|array',
             'order_unit'  => 'required|array',
+            // 'item_id'     => 'required|array|min:1',
+            // 'discounts'   => 'sometimes|array',
+            // 'subtotal'    => 'required|numeric|min:0',
+            // 'grand_total' => 'required|numeric|min:0',
         ]);
-    
+
         try {
             DB::beginTransaction();
-    
+
             $tax = $request->has('include_tax') ? ($request->tax ?? 0) : 0;
             $vat = $request->has('include_vat') ? ($request->vat ?? 0) : 0;
-    
+
             // Save sale record
             $sale = Sale::create([
                 'client_id'        => $validated['client'],
@@ -149,122 +152,30 @@ class SalesController extends Controller
                 'total'            => $request->subtotal ?? 0,
                 'grand_total'      => $request->grand_total ?? 0,
                 'description'      => $request->description,
-                'project_id'       => $request->projects, // you used "projects" instead of "project_id"
+                'project_id'       => $request->projects ?? null,
             ]);
-    
+
             // Loop through products
             foreach ($request->order_unit as $index => $productId) {
-                // dd($productId);
                 $quantity = $request->quantity[$index] ?? 0;
                 $unitPrice = $request->unit_price[$index] ?? 0;
-                $discount = $request->discounts[$index] ?? 0; // fallback if provided
-                $itemId    = $request->item_id[$index] ?? null; 
-    
+                $discount = $request->discounts[$index] ?? 0;
+                $itemId = $request->item_id[$index] ?? null;
+
                 SaleProduct::create([
                     'sale_id'    => $sale->id,
-                    // 'product_id' => $productId,
-                    'item_id' => $itemId,
+                    'item_id'    => $itemId,
                     'quantity'   => $quantity,
                     'price'      => $unitPrice,
-                    'discount'   => $discount ?? 0,
+                    'discount'   => $discount,
                     'subtotal'   => $quantity * $unitPrice,
                     'total'      => ($quantity * $unitPrice) - ($discount ?? 0),
                 ]);
             }
-    
-            // Ledger & Journal Voucher logic
-            $saleAmount = $sale->grand_total ?? 0;
-            $salesLedger = Ledger::where('type', 'Sales')->first();
-            $receivableLedger = Ledger::where('type', 'Receivable')->first();
-            $vatLedger = Ledger::where('type', 'Vat')->first();
-            $taxLedger = Ledger::where('type', 'Tax')->first();
 
-            $vatAmount = $sale->vat_amount ?? 0;
-            $taxAmount = $sale->tax_amount ?? 0;
+            // Create journal voucher entry
+            $this->createJournalVoucher($sale);
 
-            $netSalesAmount = $saleAmount + ($vatAmount + $taxAmount);
-
-            if ($salesLedger && $receivableLedger) {
-                $companyInfo = get_company(); 
-                $currentMonth = now()->format('m');
-                $fiscalYear = str_replace('-', '', $companyInfo->fiscal_year);
-
-                $latestJV = JournalVoucher::whereRaw('MONTH(created_at) = ?', [$currentMonth])
-                            ->orderBy('created_at', 'desc')
-                            ->first();
-
-                $increment = $latestJV && preg_match('/(\d{3})$/', $latestJV->transaction_code, $matches)
-                            ? ((int)$matches[0] + 1)
-                            : 1;
-
-                $transactionCode = 'BCL-V-' . $fiscalYear . $currentMonth . str_pad($increment, 3, '0', STR_PAD_LEFT);
-
-                $journalVoucher = JournalVoucher::create([
-                    'transaction_code' => $transactionCode,
-                    'company_id'       => $companyInfo->id,
-                    'branch_id'        => $companyInfo->branch->id,
-                    'transaction_date' => now()->format('Y-m-d'),
-                    'description'      => 'Invoice Entry for Sales',
-                    'status'           => 1,
-                ]);
-
-              $details = [
-                    // Receivable Debit
-                    [
-                        'journal_voucher_id' => $journalVoucher->id,
-                        'ledger_id'          => $receivableLedger->id,
-                        'reference_no'       => $sale->invoice_no,
-                        'description'        => 'Receivable for Invoice ' . $sale->invoice_no,
-                        'debit'              => $saleAmount,
-                        'credit'             => 0,
-                        'created_at'         => now(),
-                        'updated_at'         => now(),
-                    ],
-                ];
-
-                // VAT Debit (insert before Sales)
-                if ($vatLedger && $vatAmount > 0) {
-                    $details[] = [
-                        'journal_voucher_id' => $journalVoucher->id,
-                        'ledger_id'          => $vatLedger->id,
-                        'reference_no'       => $sale->invoice_no,
-                        'description'        => 'VAT for Invoice ' . $sale->invoice_no,
-                        'debit'              => $vatAmount,
-                        'credit'             => 0,
-                        'created_at'         => now(),
-                        'updated_at'         => now(),
-                    ];
-                }
-
-                // Tax Debit (insert before Sales)
-                if ($taxLedger && $taxAmount > 0) {
-                    $details[] = [
-                        'journal_voucher_id' => $journalVoucher->id,
-                        'ledger_id'          => $taxLedger->id,
-                        'reference_no'       => $sale->invoice_no,
-                        'description'        => 'Tax for Invoice ' . $sale->invoice_no,
-                        'debit'              => $taxAmount,
-                        'credit'             => 0,
-                        'created_at'         => now(),
-                        'updated_at'         => now(),
-                    ];
-                }
-
-                // Sales Credit (last)
-                $details[] = [
-                    'journal_voucher_id' => $journalVoucher->id,
-                    'ledger_id'          => $salesLedger->id,
-                    'reference_no'       => $sale->invoice_no,
-                    'description'        => 'Sales for Invoice ' . $sale->invoice_no,
-                    'debit'              => 0,
-                    'credit'             => $netSalesAmount,
-                    'created_at'         => now(),
-                    'updated_at'         => now(),
-                ];
-
-                JournalVoucherDetail::insert($details);
-            }
-    
             DB::commit();
             return redirect()->route('admin.sale.index')->with('success', 'Sale created successfully!');
         } catch (\Exception $e) {
@@ -272,8 +183,9 @@ class SalesController extends Controller
             Log::error('Sale creation failed:', [
                 'error' => $e->getMessage(),
                 'user_id' => auth()->id(),
+                'trace' => $e->getTraceAsString()
             ]);
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return back()->withErrors(['error' => 'Sale creation failed: ' . $e->getMessage()]);
         }
     }
     
@@ -380,23 +292,29 @@ class SalesController extends Controller
      */
     public function update(Request $request, $id)
     {   
-        //dd($request->all());
-        // Step 1: Validate
+        // Validate
         $validated = $request->validate([
             'client'      => 'required|exists:clients,id',
             'invoice_no'  => 'required|unique:sales,invoice_no,' . $id,
             'order_unit'  => 'required|array|min:1',
             'quantity'    => 'required|array|min:1',
             'unit_price'  => 'required|array|min:1',
+            // 'item_id'     => 'required|array|min:1',
+            // 'discounts'   => 'sometimes|array',
+            // 'subtotal'    => 'required|numeric|min:0',
+            // 'grand_total' => 'required|numeric|min:0',
         ]);
 
         try {
             DB::beginTransaction();
 
-            // Step 2: Find sale
+            // Find sale
             $sale = Sale::findOrFail($id);
+            
+            // Delete existing journal voucher first
+            $this->deleteJournalVoucher($sale->invoice_no);
 
-            // Step 3: Update sale fields
+            // Update sale fields
             $tax = $request->has('include_tax') ? ($request->tax ?? 0) : 0;
             $vat = $request->has('include_vat') ? ($request->vat ?? 0) : 0;
 
@@ -416,32 +334,32 @@ class SalesController extends Controller
                 'total'            => $request->subtotal ?? 0,
                 'grand_total'      => $request->grand_total ?? 0,
                 'description'      => $request->description,
-                //'project_id'       => $request->projects ?? null,
-                'project_id'       => $request->project_id ?? null,
+                'project_id'       => $request->projects ?? null,
             ]);
 
-            // Step 4: Delete old sale products
+            // Delete old sale products
             $sale->saleProducts()->delete();
 
-            // Step 5: Add updated sale products
+            // Add updated sale products
             foreach ($request->order_unit as $index => $productId) {
                 $quantity  = $request->quantity[$index] ?? 0;
                 $unitPrice = $request->unit_price[$index] ?? 0;
-                //$discount  = $request->discounts[$index] ?? 0;
-                $discount = (float) ($request->discount[$index] ?? 0);
-                $itemId = $request->item_id[$index] ?? null;
+                $discount  = (float) ($request->discounts[$index] ?? 0);
+                $itemId    = $request->item_id[$index] ?? null;
 
                 SaleProduct::create([
                     'sale_id'    => $sale->id,
-                    // 'product_id' => $productId,
                     'item_id'    => $itemId,
                     'quantity'   => $quantity,
                     'price'      => $unitPrice,
                     'discount'   => $discount,
                     'subtotal'   => $quantity * $unitPrice,
-                    'total' => ((float)$quantity * (float)$unitPrice) - (float)$discount,
+                    'total'      => ($quantity * $unitPrice) - ($discount ?? 0),
                 ]);
             }
+
+            // Create updated journal voucher
+            $this->createJournalVoucher($sale);
 
             DB::commit();
             return redirect()->route('admin.sale.index')->with('success', 'Sale updated successfully!');
@@ -452,9 +370,130 @@ class SalesController extends Controller
                 'error'    => $e->getMessage(),
                 'user_id'  => auth()->id(),
                 'sale_id'  => $id,
+                'trace'    => $e->getTraceAsString()
             ]);
 
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return back()->withErrors(['error' => 'Sale update failed: ' . $e->getMessage()]);
+        }
+    }
+
+    private function createJournalVoucher(Sale $sale)
+    {
+        $saleAmount = $sale->grand_total;
+        $vatAmount = $sale->vat_amount ?? 0;
+        $taxAmount = $sale->tax_amount ?? 0;
+        
+        // Net sales amount (without tax and vat)
+        $netSalesAmount = $saleAmount + ($vatAmount + $taxAmount);
+        
+        // Get required ledgers
+        $salesLedger = Ledger::where('type', 'Sales')->first();
+        $receivableLedger = Ledger::where('type', 'Receivable')->first();
+        $vatLedger = Ledger::where('type', 'Vat')->first();
+        $taxLedger = Ledger::where('type', 'Tax')->first();
+
+        if (!$salesLedger || !$receivableLedger) {
+            throw new \Exception('Required ledgers not found');
+        }
+
+        $companyInfo = get_company(); 
+        $currentMonth = now()->format('m');
+        $fiscalYear = str_replace('-', '', $companyInfo->fiscal_year);
+
+        // Generate transaction code
+        $latestJV = JournalVoucher::whereRaw('MONTH(created_at) = ?', [$currentMonth])
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+
+        $increment = $latestJV && preg_match('/(\d{3})$/', $latestJV->transaction_code, $matches)
+                    ? ((int)$matches[0] + 1)
+                    : 1;
+
+        $transactionCode = 'BCL-V-' . $fiscalYear . $currentMonth . str_pad($increment, 3, '0', STR_PAD_LEFT);
+
+        // Create journal voucher
+        $journalVoucher = JournalVoucher::create([
+            'transaction_code' => $transactionCode,
+            'company_id'       => $companyInfo->id,
+            'branch_id'        => $companyInfo->branch->id,
+            'transaction_date' => now()->format('Y-m-d'),
+            'description'      => 'Invoice Entry for Sales - ' . $sale->invoice_no,
+            'status'           => 1,
+        ]);
+
+        // Prepare journal voucher details
+        $details = [];
+        
+        // 1. Debit Receivable account (total amount customer owes)
+        $details[] = [
+            'journal_voucher_id' => $journalVoucher->id,
+            'ledger_id'          => $receivableLedger->id,
+            'reference_no'       => $sale->invoice_no,
+            'description'        => 'Receivable for Invoice ' . $sale->invoice_no,
+            'debit'              => $saleAmount,
+            'credit'             => 0,
+            'created_at'         => now(),
+            'updated_at'         => now(),
+        ];
+        
+        // 3. Credit VAT account (if applicable)
+        if ($vatLedger && $vatAmount > 0) {
+            $details[] = [
+                'journal_voucher_id' => $journalVoucher->id,
+                'ledger_id'          => $vatLedger->id,
+                'reference_no'       => $sale->invoice_no,
+                'description'        => 'VAT for Invoice ' . $sale->invoice_no,
+                'debit'              => $vatAmount,
+                'credit'             => 0,
+                'created_at'         => now(),
+                'updated_at'         => now(),
+            ];
+        }
+        
+        // 4. Credit Tax account (if applicable)
+        if ($taxLedger && $taxAmount > 0) {
+            $details[] = [
+                'journal_voucher_id' => $journalVoucher->id,
+                'ledger_id'          => $taxLedger->id,
+                'reference_no'       => $sale->invoice_no,
+                'description'        => 'TAX for Invoice ' . $sale->invoice_no,
+                'debit'              => $taxAmount,
+                'credit'             => 0,
+                'created_at'         => now(),
+                'updated_at'         => now(),
+            ];
+        }
+
+        // 2. Credit Sales account (net sales amount)
+        $details[] = [
+            'journal_voucher_id' => $journalVoucher->id,
+            'ledger_id'          => $salesLedger->id,
+            'reference_no'       => $sale->invoice_no,
+            'description'        => 'Sales for Invoice ' . $sale->invoice_no,
+            'debit'              => 0,
+            'credit'             => $netSalesAmount,
+            'created_at'         => now(),
+            'updated_at'         => now(),
+        ];
+
+        // Insert all journal voucher details
+        JournalVoucherDetail::insert($details);
+    }
+
+    private function deleteJournalVoucher($invoiceNo)
+    {
+        // Find JV by description or reference in details
+        $jv = JournalVoucher::where('transaction_code', 'like', '%' . $invoiceNo . '%')
+            ->orWhereHas('details', function($q) use ($invoiceNo) {
+                $q->where('reference_no', $invoiceNo);
+            })
+            ->first();
+        
+        if ($jv) {
+            // Delete details first
+            JournalVoucherDetail::where('journal_voucher_id', $jv->id)->delete();
+            // Then delete the voucher
+            $jv->delete();
         }
     }
 
