@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->decimal('opening_balance', 15, 2)->nullable()->default(0); 
             $table->enum('ob_type', ['debit', 'credit'])->nullable();
-            $table->enum('type', ['Bank', 'Cash', 'Receivable', 'Payable','Purchases','Sales'])->nullable();
+            $table->enum('type', ['Bank', 'Cash', 'Receivable', 'Payable','Purchases','Sales','Vat','Tax'])->nullable();
             $table->tinyInteger('status')->nullable()->default(1)->comment('1=>Active, 0=>Inactive');
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();

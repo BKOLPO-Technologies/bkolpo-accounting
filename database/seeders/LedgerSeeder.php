@@ -81,7 +81,7 @@ class LedgerSeeder extends Seeder
                         'Other Expenses', 'Bank Fees', 'Business Insurance', 'Commissions',
                         'Repairs & Maintenance', 'Labour Wages', 'Salary', 'Legal Fees', 'Rent or Lease',
                         'Taxi & Parking', 'Uncategorized Expenses', 'Utilities', 'Mobile Phone Bill',
-                        'Sales Taxes Paid',
+                        'Sales Taxes Paid','Vat','Tax'
                     ],
                     'type' => null,
                 ],

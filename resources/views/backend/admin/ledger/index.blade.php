@@ -180,7 +180,7 @@
                                                                     <td>{{ $loop->iteration }}</td>
                                                                     <td>{{ $voucherDetail->reference_no }}</td>
                                                                     <td>{{ $voucherDetail->description }}</td>
-                                                                    <td> {{ date('d M, Y', strtotime($voucherDetail->journalVoucher->transaction_date)) }}</td>
+                                                                    <td> {{ date('d M, Y', strtotime($voucherDetail->journalVoucher->transaction_date ?? '')) }}</td>
                                                                     <td>{{ bdt() }} {{ number_format($voucherDetail->debit, 2) }}</td>
                                                                     <td>{{ bdt() }} {{ number_format($voucherDetail->credit, 2) }}</td>
                                                                 </tr>
