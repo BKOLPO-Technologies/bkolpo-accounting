@@ -121,7 +121,6 @@ class PurchaseInvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         DB::beginTransaction();
 
         try {
@@ -202,7 +201,7 @@ class PurchaseInvoiceController extends Controller
                     'updated_at' => now(),
                 ];
 
-                // Update product stock
+                // Update product stock (uncomment if needed)
                 // Product::where('id', $productId)->increment('stock', $quantity);
             }
 
@@ -214,75 +213,13 @@ class PurchaseInvoiceController extends Controller
             //     $this->recordPayment($purchaseInvoice, $validated['paid_amount']);
             // }
 
-            $purchase_amount = $purchaseInvoice->grand_total ?? 0;
-            $purchasesLedger = Ledger::where('type', 'Purchases')->first();
-            $payableLedger = Ledger::where('type', 'Payable')->first();
-
-            if ($purchasesLedger && $payableLedger) {
-
-                // 09-04-2025 new code //
-                $companyInfo = get_company(); 
-                $currentMonth = now()->format('m');
-                $currentYear = now()->format('y');
-                $randomNumber = rand(100000, 999999);
-
-                $journalVoucher = JournalVoucher::whereRaw('MONTH(created_at) = ?', [$currentMonth]) 
-                ->orderBy('created_at', 'desc') 
-                // ->where('transaction_code', $sale->invoice_no)
-                ->first(); 
-
-                if ($journalVoucher) {
-                    preg_match('/(\d{3})$/', $journalVoucher->transaction_code, $matches); 
-                    $increment = (int)$matches[0] + 1;
-                }else{
-                    $increment = 1;
-                }
-
-                $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
-                $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
-
-                $transactionCode = 'BCL-V-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement;
-                // $new_invoice_no = 'BCL-INV-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement;
-                $new_invoice_no = $originalPurchase->invoice_no;
-
-                $journalVoucher = JournalVoucher::create([
-                    'transaction_code' => $transactionCode,
-                    'transaction_date' => now()->format('Y-m-d'),
-                    'description' => 'Purchase PO No Recorded - Supplier',
-                    'status' => 1, 
-                ]);
-
-                // Purchase -> Purchases Account (Debit Entry)
-                JournalVoucherDetail::create([
-                    'journal_voucher_id' => $journalVoucher->id,
-                    'ledger_id' => $purchasesLedger->id,
-                    'reference_no' => $new_invoice_no ?? '',
-                    'description' => 'Purchased Goods from Supplier',
-                    'debit' => $purchase_amount,
-                    'credit' => 0,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-
-                // Purchase Payable -> Accounts Payable (Credit Entry)
-                JournalVoucherDetail::create([
-                    'journal_voucher_id' => $journalVoucher->id,
-                    'ledger_id' => $payableLedger->id,
-                    'reference_no' => $new_invoice_no ?? '',
-                    'description' => 'Supplier Payable Recorded for Purchase',
-                    'debit' => 0,
-                    'credit' => $purchase_amount,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-
-                //Log::info('Journal Voucher details created', ['journal_voucher_id' => $journalVoucher->id]);
-            }
+            // Create accounting entries
+            $this->createAccountingEntries($purchaseInvoice, $originalPurchase, 'create');
 
             DB::commit();
 
             return redirect()
-                ->route('admin.purchase.invoice.index',)
+                ->route('admin.purchase.invoice.index')
                 ->with('success', 'Purchase invoice created successfully!');
 
         } catch (\Exception $e) {
@@ -295,24 +232,6 @@ class PurchaseInvoiceController extends Controller
         }
     }
 
-
-    private function generateInvoiceNumber()
-    {
-        $prefix = 'PUR-';
-        $datePart = date('Ymd');
-        $latest = Purchase::where('invoice_no', 'like', $prefix.$datePart.'%')
-            ->orderBy('invoice_no', 'desc')
-            ->first();
-
-        if (!$latest) {
-            return $prefix.$datePart.'001';
-        }
-
-        $lastNumber = (int) substr($latest->invoice_no, -3);
-        $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-
-        return $prefix.$datePart.$newNumber;
-    }
 
     /**
      * Display the specified resource.
@@ -405,6 +324,13 @@ class PurchaseInvoiceController extends Controller
 
             $invoice = PurchaseInvoice::findOrFail($id);
 
+            $this->deleteJournalVoucher($invoice->invoice_no);
+
+            // Store old values for accounting adjustment
+            $oldGrandTotal = $invoice->grand_total;
+            $oldVatAmount = $invoice->vat_amount;
+            $oldTaxAmount = $invoice->tax_amount;
+
             // Update invoice
             $invoice->update([
                 'supplier_id' => $validated['supplier'],
@@ -473,10 +399,17 @@ class PurchaseInvoiceController extends Controller
             // $deletedItems = $currentItems->whereNotIn('product_id', $validated['product_ids']);
             // foreach ($deletedItems as $item) {
             //     // Revert stock for deleted items
-            //     Product::where('id', $item->product_id)
-            //         ->decrement('stock', $item->quantity);
+            //     // Product::where('id', $item->product_id)
+            //     //     ->decrement('stock', $item->quantity);
             //     $item->delete();
             // }
+
+            // Update accounting entries
+            $this->createAccountingEntries($invoice, $invoice->purchase, 'update', [
+                'old_grand_total' => $oldGrandTotal,
+                'old_vat_amount' => $oldVatAmount,
+                'old_tax_amount' => $oldTaxAmount
+            ]);
 
             DB::commit();
 
@@ -491,6 +424,192 @@ class PurchaseInvoiceController extends Controller
             return back()
                 ->withInput()
                 ->with('error', 'Failed to update invoice: ' . $e->getMessage());
+        }
+    }
+
+    // Unified helper method for accounting entries
+    private function createAccountingEntries($purchaseInvoice, $originalPurchase, $action = 'create', $oldValues = [])
+    {
+        $purchase_amount = $purchaseInvoice->grand_total ?? 0;
+        $purchasesLedger = Ledger::where('type', 'Purchases')->first();
+        $payableLedger = Ledger::where('type', 'Payable')->first();
+        $vatLedger = Ledger::where('type', 'Vat')->first();
+        $taxLedger = Ledger::where('type', 'Tax')->first();
+
+        $vatAmount = $purchaseInvoice->vat_amount ?? 0;
+        $taxAmount = $purchaseInvoice->tax_amount ?? 0;
+        $netPurchaseAmount = $purchase_amount + $vatAmount + $taxAmount;
+
+        if ($purchasesLedger && $payableLedger) {
+            $companyInfo = get_company(); 
+            $currentMonth = now()->format('m');
+
+            // For update action, find existing journal voucher
+            $journalVoucher = null;
+            if ($action === 'update') {
+                // Find existing journal voucher using invoice number
+                $invoiceNo = $purchaseInvoice->invoice_no ?? null;
+
+                $journalVoucher = JournalVoucher::where('transaction_code', 'like', '%' . $invoiceNo . '%')
+                ->orWhereHas('details', function($q) use ($invoiceNo) {
+                    $q->where('reference_no', $invoiceNo);
+                })
+                ->first();
+            }
+
+            // Create new journal voucher if not found
+            if (!$journalVoucher) {
+                $latestJV = JournalVoucher::whereRaw('MONTH(created_at) = ?', [$currentMonth])
+                    ->orderBy('created_at', 'desc')
+                    ->first(); 
+
+                $increment = 1;
+                if ($latestJV && preg_match('/(\d{3})$/', $latestJV->transaction_code, $matches)) {
+                    $increment = (int)$matches[0] + 1;
+                }
+
+                $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
+                $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
+                $transactionCode = 'BCL-V-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement;
+
+                $new_invoice_no = $originalPurchase->invoice_no ?? $purchaseInvoice->invoice_no;
+
+                $journalVoucher = JournalVoucher::create([
+                    'transaction_code' => $transactionCode,
+                    'company_id'       => $companyInfo->id,
+                    'branch_id'        => $companyInfo->branch->id,
+                    'transaction_date' => now()->format('Y-m-d'),
+                    'description' => ($action === 'update' ? 'Updated Purchase PO No' : 'Purchase PO No Recorded') . ' - Supplier',
+                    'status' => 1, 
+                ]);
+            } else {
+                // For update, clear existing details
+                JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)->delete();
+                
+                // Update journal voucher description
+                $journalVoucher->update([
+                    'description' => 'Updated Purchase PO No - Supplier',
+                    'transaction_date' => now()->format('Y-m-d'),
+                ]);
+            }
+
+            // Corrected accounting entries
+            $details = [];
+
+            // Purchases Debit (Net amount without VAT/Tax)
+            $details[] = [
+                'journal_voucher_id' => $journalVoucher->id,
+                'ledger_id' => $purchasesLedger->id,
+                'reference_no' => $purchaseInvoice->invoice_no,
+                'description' => 'Purchased Goods from Supplier',
+                'debit' => $netPurchaseAmount,
+                'credit' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            // Payable Credit (Total amount payable to supplier)
+            $details[] = [
+                'journal_voucher_id' => $journalVoucher->id,
+                'ledger_id' => $payableLedger->id,
+                'reference_no' => $purchaseInvoice->invoice_no,
+                'description' => 'Supplier Payable Recorded for Purchase',
+                'debit' => 0,
+                'credit' => $purchase_amount,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            // VAT Input Credit (if applicable)
+            if ($vatLedger && $vatAmount > 0) {
+                $details[] = [
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id' => $vatLedger->id,
+                    'reference_no' => $purchaseInvoice->invoice_no,
+                    'description' => 'VAT Input Credit for Purchase',
+                    'debit' => 0,
+                    'credit' => $vatAmount,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            // Tax Input Credit (if applicable)
+            if ($taxLedger && $taxAmount > 0) {
+                $details[] = [
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id' => $taxLedger->id,
+                    'reference_no' => $purchaseInvoice->invoice_no,
+                    'description' => 'TAX Input Credit for Purchase',
+                    'debit' => 0,
+                    'credit' => $taxAmount,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            JournalVoucherDetail::insert($details);
+
+            // Handle payment status update if amounts changed during update
+            if ($action === 'update' && !empty($oldValues)) {
+                $this->updatePaymentStatus($purchaseInvoice, $oldValues);
+            }
+        }
+    }
+
+    // Helper method to update payment status after invoice update
+    private function updatePaymentStatus($purchaseInvoice, $oldValues)
+    {
+        $grandTotalChanged = $purchaseInvoice->grand_total != $oldValues['old_grand_total'];
+        
+        if ($grandTotalChanged) {
+            $status = 'pending';
+            if ($purchaseInvoice->paid_amount > 0) {
+                if ($purchaseInvoice->paid_amount >= $purchaseInvoice->grand_total) {
+                    $status = 'paid';
+                } else {
+                    $status = 'partially_paid';
+                }
+            }
+            
+            $purchaseInvoice->update(['status' => $status]);
+        }
+    }
+
+
+    private function generateInvoiceNumber()
+    {
+        $prefix = 'PUR-';
+        $datePart = date('Ymd');
+        $latest = Purchase::where('invoice_no', 'like', $prefix.$datePart.'%')
+            ->orderBy('invoice_no', 'desc')
+            ->first();
+
+        if (!$latest) {
+            return $prefix.$datePart.'001';
+        }
+
+        $lastNumber = (int) substr($latest->invoice_no, -3);
+        $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+
+        return $prefix.$datePart.$newNumber;
+    }
+
+    private function deleteJournalVoucher($invoiceNo)
+    {
+        // dd($invoiceNo);
+        // Find JV by description or reference in details
+        $jv = JournalVoucher::where('transaction_code', 'like', '%' . $invoiceNo . '%')
+            ->orWhereHas('details', function($q) use ($invoiceNo) {
+                $q->where('reference_no', $invoiceNo);
+            })
+            ->first();
+        
+        if ($jv) {
+            // Delete details first
+            JournalVoucherDetail::where('journal_voucher_id', $jv->id)->delete();
+            // Then delete the voucher
+            $jv->delete();
         }
     }
 
