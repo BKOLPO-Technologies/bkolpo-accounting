@@ -151,7 +151,7 @@
                         @media print {
                             body {
                                 margin: 0;
-                                padding: 40px 15px 0 15px !important; /* 40px top gap */
+                                padding: 100px 15px 0 15px !important; /* 100px top gap */
                                 font-size: 12px;
                             }
                             .table {

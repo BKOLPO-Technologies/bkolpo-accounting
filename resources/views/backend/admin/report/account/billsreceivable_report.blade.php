@@ -155,7 +155,7 @@
                         @media print {
                             body {
                                 margin: 0;
-                                padding: 40px 15px 0 15px !important;
+                                padding: 100px 15px 0 15px !important;
                                 font-size: 12px;
                             }
                             .table {
