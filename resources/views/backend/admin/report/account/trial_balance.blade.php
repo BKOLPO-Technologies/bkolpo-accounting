@@ -57,7 +57,7 @@
                             <div class="card-header text-center mb-3">
                                 <h2 class="mb-1">
                                     <img 
-                                        src="{{ !empty(get_company()->logo) ? url('upload/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
+                                        src="{{ !empty(get_company()->logo) ? url('upload/backend/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
                                         alt="Company Logo" 
                                         style="height: 40px; vertical-align: middle; margin-right: 10px;"
                                     >
@@ -145,6 +145,36 @@
                     }
                 },
                 customize: function (win) {
+                    // Add print-specific styles
+                    var printStyle = document.createElement('style');
+                    printStyle.innerHTML = `
+                        @media print {
+                            body {
+                                margin: 0;
+                                padding: 40px 15px 0 15px !important; /* 40px top gap */
+                                font-size: 12px;
+                            }
+                            .table {
+                                width: 100% !important;
+                                font-size: 16px;
+                            }
+                            .table th, .table td {
+                                padding: 4px !important;
+                            }
+                            .text-end {
+                                text-align: left !important;
+                            }
+                            .text-uppercase {
+                                text-transform: uppercase;
+                            }
+                            #amountInWordsPrint {
+                                margin-top: 15px;
+                                font-size: 16px;
+                            }
+                        }
+                    `;
+                    win.document.head.appendChild(printStyle);
+                    
                     // Center align content for the print view
                     $(win.document.body).css('text-align', 'center');
 
@@ -155,14 +185,22 @@
                     $(win.document.body).find('th').css('text-align', 'center');
 
                     // Remove the default title from the print preview
-                    $(win.document.head).find('title').remove();
+                    $(win.document.head).find('title').text('Trial Balance Report - {{ get_company()->name ?? "" }}');
 
                     // Append custom Trial Balance Header before the table in print
                     $(win.document.body).prepend(`
-                        <div class="text-center mb-3">
-                            <h2 class="mb-1">{{ get_company()->name ?? '' }}</h2>
-                            <p class="mb-0"><strong>Trial Balance Report</strong></p>
-                            <p class="mb-0">Date: {{ now()->format('d M, Y') }}</p>
+                        <div class="text-center mb-2" style="margin-bottom: 10px;">
+                            <h2 style="margin: 5px 0; font-size: 18px;">
+                                <img 
+                                    src="{{ !empty(get_company()->logo) ? url('upload/backend/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
+                                    alt="Company Logo" 
+                                    style="height: 30px; vertical-align: middle; margin-right: 10px;"
+                                >
+                                {{ get_company()->name ?? '' }}
+                            </h2>
+                            <p style="margin: 3px 0; font-weight: bold;">Trial Balance Report</p>
+                            <p style="margin: 3px 0;">Date: {{ now()->format('d M, Y') }}</p>
+                            <p style="margin: 3px 0;">Period: {{ request('from_date', $fromDate) }} to {{ request('to_date', $toDate) }}</p>
                         </div>
                     `);
 
@@ -189,7 +227,6 @@
                     // Ensure footer is displayed correctly at the bottom
                     $(win.document.body).find('tfoot').css({
                         "position": "relative",
-                        "bottom": "0px",
                         "width": "100%",
                         "text-align": "center",
                         "font-weight": "bold",
@@ -202,11 +239,17 @@
 
                     // Style the amount section for print
                     $(win.document.body).find('#amountInWordsPrint').css({
-                        "margin-top": "20px",
+                        "margin-top": "15px",
                         "font-size": "16px",
                         "font-weight": "bold",
-                        "text-align": "left"
+                        "text-align": "left",
+                        "page-break-inside": "avoid"
                     });
+                    
+                    // Add page break avoidance to prevent splitting content
+                    $(win.document.body).find('table').css('page-break-inside', 'avoid');
+                    
+                    // REMOVED: The code that adds "Printed on" date at the bottom
                 }
             },
         ],
