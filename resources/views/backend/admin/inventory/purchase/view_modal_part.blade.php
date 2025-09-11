@@ -43,7 +43,7 @@
             <strong>Purchase Details</strong>
         </h4>
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>Product</th>
@@ -114,12 +114,12 @@
     <br>
 
     <!-- Payment Details -->
-    <div style="border: 1px solid #dbdbdb;">
+    <div style="border: 1px solid #dbdbdb;" id="payment-details-section">
         <h4 class="text-center mt-2 mb-3" style="text-decoration: underline; text-decoration-color: #3498db; text-decoration-thickness: 3px;">
             <strong>Payment Details</strong>
         </h4>
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>Payment Date</th>
@@ -158,7 +158,7 @@
     <br>
 
     <!-- Summary Calculation -->
-    <div style="border: 1px solid #dbdbdb;">
+    <div style="border: 1px solid #dbdbdb;" id="summary-section">
         <h4 class="text-center mt-2 mb-3" style="text-decoration: underline; text-decoration-color: #3498db; text-decoration-thickness: 3px;">
             <strong>Summary</strong>
         </h4>
@@ -190,12 +190,33 @@
 <!-- Print Script -->
 <script>
     function printInvoice() {
-        const printContents = document.getElementById('printableArea').innerHTML;
-        const originalContents = document.body.innerHTML;
+    const printContents = document.getElementById('printableArea').outerHTML;
+    const html = `
+        <html>
+        <head>
+            <title>Print Invoice</title>
+            <style>
+                @media print {
+                    body {
+                        margin: 15mm 0mm 15mm 0mm; /* top, right, bottom, left */
+                    }
+                    #payment-details-section, 
+                    #summary-section {
+                        display: none !important;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            ${printContents}
+        </body>
+        </html>
+    `;
 
-        document.body.innerHTML = printContents;
-        window.print();
-        document.body.innerHTML = originalContents;
-        location.reload(); // Optional: reload the page to restore state
-    }
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = html;
+    window.print();
+    document.body.innerHTML = originalContents;
+    location.reload();
+}
 </script>

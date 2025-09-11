@@ -106,7 +106,7 @@
                     </tr>
                     <tr>
                         <th colspan="5" class="text-right p-1 border">Discount:</th>
-                        <th class="p-1 border">{{ number_format($totalDiscount, 2) }}</th>
+                        <th class="p-1 border">-{{ number_format($totalDiscount, 2) }}</th>
                     </tr>
                     <tr>
                         <th colspan="5" class="text-right p-1 border">Total Purchase Amount:</th>
@@ -133,13 +133,32 @@
 
 <!-- Print Script -->
 <script>
-    function printInvoice() {
-        const printContents = document.getElementById('printableArea').innerHTML;
-        const originalContents = document.body.innerHTML;
+   function printInvoice() {
+    const printContents = document.getElementById('printableArea').outerHTML;
+    
+    const html = `
+        <html>
+        <head>
+            <title>Print Invoice</title>
+            <style>
+                @media print {
+                    body {
+                        margin: 15mm 0mm 15mm 0mm; /* top, right, bottom, left */
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            ${printContents}
+        </body>
+        </html>
+    `;
 
-        document.body.innerHTML = printContents;
-        window.print();
-        document.body.innerHTML = originalContents;
-        location.reload(); // Optional: reload the page to restore state
-    }
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = html;
+    window.print();
+    document.body.innerHTML = originalContents;
+    location.reload();
+}
+
 </script>
