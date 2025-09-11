@@ -9,11 +9,11 @@
 <div class="invoice p-3 mb-3" id="printableArea">
     <div class="row">
         <div class="col-12">
-            <h4>
+           <h4 style="text-align: right;">
                 <img 
                     src="{{ !empty(get_company()->logo) ? url('upload/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
                     alt="Company Logo" 
-                    style="height: 40px; vertical-align: middle; margin-right: 10px;"
+                    style="height: 50px; vertical-align: middle; margin-right: 10px;"
                 >
                 {{-- {{ get_company()->name ?? '' }} --}}
                 <small class="float-right" id="current-date"></small>

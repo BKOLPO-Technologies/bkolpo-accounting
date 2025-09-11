@@ -9,13 +9,13 @@
 <div class="invoice p-3 mb-3" id="printableArea">
     <div class="row">
         <div class="col-12">
-            <h4>
+            <h4 style="text-align: right;">
                 <img 
                     src="{{ !empty(get_company()->logo) ? url('upload/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
                     alt="Company Logo" 
                     style="height: 40px; vertical-align: middle; margin-right: 10px;"
                 >
-                {{ get_company()->name ?? '' }}
+                {{-- {{ get_company()->name ?? '' }} --}}
                 <small class="float-right" id="current-date"></small>
             </h4>  
         </div>
@@ -39,9 +39,9 @@
 
     <!-- Purchase Details -->
     <div style="border: 1px solid #dbdbdb;">
-        <h4 class="text-center mt-2 mb-3" style="text-decoration: underline; text-decoration-color: #3498db; text-decoration-thickness: 3px;">
+        {{-- <h4 class="text-center mt-2 mb-3" style="text-decoration: underline; text-decoration-color: #3498db; text-decoration-thickness: 3px;">
             <strong>Purchase Details</strong>
-        </h4>
+        </h4> --}}
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>
