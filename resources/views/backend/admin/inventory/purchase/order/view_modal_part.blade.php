@@ -15,7 +15,7 @@
                     alt="Company Logo" 
                     style="height: 40px; vertical-align: middle; margin-right: 10px;"
                 >
-                {{ get_company()->name ?? '' }}
+                {{-- {{ get_company()->name ?? '' }} --}}
                 <small class="float-right" id="current-date"></small>
             </h4>  
         </div>
@@ -49,11 +49,11 @@
 
     <!-- Purchase Details -->
     <div style="border: 1px solid #dbdbdb;">
-        <h4 class="text-center mt-2 mb-3" style="text-decoration: underline; text-decoration-color: #3498db; text-decoration-thickness: 3px;">
+        {{-- <h4 class="text-center mt-2 mb-3" style="text-decoration: underline; text-decoration-color: #3498db; text-decoration-thickness: 3px;">
             <strong>Purchase Order Details</strong>
-        </h4>
+        </h4> --}}
         <div class="table-responsive" style="overflow-x: hidden;">
-            <table class="table table-striped table-sm table-bordered" style="margin: 10px; font-size: 13px;">
+            <table class="table table-striped table-sm table-bordered" style="margin: 10px; font-size: 16px;">
                 <thead class="table-light">
                     <tr>
                         <th class="p-1 border">Product</th>
@@ -106,7 +106,7 @@
                     </tr>
                     <tr>
                         <th colspan="5" class="text-right p-1 border">Discount:</th>
-                        <th class="p-1 border">-{{ number_format($totalDiscount, 2) }}</th>
+                        <th class="p-1 border">{{ number_format($totalDiscount, 2) }}</th>
                     </tr>
                     <tr>
                         <th colspan="5" class="text-right p-1 border">Total Purchase Amount:</th>
