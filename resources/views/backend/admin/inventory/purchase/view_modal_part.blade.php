@@ -96,7 +96,7 @@
                     </tr>
                     <tr>
                         <th colspan="5" class="text-right">Discount:</th>
-                        <th>-{{ number_format($totalDiscount, 2) }}</th>
+                        <th>{{ number_format($totalDiscount, 2) }}</th>
                     </tr>
                     <tr>
                         <th colspan="5" class="text-right">Total Purchase Amount:</th>
