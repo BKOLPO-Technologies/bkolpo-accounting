@@ -96,7 +96,7 @@
                     </tr>
                     <tr>
                         <th colspan="5" class="text-right">Discount:</th>
-                        <th>-{{ number_format($totalDiscount, 2) }}</th>
+                        <th>{{ number_format($totalDiscount, 2) }}</th>
                     </tr>
                     <tr>
                         <th colspan="5" class="text-right">Total Purchase Amount:</th>
@@ -106,7 +106,7 @@
             </table>
             <div class="pl-2 pb-2" style="margin-top: 10px;">
                 <strong>Amount in Words:</strong>
-                <strong class="text-uppercase">{{ convertNumberToWords($totalTotal) }}</strong>
+                <strong>{{ convertNumberToWords($totalTotal) }}</strong>
             </div>
         </div>
     </div>
@@ -181,7 +181,7 @@
             </table>
             <div class="pl-2 pb-2" style="margin-top: 10px;">
                 <strong>Amount in Words:</strong>
-                <strong class="text-uppercase">{{ convertNumberToWords(number_format($totalTotal - $totalPayment, 2, '.', '')) }}</strong>
+                <strong>{{ convertNumberToWords(number_format($totalTotal - $totalPayment, 2, '.', '')) }}</strong>
             </div>
         </div>
     </div>
