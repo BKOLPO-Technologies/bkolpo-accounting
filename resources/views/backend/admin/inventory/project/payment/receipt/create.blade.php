@@ -81,10 +81,10 @@
 
                                 <!-- Pay Amount -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="amount" class="form-label">Pay Amount:</label>
+                                    <label for="amount" class="form-label">Receive Amount:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
-                                        <input type="number" class="form-control" id="pay_amount" name="pay_amount" step="0.01" placeholder="Enter Pay Amount" required>
+                                        <input type="number" class="form-control" id="pay_amount" name="pay_amount" step="0.01" placeholder="Enter Receive Amount" required>
                                     </div>
                                 </div>
 
@@ -97,13 +97,13 @@
                                     </div>
                                 </div>
 
-                                <!-- Payment Method -->
+                                <!-- Receive Method -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="ledger_group_id" class="form-label">Select Payment Method:</label>
+                                    <label for="ledger_group_id" class="form-label">Select Receive Method:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-book"></i></span>
                                         <select class="form-control" name="payment_method" id="payment_method" required>
-                                            <option value="">Choose Payment Method</option>
+                                            <option value="">Choose Receive Method</option>
                                             @foreach($ledgers as $ledger)
                                                 <option value="{{ $ledger->id }}" data-type="{{ $ledger->type }}">{{ $ledger->name }}</option>
                                             @endforeach
@@ -111,13 +111,13 @@
                                     </div>
                                 </div>
 
-                                <!-- Payment Mood -->
+                                <!-- Receive Mood -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="ledger_group_id" class="form-label">Select Payment Mood:</label>
+                                    <label for="ledger_group_id" class="form-label">Select Receive Mood:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-book"></i></span>
                                         <select class="form-control" name="payment_mood" id="payment_mood">
-                                            <option value="">Choose Payment Mood</option>
+                                            <option value="">Choose Receive Mood</option>
                                             <option value="bank_transfer">Bank Transfer</option>
                                             <option value="cheque">Cheque Payment</option>
                                             <option value="bkash">Bkash</option>
@@ -196,9 +196,9 @@
                                     </div>
                                 </div>
 
-                                <!-- Payment Date -->
+                                <!-- Receive Date -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="payment_date" class="form-label">Payment Date:</label>
+                                    <label for="payment_date" class="form-label">Receive Date:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                                         <input type="text" id="date" class="form-control" name="payment_date" value="{{ date('Y-m-d') }}" required>
