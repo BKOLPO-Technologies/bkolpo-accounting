@@ -120,6 +120,7 @@ class ProductSaleReceiveController extends Controller
                 'pay_amount' => $request->input('pay_amount'),
                 'due_amount' => $request->input('due_amount'),
                 'payment_method' => $payment_method,
+                'ledger_id' => $ledger->id,
                 'payment_date' => $request->input('payment_date'),
                 'bank_account_no' => $request->input('bank_account_no'),
                 'cheque_no' => $request->input('cheque_no'),
@@ -139,18 +140,38 @@ class ProductSaleReceiveController extends Controller
 
             $cashBankLedger  = $ledger;
             $receivableLedger = Ledger::where('type', 'Receivable')->first();
-        
+            $companyInfo = get_company();
+            $currentMonth = now()->format('m'); 
             $paymentAmount = $request->input('pay_amount', 0); 
 
             if ($cashBankLedger && $receivableLedger) {
                 // Check if a Journal Voucher exists for this payment transaction
                 $journalVoucher = JournalVoucher::where('transaction_code', $project->invoice_no)->first();
+
+                $increment = 1;
+                if ($journalVoucher && preg_match('/(\d{3})$/', $journalVoucher->transaction_code, $matches)) {
+                    $increment = (int)$matches[0] + 1;
+                }
+
+                $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
+                $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
+                $transactionCode = 'BCL-V-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement; $increment = 1;
+                if ($journalVoucher && preg_match('/(\d{3})$/', $journalVoucher->transaction_code, $matches)) {
+                    $increment = (int)$matches[0] + 1;
+                }
+
+                $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
+                $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
+                $transactionCode = 'BCL-V-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement;
+            
             
                 if (!$journalVoucher) {
                     // Create a new Journal Voucher for Payment Received
                     $journalVoucher = JournalVoucher::create([
                         'transaction_code'  => $project->invoice_no,
                         'transaction_date'  => $request->payment_date,
+                        'company_id'       => $companyInfo->id,
+                        'branch_id'        => $companyInfo->branch->id,
                         'description'       => 'Invoice Payment Received - First Installment', // ম্যানুয়াল বর্ণনা
                         'status'            => 1, // Pending status
                     ]);
@@ -225,6 +246,187 @@ class ProductSaleReceiveController extends Controller
     
             // Log the error or return a custom error message
             return redirect()->back()->with('error', 'Payment failed! ' . $e->getMessage());
+        }
+    }
+
+    public function edit($id)
+    {
+        $pageTitle = "Edit Receive Payment";
+        $receipt = ProjectReceipt::findOrFail($id);
+
+        // Get the sale record for this receipt
+        $sale = Sale::where('invoice_no', $receipt->invoice_no)->first();
+
+        // If a sale exists, we can get project_id from it
+        $projectId = $sale ? $sale->project_id : null;
+
+        $projects = Project::where(function ($query) use ($projectId) {
+                $query->whereHas('sales', function ($q) {
+                    $q->where(function ($q2) {
+                        $q2->whereColumn('grand_total', '!=', 'paid_amount')
+                            ->orWhere('status', '!=', 'Paid');
+                    });
+                });
+
+                // Always include the project linked to this receipt’s sale
+                if ($projectId) {
+                    $query->orWhere('id', $projectId);
+                }
+            })
+            ->where('project_type', 'Running')
+            ->with(['sales' => function ($q) {
+                $q->select(
+                    'project_id',
+                    DB::raw('SUM(grand_total) as total_grand'),
+                    DB::raw('SUM(paid_amount) as total_paid')
+                )->groupBy('project_id');
+            }])
+            ->latest()
+            ->get();
+
+        $ledgers = Ledger::whereIn('type', ['Cash', 'Bank'])->get();
+        // dd($ledgers);
+
+        return view('backend.admin.inventory.project.payment.receipt.edit', compact(
+            'pageTitle',
+            'receipt',
+            'projects',
+            'ledgers',
+            'sale'
+        ));
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        // Validate the incoming form data
+        $request->validate([
+            'project_id' => 'required|exists:projects,id',
+            'total_amount' => 'required|numeric|min:0',
+            'pay_amount' => 'required|numeric|min:0',
+            'due_amount' => 'required|numeric|min:0',
+            'payment_date' => 'required|date',
+        ]);
+
+        // Begin a transaction to ensure atomicity
+        DB::beginTransaction();
+
+        try {
+            $receipt = ProjectReceipt::findOrFail($id);
+            $project = Sale::where('invoice_no', $receipt->invoice_no)
+                        ->where('project_id', $request->input('project_id'))
+                        ->firstOrFail();
+                        
+            $ledger = Ledger::findOrFail($request->payment_method);
+            
+            // Calculate the difference in payment amount for journal adjustment
+            $paymentDifference = $request->input('pay_amount') - $receipt->pay_amount;
+            // dd($paymentDifference);
+            
+            // Determine payment method
+            $paymentDescription = "{$ledger->name}";
+            $payment_method = $ledger->type == 'Cash' ? 'Cash' : 'Bank';
+            
+            // Store old values for potential rollback
+            $oldPayAmount = $receipt->pay_amount;
+            $oldDueAmount = $receipt->due_amount;
+            
+            // Update the receipt
+            $receipt->update([
+                'client_id' => $project->client_id,
+                'invoice_no' => $project->invoice_no,
+                'total_amount' => $request->input('total_amount'),
+                'pay_amount' => $request->input('pay_amount'),
+                'due_amount' => $request->input('due_amount'),
+                'payment_method' => $payment_method,
+                'ledger_id' => $ledger->id,
+                'payment_date' => $request->input('payment_date'),
+                'bank_account_no' => $request->input('bank_account_no'),
+                'cheque_no' => $request->input('cheque_no'),
+                'cheque_date' => $request->input('cheque_date'),
+                'bank_batch_no' => $request->input('bank_batch_no'),
+                'bank_date' => $request->input('bank_date'),
+                'bkash_number' => $request->input('bkash_number'),
+                'reference_no' => $request->input('reference_no'),
+                'bkash_date' => $request->input('bkash_date'),
+                'description' => $request->input('description'),
+            ]);
+            
+            // Update journal entries if payment amount changed
+            if ($paymentDifference != 0) {
+                $cashBankLedger = $receipt->ledger_id; // Use the ledger from the receipt
+                // dd($cashBankLedger);
+                $receivableLedger = Ledger::where('type', 'Receivable')->first();
+                
+                if ($cashBankLedger && $receivableLedger) {
+                    // Find the journal voucher for this transaction
+                    $journalVoucher = JournalVoucher::where('transaction_code', $project->invoice_no)->first();
+                    
+                    if ($journalVoucher) {
+                        // Update or create debit entry (Cash/Bank)
+                        $debitEntry = JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)
+                            ->where('ledger_id', $cashBankLedger)
+                            ->first();
+                            
+                        if ($debitEntry) {
+                            $debitEntry->update([
+                                'debit' => $debitEntry->debit + $paymentDifference,
+                                'description' => $paymentDescription . ' of ' . number_format($request->input('pay_amount'), 2) . ' Taka Received from Customer for Invoice ' . $project->invoice_no,
+                            ]);
+                        }
+                        
+                        // Update or create credit entry (Receivable)
+                        $creditEntry = JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)
+                            ->where('ledger_id', $receivableLedger->id)
+                            ->first();
+
+                            // dd($creditEntry);
+                            
+                        if ($creditEntry) {
+                            $creditEntry->update([
+                                'credit' => $creditEntry->credit + $paymentDifference,
+                                'description' => $paymentDescription . ' Accounts Receivable Adjusted by '.$paymentDifference.' Taka',
+                            ]);
+                        }
+                    }
+                }
+            }
+            
+            // Update the project's paid amount and status
+            if ($project) {
+                // Adjust the paid amount by the difference
+                $project->paid_amount += $paymentDifference;
+                
+                // Check if the total paid amount is equal to or greater than the project amount
+                if ($project->paid_amount >= $project->grand_total) {
+                    $project->status = 'paid';
+                } else if ($project->paid_amount > 0) {
+                    $project->status = 'partially_paid';
+                } else {
+                    $project->status = 'due';
+                }
+                
+                $project->save();
+            }
+            
+            // Commit the transaction
+            DB::commit();
+            
+            return redirect()->route('project.receipt.payment.index')->with('success', 'Payment has been successfully updated!');
+            
+        } catch (\Exception $e) {
+            // If an error occurs, roll back the transaction
+            DB::rollBack();
+            
+            // Log the error with details
+            Log::error('Payment update failed', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'request_data' => $request->all(),
+            ]);
+            
+            return redirect()->back()->with('error', 'Payment update failed! ' . $e->getMessage());
         }
     }
 

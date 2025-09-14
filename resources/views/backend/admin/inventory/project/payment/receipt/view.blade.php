@@ -236,10 +236,10 @@
                                                     <th>Sl</th>
                                                     <th>Reference No</th>
                                                     <th>Total Amount</th>
-                                                    <th>Pay Amount</th>
+                                                    <th>Receive Amount</th>
                                                     <th>Due Amount</th>
-                                                    <th>Payment Method</th>
-                                                    <th>Payment Date</th>
+                                                    <th>Receive Method</th>
+                                                    <th>Receive Date</th>
                                                     <!-- Additional columns for Bank payment -->
                                                     <th>Bank Account No</th>
                                                     <th>Cheque No</th>

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('pay_amount', 15, 2);
             $table->decimal('due_amount', 15, 2);
             $table->enum('payment_method', ['cash', 'bank']);
+            $table->integer('ledger_id')->nullable(); // Ledger ID for Cash/Bank
             $table->string('bank_account_no')->nullable();
             $table->string('cheque_no')->nullable();
             $table->string('cheque_date')->nullable();
