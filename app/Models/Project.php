@@ -31,6 +31,11 @@ class Project extends Model
         return $this->hasMany(Purchase::class);
     }
 
+    public function purchasesinvoice()
+    {
+        return $this->hasMany(PurchaseInvoice::class);
+    }
+
     public function receipts()
     {
         return $this->hasMany(ProjectReceipt::class, 'invoice_no', 'reference_no');

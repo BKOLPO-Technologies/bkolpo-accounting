@@ -10,18 +10,24 @@ trait ProjectSalesTrait
         // Fetch the project with related models
         $project = Project::where('id', $id)
             ->with(['client', 'items', 'sales', 'purchases', 'receipts'])
-            ->firstOrFail(); // Ensure the project exists
+            ->firstOrFail();
 
         // Filter purchases based on the provided dates
-        $purchases = $project->purchases()
+        $purchases = $project->purchasesinvoice()
+            ->whereBetween('invoice_date', [$fromDate, $toDate])
+            ->get();
+            // dd($purchases);
+
+        // Filter sales within date range
+        $sales = $project->sales()
             ->whereBetween('invoice_date', [$fromDate, $toDate])
             ->get();
 
-        // Calculate totals
-        $totalAmount = $project->grand_total;
-        $paidAmount = $project->paid_amount;
-        $dueAmount = $totalAmount - $paidAmount;
+        // Calculate totals from sales
+        $totalAmount = $sales->sum('grand_total');
+        $paidAmount  = $sales->sum('paid_amount');
+        $dueAmount   = $totalAmount - $paidAmount;
 
-        return compact('project', 'purchases', 'totalAmount', 'paidAmount', 'dueAmount');
+        return compact('project', 'purchases', 'sales', 'totalAmount', 'paidAmount', 'dueAmount');
     }
 }
