@@ -407,7 +407,7 @@
                                                                 <th>Total</th>
                                                                 <th>Paid Amount</th>
                                                                 <th>Status</th>
-                                                                <th>Action</th>
+                                                                {{-- <th>Action</th> --}}
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -429,14 +429,14 @@
                                                                     <td>{{ $sale->total }}</td>
                                                                     <td>{{ $sale->paid_amount }}</td>
                                                                     <td>{{ ucfirst($sale->status) }}</td>
-                                                                    <td>
+                                                                    {{-- <td>
                                                                         <button class="btn btn-success saleDetailsBtn"
                                                                             type="button" data-toggle="modal"
                                                                             data-target="#saleDetailsModal"
                                                                             data-id="{{ $sale->id }}">
                                                                             <i class="fas fa-eye"></i>
                                                                         </button>
-                                                                    </td>
+                                                                    </td> --}}
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
