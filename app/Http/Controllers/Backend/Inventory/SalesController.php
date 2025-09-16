@@ -43,7 +43,31 @@ class SalesController extends Controller
 
         $products = Product::where('status',1)->latest()->get();
         $categories = Category::where('status',1)->latest()->get();
-        $projects = Project::where('project_type','Running')->with(['items.product'])->latest()->get();
+
+        $projects = Project::where('project_type', 'Running')
+            ->with([
+                'items.product',
+                'sales.saleProducts' 
+            ])
+            ->latest()
+            ->get()
+            ->map(function($project) {
+                foreach ($project->items as $item) {
+                    $soldQty = 0;
+                    foreach ($project->sales as $sale) {
+                        foreach ($sale->saleProducts as $sp) {
+                            if ($sp->item_id == $item->id) {
+                                $soldQty += $sp->quantity;
+                            }
+                        }
+                    }
+                    $item->sold_quantity = $soldQty;
+                    $item->remaining_quantity = $item->quantity - $soldQty;
+                }
+                return $project;
+            });
+
+
         //dd($projects);
         $pageTitle = 'Invoice';
 

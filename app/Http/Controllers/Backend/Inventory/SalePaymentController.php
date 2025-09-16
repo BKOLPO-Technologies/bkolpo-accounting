@@ -250,11 +250,16 @@ class SalePaymentController extends Controller
             if ($payment_ledger && $payableLedger) {
                 // Check if a Journal Voucher exists for this payment transaction
                 $journalVoucher = JournalVoucher::where('transaction_code', $purchase->invoice_no)->first();
+
+                $companyInfo = get_company(); 
+                $currentMonth = now()->format('m');
             
                 if (!$journalVoucher) {
                     // Create a new Journal Voucher for Payment
                     $journalVoucher = JournalVoucher::create([
                         'transaction_code'  => $purchase->invoice_no,
+                        'company_id'        => $companyInfo->id,
+                        'branch_id'         => $companyInfo->branch->id,
                         'transaction_date'  => $request->payment_date,
                         'description'       => ucfirst($paymentDescription), 
                         'status'            => 1, // Pending status
@@ -324,6 +329,198 @@ class SalePaymentController extends Controller
     
             // Log the error or return a custom error message
             return redirect()->back()->with('error', 'Payment failed! ' . $e->getMessage());
+        }
+    }
+
+     public function edit($id)
+    {
+        $pageTitle = 'Edit Payment';
+        
+        // Get the payment with related data
+        $payment = Payment::with(['supplier'])
+            ->findOrFail($id);
+        
+        // Get suppliers for dropdown
+        $suppliers = Supplier::all();
+        
+        // Get ledgers for payment method dropdown
+        $ledgers = Ledger::whereIn('type', ['Cash', 'Bank'])->get();
+        
+        return view('backend.admin.inventory.sales.payment.edit', compact(
+            'pageTitle', 
+            'payment', 
+            'suppliers', 
+            'ledgers'
+        ));
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validate the incoming form data
+        $request->validate([
+            'supplier_id' => 'required|exists:suppliers,id',
+            'invoice_no' => 'required',
+            'total_amount' => 'required|numeric|min:0',
+            'pay_amount' => 'required|numeric|min:0',
+            'due_amount' => 'required|numeric|min:0',
+            'payment_date' => 'required|date',
+        ]);
+
+        // Begin a transaction to ensure atomicity
+        DB::beginTransaction();
+
+        try {
+            // Find the existing payment
+            $payment = Payment::findOrFail($id);
+            
+            // Get the ledger
+            $ledger = Ledger::findOrFail($request->payment_method);
+
+            if($ledger->type == 'Cash'){
+                $paymentDescription = "{$ledger->name} Payment Made to Supplier";
+                $payment_method = 'Cash';
+            } elseif($ledger->type == 'Bank'){
+                $paymentDescription = "{$ledger->name} Payment Made to Supplier";
+                $payment_method = 'Bank';
+            }
+
+            // Store old values for journal voucher adjustment
+            $oldPayAmount = $payment->pay_amount;
+            $oldInvoiceNo = $payment->invoice_no;
+            
+            // Update the payment
+            $payment->update([
+                'supplier_id' => $request->input('supplier_id'),
+                'ledger_id' => $request->input('payment_method'),
+                'invoice_no' => $request->input('invoice_no'),
+                'total_amount' => $request->input('total_amount'),
+                'pay_amount' => $request->input('pay_amount'),
+                'due_amount' => $request->input('due_amount'),
+                'payment_method' => $payment_method,
+                'payment_date' => $request->input('payment_date'),
+                'bank_account_no' => $request->input('bank_account_no'),
+                'cheque_no' => $request->input('cheque_no'),
+                'cheque_date' => $request->input('cheque_date'),
+                'bank_batch_no' => $request->input('bank_batch_no'),
+                'bank_date' => $request->input('bank_date'),
+                'bkash_number' => $request->input('bkash_number'),
+                'reference_no' => $request->input('reference_no'),
+                'bkash_date' => $request->input('bkash_date'),
+            ]);
+
+            // Find the purchase invoice
+            $purchase = PurchaseInvoice::where('supplier_id', $request->input('supplier_id'))
+                    ->where('invoice_no', $request->input('invoice_no'))
+                    ->first();
+
+            if (!$purchase) {
+                throw new \Exception("Purchase invoice not found!");
+            }
+
+            // Adjust the purchase paid amount (subtract old payment and add new payment)
+            $purchase->paid_amount = ($purchase->paid_amount - $oldPayAmount) + $request->input('pay_amount');
+            
+            // Check if the total paid amount is equal to or greater than the purchase amount
+            if ($purchase->paid_amount >= $purchase->total) {
+                $purchase->status = 'paid';
+            } else if ($purchase->paid_amount > 0) {
+                $purchase->status = 'partially_paid';
+            } else {
+                $purchase->status = 'due';
+            }
+
+            $purchase->save();
+
+            // Update journal voucher entries
+            $payment_ledger = $ledger;
+            $payableLedger = Ledger::where('type', 'Payable')->first();
+            $paymentAmount = $request->input('pay_amount', 0);
+
+            if ($payment_ledger && $payableLedger) {
+                // Find the existing journal voucher
+                $journalVoucher = JournalVoucher::where('transaction_code', $oldInvoiceNo)->first();
+                $companyInfo = get_company(); 
+                $currentMonth = now()->format('m');
+                
+                if ($journalVoucher) {
+                    // Update the journal voucher
+                    $journalVoucher->update([
+                        'transaction_code' => $purchase->invoice_no,
+                        'company_id'       => $companyInfo->id,
+                        'branch_id'        => $companyInfo->branch->id,
+                        'transaction_date' => $request->payment_date,
+                        'description'      => ucfirst($paymentDescription),
+                    ]);
+                    
+                    // Find and update the journal voucher details
+                    $payableEntry = JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)
+                        ->where('ledger_id', $payableLedger->id)
+                        ->first();
+                        
+                    $paymentEntry = JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)
+                        ->where('ledger_id', $payment_ledger->id)
+                        ->first();
+                    
+                    if ($payableEntry) {
+                        $payableEntry->update([
+                            'reference_no' => $purchase->invoice_no,
+                            'debit' => $paymentAmount,
+                            'credit' => 0,
+                        ]);
+                    }
+                    
+                    if ($paymentEntry) {
+                        $paymentEntry->update([
+                            'reference_no' => $purchase->invoice_no,
+                            'debit' => 0,
+                            'credit' => $paymentAmount,
+                        ]);
+                    }
+                } else {
+                    // Create a new journal voucher if none exists
+                    $journalVoucher = JournalVoucher::create([
+                        'transaction_code' => $purchase->invoice_no,
+                        'company_id'       => $companyInfo->id,
+                        'branch_id'        => $companyInfo->branch->id,
+                        'transaction_date' => $request->payment_date,
+                        'description' => ucfirst($paymentDescription),
+                        'status' => 1,
+                    ]);
+                    
+                    // Payment -> Accounts Payable (Debit Entry)
+                    JournalVoucherDetail::create([
+                        'journal_voucher_id' => $journalVoucher->id,
+                        'ledger_id' => $payableLedger->id,
+                        'reference_no' => $purchase->invoice_no,
+                        'description' => 'Payment to Supplier',
+                        'debit' => $paymentAmount,
+                        'credit' => 0,
+                    ]);
+                    
+                    // Payment -> Cash & Bank (Credit Entry)
+                    JournalVoucherDetail::create([
+                        'journal_voucher_id' => $journalVoucher->id,
+                        'ledger_id' => $payment_ledger->id,
+                        'reference_no' => $purchase->invoice_no,
+                        'description' => ucfirst($paymentDescription),
+                        'debit' => 0,
+                        'credit' => $paymentAmount,
+                    ]);
+                }
+            }
+
+            // Commit the transaction
+            DB::commit();
+
+            // Redirect after updating the payment
+            return redirect()->route('sale.payment.index')->with('success', 'Payment has been successfully updated!');
+
+        } catch (\Exception $e) {
+            // If an error occurs, roll back the transaction
+            DB::rollBack();
+
+            // Log the error or return a custom error message
+            return redirect()->back()->with('error', 'Payment update failed! ' . $e->getMessage());
         }
     }
 
