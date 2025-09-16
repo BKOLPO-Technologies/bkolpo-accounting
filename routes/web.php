@@ -39,6 +39,7 @@ use App\Http\Controllers\Backend\Inventory\SaleReceiptController;
 use App\Http\Controllers\Backend\Inventory\IncomingChalanController;
 use App\Http\Controllers\Backend\Inventory\OutComingChalanController;
 use App\Http\Controllers\Backend\Inventory\ProductSaleReceiveController;
+use App\Http\Controllers\Backend\Inventory\AdvanceReceiveController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
@@ -464,6 +465,17 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/delete/{id}', [ProductSaleReceiveController::class, 'destroy'])->name('project.receipt.payment.destroy');
         Route::get('/get-ledgers-by-group', [ProductSaleReceiveController::class, 'getLedgersByGroup'])->name('project.receipt.payment.get.ledgers.by.group');
         Route::get('/payment/get-chalans-by-client', [ProductSaleReceiveController::class, 'getChalansByClient'])->name('project.receipt.payment.get.chalans.by.client');
+    });
+
+    /* ==================== Project Advance Payment Receipt Controller =================== */
+    Route::prefix('project/advance/payment/receipt')->group(function () {
+        Route::get('/', [AdvanceReceiveController::class, 'index'])->name('project.advance.receipt.payment.index');
+        Route::get('/create', [AdvanceReceiveController::class, 'create'])->name('project.advance.receipt.payment.create');
+        Route::post('/store', [AdvanceReceiveController::class, 'store'])->name('project.advance.receipt.payment.store');
+        Route::get('/view', [AdvanceReceiveController::class, 'view'])->name('project.advance.receipt.payment.show');
+        Route::get('project/receipt-payment/edit/{id}', [AdvanceReceiveController::class, 'edit'])->name('project.advance.receipt.payment.edit');
+        Route::put('project/receipt-payment/{id}', [AdvanceReceiveController::class, 'update'])->name('project.advance.receipt.payment.update');
+        Route::get('/delete/{id}', [AdvanceReceiveController::class, 'destroy'])->name('project.advance.receipt.payment.destroy');
     });
     
     // Quotation Routes
