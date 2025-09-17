@@ -119,6 +119,11 @@
                                         </tfoot>
                                     @endif
                                 </table>
+                                <!-- Amount in Words -->
+                                    <div class="mt-3">
+                                        <strong>Amount in Words:</strong>
+                                        <strong>{{ convertNumberToWords($totalReceived) }}</strong>
+                                    </div>
                                 </div>
                             <div>
                             </div>
