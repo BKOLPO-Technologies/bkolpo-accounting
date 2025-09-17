@@ -38,7 +38,7 @@
                                             <th>Sl No</th>
                                             <th>Reference No</th>
                                             <th>Customer Name</th>
-                                            <th>Pay Amount</th>
+                                            <th>Receive Amount</th>
                                             <th>Payment Method</th>  
                                             <th>Payment Date</th>
                                             <th>Action</th>
@@ -48,13 +48,13 @@
                                         @foreach($receipts as $key => $receipt)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
-                                                <td>{{ $receipt->invoice_no ?? 'N/A' }}</td>
+                                                <td>{{ $receipt->reference_no ?? 'N/A' }}</td>
                                                 <td>{{ $receipt->client->name ?? 'N/A' }}</td>
-                                                <td>{{ number_format($receipt->pay_amount, 2) }}</td>
+                                                <td>{{ number_format($receipt->receive_amount, 2) }}</td>
                                                 <td>
-                                                    @if($receipt->payment_method == 'cash')
+                                                    @if($receipt->payment_method == 'Cash')
                                                         Cash
-                                                    @elseif($receipt->payment_method == 'bank')
+                                                    @elseif($receipt->payment_method == 'Bank')
                                                         Bank
                                                     @else
                                                         N/A
@@ -63,7 +63,7 @@
                                                 <td>{{ $receipt->payment_date }}</td>
                                                 <td>
                                                     <!-- View Button -->
-                                                    <a href="{{ route('project.advance.receipt.payment.show', ['invoice_no' => $receipt->invoice_no]) }}" class="btn btn-success btn-sm">
+                                                    <a href="{{ route('project.advance.receipt.payment.show', ['reference_no' => $receipt->reference_no]) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                     <!-- Edit Button -->

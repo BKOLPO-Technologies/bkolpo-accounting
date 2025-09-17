@@ -472,7 +472,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/', [AdvanceReceiveController::class, 'index'])->name('project.advance.receipt.payment.index');
         Route::get('/create', [AdvanceReceiveController::class, 'create'])->name('project.advance.receipt.payment.create');
         Route::post('/store', [AdvanceReceiveController::class, 'store'])->name('project.advance.receipt.payment.store');
-        Route::get('/view', [AdvanceReceiveController::class, 'view'])->name('project.advance.receipt.payment.show');
+        Route::post('/project/store', [AdvanceReceiveController::class, 'projectStore'])->name('advance.project.store');
+        Route::get('/show/{reference_no}', [AdvanceReceiveController::class, 'show'])->name('project.advance.receipt.payment.show');
         Route::get('project/receipt-payment/edit/{id}', [AdvanceReceiveController::class, 'edit'])->name('project.advance.receipt.payment.edit');
         Route::put('project/receipt-payment/{id}', [AdvanceReceiveController::class, 'update'])->name('project.advance.receipt.payment.update');
         Route::get('/delete/{id}', [AdvanceReceiveController::class, 'destroy'])->name('project.advance.receipt.payment.destroy');
