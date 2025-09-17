@@ -100,7 +100,7 @@
                                                 <td>{{ $r->payment_date }}</td>
                                                 <td>{{ ucfirst($r->payment_method) }}</td>
                                                 <td>{{ $r->ledger->name ?? '' }}</td>
-                                                <td>{{ number_format($r->receive_amount, 2) }}</td>
+                                                <td>{{ bdt() }}  {{ number_format($r->receive_amount, 2) }}</td>
                                             </tr>
                                         @empty
                                             <tr>
@@ -114,7 +114,7 @@
                                             <tr>
                                                 <th colspan="4" class="text-right">Total Received</th>
                                                 <th class="text-left" colspan="">
-                                                <b>{{ number_format($totalReceived, 2) }}</b></th>
+                                                <b>{{ bdt() }}  {{ number_format($totalReceived, 2) }}</b></th>
                                             </tr>
                                         </tfoot>
                                     @endif

@@ -50,7 +50,7 @@
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>{{ $receipt->reference_no ?? 'N/A' }}</td>
                                                 <td>{{ $receipt->client->name ?? 'N/A' }}</td>
-                                                <td>{{ number_format($receipt->receive_amount, 2) }}</td>
+                                                <td>{{ bdt() }} {{ number_format($receipt->receive_amount, 2) }}</td>
                                                 <td>
                                                     @if($receipt->payment_method == 'Cash')
                                                         Cash
