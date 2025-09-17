@@ -76,49 +76,51 @@
                                 </div>
                                 <h4>Receive Amount History</h4>
                                 <hr>
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Sl</th>
-                                            <th>Receive Date</th>
-                                            <th>Payment Method</th>
-                                            <th>Ledger</th>
-                                            <th>Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $totalReceived = 0;
-                                        @endphp
-
-                                        @forelse ($project->advancereceipts as $key => $r)
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Sl</th>
+                                                <th>Receive Date</th>
+                                                <th>Payment Method</th>
+                                                <th>Ledger</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
                                             @php
-                                                $totalReceived += $r->receive_amount;
+                                                $totalReceived = 0;
                                             @endphp
-                                            <tr>
-                                                <td>{{ $key + 1 }}</td>
-                                                <td>{{ $r->payment_date }}</td>
-                                                <td>{{ ucfirst($r->payment_method) }}</td>
-                                                <td>{{ $r->ledger->name ?? '' }}</td>
-                                                <td>{{ bdt() }}  {{ number_format($r->receive_amount, 2) }}</td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="5" class="text-center">No payments received yet.</td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
 
-                                    @if ($project->advancereceipts->count() > 0)
-                                        <tfoot>
-                                            <tr>
-                                                <th colspan="4" class="text-right">Total Received</th>
-                                                <th class="text-left" colspan="">
-                                                <b>{{ bdt() }}  {{ number_format($totalReceived, 2) }}</b></th>
-                                            </tr>
-                                        </tfoot>
-                                    @endif
-                                </table>
+                                            @forelse ($project->advancereceipts as $key => $r)
+                                                @php
+                                                    $totalReceived += $r->receive_amount;
+                                                @endphp
+                                                <tr>
+                                                    <td>{{ $key + 1 }}</td>
+                                                    <td>{{ $r->payment_date }}</td>
+                                                    <td>{{ ucfirst($r->payment_method) }}</td>
+                                                    <td>{{ $r->ledger->name ?? '' }}</td>
+                                                    <td>{{ bdt() }}  {{ number_format($r->receive_amount, 2) }}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="5" class="text-center">No payments received yet.</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+
+                                        @if ($project->advancereceipts->count() > 0)
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="4" class="text-right">Total Received</th>
+                                                    <th class="text-left" colspan="">
+                                                    <b>{{ bdt() }}  {{ number_format($totalReceived, 2) }}</b></th>
+                                                </tr>
+                                            </tfoot>
+                                        @endif
+                                    </table>
+                                </div>
                                 <!-- Amount in Words -->
                                     <div class="mt-3">
                                         <strong>Amount in Words:</strong>
