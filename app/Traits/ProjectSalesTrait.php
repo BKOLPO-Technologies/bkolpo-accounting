@@ -23,9 +23,11 @@ trait ProjectSalesTrait
             ->whereBetween('invoice_date', [$fromDate, $toDate])
             ->get();
 
+        $advance_receive = $project->paid_amount;
+
         // Calculate totals from sales
         $totalAmount = $project->grand_total;
-        $paidAmount  = $sales->sum('paid_amount');
+        $paidAmount  = $sales->sum('paid_amount')+$advance_receive;
         $dueAmount   = $totalAmount - $paidAmount;
 
         return compact('project', 'purchases', 'sales', 'totalAmount', 'paidAmount', 'dueAmount');

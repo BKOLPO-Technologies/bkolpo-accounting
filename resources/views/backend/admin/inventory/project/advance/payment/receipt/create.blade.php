@@ -217,10 +217,10 @@
                                     </div>
 
                                     <div class="col-lg-12 col-md-12 mb-3">
-                                        <label for="description">Note</label>
+                                        <label for="note">Note</label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fas fa-comment"></i></span>
-                                            <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter some note">{{ old('description') }}</textarea>
+                                            <textarea id="description" name="note" class="form-control" rows="3" placeholder="Enter some note">{{ old('note') }}</textarea>
                                         </div>
                                     </div>
                                 </div>

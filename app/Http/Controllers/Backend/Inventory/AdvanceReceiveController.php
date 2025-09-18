@@ -3,29 +3,23 @@
 namespace App\Http\Controllers\Backend\Inventory;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Sale;
-use App\Models\Client;
-use App\Models\Ledger;
-use App\Models\Project;
-use App\Models\LedgerGroup;
-use App\Models\JournalVoucher;
-use App\Models\ProjectReceipt;
 use App\Models\AdvanceProjectReceipt;
+use App\Models\Category;
+use App\Models\Client;
+use App\Models\JournalVoucher;
+use App\Models\JournalVoucherDetail;
+use App\Models\Ledger;
+use App\Models\LedgerGroup;
+use App\Models\Product;
+use App\Models\Project;
+use App\Models\ProjectItem;
+use App\Models\Unit;
+use Exception;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\JournalVoucherDetail;
-use Exception;
-use Carbon\Carbon;
-use App\Models\Unit;
-use App\Models\Product;
-use App\Models\Category;
-use App\Models\Purchase;
-use App\Models\ProjectItem;
 use Illuminate\Support\Str;
-use App\Traits\ProjectSalesTrait;
-use App\Traits\TrialBalanceTrait;
-use Illuminate\Database\QueryException;
 
 class AdvanceReceiveController extends Controller
 {
@@ -34,67 +28,68 @@ class AdvanceReceiveController extends Controller
      */
     public function index()
     {
-        $pageTitle = 'Advance Payment Receive List';
-    
+        $pageTitle = 'Advance Receive List';
+
         $receipts = AdvanceProjectReceipt::with(['client'])
             ->orderBy('id', 'desc')
             ->get();
-        
+
         return view('backend.admin.inventory.project.advance.payment.receipt.index', compact('pageTitle', 'receipts'));
     }
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        $pageTitle = 'Advance Receive Payment';
+        $pageTitle = 'Advance Receive';
 
         $ledgerGroups = LedgerGroup::with('ledgers')->latest()->get();
-    
+
         $projects = Project::where('project_type', 'Running')
-            ->with(['sales' => function($q) {
+            ->with(['sales' => function ($q) {
                 $q->where('status', 'Paid')
-                ->select('project_id', DB::raw('SUM(grand_total) as total_grand'), DB::raw('SUM(paid_amount) as total_paid'))
-                ->groupBy('project_id');
+                    ->select('project_id', DB::raw('SUM(grand_total) as total_grand'), DB::raw('SUM(paid_amount) as total_paid'))
+                    ->groupBy('project_id');
             }])
             ->latest()
             ->get();
-        
+
         $ledgers = Ledger::whereIn('type', ['Bank', 'Cash'])->get();
 
-       $clients = Client::latest()->get();
+        $clients = Client::latest()->get();
 
-        $units = Unit::where('status',1)->latest()->get();
+        $units = Unit::where('status', 1)->latest()->get();
         $categories = Category::all();
-        $products = Product::where('status',1)->latest()->get();
+        $products = Product::where('status', 1)->latest()->get();
 
-        $companyInfo = get_company(); 
+        $companyInfo = get_company();
 
         $currentMonth = now()->format('m');
         $currentYear = now()->format('y');
 
         $randomNumber = rand(100000, 999999);
 
-        $lastReference = Project::whereRaw('MONTH(created_at) = ?', [$currentMonth]) 
-        ->orderBy('created_at', 'desc') 
-        ->first();
+        $lastReference = Project::whereRaw('MONTH(created_at) = ?', [$currentMonth])
+            ->orderBy('created_at', 'desc')
+            ->first();
 
         if ($lastReference) {
-            preg_match('/(\d{3})$/', $lastReference->reference_no, $matches); 
-            $increment = (int)$matches[0] + 1; 
+            preg_match('/(\d{3})$/', $lastReference->reference_no, $matches);
+            $increment = (int) $matches[0] + 1;
         } else {
             $increment = 1;
         }
 
         $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
         $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
-        $referance_no = 'BCL-PR-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement;
-      
+        $referance_no = 'BCL-PR-'.$fiscalYearWithoutHyphen.$currentMonth.$formattedIncrement;
+
         $vat = $companyInfo->vat;
         $tax = $companyInfo->tax;
-        $productCode = 'PRD' . strtoupper(Str::random(5));
+        $productCode = 'PRD'.strtoupper(Str::random(5));
 
-        return view('backend.admin.inventory.project.advance.payment.receipt.create',compact('pageTitle', 'clients', 'ledgerGroups', 'projects','ledgers','referance_no','units','products','vat','tax', 'categories', 'productCode'));
+        return view('backend.admin.inventory.project.advance.payment.receipt.create', compact('pageTitle', 'clients', 'ledgerGroups', 'projects', 'ledgers', 'referance_no', 'units', 'products', 'vat', 'tax', 'categories', 'productCode'));
     }
 
     /**
@@ -112,10 +107,15 @@ class AdvanceReceiveController extends Controller
 
         // find project id
         $project = Project::find($request->project_id);
-    
+
+        if ($request->receive_amount > $project->grand_total) {
+            return back()->with('error', 'Receive amount cannot be greater than the project grand total.');
+        }
+
+
         // Begin a transaction to ensure atomicity
         DB::beginTransaction();
-    
+
         try {
             // Determine payment method
             $ledger = Ledger::findOrFail($request->payment_method);
@@ -129,6 +129,7 @@ class AdvanceReceiveController extends Controller
                 'reference_no' => $project->reference_no,
                 'receive_amount' => $request->receive_amount,
                 'payment_method' => $payment_method,
+                'payment_mood'    => $request->payment_mood,
                 'ledger_id' => $ledger->id,
                 'payment_date' => $request->payment_date,
                 'bank_account_no' => $request->bank_account_no,
@@ -138,16 +139,17 @@ class AdvanceReceiveController extends Controller
                 'bank_date' => $request->bank_date,
                 'bkash_number' => $request->bkash_number,
                 'bkash_date' => $request->bkash_date,
+                'note' => $request->note,
             ]);
 
             // journal payment project receipt add amount
             $project_amount = $request->receive_amount ?? 0; // Get the total project amount
 
-            $cashBankLedger  = $ledger;
+            $cashBankLedger = $ledger;
             $receivableLedger = Ledger::where('type', 'Receivable')->first();
             $companyInfo = get_company();
-            $currentMonth = now()->format('m'); 
-            $paymentAmount = $request->input('receive_amount', 0); 
+            $currentMonth = now()->format('m');
+            $paymentAmount = $request->input('receive_amount', 0);
 
             if ($cashBankLedger && $receivableLedger) {
                 // Check if a Journal Voucher exists for this payment transaction
@@ -155,67 +157,77 @@ class AdvanceReceiveController extends Controller
 
                 $increment = 1;
                 if ($journalVoucher && preg_match('/(\d{3})$/', $journalVoucher->transaction_code, $matches)) {
-                    $increment = (int)$matches[0] + 1;
+                    $increment = (int) $matches[0] + 1;
                 }
 
                 $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
                 $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
-                $transactionCode = 'BCL-V-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement; $increment = 1;
+                $transactionCode = 'BCL-V-'.$fiscalYearWithoutHyphen.$currentMonth.$formattedIncrement;
+                $increment = 1;
                 if ($journalVoucher && preg_match('/(\d{3})$/', $journalVoucher->transaction_code, $matches)) {
-                    $increment = (int)$matches[0] + 1;
+                    $increment = (int) $matches[0] + 1;
                 }
 
                 $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
                 $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
-                $transactionCode = 'BCL-V-' . $fiscalYearWithoutHyphen . $currentMonth . $formattedIncrement;
-            
-            
-                if (!$journalVoucher) {
+                $transactionCode = 'BCL-V-'.$fiscalYearWithoutHyphen.$currentMonth.$formattedIncrement;
+
+                if (! $journalVoucher) {
                     // Create a new Journal Voucher for Payment Received
                     $journalVoucher = JournalVoucher::create([
-                        'transaction_code'  => $project->reference_no,
-                        'transaction_date'  => $request->payment_date,
-                        'company_id'       => $companyInfo->id,
-                        'branch_id'        => $companyInfo->branch->id,
-                        'description'       => 'Advance Payment Received', // ম্যানুয়াল বর্ণনা
-                        'status'            => 1, // Pending status
+                        'transaction_code' => $project->reference_no,
+                        'transaction_date' => $request->payment_date,
+                        'company_id' => $companyInfo->id,
+                        'branch_id' => $companyInfo->branch->id,
+                        'description' => 'Advance Received', // ম্যানুয়াল বর্ণনা
+                        'status' => 1, // Pending status
                     ]);
                 }
-            
+
                 // Payment Received -> Cash & Bank (Debit Entry)
                 JournalVoucherDetail::create([
                     'journal_voucher_id' => $journalVoucher->id,
-                    'ledger_id'          => $cashBankLedger->id, // নগদ ও ব্যাংক হিসাব
-                    'reference_no'       => $project->reference_no,
-                    'description'        => 'Advance Payment Received: ' . number_format($paymentAmount, 2) . ' Taka from Customer for Invoice #' . $project->reference_no,
-                    'debit'              => $paymentAmount, // টাকা জমা হচ্ছে
-                    'credit'             => 0,
-                    'created_at'         => now(),
-                    'updated_at'         => now(),
+                    'ledger_id' => $cashBankLedger->id, // নগদ ও ব্যাংক হিসাব
+                    'reference_no' => $project->reference_no,
+                    'description' => 'Advance Received: '.number_format($paymentAmount, 2).' Taka from Customer for Invoice #'.$project->reference_no,
+                    'debit' => $paymentAmount, // টাকা জমা হচ্ছে
+                    'credit' => 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
-            
+
                 // Payment Received -> Accounts Receivable (Credit Entry)
                 JournalVoucherDetail::create([
                     'journal_voucher_id' => $journalVoucher->id,
-                    'ledger_id'          => $receivableLedger->id, 
-                    'reference_no'       => $project->reference_no,
-                    'description'        => 'Reduce Accounts Receivable by ' . number_format($paymentAmount, 2) . ' Taka for Invoice #' . $project->reference_no,
-                    'debit'              => 0,
-                    'credit'             => $paymentAmount,  // পাওনা টাকা কমবে
-                    'created_at'         => now(),
-                    'updated_at'         => now(),
+                    'ledger_id' => $receivableLedger->id,
+                    'reference_no' => $project->reference_no,
+                    'description' => 'Reduce Accounts Receivable by '.number_format($paymentAmount, 2).' Taka for Invoice #'.$project->reference_no,
+                    'debit' => 0,
+                    'credit' => $paymentAmount,  // পাওনা টাকা কমবে
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
+            }
+
+            if ($project) {
+                $project->paid_amount += $request->input('receive_amount', 0);
+                if ($project->paid_amount >= $project->grand_total) {
+                    $project->status = 'paid';
+                } else {
+                    $project->status = 'partially_paid';
+                }
+                $project->save();
             }
 
             // Commit the transaction
             DB::commit();
 
             return redirect()->route('project.advance.receipt.payment.index')->with('success', 'Advance Payment has been successfully recorded!');
-    
+
         } catch (\Exception $e) {
             // If an error occurs, roll back the transaction
             DB::rollBack();
-            
+
             // Log the error with details
             Log::error('Payment storing failed', [
                 'error' => $e->getMessage(),
@@ -223,9 +235,9 @@ class AdvanceReceiveController extends Controller
                 'line' => $e->getLine(),
                 'request_data' => $request->all(),
             ]);
-    
+
             // Log the error or return a custom error message
-            return redirect()->back()->with('error', 'Payment failed! ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Payment failed! '.$e->getMessage());
         }
     }
 
@@ -234,16 +246,16 @@ class AdvanceReceiveController extends Controller
      */
     public function show(string $reference_no)
     {
-        $pageTitle = 'Advance Payment Receipt Details';
+        $pageTitle = 'Advance Receipt Details';
 
         $receipt = AdvanceProjectReceipt::with(['client', 'ledger'])->where('reference_no', $reference_no)->first();
         $project = Project::with(['client', 'items', 'advancereceipts'])->find($receipt->project_id);
 
-        if (!$receipt) {
+        if (! $receipt) {
             return redirect()->back()->with('error', 'Payment receipt not found!');
         }
 
-        return view('backend.admin.inventory.project.advance.payment.receipt.show', compact('pageTitle', 'receipt','project'));
+        return view('backend.admin.inventory.project.advance.payment.receipt.show', compact('pageTitle', 'receipt', 'project'));
     }
 
     /**
@@ -251,7 +263,27 @@ class AdvanceReceiveController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $pageTitle = 'Advance Receipt Edit';
+
+        $receipt = AdvanceProjectReceipt::with(['client', 'ledger', 'project'])->findOrFail($id);
+
+        $projects = Project::where('project_type', 'Running')
+            ->with(['sales' => function ($q) {
+                $q->where('status', 'Paid')
+                    ->select('project_id', DB::raw('SUM(grand_total) as total_grand'), DB::raw('SUM(paid_amount) as total_paid'))
+                    ->groupBy('project_id');
+            }])
+            ->latest()
+            ->get();
+
+        $ledgers = Ledger::whereIn('type', ['Bank', 'Cash'])->get();
+
+        return view('backend.admin.inventory.project.advance.payment.receipt.edit', compact(
+            'pageTitle',
+            'receipt',
+            'projects',
+            'ledgers'
+        ));
     }
 
     /**
@@ -259,8 +291,123 @@ class AdvanceReceiveController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'project_id'     => 'required|exists:projects,id',
+            'receive_amount' => 'required|numeric|min:0',
+            'payment_date'   => 'required|date',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $receipt = AdvanceProjectReceipt::findOrFail($id);
+            $project = Project::findOrFail($request->project_id);
+
+            if ($request->receive_amount > $project->grand_total) {
+                return back()->with('error', 'Receive amount cannot be greater than the project grand total.');
+            }
+
+
+            $ledger = Ledger::findOrFail($request->payment_method);
+            $payment_method = $ledger->type == 'Cash' ? 'Cash' : 'Bank';
+
+            // 🔹 Update AdvanceProjectReceipt
+            $receipt->update([
+                'project_id'      => $project->id,
+                'client_id'       => $project->client_id,
+                'reference_no'    => $project->reference_no,
+                'receive_amount'  => $request->receive_amount,
+                'payment_method'  => $payment_method,
+                'payment_mood'    => $request->payment_mood,
+                'ledger_id'       => $ledger->id,
+                'payment_date'    => $request->payment_date,
+                'bank_account_no' => $request->bank_account_no,
+                'cheque_no'       => $request->cheque_no,
+                'cheque_date'     => $request->cheque_date,
+                'bank_batch_no'   => $request->bank_batch_no,
+                'bank_date'       => $request->bank_date,
+                'bkash_number'    => $request->bkash_number,
+                'bkash_date'      => $request->bkash_date,
+                'note'     => $request->note,
+            ]);
+
+            // 🔹 Update Journal Voucher
+            $companyInfo   = get_company();
+            $receivableLedger = Ledger::where('type', 'Receivable')->first();
+            $paymentAmount = $request->receive_amount ?? 0;
+
+            $journalVoucher = JournalVoucher::where('transaction_code', $project->reference_no)->first();
+
+            if (!$journalVoucher) {
+                // If missing, create new voucher
+                $journalVoucher = JournalVoucher::create([
+                    'transaction_code' => $project->reference_no,
+                    'transaction_date' => $request->payment_date,
+                    'company_id'       => $companyInfo->id,
+                    'branch_id'        => $companyInfo->branch->id,
+                    'description'      => 'Advance Received',
+                    'status'           => 1,
+                ]);
+            } else {
+                // If exists, update
+                $journalVoucher->update([
+                    'transaction_date' => $request->payment_date,
+                    'description'      => 'Advance Updated',
+                ]);
+
+                // Remove old details before inserting new
+                $journalVoucher->details()->delete();
+            }
+
+            // 🔹 Add updated journal voucher details
+            // Debit (Cash/Bank)
+            JournalVoucherDetail::create([
+                'journal_voucher_id' => $journalVoucher->id,
+                'ledger_id'          => $ledger->id,
+                'reference_no'       => $project->reference_no,
+                'description'        => 'Advance Received: ' . number_format($paymentAmount, 2) . ' Taka from Customer for Invoice #' . $project->reference_no,
+                'debit'              => $paymentAmount,
+                'credit'             => 0,
+            ]);
+
+            // Credit (Receivable)
+            JournalVoucherDetail::create([
+                'journal_voucher_id' => $journalVoucher->id,
+                'ledger_id'          => $receivableLedger->id,
+                'reference_no'       => $project->reference_no,
+                'description'        => 'Reduce Accounts Receivable by ' . number_format($paymentAmount, 2) . ' Taka for Invoice #' . $project->reference_no,
+                'debit'              => 0,
+                'credit'             => $paymentAmount,
+            ]);
+
+            if ($project) {
+                $project->paid_amount += $request->input('receive_amount', 0);
+                if ($project->paid_amount >= $project->grand_total) {
+                    $project->status = 'paid';
+                } else {
+                    $project->status = 'partially_paid';
+                }
+                $project->save();
+            }
+
+            DB::commit();
+
+            return redirect()->route('project.advance.receipt.payment.index')
+                            ->with('success', 'Advance Payment Receipt updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Log::error('Payment update failed', [
+                'error'        => $e->getMessage(),
+                'file'         => $e->getFile(),
+                'line'         => $e->getLine(),
+                'request_data' => $request->all(),
+            ]);
+
+            return redirect()->back()->with('error', 'Update failed! ' . $e->getMessage());
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -275,9 +422,17 @@ class AdvanceReceiveController extends Controller
             $journalVoucher = JournalVoucher::where('transaction_code', $receipt->reference_no)->first();
             // dd($journalVoucher);
 
+            $project = Project::findOrFail($receipt->project_id);
+
             if ($journalVoucher) {
                 JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)->delete();
                 $journalVoucher->delete();
+            }
+
+            if ($project) {
+                $project->paid_amount -= $receipt->receive_amount;
+                $project->status = ($project->paid_amount >= $project->grand_total) ? 'paid' : 'pending';
+                $project->save();
             }
 
             $receipt->delete();
@@ -294,7 +449,7 @@ class AdvanceReceiveController extends Controller
                 'line' => $e->getLine(),
             ]);
 
-            return redirect()->back()->with('error', 'Failed to delete payment receipt! ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to delete payment receipt! '.$e->getMessage());
             // return redirect()->back()->with('success', 'Payment receipt deleted successfully, and journal entry updated!');
         }
     }
@@ -342,11 +497,9 @@ class AdvanceReceiveController extends Controller
                 'total.*' => 'required|numeric|min:0',
             ]);
 
-           
+            $tax = $request->include_tax ? $request->tax : 0;
+            $vat = $request->include_vat ? $request->vat : 0;
 
-            $tax = $request->include_tax ? $request->tax : 0; 
-            $vat = $request->include_vat ? $request->vat : 0; 
-    
             // Store the project in the database
             $project = Project::create([
                 'project_name' => $request->project_name,
@@ -372,8 +525,6 @@ class AdvanceReceiveController extends Controller
                 'terms_conditions' => $request->terms_conditions,
             ]);
 
-         
-    
             // Store project items
             foreach ($request->items as $index => $item) {
                 ProjectItem::create([
@@ -389,18 +540,19 @@ class AdvanceReceiveController extends Controller
                 ]);
             }
 
-    
             DB::commit(); // Commit transaction if everything is successful
-    
+
             return redirect()->route('project.advance.receipt.payment.create')->with('success', 'Project and items created successfully!');
-    
+
         } catch (QueryException $e) {
             DB::rollBack(); // Rollback transaction on error
-            return redirect()->back()->with('error', 'Database error: ' . $e->getMessage());
-    
+
+            return redirect()->back()->with('error', 'Database error: '.$e->getMessage());
+
         } catch (Exception $e) {
             DB::rollBack(); // Rollback transaction on error
-            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Something went wrong: '.$e->getMessage());
         }
     }
 }

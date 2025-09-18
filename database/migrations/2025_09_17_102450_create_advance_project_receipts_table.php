@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('reference_no')->unique();
             $table->decimal('receive_amount', 15, 2);
             $table->string('payment_method'); // cash, bank, bkash, etc
+            $table->string('payment_mood'); 
             $table->unsignedBigInteger('ledger_id');
 
             $table->string('bank_account_no')->nullable();
@@ -31,6 +32,7 @@ return new class extends Migration
             $table->date('bkash_date')->nullable();
 
             $table->date('payment_date');
+            $table->text('note')->nullable();
             
             $table->timestamps();
 

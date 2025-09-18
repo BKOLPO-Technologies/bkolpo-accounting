@@ -12,6 +12,7 @@ class AdvanceProjectReceipt extends Model
         'reference_no',
         'receive_amount',
         'payment_method',
+        'payment_mood',
         'ledger_id',
         'payment_date',
         'bank_account_no',
@@ -21,6 +22,7 @@ class AdvanceProjectReceipt extends Model
         'bank_date',
         'bkash_number',
         'bkash_date',
+        'note',
     ];
 
     // Relationships
