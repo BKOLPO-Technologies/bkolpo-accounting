@@ -54,24 +54,24 @@
                         </div>
                         
                         <div class="text-right mt-3 mr-4">
-                            <button class="btn btn-primary" onclick="printBalanceSheet()">
+                            <button class="btn btn-primary" onclick="printInvoice()">
                                 <i class="fa fa-print"></i> Print
                             </button>
                         </div>
 
-                        <div id="printable-area">
+                        <div id="printableArea">
                             <div class="card-body">
                                 <div class="invoice p-3 mb-3">
                                     <div class="row">
                                         <div class="col-12">
-                                            <h4>
+                                            <h4 style="text-align: right;">
                                                 <img 
                                                     src="{{ !empty(get_company()->logo) ? url('upload/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
                                                     alt="Company Logo" 
                                                     style="height: 40px; vertical-align: middle; margin-right: 10px;"
                                                 >
-                                                {{ get_company()->name ?? '' }}
-                                                <small class="float-right" id="current-date"></small>
+                                                {{-- {{ get_company()->name ?? '' }} --}}
+                                                {{-- <small class="float-right" id="current-date"></small> --}}
                                             </h4>                                    
                                         </div>
                                     </div>
@@ -205,15 +205,36 @@
   document.getElementById('current-date').textContent = 'Date: ' + currentDate;
 
 </script>
-
+<!-- Print Script -->
 <script>
-    function printBalanceSheet() {
-        var printContent = document.getElementById("printable-area").innerHTML;
-        var originalContent = document.body.innerHTML;
+   function printInvoice() {
+    const printContents = document.getElementById('printableArea').outerHTML;
+    
+    const html = `
+        <html>
+        <head>
+            <title>Print Invoice</title>
+            <style>
+                @media print {
+                    body {
+                        margin: 15mm 0mm 15mm 0mm; /* top, right, bottom, left */
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            ${printContents}
+        </body>
+        </html>
+    `;
 
-        document.body.innerHTML = printContent;
-        window.print();
-        document.body.innerHTML = originalContent;
-    }
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = html;
+    window.print();
+    document.body.innerHTML = originalContents;
+    location.reload();
+}
+
 </script>
+
 @endpush
