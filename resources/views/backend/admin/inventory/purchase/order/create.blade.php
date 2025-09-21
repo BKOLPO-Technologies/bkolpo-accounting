@@ -655,7 +655,7 @@
                         <input type="text" name="speciphictions[]" class="form-control speciphictions" readonly>
                     </td>
                     <td><input type="text" name="order_unit[]" class="form-control unit-input" readonly></td>
-                    <td><input type="number" name="unit_price[]" class="form-control unit-price" style="text-align: right;"></td>
+                    <td><input type="number" name="unit_price[]" step="0.01" class="form-control unit-price" style="text-align: right;"></td>
                     <td><input type="number" name="quantity[]" class="form-control quantity" value="1"></td>
                     <td><input type="text" name="total[]" class="form-control total" readonly style="text-align: right;"></td>
                     <td class="col-1">
