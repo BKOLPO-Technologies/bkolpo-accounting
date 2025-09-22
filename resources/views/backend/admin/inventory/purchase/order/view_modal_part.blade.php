@@ -90,10 +90,10 @@
         <tfoot>
             <tr>
                 <td colspan="4" rowspan="5" style="border:0.5px solid #dee2e6; vertical-align: top; border-left:none;">
-                    <p><b>Project Code:</b> {{ $purchase->invoice_no ?? '' }}</p>
-                    <p><b>Quotation Number:</b> {{ $purchase->quotation_number ?? '' }}</p>
-                    <p><b>Requester Name:</b> {{ $purchase->requester_name ?? '' }}</p>
-                    <p><b>Cost Center:</b> {{ $purchase->cost_center ?? '' }}</p>
+                    <p style="margin: 0px;"><b>Project Code:</b> {{ $purchase->invoice_no ?? '' }}</p>
+                    <p style="margin: 0px;"><b>Quotation Number:</b> {{ $purchase->quotation_number ?? '' }}</p>
+                    <p style="margin: 0px;"><b>Requester Name:</b> {{ $purchase->requester_name ?? '' }}</p>
+                    <p style="margin: 0px;"><b>Cost Center:</b> {{ $purchase->cost_center ?? '' }}</p>
                 </td>
                 <th style="border:0.5px solid #dee2e6;" class="text-right">Subtotal</th>
                 <th style="border:0.5px solid #dee2e6;" class="text-left">{{ number_format($total, 2) }}</th>
@@ -119,13 +119,13 @@
         </tfoot>
     </table>
     <div>
-        <strong>Amount in Words:</strong>
+        <strong style="margin: 0px;">Amount in Words:</strong>
         <strong>{{ convertNumberToWords($totalTotal) }}</strong>
     </div>
 </div>
 <div>
     <strong>Terms & Conditions:</strong>
-    <p>{!! $purchase->project->terms_conditions ?? '' !!}</p>
+    <p style="margin: 0px;">{!! $purchase->project->terms_conditions ?? '' !!}</p>
 </div>
 
 <!-- Signatures -->
