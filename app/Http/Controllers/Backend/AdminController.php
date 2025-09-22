@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Models\Project;
 use App\Models\Purchase;
+use App\Models\Sale;
 use App\Models\PurchaseInvoice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -79,7 +80,11 @@ class AdminController extends Controller
 
         // Project calculations
         $projectTotalAmount = Project::sum('grand_total');
-        $projectTotalAmountPaid = Project::sum('paid_amount');
+        $projectPaidAmount = Project::sum('paid_amount');
+        $salesPaidAmount = Sale::sum('paid_amount');
+
+        $projectTotalAmountPaid = $projectPaidAmount + $salesPaidAmount;
+
         $projectTotalAmountDue = $projectTotalAmount - $projectTotalAmountPaid;
 
         // ✅ Corrected: Fetch total purchase amount from `purchases` table
