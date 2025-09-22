@@ -49,86 +49,109 @@
 
     <!-- Purchase Details -->
     <div style="border: 1px solid #dbdbdb;">
-        {{-- <h4 class="text-center mt-2 mb-3" style="text-decoration: underline; text-decoration-color: #3498db; text-decoration-thickness: 3px;">
-            <strong>Purchase Order Details</strong>
-        </h4> --}}
-        <div class="table-responsive" style="overflow-x: hidden;">
-            <table class="table table-striped table-sm table-bordered" style="margin: 10px; font-size: 16px;">
-                <thead class="table-light">
-                    <tr>
-                        <th class="p-1 border">Product</th>
-                        <th class="p-1 border">Product Code</th>
-                        <th class="p-1 border">Specifications</th>
-                        <th class="p-1 border">Unit Price</th>
-                        <th class="p-1 border">Quantity</th>
-                        <th class="p-1 border">Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php $total = 0; @endphp
-                    @foreach ($purchase->products as $product)
-                        @php
-                            $subtotal = (($product->pivot->price * $product->pivot->quantity) - $product->pivot->discount);
-                            $total += $subtotal;
-                        @endphp
-                        <tr>
-                            <td class="p-1 border">{{ $product->name }}</td>
-                            <td class="p-1 border">{{ $product->product_code ?? '' }}</td>
-                            <td class="p-1 border">{{ $product->description }}</td>
-                            <td class="p-1 border">{{ number_format($product->pivot->price, 2) }}</td>
-                            <td class="p-1 border">{{ $product->pivot->quantity }} ({{ $product->unit->name }})</td>
-                            <td class="p-1 border">{{ number_format($subtotal, 2) }}</td>
-                        </tr>
-                    @endforeach
-
-                    @php
-                        $transportCost = $purchase->transport_cost ?? 0;
-                        $carryingCharge = $purchase->carrying_charge ?? 0;
-                        $vat = $purchase->vat_amount ?? 0;
-                        $tax = $purchase->tax_amount ?? 0;
-                        $totalDiscount = $purchase->discount ?? 0;
-                        $totalVatTax = ($transportCost + $carryingCharge + $vat + $tax) - $totalDiscount;
-                        $totalTotal = $total + $totalVatTax;
-                    @endphp
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="5" class="text-right p-1 border">Subtotal:</th>
-                        <th class="p-1 border">{{ number_format($total, 2) }}</th>
-                    </tr>
-                    <tr>
-                        <th colspan="5" class="text-right p-1 border">VAT:</th>
-                        <th class="p-1 border">{{ number_format($vat, 2) }}</th>
-                    </tr>
-                    <tr>
-                        <th colspan="5" class="text-right p-1 border">TAX:</th>
-                        <th class="p-1 border">{{ number_format($tax, 2) }}</th>
-                    </tr>
-                    <tr>
-                        <th colspan="5" class="text-right p-1 border">Discount:</th>
-                        <th class="p-1 border">{{ number_format($totalDiscount, 2) }}</th>
-                    </tr>
-                    <tr>
-                        <th colspan="5" class="text-right p-1 border">Total Purchase Amount:</th>
-                        <th class="p-1 border">{{ number_format($totalTotal, 2) }}</th>
-                    </tr>
-                </tfoot>
-            </table>
-
-
-            <div class="pl-2 pb-2" style="margin-top: 10px;">
-                <strong>Amount in Words:</strong>
-                <strong>{{ convertNumberToWords($totalTotal) }}</strong>
-            </div>
-        </div>
-        
-    </div>
-
+    <div class="table-responsive">
+    <table class="table table-sm table-striped" style="font-size: 17px; border-collapse: collapse; width:100%;">
+        <thead>
+            <tr style="border:0.5px solid #dee2e6; background:#f8f9fa;">
+                <th class="p-1">Product</th>
+                <th class="p-1" style="border:0.5px solid #dee2e6;">Product Code</th>
+                <th class="p-1" style="border:0.5px solid #dee2e6;">Specifications</th>
+                <th class="p-1" style="border:0.5px solid #dee2e6;">Unit Price</th>
+                <th class="p-1" style="border:0.5px solid #dee2e6;">Quantity</th>
+                <th class="p-1" style="border:0.5px solid #dee2e6;">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php $total = 0; @endphp
+            @foreach ($purchase->products as $product)
+                @php
+                    $subtotal = (($product->pivot->price * $product->pivot->quantity) - $product->pivot->discount);
+                    $total += $subtotal;
+                @endphp
+                <tr>
+                    <td class="p-1" style="border:0.5px solid #dee2e6; border-left:none;">{{ $product->name }}</td>
+                    <td class="p-1" style="border:0.5px solid #dee2e6;">{{ $product->product_code ?? '' }}</td>
+                    <td class="p-1" style="border:0.5px solid #dee2e6;">{{ $product->description }}</td>
+                    <td class="p-1 text-left" style="border:0.5px solid #dee2e6;">{{ number_format($product->pivot->price, 2) }}</td>
+                    <td class="p-1 text-left" style="border:0.5px solid #dee2e6;">{{ $product->pivot->quantity }} ({{ $product->unit->name }})</td>
+                    <td class="p-1 text-left" style="border:0.5px solid #dee2e6;">{{ number_format($subtotal, 2) }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+        @php
+            $transportCost = $purchase->transport_cost ?? 0;
+            $carryingCharge = $purchase->carrying_charge ?? 0;
+            $vat = $purchase->vat_amount ?? 0;
+            $tax = $purchase->tax_amount ?? 0;
+            $totalDiscount = $purchase->discount ?? 0;
+            $totalVatTax = ($transportCost + $carryingCharge + $vat + $tax) - $totalDiscount;
+            $totalTotal = $total + $totalVatTax;
+        @endphp
+        <tfoot>
+            <tr>
+                <td colspan="4" rowspan="5" style="border:0.5px solid #dee2e6; vertical-align: top; border-left:none;">
+                    <p><b>Project Code:</b> {{ $purchase->invoice_no ?? '' }}</p>
+                    <p><b>Quotation Number:</b> {{ $purchase->quotation_number ?? '' }}</p>
+                    <p><b>Requester Name:</b> {{ $purchase->requester_name ?? '' }}</p>
+                    <p><b>Cost Center:</b> {{ $purchase->cost_center ?? '' }}</p>
+                </td>
+                <th style="border:0.5px solid #dee2e6;" class="text-right">Subtotal</th>
+                <th style="border:0.5px solid #dee2e6;" class="text-left">{{ number_format($total, 2) }}</th>
+            </tr>
+            <tr>
+                <th style="border:0.5px solid #dee2e6;" class="text-right">VAT</th>
+                <th style="border:0.5px solid #dee2e6;" class="text-left">{{ number_format($vat ?? 0, 2) }}</th>
+            </tr>
+            <tr>
+                <th style="border:0.5px solid #dee2e6;" class="text-right">Tax</th>
+                <th style="border:0.5px solid #dee2e6;" class="text-left">{{ number_format($tax ?? 0, 2) }}</th>
+            </tr>
+            <tr>
+                <th style="border:0.5px solid #dee2e6;" class="text-right">Discount</th>
+                <th style="border:0.5px solid #dee2e6;" class="text-left">{{ number_format($totalDiscount ?? 0, 2) }}</th>
+            </tr>
+            <tr>
+                <th style="border:0.5px solid #dee2e6;" class="text-right">Total Purchase Amount</th>
+                <th style="border:0.5px solid #dee2e6;" class="text-left">
+                    {{ number_format($totalTotal ?? 0, 2) }}
+                </th>
+            </tr>
+        </tfoot>
+    </table>
     <div>
-        <strong>Terms & Conditions:</strong>
-        <p>{!! $purchase->project->terms_conditions ?? '' !!}</p>
+        <strong>Amount in Words:</strong>
+        <strong>{{ convertNumberToWords($totalTotal) }}</strong>
     </div>
-    <br>
+</div>
+<div>
+    <strong>Terms & Conditions:</strong>
+    <p>{!! $purchase->project->terms_conditions ?? '' !!}</p>
+</div>
+
+<!-- Signatures -->
+<table class="table table-sm" style="margin-top: 20px; text-align: center; font-size: 13px; border:0.5px solid #dee2e6; border-collapse: collapse; width:100%;">
+    <tr>
+        <td style="border:0.5px solid #dee2e6;">Prepared By</td>
+        <td style="border:0.5px solid #dee2e6;">Checked By</td>
+        <td style="border:0.5px solid #dee2e6;">Approved By</td>
+        <td style="border:0.5px solid #dee2e6;">Managing Director</td>
+    </tr>
+    <tr style="height: 80px;">
+        <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left;"> 
+            <div style="border-top:0.5px solid #dee2e6; padding-top:5px;">Date: ........</div>
+        </td>
+        <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left;"> 
+            <div style="border-top:0.5px solid #dee2e6; padding-top:5px;">Date: ........</div>
+        </td>
+        <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left;"> 
+            <div style="border-top:0.5px solid #dee2e6; padding-top:5px;">Date: ........</div>
+        </td>
+        <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left;"> 
+            <div style="border-top:0.5px solid #dee2e6; padding-top:5px;">Date: ........</div>
+        </td>
+    </tr>
+</table>
+
 </div>
 
 <!-- Print Script -->
