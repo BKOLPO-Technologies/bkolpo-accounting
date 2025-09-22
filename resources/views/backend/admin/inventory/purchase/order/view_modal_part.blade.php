@@ -138,23 +138,23 @@
     </tr>
    <tr style="height: 80px;">
         <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left;"> 
-           <div style="border-top:0.5px solid #dee2e6; padding-top:5px;">
-                Date: <span style="display:inline-block; width:85%; border-bottom:1px dotted #000;"></span>
+           <div style="border-top:0.5px solid #dee2e6; padding-top:10px;">
+                Date: <span style="display:inline-block; width:85%; border-bottom:1px dotted #dee2e6;"></span>
             </div>
         </td>
         <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left;"> 
-           <div style="border-top:0.5px solid #dee2e6; padding-top:5px;">
-                Date: <span style="display:inline-block; width:85%; border-bottom:1px dotted #000;"></span>
+           <div style="border-top:0.5px solid #dee2e6; padding-top:10px;">
+                Date: <span style="display:inline-block; width:85%; border-bottom:1px dotted #dee2e6;"></span>
             </div>
         </td>
         <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left;"> 
-           <div style="border-top:0.5px solid #dee2e6; padding-top:5px;">
-                Date: <span style="display:inline-block; width:85%; border-bottom:1px dotted #000;"></span>
+           <div style="border-top:0.5px solid #dee2e6; padding-top:10px;">
+                Date: <span style="display:inline-block; width:85%; border-bottom:1px dotted #dee2e6;"></span>
             </div>
         </td>
         <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left;"> 
-           <div style="border-top:0.5px solid #dee2e6; padding-top:5px;">
-                Date: <span style="display:inline-block; width:89%; border-bottom:1px dotted #000;"></span>
+           <div style="border-top:0.5px solid #dee2e6; padding-top:10px;">
+                Date: <span style="display:inline-block; width:89%; border-bottom:1px dotted #dee2e6;"></span>
             </div>
         </td>
     </tr>
