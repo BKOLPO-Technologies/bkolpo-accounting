@@ -122,16 +122,17 @@
                     <tr>
                         <td colspan="3" style="border:0.5px solid #dee2e6; text-align:left;">
                             <p style="margin: 0px;">
-                                <b>TAX Condition :</b> {{ ($tax ?? 0) > 0 ? 'Inclusive' : '' }}
+                                <b>TAX Condition :</b> {{ ($tax ?? 0) > 0 ? 'AIT Inclusive' : 'AIT Exclusive' }}
                             </p>
                             <p style="margin: 0px;">
-                                <b>VAT Condition :</b> {{ ($vat ?? 0) > 0 ? 'Exclusive' : '' }}
+                                <b>VAT Condition :</b> {{ ($vat ?? 0) > 0 ? 'VAT Inclusive' : 'VAT Exclusive' }}
                             </p>
                         </td>
                         <td colspan="3" style="border:0.5px solid #dee2e6; text-align:left;">
                             <b>Remark :</b>
                         </td>
                     </tr>
+
                 </tfoot>
 
 
@@ -148,7 +149,7 @@
 
         <!-- Signatures -->
         <table class="table table-sm"
-            style="margin-top: 20px; text-align: center; font-size: 13px; border:0.5px solid #dee2e6; border-collapse: collapse; width:100%; table-layout: fixed;">
+            style="margin-top: 100px; text-align: center; font-size: 13px; border:0.5px solid #dee2e6; border-collapse: collapse; width:100%; table-layout: fixed;">
             <tr>
                 <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Prepare By</strong></td>
                 <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Checked By</strong></td>
