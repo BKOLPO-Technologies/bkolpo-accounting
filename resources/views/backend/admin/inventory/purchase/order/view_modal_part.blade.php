@@ -22,7 +22,7 @@
         <div class="col-sm-4 invoice-col">
             <strong>Vendor:</strong><br>
             {{ $purchase->supplier->name }}<br>
-            {{ $purchase->supplier->address }}, {{ $purchase->supplier->city }}<br>
+            {{ $purchase->supplier->address }} {{ $purchase->supplier->city }}<br>
             Phone: {{ $purchase->supplier->phone }}<br>
             Email: {{ $purchase->supplier->email }}
         </div>
@@ -35,7 +35,7 @@
         <div class="col-sm-4 invoice-col">
             <strong>Company:</strong><br>
             {{ get_company()->name ?? '' }}<br>
-            {{ get_company()->address ?? '' }}, {{ get_company()->city ?? '' }}<br>
+            {{ get_company()->address ?? '' }} {{ get_company()->city ?? '' }}<br>
             Phone: {{ get_company()->phone ?? '' }}<br>
             Email: {{ get_company()->email ?? '' }}
         </div>
