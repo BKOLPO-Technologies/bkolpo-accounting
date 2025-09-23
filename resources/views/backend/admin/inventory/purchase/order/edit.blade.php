@@ -279,8 +279,8 @@
                             <hr>
 
                             <div class="col-lg-12 col-md-12 mb-3">
-                                <label for="description">Description</label>
-                                <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter the description"></textarea>
+                                <label for="description">Remarks</label>
+                                <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter the remarks"></textarea>
                             </div>
                             <div class="row text-right">
                                 <div class="col-12">

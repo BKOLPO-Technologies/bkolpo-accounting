@@ -1,3 +1,43 @@
+<style>
+    @media print {
+        body {
+            margin: 15mm 0mm 15mm 0mm;
+            position: relative;
+        }
+
+        .print-signature-section {
+            position: fixed;
+            bottom: 15mm;
+            left: 0;
+            width: 100%;
+            page-break-inside: avoid;
+        }
+
+        .signature-box {
+            border-top: 1px solid #999;
+            padding-top: 15px;
+            height: 100px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table td,
+        table th {
+            border: 1px solid #dee2e6;
+            padding: 5px;
+            font-size: 13px;
+        }
+
+        /* Avoid breaking the signature across pages */
+        .invoice-signatures {
+            page-break-inside: avoid !important;
+        }
+    }
+</style>
+
 <!-- Print Button -->
 <div class="text-right mb-3">
     <button onclick="printInvoice()" class="btn btn-primary">
@@ -114,7 +154,7 @@
                             {{ number_format($totalDiscount ?? 0, 2) }}</th>
                     </tr>
                     <tr>
-                        <th style="border:0.5px solid #dee2e6;" class="text-right">Total Purchase Amount</th>
+                        <th style="border:0.5px solid #dee2e6;" class="text-right">Total Amount</th>
                         <th style="border:0.5px solid #dee2e6;" class="text-left">
                             {{ number_format($totalTotal ?? 0, 2) }}</th>
                     </tr>
@@ -129,7 +169,7 @@
                             </p>
                         </td>
                         <td colspan="3" style="border:0.5px solid #dee2e6; text-align:left;">
-                            <b>Remark :</b>
+                            <b>Remark :</b> {{ $purchase->description ?? '' }}
                         </td>
                     </tr>
 
@@ -147,15 +187,16 @@
             <p style="margin: 0px;">{!! $purchase->project->terms_conditions ?? '' !!}</p>
         </div>
 
-        <!-- Signatures -->
-        <div class="invoice-signatures">
+        <!-- Signature Section -->
+        <div class="invoice-signatures print-signature-section">
             <table class="table table-sm"
-                style="margin-top: 280px; text-align: center; font-size: 13px; border:0.5px solid #dee2e6; border-collapse: collapse; width:100%; table-layout: fixed;">
+                style="margin-top: 20px; text-align: center; font-size: 13px; border:0.5px solid #dee2e6; border-collapse: collapse; width:100%; table-layout: fixed;">
                 <tr>
                     <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Prepare By</strong></td>
                     <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Checked By</strong></td>
                     <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Approve By</strong></td>
-                    <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Received By (Vendor/Subcontractor)</strong>
+                    <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Received By
+                            (Vendor/Subcontractor)</strong>
                     </td>
                 </tr>
                 <tr style="height: 120px;">
@@ -188,6 +229,7 @@
         </div>
 
 
+
     </div>
 
     <!-- Print Script -->
@@ -202,7 +244,39 @@
             <style>
                 @media print {
                     body {
-                        margin: 15mm 0mm 15mm 0mm; /* top, right, bottom, left */
+                        margin: 15mm 0mm 15mm 0mm;
+                        position: relative;
+                    }
+
+.print-signature-section {
+    position: fixed;
+    bottom: 15mm;
+    left: 4mm; /* adds left margin */
+    right: 4mm; /* adds right margin */
+    width: auto; /* width auto so it respects left/right margins */
+    page-break-inside: avoid;
+}
+
+
+                    .signature-box {
+                        border-top: 1px solid #999;
+                        padding-top: 15px;
+                        height: 100px;
+                    }
+
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
+
+                    table td, table th {
+                        border: 1px solid #dee2e6;
+                        padding: 5px;
+                        font-size: 13px;
+                    }
+
+                    .invoice-signatures {
+                        page-break-inside: avoid !important;
                     }
                 }
             </style>
