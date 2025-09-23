@@ -104,7 +104,7 @@
                         </th>
                     </tr>
                     <tr>
-                        <th style="border:0.5px solid #dee2e6;" class="text-right">Tax</th>
+                        <th style="border:0.5px solid #dee2e6;" class="text-right">TAX</th>
                         <th style="border:0.5px solid #dee2e6;" class="text-left">{{ number_format($tax ?? 0, 2) }}
                         </th>
                     </tr>
@@ -122,7 +122,7 @@
                     <tr>
                         <td colspan="3" style="border:0.5px solid #dee2e6; text-align:left;">
                             <p style="margin: 0px;">
-                                <b>Tax Condition :</b> {{ ($tax ?? 0) > 0 ? 'Inclusive' : '' }}
+                                <b>TAX Condition :</b> {{ ($tax ?? 0) > 0 ? 'Inclusive' : '' }}
                             </p>
                             <p style="margin: 0px;">
                                 <b>VAT Condition :</b> {{ ($vat ?? 0) > 0 ? 'Exclusive' : '' }}
