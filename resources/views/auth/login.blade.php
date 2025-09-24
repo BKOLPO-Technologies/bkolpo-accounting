@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Bkolpo Accounting | Admin Login</title>
+  <title>Admin Login | {{ env('APP_NAME') }}</title>
+  <link rel="icon" type="image/png" href="{{ !empty(get_company()->logo) ? url('upload/company/' . get_company()->logo) : asset('backend/logo.jpg') }}">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{{ asset('backend/plugins/fontawesome-free/css/all.min.css')}}">
   <!-- icheck bootstrap -->
