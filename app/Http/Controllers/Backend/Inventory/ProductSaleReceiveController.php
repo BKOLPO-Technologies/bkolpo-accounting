@@ -27,8 +27,10 @@ class ProductSaleReceiveController extends Controller
         $receipts = ProjectReceipt::with(['client'])
             ->orderBy('id', 'desc')
             ->get();
+        $ledgers = Ledger::whereIn('type', ['Bank', 'Cash'])->get();
+
         
-        return view('backend.admin.inventory.project.payment.receipt.index', compact('pageTitle', 'receipts'));
+        return view('backend.admin.inventory.project.payment.receipt.index', compact('pageTitle', 'receipts','ledgers'));
     }
 
     /**
