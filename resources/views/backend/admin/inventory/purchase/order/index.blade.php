@@ -72,8 +72,8 @@
                                                     {{-- <a href="{{ route('admin.purchase.show', $purchase->id) }}" class="btn btn-success btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a> --}}
-                                                    <button class="btn btn-success btn-sm view-purchase" data-id="{{ $purchase->id }}" data-toggle="modal" data-target="#purchaseDetailsModal">
-                                                        <i class="fas fa-eye"></i>
+                                                    <button class="btn btn-info btn-sm view-purchase" data-id="{{ $purchase->id }}" data-toggle="modal" data-target="#purchaseDetailsModal">
+                                                        <i class="fas fa-print"></i>
                                                     </button>                                                    
                                                     <!-- Edit Button -->
                                                     <a href="{{ route('admin.purchase.order.edit', $purchase->id) }}" class="btn btn-primary btn-sm">

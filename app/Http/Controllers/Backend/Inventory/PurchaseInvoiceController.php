@@ -248,6 +248,16 @@ class PurchaseInvoiceController extends Controller
         return view('backend.admin.inventory.purchase.view',compact('pageTitle', 'purchase'));
     }
 
+    public function print(Request $request)
+    {
+        $pageTitle = 'Purchase Invoice Print View';
+        $purchase = PurchaseInvoice::where('id', $request->id)
+            ->with(['products', 'supplier'])
+            ->first();
+            
+        return view('backend.admin.inventory.purchase.print', compact('purchase','pageTitle'));
+    }
+
     public function AdminPurchaseInvoiceView2(Request $request)
     {
         $purchase = PurchaseInvoice::where('id', $request->id)

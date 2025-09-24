@@ -68,10 +68,11 @@
                                                 </td>
                                                 
                                                 <td class="col-2">
-                                                    <!-- View Button -->
-                                                    {{-- <a href="{{ route('admin.purchase.show', $purchase->id) }}" class="btn btn-success btn-sm">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a> --}}
+                                                    <!-- Print Button -->
+                                                     <button class="btn btn-info btn-sm print-purchase" data-id="{{ $purchase->id }}" data-toggle="modal" data-target="#purchasePrintModal">
+                                                        <i class="fas fa-print"></i>
+                                                    </button> 
+
                                                     <button class="btn btn-success btn-sm view-purchase" data-id="{{ $purchase->id }}" data-toggle="modal" data-target="#purchaseDetailsModal">
                                                         <i class="fas fa-eye"></i>
                                                     </button>                                                    
@@ -98,6 +99,7 @@
     
 <!-- Modal for creating a new supplier -->
 @include('backend.admin.inventory.purchase.view_modal')
+@include('backend.admin.inventory.purchase.print_modal')
 
 @endsection
 
@@ -108,6 +110,25 @@
         $('.select2').select2();
     });
 
+    // print
+    $(document).ready(function () {
+        $('.print-purchase').on('click', function () {
+            var purchaseId = $(this).data('id');
+            $.ajax({
+                url: "{{ route('admin.purchase.invoice.print') }}",
+                type: "GET",
+                data: { id: purchaseId },
+                success: function (response) {
+                    $('#purchasePrintContent').html(response);
+                },
+                error: function () {
+                    alert('Failed to load purchase print.');
+                }
+            });
+        });
+    });
+
+    // view
     $(document).ready(function () {
         $('.view-purchase').on('click', function () {
             var purchaseId = $(this).data('id');

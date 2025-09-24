@@ -1,12 +1,12 @@
 <!-- Print Button -->
-<div class="text-right mb-3">
-    <button onclick="printInvoice()" class="btn btn-primary">
+{{-- <div class="text-right mb-3">
+    <button onclick="printInvoice()" class="btn btn-info">
         <i class="fas fa-print"></i> Print
     </button>
-</div>
+</div> --}}
 
-<!-- Printable Invoice -->
-<div class="invoice p-3 mb-3" id="printableArea">
+<!-- View Invoice -->
+<div class="invoice p-3 mb-3" id="ViewArea">
     <div class="row">
         <div class="col-12">
             <h4 style="text-align: right;">
@@ -190,7 +190,7 @@
 <!-- Print Script -->
 <script>
     function printInvoice() {
-    const printContents = document.getElementById('printableArea').outerHTML;
+    const printContents = document.getElementById('ViewArea').outerHTML;
     const html = `
         <html>
         <head>

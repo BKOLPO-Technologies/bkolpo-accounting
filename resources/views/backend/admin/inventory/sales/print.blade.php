@@ -60,16 +60,17 @@
     <hr>
     <div class="row invoice-info">
         <div class="col-sm-4 invoice-col">
-            <strong>Vendor:</strong><br>
-            {{ $purchase->supplier->name }}<br>
-            {{ $purchase->supplier->address }} {{ $purchase->supplier->city }}<br>
-            Phone: {{ $purchase->supplier->phone }}<br>
-            Email: {{ $purchase->supplier->email }}
+            <strong>Customer:</strong><br>
+            {{ $sale->client->name }}<br>
+            {{ $sale->client->address }} {{ $sale->client->city }}<br>
+            Phone: {{ $sale->client->phone }}<br>
+            Email: {{ $sale->client->email }}
         </div>
 
         <div class="col-sm-4 invoice-col">
-            <b>PO No:</b> {{ $purchase->invoice_no }}<br>
-            <b>Date:</b> {{ \Carbon\Carbon::parse($purchase->invoice_date)->format('d F Y') }}
+            <b>Invoice :{{ $sale->invoice_no }}</b><br>
+            <b>Reference :{{ $sale->project->reference_no ?? '' }}</b><br>
+            <b>Date:</b> {{ \Carbon\Carbon::parse($sale->invoice_date)->format('d F Y') }}
         </div>
 
         <div class="col-sm-4 invoice-col">
@@ -84,7 +85,7 @@
 
     <br>
 
-    <!-- Purchase Details -->
+    <!-- Sales Details -->
     <div style="border: 1px solid #dbdbdb;">
         <div class="table-responsive">
             <table class="table table-sm table-striped" style="font-size: 17px; border-collapse: collapse; width:100%;">
@@ -99,77 +100,84 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php $total = 0; @endphp
-                    @foreach ($purchase->products as $product)
+                    @php
+                        $subtotal = 0;
+                        $totalDiscount = 0;
+                    @endphp
+                    @foreach ($sale->saleProducts as $product)
                         @php
-                            $subtotal = $product->pivot->price * $product->pivot->quantity - $product->pivot->discount;
-                            $total += $subtotal;
+                            $finalTotal = $product->quantity * $product->price;
                         @endphp
                         <tr>
                             <td class="p-1" style="border:0.5px solid #dee2e6; border-left:none;">
-                                {{ $product->name }}</td>
-                            <td class="p-1" style="border:0.5px solid #dee2e6;">{{ $product->product_code ?? '' }}
+                                {{ $product->item->product->name ?? '' }}
                             </td>
-                            <td class="p-1" style="border:0.5px solid #dee2e6;">{{ $product->description }}</td>
+                            <td class="p-1" style="border:0.5px solid #dee2e6;">
+                                {{ $product->item->product->product_code ?? '' }}
+                            </td>
+                            <td class="p-1" style="border:0.5px solid #dee2e6;">
+                                {{ $product->item->items_description }}</td>
                             <td class="p-1 text-left" style="border:0.5px solid #dee2e6;">
-                                {{ number_format($product->pivot->price, 2) }}</td>
+                                {{ number_format($product->price, 2) }}</td>
                             <td class="p-1 text-left" style="border:0.5px solid #dee2e6;">
-                                {{ $product->pivot->quantity }} ({{ $product->unit->name }})</td>
+                                {{ $product->quantity }} ({{ $product->item->unit->name ?? '' }})</td>
                             <td class="p-1 text-left" style="border:0.5px solid #dee2e6;">
-                                {{ number_format($subtotal, 2) }}</td>
+                                {{ number_format($finalTotal, 2) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
-                @php
-                    $transportCost = $purchase->transport_cost ?? 0;
-                    $carryingCharge = $purchase->carrying_charge ?? 0;
-                    $vat = $purchase->vat_amount ?? 0;
-                    $tax = $purchase->tax_amount ?? 0;
-                    $totalDiscount = $purchase->discount ?? 0;
-                    $totalVatTax = $transportCost + $carryingCharge + $vat + $tax - $totalDiscount;
-                    $totalTotal = $total + $totalVatTax;
-                @endphp
                 <tfoot>
                     <tr>
                         <td colspan="4" rowspan="5"
                             style="border:0.5px solid #dee2e6; vertical-align: top; border-left:none;">
-                            <b>Project Code:</b> {{ $purchase->project->reference_no ?? '' }}
+                            <b>Project Code:</b> safdsaf
                         </td>
                         <th style="border:0.5px solid #dee2e6;" class="text-right">Subtotal</th>
-                        <th style="border:0.5px solid #dee2e6;" class="text-left">{{ number_format($total, 2) }}</th>
-                    </tr>
-                    <tr>
-                        <th style="border:0.5px solid #dee2e6;" class="text-right">VAT</th>
-                        <th style="border:0.5px solid #dee2e6;" class="text-left">{{ number_format($vat ?? 0, 2) }}
-                        </th>
-                    </tr>
-                    <tr>
-                        <th style="border:0.5px solid #dee2e6;" class="text-right">TAX</th>
-                        <th style="border:0.5px solid #dee2e6;" class="text-left">{{ number_format($tax ?? 0, 2) }}
-                        </th>
+                        <th style="border:0.5px solid #dee2e6;" class="text-left">
+                            {{ number_format($sale->subtotal, 2) }}</th>
                     </tr>
                     <tr>
                         <th style="border:0.5px solid #dee2e6;" class="text-right">Discount</th>
                         <th style="border:0.5px solid #dee2e6;" class="text-left">
-                            {{ number_format($totalDiscount ?? 0, 2) }}</th>
+                            {{ number_format($sale->discount ?? 0, 2) }}</th>
                     </tr>
                     <tr>
-                        <th style="border:0.5px solid #dee2e6;" class="text-right">Total Amount</th>
+                        <th style="border:0.5px solid #dee2e6;" class="text-right">Net Amount</th>
                         <th style="border:0.5px solid #dee2e6;" class="text-left">
-                            {{ number_format($totalTotal ?? 0, 2) }}</th>
+                            {{ number_format($sale->total_netamount ?? 0, 2) }}</th>
                     </tr>
+                    <tr>
+                        <th style="border:0.5px solid #dee2e6;" class="text-right">VAT</th>
+                        <th style="border:0.5px solid #dee2e6;" class="text-left">
+                            {{ number_format($sale->vat_amount ?? 0, 2) }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="border:0.5px solid #dee2e6;" class="text-right">TAX</th>
+                        <th style="border:0.5px solid #dee2e6;" class="text-left">
+                            {{ number_format($sale->tax_amount ?? 0, 2) }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="border:0.5px solid #dee2e6; border-left:none;"></td>
+                        <th style="border:0.5px solid #dee2e6; text-align:right;">Grand Total</th>
+                        <th style="border:0.5px solid #dee2e6; text-align:left;">
+                            {{ number_format($sale->grand_total ?? 0, 2) }}
+                        </th>
+                    </tr>
+
                     <!-- Tax/VAT Condition Left + Remark Right -->
                     <tr>
                         <td colspan="3" style="border:0.5px solid #dee2e6; text-align:left;">
                             <p style="margin: 0px;">
-                                <b>TAX Condition :</b> {{ ($tax ?? 0) > 0 ? 'AIT Inclusive' : 'AIT Exclusive' }}
+                                <b>TAX Condition :</b> {{ ($sale->tax_amount ?? 0) > 0 ? 'AIT Inclusive' : 'AIT Exclusive' }}
                             </p>
                             <p style="margin: 0px;">
-                                <b>VAT Condition :</b> {{ ($vat ?? 0) > 0 ? 'VAT Inclusive' : 'VAT Exclusive' }}
+                                <b>VAT Condition :</b> {{ ($sale->vat_amount ?? 0) > 0 ? 'VAT Inclusive' : 'VAT Exclusive' }}
                             </p>
                         </td>
                         <td colspan="3" style="border:0.5px solid #dee2e6; text-align:left;">
-                            <b>Remark :</b> {{ $purchase->description ?? '' }}
+                            <b>Remark :</b> {{ $sale->description ?? '' }}
                         </td>
                     </tr>
 
@@ -179,12 +187,12 @@
             </table>
             <div>
                 <strong style="margin: 0px;">Amount in Words:</strong>
-                <strong>{{ convertNumberToWords($totalTotal) }}</strong>
+                <strong>{{ convertNumberToWords($sale->grand_total) }}</strong>
             </div>
         </div>
         <div>
             <strong>Terms & Conditions:</strong>
-            <p style="margin: 0px;">{!! $purchase->project->terms_conditions ?? '' !!}</p>
+            <p style="margin: 0px;">{!! $sale->project->terms_conditions ?? '' !!}</p>
         </div>
 
         <!-- Signature Section -->
@@ -196,7 +204,7 @@
                     <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Checked By</strong></td>
                     <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Approve By</strong></td>
                     <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Received By
-                            (Vendor/Subcontractor)</strong>
+                            (Customer/Subcontractor)</strong>
                     </td>
                 </tr>
                 <tr style="height: 120px;">

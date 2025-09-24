@@ -227,6 +227,16 @@ class SalesController extends Controller
         return view('backend.admin.inventory.sales.view',compact('pageTitle', 'sale'));
     }
 
+    public function print(Request $request)
+    {
+        $pageTitle = 'Sales Invoice Print View';
+        $sale = Sale::where('id', $request->id)
+            ->with(['saleProducts.item.unit', 'client']) // Include supplier details
+            ->first();
+            
+        return view('backend.admin.inventory.sales.print', compact('sale','pageTitle'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

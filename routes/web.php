@@ -367,6 +367,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
         // purchase invoice
         Route::get('/invoice/list', [PurchaseInvoiceController::class, 'index'])->name('admin.purchase.invoice.index');
+        Route::get('/invoice/print', [PurchaseInvoiceController::class, 'print'])->name('admin.purchase.invoice.print');
         Route::get('/invoice/create', [PurchaseInvoiceController::class, 'create'])->name('admin.purchase.invoice.create');
         Route::post('/invoice/store', [PurchaseInvoiceController::class, 'store'])->name('admin.purchase.invoice.store');
         Route::get('/invoice/edit/{id}', [PurchaseInvoiceController::class, 'edit'])->name('admin.purchase.invoice.edit');
@@ -404,6 +405,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/create', [SalesController::class, 'create'])->name('admin.sale.create');
         Route::post('/store', [SalesController::class, 'store'])->name('admin.sale.store');
         Route::get('/view/{id}', [SalesController::class, 'view'])->name('admin.sale.show');
+        Route::get('/invoice/print', [SalesController::class, 'print'])->name('admin.sale.invoice.print');
         Route::get('/edit/{id}', [SalesController::class, 'edit'])->name('admin.sale.edit');
         Route::put('/update/{id}', [SalesController::class, 'update'])->name('admin.sale.update');
         Route::get('/delete/{id}', [SalesController::class, 'destroy'])->name('admin.sale.destroy');

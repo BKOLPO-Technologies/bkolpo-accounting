@@ -53,11 +53,11 @@
                             </div>
                         </div>
                         
-                        <div class="text-right mt-3 mr-4">
+                        {{-- <div class="text-right mt-3 mr-4">
                             <button class="btn btn-primary" onclick="printInvoice()">
                                 <i class="fa fa-print"></i> Print
                             </button>
-                        </div>
+                        </div> --}}
 
                         <div id="printableArea">
                             <div class="card-body">

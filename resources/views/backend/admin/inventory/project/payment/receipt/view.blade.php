@@ -31,6 +31,11 @@
                                     </a>
                                 </div>
                             </div>
+                            <div class="text-right mt-3 mr-4">
+                                <button class="btn btn-primary" onclick="printInvoice()">
+                                    <i class="fa fa-print"></i> Print
+                                </button>
+                            </div>
 
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -224,7 +229,48 @@
                                 </div>
                             </div>
 
-                         <div class="mt-4">
+                            <div class="mt-4">
+                                <div class="invoice p-3 mb-3">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h4 style="text-align: right;">
+                                                <img 
+                                                    src="{{ !empty(get_company()->logo) ? url('upload/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
+                                                    alt="Company Logo" 
+                                                    style="height: 40px; vertical-align: middle; margin-right: 10px;"
+                                                >
+                                            </h4>                                    
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="row invoice-info">
+                                        <div class="col-sm-4 invoice-col">
+                                            <address>
+                                                <strong>{{ get_company()->name ?? '' }}</strong><br>
+                                                {{ get_company()->address ?? '' }}<br>
+                                                Phone: {{ get_company()->phone ?? '' }}<br>
+                                                Email: {{ get_company()->email ?? '' }}
+                                            </address>
+                                        </div>
+                                        <div class="col-sm-4 invoice-col">
+                                            <address>
+                                                <strong>{{ $project->client->name }}</strong><br>
+                                                {{ $project->client->address }}, {{ $project->client->city }}<br>
+                                                {{ $project->client->region }}, {{ $project->client->country }}<br>
+                                                Phone: {{ $project->client->phone }}<br>
+                                                Email: {{ $project->client->email }}
+                                            </address>
+                                        </div>
+                                        <div class="col-sm-4 invoice-col">
+                                            <b>Reference No :- {{ $project->reference_no ?? '' }}</b><br>
+                                        </div>
+                                    </div>
+
+                                    <br>
+                                    <br>
+                                </div>
                                 <div class="card-header">
                                     <h4>Receive Payment</h4>
                                 </div>
@@ -234,7 +280,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Sl</th>
-                                                    <th>Reference No</th>
+                                                    <th>Invoice No</th>
                                                     <th>Total Amount</th>
                                                     <th>Receive Amount</th>
                                                     <th>Due Amount</th>

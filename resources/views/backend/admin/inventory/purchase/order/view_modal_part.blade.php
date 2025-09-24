@@ -40,7 +40,7 @@
 
 <!-- Print Button -->
 <div class="text-right mb-3">
-    <button onclick="printInvoice()" class="btn btn-primary">
+    <button onclick="printInvoice()" class="btn btn-info">
         <i class="fas fa-print"></i> Print
     </button>
 </div>

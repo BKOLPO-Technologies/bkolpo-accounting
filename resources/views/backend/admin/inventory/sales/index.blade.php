@@ -70,6 +70,10 @@
                                                     </td>
                                             
                                                     <td class="col-2">
+                                                        <!-- Print Button -->
+                                                        <button class="btn btn-info btn-sm print-sales" data-id="{{ $sale->id }}" data-toggle="modal" data-target="#salesPrintModal">
+                                                            <i class="fas fa-print"></i>
+                                                        </button> 
                                                         <!-- View Button -->
                                                         <a href="{{ route('admin.sale.show', $sale->id) }}" class="btn btn-success btn-sm">
                                                             <i class="fas fa-eye"></i>
@@ -94,6 +98,7 @@
             </div>
         </section>
     </div>
+    @include('backend.admin.inventory.sales.print_modal')
 @endsection
 
 @push('js')
@@ -101,6 +106,25 @@
     // Initialize Select2 if necessary
     $(document).ready(function() {
         $('.select2').select2();
+    });
+
+    // print
+    $(document).ready(function () {
+        $('.print-sales').on('click', function () {
+            var salesId = $(this).data('id');
+            $.ajax({
+                url: "{{ route('admin.sale.invoice.print') }}",
+                type: "GET",
+                data: { id: salesId },
+                success: function (response) {
+                console.log(response);
+                    $('#salesPrintContent').html(response);
+                },
+                error: function () {
+                    alert('Failed to load sales print.');
+                }
+            });
+        });
     });
 </script>
 @endpush
