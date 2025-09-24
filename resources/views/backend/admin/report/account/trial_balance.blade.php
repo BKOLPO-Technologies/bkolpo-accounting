@@ -57,7 +57,7 @@
                             <div class="card-header text-center mb-3">
                                 <h2 class="mb-1">
                                     <img 
-                                        src="{{ !empty(get_company()->logo) ? url('upload/backend/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
+                                        src="{{ !empty(get_company()->logo) ? url('upload/company/' . get_company()->logo) : asset('backend/logo.jpg') }}" 
                                         alt="Company Logo" 
                                         style="height: 40px; vertical-align: middle; margin-right: 10px;"
                                     >
