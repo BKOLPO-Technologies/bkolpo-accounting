@@ -129,7 +129,8 @@
                                     <h5 style="margin:0; color:#6c757d;">Receipt Voucher</h5>
                                     <p style="margin:0;"><strong>Reference No:</strong>
                                         {{ $sale->project->reference_no ?? '' }}</p>
-                                    <p style="margin:0;"><strong>Receive Date:</strong> {{ \Carbon\Carbon::parse($receipt->payment_date)->format('d F Y') }}</p>
+                                    <p style="margin:0;"><strong>Receive Date:</strong>
+                                        {{ \Carbon\Carbon::parse($receipt->payment_date)->format('d F Y') }}</p>
                                 </div>
                             </div>
 
@@ -173,11 +174,12 @@
                                                 {{ $receipt->invoice_no ?? '' }}
                                             </td>
                                             <td style="border:1px solid #dee2e6; padding:6px;">
-                                                @foreach ($ledgers as $ledger)
-                                                    @if ($receipt->ledger_id == $ledger->id)
-                                                        {{ ucfirst($ledger->name) }}
-                                                    @endif
-                                                @endforeach
+                                                @if ($receipt->payment_method == 'cash')
+                                                    Cash
+                                                @elseif($receipt->payment_method == 'bank')
+                                                    Bank
+                                                @else
+                                                @endif
                                             </td>
                                             <td style="border:1px solid #dee2e6; padding:6px;">
                                                 {{ bdt() }} {{ number_format($receipt->pay_amount, 2) }}
@@ -185,10 +187,10 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                               <div>
-    <strong style="display:inline-block; padding-top:20px;">Amount in Words:</strong>
-    <strong>{{ convertNumberToWords($receipt->pay_amount) }}</strong>
-</div>
+                                <div>
+                                    <strong style="display:inline-block; padding-top:20px;">Amount in Words:</strong>
+                                    <strong>{{ convertNumberToWords($receipt->pay_amount) }}</strong>
+                                </div>
 
                             </div>
 
@@ -196,11 +198,11 @@
                             <div style="display:flex; justify-content:space-between; margin-top:60px;">
                                 <div style="text-align:left;">
                                     <p style="margin:0;">__________________________</p>
-                                    <p style="margin:0;">Received By</p>
+                                    <p style="margin:0; text-align:center;">Received By</p>
                                 </div>
                                 <div style="text-align:right;">
                                     <p style="margin:0;">__________________________</p>
-                                    <p style="margin:0;">Authorized Signature</p>
+                                    <p style="margin:0; text-align:center;">Authorized Signature</p>
                                 </div>
                             </div>
 
@@ -227,15 +229,15 @@
             $('.select2').select2();
         });
     </script>
-  <script>
-    function printInvoice(id) {
-        let printContents = document.getElementById('voucherContent' + id).outerHTML;
+    <script>
+        function printInvoice(id) {
+            let printContents = document.getElementById('voucherContent' + id).outerHTML;
 
-        // Ensure image paths are absolute (prepend domain if missing)
-        const baseUrl = window.location.origin + '/';
-        printContents = printContents.replace(/src="\//g, 'src="' + baseUrl);
+            // Ensure image paths are absolute (prepend domain if missing)
+            const baseUrl = window.location.origin + '/';
+            printContents = printContents.replace(/src="\//g, 'src="' + baseUrl);
 
-        const html = `
+            const html = `
         <html>
         <head>
             <title>Print Receipt</title>
@@ -276,18 +278,17 @@
         </html>
         `;
 
-        const printWindow = window.open('', '_blank');
-        printWindow.document.open();
-        printWindow.document.write(html);
-        printWindow.document.close();
+            const printWindow = window.open('', '_blank');
+            printWindow.document.open();
+            printWindow.document.write(html);
+            printWindow.document.close();
 
-        // Wait until all resources (like logo) load before printing
-        printWindow.onload = function () {
-            printWindow.focus();
-            printWindow.print();
-            printWindow.close();
-        };
-    }
-</script>
-
+            // Wait until all resources (like logo) load before printing
+            printWindow.onload = function() {
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
+            };
+        }
+    </script>
 @endpush
