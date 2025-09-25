@@ -213,7 +213,7 @@
                                                         $grandTotal = max($totalAssets, $totalLiabilities);
                                                     @endphp
                                                     <h4>Grand Total: {{ bdt() }} {{ number_format($grandTotal, 2) }}</h4>
-                                                    <p><strong>Amount in Words:</strong> {{ convertNumberToWords($grandTotal) }}</p>
+                                                    <p><strong>Amount in Words:{{ convertNumberToWords($grandTotal) }}</strong></p>
                                                 </div>
                                             </div>
                                         </div>

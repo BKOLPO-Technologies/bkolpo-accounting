@@ -123,7 +123,7 @@
                                             <!-- Amount in Words -->
                                             <div id="amountInWordsPrint" class="mt-2">
                                                 <strong>Amount in Words:</strong>
-                                                <strong class="text-uppercase">{{ convertNumberToWords(number_format(abs($totalPaid), 2)) }}</strong>
+                                                <strong>{{ convertNumberToWords(number_format(abs($totalPaid), 2)) }}</strong>
                                             </div>
                                         </div>
                                     </div>

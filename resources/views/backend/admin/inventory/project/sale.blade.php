@@ -382,7 +382,7 @@
                                     <!-- Amount in Words: Bottom Left with margin -->
                                     <div class="pl-3" style="margin-top: 20px;">
                                         <strong>Amount in Words:</strong>
-                                        <strong class="text-uppercase">{{ convertNumberToWords($paidAmount) }}</strong>
+                                        <strong>{{ convertNumberToWords($paidAmount) }}</strong>
                                     </div>
                                 </div>
                                 {{-- End Expense List --}}
@@ -472,8 +472,7 @@
                                     <!-- Amount in Words -->
                                     <div class="pl-3" style="margin-top: 20px;">
                                         <strong>Amount in Words:</strong>
-                                        <strong
-                                            class="text-uppercase">{{ convertNumberToWords($salePaidAmount) }}</strong>
+                                        <strong>{{ convertNumberToWords($salePaidAmount) }}</strong>
                                     </div>
                                 </div>
                                 {{-- End Sales List --}}

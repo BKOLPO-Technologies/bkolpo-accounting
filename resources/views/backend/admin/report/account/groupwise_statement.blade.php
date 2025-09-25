@@ -168,7 +168,7 @@
                                             <!-- Amount in Words -->
                                             <div id="amountInWordsPrint" style="margin-top: 10px;">
                                                 <strong>Amount in Words:</strong>
-                                                <strong class="text-uppercase">{{ convertNumberToWords(number_format(abs($grandBalance), 2)) }} {{ $grandBalance >= 0 ? '' : '' }}</strong>
+                                                <strong>{{ convertNumberToWords(number_format(abs($grandBalance), 2)) }} {{ $grandBalance >= 0 ? '' : '' }}</strong>
                                             </div>
                                         </div>
                                     </div>

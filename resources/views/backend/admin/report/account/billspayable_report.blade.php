@@ -105,7 +105,7 @@
                                             <!-- Amount in Words: Bottom Left with margin -->
                                             <div id="amountInWordsPrint" style="margin-top: 10px;">
                                                 <strong>Amount in Words:</strong>
-                                                <strong class="text-uppercase">{{ convertNumberToWords(number_format($billspayableReports->sum('grand_total'), 2)) }}</strong>
+                                                <strong>{{ convertNumberToWords(number_format($billspayableReports->sum('grand_total'), 2)) }}</strong>
                                             </div>
                                         </div>
                                     </div>
