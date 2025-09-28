@@ -5,12 +5,25 @@
             position: relative;
         }
 
-        .print-signature-section {
+        .printable-content {
+            position: relative;
+        }
+
+        .terms-and-signature-container {
             position: fixed;
             bottom: 15mm;
             left: 0;
             width: 100%;
             page-break-inside: avoid;
+        }
+
+        .terms-conditions {
+            margin-bottom: 10px;
+        }
+
+        .invoice-signatures {
+            border-top: 1px solid #dee2e6;
+            padding-top: 10px;
         }
 
         .signature-box {
@@ -34,6 +47,18 @@
         /* Avoid breaking the signature across pages */
         .invoice-signatures {
             page-break-inside: avoid !important;
+        }
+
+        /* Ensure content doesn't overflow behind the fixed signature section */
+        .main-content {
+            margin-bottom: 150px;
+            /* Adjust based on your signature section height */
+        }
+    }
+
+    @media screen {
+        .terms-and-signature-container {
+            margin-top: 20px;
         }
     }
 </style>
@@ -59,25 +84,37 @@
     </div>
     <hr>
     <div class="row invoice-info">
-        <div class="col-sm-4 invoice-col">
-            <strong>Vendor:</strong><br>
-            {{ $purchase->supplier->name }}<br>
-            {{ $purchase->supplier->address }} {{ $purchase->supplier->city }}<br>
-            Phone: {{ $purchase->supplier->phone }}<br>
-            Email: {{ $purchase->supplier->email }}
-        </div>
+        <div class="table-responsive p-2">
+            <!-- Vendor / Invoice / Company Section -->
+            <table style="width:100%; border:0.5px solid #dee2e6; border-collapse: collapse; margin-bottom:0px;">
+                <thead>
+                    <tr>
+                        <!-- Vendor -->
+                        <td style="border:0.5px solid #dee2e6; vertical-align:top; width:33%; padding:5px;">
+                            <strong>Vendor:</strong><br>
+                            {{ $purchase->supplier->name }}<br>
+                            {{ $purchase->supplier->address }} {{ $purchase->supplier->city }}<br>
+                            Phone: {{ $purchase->supplier->phone }}<br>
+                            Email: {{ $purchase->supplier->email }}
+                        </td>
 
-        <div class="col-sm-4 invoice-col">
-            <b>PO No:</b> {{ $purchase->invoice_no }}<br>
-            <b>Date:</b> {{ \Carbon\Carbon::parse($purchase->invoice_date)->format('d F Y') }}
-        </div>
+                        <!-- Invoice -->
+                        <td style="border:0.5px solid #dee2e6; vertical-align:top; width:33%; padding:5px;">
+                            <b>PO No:</b> {{ $purchase->invoice_no }}<br>
+                            <b>Date:</b> {{ \Carbon\Carbon::parse($purchase->invoice_date)->format('d F Y') }}
+                        </td>
 
-        <div class="col-sm-4 invoice-col">
-            <strong>Company:</strong><br>
-            {{ get_company()->name ?? '' }}<br>
-            {{ get_company()->address ?? '' }} {{ get_company()->city ?? '' }}<br>
-            Phone: {{ get_company()->phone ?? '' }}<br>
-            Email: {{ get_company()->email ?? '' }}
+                        <!-- Company -->
+                        <td style="border:0.5px solid #dee2e6; vertical-align:top; width:33%; padding:5px;">
+                            <strong>Company:</strong><br>
+                            {{ get_company()->name ?? '' }}<br>
+                            {{ get_company()->address ?? '' }} {{ get_company()->city ?? '' }}<br>
+                            Phone: {{ get_company()->phone ?? '' }}<br>
+                            Email: {{ get_company()->email ?? '' }}
+                        </td>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
 
@@ -177,67 +214,75 @@
 
 
             </table>
-            <div>
-                <strong style="margin: 0px;">Amount in Words:</strong>
-                <strong>{{ convertNumberToWords($totalTotal) }}</strong>
-            </div>
-        </div>
-        <div>
-            <strong>Terms & Conditions:</strong>
-            <p style="margin: 0px;">{!! $purchase->project->terms_conditions ?? '' !!}</p>
-        </div>
-
-        <!-- Signature Section -->
-        <div class="invoice-signatures print-signature-section">
-            <table class="table table-sm"
-                style="margin-top: 20px; text-align: center; font-size: 13px; border:0.5px solid #dee2e6; border-collapse: collapse; width:100%; table-layout: fixed;">
+            <!-- Amount in Words -->
+            <table style="width:100%; margin-top:5px; border:0.5px solid #dee2e6; border-collapse: collapse;">
                 <tr>
-                    <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Prepare By</strong></td>
-                    <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Checked By</strong></td>
-                    <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Approve By</strong></td>
-                    <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Received By
-                            (Vendor/Subcontractor)</strong>
-                    </td>
-                </tr>
-                <tr style="height: 120px;">
-                    <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
-                        <div style="border-top:0.5px solid #dee2e6; padding-top:15px;">
-                            <span
-                                style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
-                        </div>
-                    </td>
-                    <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
-                        <div style="border-top:0.5px solid #dee2e6; padding-top:15px;">
-                            <span
-                                style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
-                        </div>
-                    </td>
-                    <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
-                        <div style="border-top:0.5px solid #dee2e6; padding-top:15px;">
-                            <span
-                                style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
-                        </div>
-                    </td>
-                    <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
-                        <div style="border-top:0.5px solid #dee2e6; padding-top:15px;">
-                            <span
-                                style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
-                        </div>
-                    </td>
+                    <td style="padding:5px;"><strong>Amount in Words:
+                            {{ convertNumberToWords($totalTotal) }}</strong></td>
                 </tr>
             </table>
         </div>
-
-
-
     </div>
+
+    <!-- Terms & Conditions and Signature Section -->
+        <div class="terms-and-signature-container">
+            <!-- Terms & Conditions Section -->
+            <div class="terms-conditions">
+                <strong>Terms & Conditions:</strong>
+                <p style="margin: 0px;">{!! $purchase->project->terms_conditions ?? '' !!}</p>
+            </div>
+
+            <!-- Signature Section -->
+            <div class="invoice-signatures">
+                <table class="table table-sm"
+                    style="text-align: center; font-size: 13px; border:0.5px solid #dee2e6; border-collapse: collapse; width:100%; table-layout: fixed;">
+                    <tr>
+                        <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Prepare By</strong></td>
+                        <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Checked By</strong></td>
+                        <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Approve By</strong></td>
+                        <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Received By
+                                (Vendor/Subcontractor)</strong>
+                        </td>
+                    </tr>
+                    <tr style="height: 120px;">
+                        <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
+                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px;">
+                                <span
+                                    style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
+                            </div>
+                        </td>
+                        <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
+                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px;">
+                                <span
+                                    style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
+                            </div>
+                        </td>
+                        <td
+                            style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
+                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px;">
+                                <span
+                                    style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
+                            </div>
+                        </td>
+                        <td
+                            style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
+                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px;">
+                                <span
+                                    style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
 
     <!-- Print Script -->
     <script>
-        function printInvoice() {
-            const printContents = document.getElementById('printableArea').outerHTML;
+    function printInvoice() {
+        const printContents = document.getElementById('printableArea').outerHTML;
 
-            const html = `
+        const html = `
         <html>
         <head>
             <title>Print Invoice</title>
@@ -248,15 +293,26 @@
                         position: relative;
                     }
 
-.print-signature-section {
-    position: fixed;
-    bottom: 15mm;
-    left: 4mm; /* adds left margin */
-    right: 4mm; /* adds right margin */
-    width: auto; /* width auto so it respects left/right margins */
-    page-break-inside: avoid;
-}
+                    .printable-content {
+                        position: relative;
+                    }
 
+                    .terms-and-signature-container {
+                        position: fixed;
+                        bottom: 15mm;
+                        left: 4mm; /* adds left margin */
+                        right: 4mm; /* adds right margin */
+                        width: auto; /* width auto so it respects left/right margins */
+                        page-break-inside: avoid;
+                    }
+
+                    .terms-conditions {
+                        margin-bottom: 10px;
+                    }
+
+                    .invoice-signatures {
+                        padding-top: 10px;
+                    }
 
                     .signature-box {
                         border-top: 1px solid #999;
@@ -278,6 +334,10 @@
                     .invoice-signatures {
                         page-break-inside: avoid !important;
                     }
+                    
+                    .main-content {
+                        margin-bottom: 150px;
+                    }
                 }
             </style>
         </head>
@@ -287,10 +347,11 @@
         </html>
     `;
 
-            const originalContents = document.body.innerHTML;
-            document.body.innerHTML = html;
-            window.print();
-            document.body.innerHTML = originalContents;
-            location.reload();
-        }
-    </script>
+        const originalContents = document.body.innerHTML;
+        document.body.innerHTML = html;
+        window.print();
+        document.body.innerHTML = originalContents;
+        location.reload();
+    }
+</script>
+
