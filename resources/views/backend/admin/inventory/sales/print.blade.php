@@ -252,11 +252,8 @@
                     style="text-align: center; font-size: 13px; border:0.5px solid #dee2e6; border-collapse: collapse; width:100%; table-layout: fixed;">
                     <tr>
                         <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Prepare By</strong></td>
-                        <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Checked By</strong></td>
+                        <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Received By</strong></td>
                         <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Approve By</strong></td>
-                        <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Received By
-                                (Customer/Subcontractor)</strong>
-                        </td>
                     </tr>
                     <tr style="height: 120px;">
                         <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
@@ -266,13 +263,6 @@
                             </div>
                         </td>
                         <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
-                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px;">
-                                <span
-                                    style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
-                            </div>
-                        </td>
-                        <td
-                            style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
                             <div style="border-top:0.5px solid #dee2e6; padding-top:15px;">
                                 <span
                                     style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
