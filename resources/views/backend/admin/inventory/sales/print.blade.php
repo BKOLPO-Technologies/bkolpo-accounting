@@ -257,20 +257,20 @@
                     </tr>
                     <tr style="height: 120px;">
                         <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
-                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px;">
+                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px; padding-bottom:15px;">
                                 <span
                                     style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
                             </div>
                         </td>
                         <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
-                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px;">
+                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px; padding-bottom:15px;">
                                 <span
                                     style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
                             </div>
                         </td>
                         <td
                             style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
-                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px;">
+                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px; padding-bottom:15px;">
                                 <span
                                     style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
                             </div>
