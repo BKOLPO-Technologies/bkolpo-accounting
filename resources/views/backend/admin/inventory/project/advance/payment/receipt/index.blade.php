@@ -37,6 +37,7 @@
                                     <thead>
                                         <tr>
                                             <th>Sl No</th>
+                                            <th>Voucher No</th>
                                             <th>Reference No</th>
                                             <th>Customer Name</th>
                                             <th>Receive Amount</th>
@@ -49,6 +50,7 @@
                                         @foreach ($receipts as $key => $receipt)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
+                                                <td>{{ $receipt->voucher_no ?? 'N/A' }}</td>
                                                 <td>{{ $receipt->reference_no ?? 'N/A' }}</td>
                                                 <td>{{ $receipt->client->name ?? 'N/A' }}</td>
                                                 <td>{{ bdt() }} {{ number_format($receipt->receive_amount, 2) }}
@@ -160,7 +162,7 @@
                                 <table style="width:100%; border-collapse:collapse; text-align:center;">
                                     <thead>
                                         <tr style="background:#f8f9fa;">
-                                            <th style="border:1px solid #dee2e6; padding:6px;">Reference No</th>
+                                            <th style="border:1px solid #dee2e6; padding:6px;">Voucher No</th>
                                             <th style="border:1px solid #dee2e6; padding:6px;">Payment Method</th>
                                             <th style="border:1px solid #dee2e6; padding:6px;">Amount Received</th>
                                         </tr>
@@ -168,7 +170,7 @@
                                     <tbody>
                                         <tr>
                                             <td style="border:1px solid #dee2e6; padding:6px;">
-                                                {{ $receipt->reference_no ?? '' }}
+                                                {{ $receipt->voucher_no ?? '' }}
                                             </td>
                                             <td style="border:1px solid #dee2e6; padding:6px;">
                                                 @if ($receipt->payment_method == 'Cash')

@@ -9,6 +9,7 @@ class AdvanceProjectReceipt extends Model
     protected $fillable = [
         'client_id',
         'project_id',
+        'voucher_no',
         'reference_no',
         'receive_amount',
         'payment_method',

@@ -112,7 +112,6 @@ class AdvanceReceiveController extends Controller
             return back()->with('error', 'Receive amount cannot be greater than the project grand total.');
         }
 
-
         // Begin a transaction to ensure atomicity
         DB::beginTransaction();
 
@@ -122,14 +121,39 @@ class AdvanceReceiveController extends Controller
             $paymentDescription = "{$ledger->name}";
             $payment_method = $ledger->type == 'Cash' ? 'Cash' : 'Bank';
 
+            $companyInfo = get_company();
+            $currentMonth = now()->format('m');
+            $currentYear = now()->format('y');
+            $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
+            $voucherPrefix = 'BCL-ADV-'.$fiscalYearWithoutHyphen.$currentMonth;
+
+            $lastVoucher = AdvanceProjectReceipt::whereRaw('MONTH(created_at) = ?', [$currentMonth]) ->orderBy('created_at', 'desc') ->first(); 
+
+
+            if ($lastVoucher && preg_match('/(\d{3})$/', $lastVoucher->voucher_no, $matches)) {
+                $increment = (int) $matches[1] + 1;
+            } else {
+                $increment = 1;
+            }
+
+            $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
+            $voucherNo = $voucherPrefix.$formattedIncrement;
+
+            // Optionally check again for uniqueness
+            $exists = AdvanceProjectReceipt::where('voucher_no', $voucherNo)->exists();
+            // if ($exists) {
+            //     throw new \Exception('Generated duplicate voucher number. Try again.');
+            // }
+
             // Create a new project receipt
             $receipt = AdvanceProjectReceipt::create([
                 'client_id' => $project->client_id,
                 'project_id' => $project->id,
+                'voucher_no' => $voucherNo,
                 'reference_no' => $project->reference_no,
                 'receive_amount' => $request->receive_amount,
                 'payment_method' => $payment_method,
-                'payment_mood'    => $request->payment_mood,
+                'payment_mood' => $request->payment_mood,
                 'ledger_id' => $ledger->id,
                 'payment_date' => $request->payment_date,
                 'bank_account_no' => $request->bank_account_no,
@@ -153,29 +177,12 @@ class AdvanceReceiveController extends Controller
 
             if ($cashBankLedger && $receivableLedger) {
                 // Check if a Journal Voucher exists for this payment transaction
-                $journalVoucher = JournalVoucher::where('transaction_code', $project->reference_no)->first();
-
-                $increment = 1;
-                if ($journalVoucher && preg_match('/(\d{3})$/', $journalVoucher->transaction_code, $matches)) {
-                    $increment = (int) $matches[0] + 1;
-                }
-
-                $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
-                $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
-                $transactionCode = 'BCL-V-'.$fiscalYearWithoutHyphen.$currentMonth.$formattedIncrement;
-                $increment = 1;
-                if ($journalVoucher && preg_match('/(\d{3})$/', $journalVoucher->transaction_code, $matches)) {
-                    $increment = (int) $matches[0] + 1;
-                }
-
-                $formattedIncrement = str_pad($increment, 3, '0', STR_PAD_LEFT);
-                $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
-                $transactionCode = 'BCL-V-'.$fiscalYearWithoutHyphen.$currentMonth.$formattedIncrement;
+                $journalVoucher = JournalVoucher::where('transaction_code', $receipt->voucher_no)->first();
 
                 if (! $journalVoucher) {
                     // Create a new Journal Voucher for Payment Received
                     $journalVoucher = JournalVoucher::create([
-                        'transaction_code' => $project->reference_no,
+                        'transaction_code' => $receipt->voucher_no,
                         'transaction_date' => $request->payment_date,
                         'company_id' => $companyInfo->id,
                         'branch_id' => $companyInfo->branch->id,
@@ -292,9 +299,9 @@ class AdvanceReceiveController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'project_id'     => 'required|exists:projects,id',
+            'project_id' => 'required|exists:projects,id',
             'receive_amount' => 'required|numeric|min:0',
-            'payment_date'   => 'required|date',
+            'payment_date' => 'required|date',
         ]);
 
         DB::beginTransaction();
@@ -307,52 +314,51 @@ class AdvanceReceiveController extends Controller
                 return back()->with('error', 'Receive amount cannot be greater than the project grand total.');
             }
 
-
             $ledger = Ledger::findOrFail($request->payment_method);
             $payment_method = $ledger->type == 'Cash' ? 'Cash' : 'Bank';
 
             // 🔹 Update AdvanceProjectReceipt
             $receipt->update([
-                'project_id'      => $project->id,
-                'client_id'       => $project->client_id,
-                'reference_no'    => $project->reference_no,
-                'receive_amount'  => $request->receive_amount,
-                'payment_method'  => $payment_method,
-                'payment_mood'    => $request->payment_mood,
-                'ledger_id'       => $ledger->id,
-                'payment_date'    => $request->payment_date,
+                'project_id' => $project->id,
+                'client_id' => $project->client_id,
+                'reference_no' => $project->reference_no,
+                'receive_amount' => $request->receive_amount,
+                'payment_method' => $payment_method,
+                'payment_mood' => $request->payment_mood,
+                'ledger_id' => $ledger->id,
+                'payment_date' => $request->payment_date,
                 'bank_account_no' => $request->bank_account_no,
-                'cheque_no'       => $request->cheque_no,
-                'cheque_date'     => $request->cheque_date,
-                'bank_batch_no'   => $request->bank_batch_no,
-                'bank_date'       => $request->bank_date,
-                'bkash_number'    => $request->bkash_number,
-                'bkash_date'      => $request->bkash_date,
-                'note'     => $request->note,
+                'cheque_no' => $request->cheque_no,
+                'cheque_date' => $request->cheque_date,
+                'bank_batch_no' => $request->bank_batch_no,
+                'bank_date' => $request->bank_date,
+                'bkash_number' => $request->bkash_number,
+                'bkash_date' => $request->bkash_date,
+                'note' => $request->note,
             ]);
 
             // 🔹 Update Journal Voucher
-            $companyInfo   = get_company();
+            $companyInfo = get_company();
             $receivableLedger = Ledger::where('type', 'Receivable')->first();
             $paymentAmount = $request->receive_amount ?? 0;
 
-            $journalVoucher = JournalVoucher::where('transaction_code', $project->reference_no)->first();
+            $journalVoucher = JournalVoucher::where('transaction_code', $receipt->voucher_no)->first();
 
-            if (!$journalVoucher) {
+            if (! $journalVoucher) {
                 // If missing, create new voucher
                 $journalVoucher = JournalVoucher::create([
-                    'transaction_code' => $project->reference_no,
+                    'transaction_code' => $receipt->voucher_no,
                     'transaction_date' => $request->payment_date,
-                    'company_id'       => $companyInfo->id,
-                    'branch_id'        => $companyInfo->branch->id,
-                    'description'      => 'Advance Received',
-                    'status'           => 1,
+                    'company_id' => $companyInfo->id,
+                    'branch_id' => $companyInfo->branch->id,
+                    'description' => 'Advance Received',
+                    'status' => 1,
                 ]);
             } else {
                 // If exists, update
                 $journalVoucher->update([
                     'transaction_date' => $request->payment_date,
-                    'description'      => 'Advance Updated',
+                    'description' => 'Advance Updated',
                 ]);
 
                 // Remove old details before inserting new
@@ -363,51 +369,55 @@ class AdvanceReceiveController extends Controller
             // Debit (Cash/Bank)
             JournalVoucherDetail::create([
                 'journal_voucher_id' => $journalVoucher->id,
-                'ledger_id'          => $ledger->id,
-                'reference_no'       => $project->reference_no,
-                'description'        => 'Advance Received: ' . number_format($paymentAmount, 2) . ' Taka from Customer for Invoice #' . $project->reference_no,
-                'debit'              => $paymentAmount,
-                'credit'             => 0,
+                'ledger_id' => $ledger->id,
+                'reference_no' => $project->reference_no,
+                'description' => 'Advance Received: '.number_format($paymentAmount, 2).' Taka from Customer for Invoice #'.$project->reference_no,
+                'debit' => $paymentAmount,
+                'credit' => 0,
             ]);
 
             // Credit (Receivable)
             JournalVoucherDetail::create([
                 'journal_voucher_id' => $journalVoucher->id,
-                'ledger_id'          => $receivableLedger->id,
-                'reference_no'       => $project->reference_no,
-                'description'        => 'Reduce Accounts Receivable by ' . number_format($paymentAmount, 2) . ' Taka for Invoice #' . $project->reference_no,
-                'debit'              => 0,
-                'credit'             => $paymentAmount,
+                'ledger_id' => $receivableLedger->id,
+                'reference_no' => $project->reference_no,
+                'description' => 'Reduce Accounts Receivable by '.number_format($paymentAmount, 2).' Taka for Invoice #'.$project->reference_no,
+                'debit' => 0,
+                'credit' => $paymentAmount,
             ]);
 
-            if ($project) {
-                $project->paid_amount += $request->input('receive_amount', 0);
+           if ($project) {
+                $new_receive_amount = $request->input('receive_amount', 0);
+                $old_receive_amount = $receipt->receive_amount ?? 0;
+
+                $project->paid_amount = ($project->paid_amount - $old_receive_amount) + $new_receive_amount;
+
                 if ($project->paid_amount >= $project->grand_total) {
                     $project->status = 'paid';
                 } else {
                     $project->status = 'partially_paid';
                 }
+
                 $project->save();
             }
 
             DB::commit();
 
             return redirect()->route('project.advance.receipt.payment.index')
-                            ->with('success', 'Advance Payment Receipt updated successfully!');
+                ->with('success', 'Advance Payment Receipt updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
 
             Log::error('Payment update failed', [
-                'error'        => $e->getMessage(),
-                'file'         => $e->getFile(),
-                'line'         => $e->getLine(),
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
                 'request_data' => $request->all(),
             ]);
 
-            return redirect()->back()->with('error', 'Update failed! ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Update failed! '.$e->getMessage());
         }
     }
-
 
     /**
      * Remove the specified resource from storage.
