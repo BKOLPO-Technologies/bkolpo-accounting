@@ -101,6 +101,7 @@
                         <!-- Invoice -->
                         <td style="border:0.5px solid #dee2e6; vertical-align:top; width:33%; padding:5px;">
                             <b>PO No:</b> {{ $purchase->invoice_no }}<br>
+                            <b>Project Code:</b> {{ $purchase->project->reference_no ?? '' }}<br>
                             <b>Date:</b> {{ \Carbon\Carbon::parse($purchase->invoice_date)->format('d F Y') }}
                         </td>
 
@@ -170,7 +171,8 @@
                     <tr>
                         <td colspan="4" rowspan="5"
                             style="border:0.5px solid #dee2e6; vertical-align: top; border-left:none;">
-                            <b>Project Code:</b> {{ $purchase->project->reference_no ?? '' }}
+                            <b>Contact Person:</b> {{ $purchase->project->project_coordinator ?? '' }} <br>
+                            <b>Delivery Location:</b> {{ $purchase->project->project_location ?? '' }}
                         </td>
                         <th style="border:0.5px solid #dee2e6;" class="text-right">Subtotal</th>
                         <th style="border:0.5px solid #dee2e6;" class="text-left">{{ number_format($total, 2) }}</th>
@@ -197,14 +199,25 @@
                     </tr>
                     <!-- Tax/VAT Condition Left + Remark Right -->
                     <tr>
-                        <td colspan="3" style="border:0.5px solid #dee2e6; text-align:left;">
+                        {{-- <td colspan="3" style="border:0.5px solid #dee2e6; text-align:left;">
                             <p style="margin: 0px;">
                                 <b>TAX Condition :</b> {{ ($tax ?? 0) > 0 ? 'AIT Inclusive' : 'AIT Exclusive' }}
                             </p>
                             <p style="margin: 0px;">
                                 <b>VAT Condition :</b> {{ ($vat ?? 0) > 0 ? 'VAT Inclusive' : 'VAT Exclusive' }}
                             </p>
+                        </td> --}}
+                        <td colspan="3" style="border:0.5px solid #dee2e6; text-align:left;">
+                            <p style="margin: 0px;">
+                                <b>TAX Condition :</b>
+                                {{ ($tax ?? 0) == 0 ? 'AIT Inclusive' : 'AIT Exclusive' }}
+                            </p>
+                            <p style="margin: 0px;">
+                                <b>VAT Condition :</b>
+                                {{ ($vat ?? 0) == 0 ? 'VAT Inclusive' : 'VAT Exclusive' }}
+                            </p>
                         </td>
+
                         <td colspan="3" style="border:0.5px solid #dee2e6; text-align:left;">
                             <b>Remark :</b> {{ $purchase->description ?? '' }}
                         </td>
@@ -225,64 +238,62 @@
     </div>
 
     <!-- Terms & Conditions and Signature Section -->
-        <div class="terms-and-signature-container">
-            <!-- Terms & Conditions Section -->
-            <div class="terms-conditions">
-                <strong>Terms & Conditions:</strong>
-                <p style="margin: 0px;">{!! $purchase->project->terms_conditions ?? '' !!}</p>
-            </div>
-
-            <!-- Signature Section -->
-            <div class="invoice-signatures">
-                <table class="table table-sm"
-                    style="text-align: center; font-size: 13px; border:0.5px solid #dee2e6; border-collapse: collapse; width:100%; table-layout: fixed;">
-                    <tr>
-                        <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Prepare By</strong></td>
-                        <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Checked By</strong></td>
-                        <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Approve By</strong></td>
-                        <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Received By
-                                (Vendor/Subcontractor)</strong>
-                        </td>
-                    </tr>
-                    <tr style="height: 120px;">
-                        <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
-                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px; padding-bottom:15px;">
-                                <span
-                                    style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
-                            </div>
-                        </td>
-                        <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
-                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px; padding-bottom:15px;">
-                                <span
-                                    style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
-                            </div>
-                        </td>
-                        <td
-                            style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
-                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px; padding-bottom:15px;">
-                                <span
-                                    style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
-                            </div>
-                        </td>
-                        <td
-                            style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
-                            <div style="border-top:0.5px solid #dee2e6; padding-top:15px; padding-bottom:15px;">
-                                <span
-                                    style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+    <div class="terms-and-signature-container">
+        <!-- Terms & Conditions Section -->
+        <div class="terms-conditions">
+            <strong>Terms & Conditions:</strong>
+            <p style="margin: 0px;">{!! $purchase->project->terms_conditions ?? '' !!}</p>
         </div>
+
+        <!-- Signature Section -->
+        <div class="invoice-signatures">
+            <table class="table table-sm"
+                style="text-align: center; font-size: 13px; border:0.5px solid #dee2e6; border-collapse: collapse; width:100%; table-layout: fixed;">
+                <tr>
+                    <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Prepare By</strong></td>
+                    <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Checked By</strong></td>
+                    <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Approve By</strong></td>
+                    <td style="border:0.5px solid #dee2e6; width:25%;"><strong>Received By
+                            (Vendor/Subcontractor)</strong>
+                    </td>
+                </tr>
+                <tr style="height: 120px;">
+                    <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
+                        <div style="border-top:0.5px solid #dee2e6; padding-top:15px; padding-bottom:15px;">
+                            <span
+                                style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
+                        </div>
+                    </td>
+                    <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
+                        <div style="border-top:0.5px solid #dee2e6; padding-top:15px; padding-bottom:15px;">
+                            <span
+                                style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
+                        </div>
+                    </td>
+                    <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
+                        <div style="border-top:0.5px solid #dee2e6; padding-top:15px; padding-bottom:15px;">
+                            <span
+                                style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
+                        </div>
+                    </td>
+                    <td style="border:0.5px solid #dee2e6; vertical-align: bottom; text-align:left; padding:0 5px;">
+                        <div style="border-top:0.5px solid #dee2e6; padding-top:15px; padding-bottom:15px;">
+                            <span
+                                style="display:block; border-bottom:1px dotted #dee2e6; width:100%; height:1.2em;"><strong>Date:</strong></span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
 
     <!-- Print Script -->
     <script>
-    function printInvoice() {
-        const printContents = document.getElementById('printableArea').outerHTML;
+        function printInvoice() {
+            const printContents = document.getElementById('printableArea').outerHTML;
 
-        const html = `
+            const html = `
         <html>
         <head>
             <title>Print Invoice</title>
@@ -347,11 +358,10 @@
         </html>
     `;
 
-        const originalContents = document.body.innerHTML;
-        document.body.innerHTML = html;
-        window.print();
-        document.body.innerHTML = originalContents;
-        location.reload();
-    }
-</script>
-
+            const originalContents = document.body.innerHTML;
+            document.body.innerHTML = html;
+            window.print();
+            document.body.innerHTML = originalContents;
+            location.reload();
+        }
+    </script>
