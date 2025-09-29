@@ -299,6 +299,9 @@
                                                     <tr>
                                                         <td>
                                                             <div class="icheck-success d-inline">
+                                                                {{-- <input type="checkbox" name="include_vat"
+                                                                    id="include_vat"
+                                                                    {{ $purchase->vat > 0 ? 'checked' : '' }}> --}}
                                                                 <input type="checkbox" name="include_vat" id="include_vat" {{ old('include_vat', $purchase->include_vat ?? 0) ? 'checked' : '' }}>
                                                                 <label for="include_vat">
                                                                     Include VAT (%)
@@ -644,10 +647,11 @@
                 calculateRowTotal(row);
             });
 
-            // Quantity change
-            $(document).on('input', '.quantity', function() {
+            // Unified change handler for quantity, price, and discount
+            $(document).on('input keyup change', '.quantity, .unit-price, .product-discount', function () {
                 const row = $(this).closest('tr');
                 calculateRowTotal(row);
+                updateSubtotal();
             });
 
             // Calculate total for each row
