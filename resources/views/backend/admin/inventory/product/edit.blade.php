@@ -90,7 +90,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                     </div>
-                                    <input type="number" class="form-control" value="{{ old('price', $product->price) }}" name="price">
+                                    <input type="number" class="form-control" value="{{ old('price', $product->price) }}" name="price" step="0.01">
                                 </div>
                             </div>
                         </div>
