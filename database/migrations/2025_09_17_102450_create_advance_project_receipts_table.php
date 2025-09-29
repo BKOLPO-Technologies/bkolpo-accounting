@@ -16,7 +16,8 @@ return new class extends Migration
 
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('project_id');
-            $table->string('reference_no')->unique();
+            $table->string('voucher_no')->unique()->nullable();
+            $table->string('reference_no')->nullable();
             $table->decimal('receive_amount', 15, 2);
             $table->string('payment_method'); // cash, bank, bkash, etc
             $table->string('payment_mood'); 

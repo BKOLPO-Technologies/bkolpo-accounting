@@ -106,7 +106,7 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
+        // dd($request->all());
         //Log::info('AdminPurchaseStore function started', ['request_data' => $request->all()]);
 
         // Validate the request data
@@ -166,6 +166,8 @@ class PurchaseOrderController extends Controller
             $purchase->vat_amount = $request->vat_amount;
             $purchase->tax = $tax;
             $purchase->tax_amount = $request->tax_amount;
+            $purchase->include_tax = $request->has('include_tax') ? 1 : 0;
+            $purchase->include_vat = $request->has('include_vat') ? 1 : 0;
             $purchase->total = $request->subtotal;
             $purchase->grand_total = $request->grand_total;
             $purchase->description = $request->description;
@@ -290,7 +292,7 @@ class PurchaseOrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //dd($request->all());
+        // dd($request->all());
         // Validate the request data
         $validated = $request->validate([
             'supplier' => 'required|exists:suppliers,id',
@@ -303,10 +305,14 @@ class PurchaseOrderController extends Controller
         ]);
 
         // Extract product data from request
-        $productIds = explode(',', $request->input('product_ids'));  
+        // $productIds = explode(',', $request->input('product_ids'));  
+
+        // Step 1: Get request products
+        $productIds = $request->input('aproducts');  
         //$quantities = explode(',', $request->input('quantities'));  
         $quantities = $request->input('quantity');
-        $prices = explode(',', $request->input('prices'));  
+        // $prices = explode(',', $request->input('prices'));  
+        $prices = $request->input('unit_price');
         $discounts = explode(',', $request->input('discounts'));  
 
         if (empty($productIds) || count($productIds) === 0 || $productIds[0] == '') {
@@ -339,23 +345,31 @@ class PurchaseOrderController extends Controller
             $purchase->vat_amount = $request->vat_amount;
             $purchase->tax = $tax;
             $purchase->tax_amount = $request->tax_amount;
+            $purchase->include_tax = $request->has('include_tax') ? 1 : 0;
+            $purchase->include_vat = $request->has('include_vat') ? 1 : 0;
             $purchase->total = $request->subtotal;
             $purchase->grand_total = $request->grand_total;
             $purchase->category_id = $categoryId;
             $purchase->project_id = $request->project_id;
             $purchase->save();
 
-            // Remove existing purchase product records and update with new ones
-            PurchaseProduct::where('purchase_id', $id)->delete();
+            // Step 2: Delete only the removed products
+            PurchaseProduct::where('purchase_id', $id)
+                ->whereNotIn('product_id', $productIds)
+                ->delete();
 
-            // Insert updated product data
+            // Step 3: Loop through request products and update/insert
             foreach ($productIds as $index => $productId) {
-                $purchaseProduct = new PurchaseProduct();
-                $purchaseProduct->purchase_id = $purchase->id;
-                $purchaseProduct->product_id = $productId;
-                $purchaseProduct->quantity = $quantities[$index];
-                $purchaseProduct->price = $prices[$index];
-                $purchaseProduct->discount = $discounts[$index];
+                if (!$productId) continue;
+
+                $purchaseProduct = PurchaseProduct::firstOrNew([
+                    'purchase_id' => $id,
+                    'product_id' => $productId,
+                ]);
+
+                $purchaseProduct->quantity = $quantities[$index] ?? 1;
+                $purchaseProduct->price = $prices[$index] ?? 0;
+                $purchaseProduct->discount = $discounts[$index] ?? 0;
                 $purchaseProduct->save();
             }
 

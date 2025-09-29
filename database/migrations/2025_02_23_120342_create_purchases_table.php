@@ -23,8 +23,10 @@ return new class extends Migration
             $table->decimal('discount', 10, 2)->default(0)->nullable();
             $table->decimal('transport_cost', 10, 2)->default(0)->nullable();
             $table->decimal('carrying_charge', 10, 2)->default(0)->nullable();
+            $table->boolean('include_vat')->default(0)->nullable();
             $table->decimal('vat', 10, 2)->default(0)->nullable();
             $table->decimal('vat_amount', 10, 2)->default(0)->nullable();
+            $table->boolean('include_tax')->default(0)->nullable();
             $table->decimal('tax', 10, 2)->default(0);
             $table->decimal('tax_amount', 10, 2)->default(0)->nullable();
             $table->decimal('total', 10, 2)->nullable(); 

@@ -163,6 +163,8 @@
                     $carryingCharge = $purchase->carrying_charge ?? 0;
                     $vat = $purchase->vat_amount ?? 0;
                     $tax = $purchase->tax_amount ?? 0;
+                    $include_tax = $purchase->include_tax;
+                    $include_vat = $purchase->include_vat;
                     $totalDiscount = $purchase->discount ?? 0;
                     $totalVatTax = $transportCost + $carryingCharge + $vat + $tax - $totalDiscount;
                     $totalTotal = $total + $totalVatTax;
@@ -210,13 +212,15 @@
                         <td colspan="3" style="border:0.5px solid #dee2e6; text-align:left;">
                             <p style="margin: 0px;">
                                 <b>TAX Condition :</b>
-                                {{ ($tax ?? 0) == 0 ? 'AIT Inclusive' : 'AIT Exclusive' }}
+                                {{ ($include_tax ?? 0) == 1 ? 'AIT Inclusive' : 'AIT Exclusive' }}
                             </p>
                             <p style="margin: 0px;">
                                 <b>VAT Condition :</b>
-                                {{ ($vat ?? 0) == 0 ? 'VAT Inclusive' : 'VAT Exclusive' }}
+                                {{ ($include_vat ?? 0) == 1 ? 'VAT Inclusive' : 'VAT Exclusive' }}
                             </p>
                         </td>
+
+
 
                         <td colspan="3" style="border:0.5px solid #dee2e6; text-align:left;">
                             <b>Remark :</b> {{ $purchase->description ?? '' }}
