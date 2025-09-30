@@ -23,11 +23,13 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card card-primary card-outline shadow-lg">
-                            <div class="card-header py-2 d-flex justify-content-between align-items-center">
-                                <h4 class="mb-0">{{ $pageTitle ?? '' }}</h4>
-                                <a href="{{ route('admin.staff.index') }}" class="btn btn-sm btn-danger rounded-0">
+                             <div class="card-header py-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h4 class="mb-0">{{ $pageTitle ?? '' }}</h4>
+                                     <a href="{{ route('admin.staff.index') }}" class="btn btn-sm btn-danger rounded-0">
                                     <i class="fa-solid fa-arrow-left"></i> Back To List Staff
                                 </a>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <form method="POST" action="{{ route('admin.staff.update', $staff->id) }}"
