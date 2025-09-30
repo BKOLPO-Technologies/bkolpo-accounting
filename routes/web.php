@@ -41,6 +41,8 @@ use App\Http\Controllers\Backend\Inventory\OutComingChalanController;
 use App\Http\Controllers\Backend\Inventory\ProductSaleReceiveController;
 use App\Http\Controllers\Backend\Inventory\AdvanceReceiveController;
 
+use App\Http\Controllers\Backend\Hrm\StaffController;
+
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
 });
@@ -506,6 +508,18 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::get('/out/{id}', [StockController::class, 'OutView'])->name('stock.out.view');
         Route::get('/in', [StockController::class, 'In'])->name('stock.in');
         Route::get('/in/{id}', [StockController::class, 'InView'])->name('stock.in.view');
+    });
+
+    /* ==================== Start Hrm =================== */
+    /* ==================== Staff Controller =================== */
+    Route::prefix('staff')->group(function () {
+        Route::get('/', [StaffController::class, 'index'])->name('admin.staff.index');
+        Route::get('/create', [StaffController::class, 'create'])->name('admin.staff.create');
+        Route::post('/store', [StaffController::class, 'store'])->name('admin.staff.store');
+        Route::get('/edit/{id}', [StaffController::class, 'edit'])->name('admin.staff.edit');
+        Route::put('/update/{id}', [StaffController::class, 'update'])->name('admin.staff.update');
+        Route::get('/show/{id}', [StaffController::class, 'show'])->name('admin.staff.show');
+        Route::get('/delete/{id}', [StaffController::class, 'destroy'])->name('admin.staff.delete');
     });
 
 });
