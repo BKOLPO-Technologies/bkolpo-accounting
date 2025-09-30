@@ -386,20 +386,25 @@ class AdvanceReceiveController extends Controller
                 'credit' => $paymentAmount,
             ]);
 
-           if ($project) {
-                $new_receive_amount = $request->input('receive_amount', 0);
-                $old_receive_amount = $receipt->receive_amount ?? 0;
+            // 🔹 Update Project Paid Amount
+            if ($project) {
+                // ওই project এর সব receipt এর amount যোগফল নিন
+                $totalPaid = AdvanceProjectReceipt::where('project_id', $project->id)->sum('receive_amount');
 
-                $project->paid_amount = ($project->paid_amount - $old_receive_amount) + $new_receive_amount;
+                $project->paid_amount = $totalPaid;
 
                 if ($project->paid_amount >= $project->grand_total) {
                     $project->status = 'paid';
-                } else {
+                } elseif ($project->paid_amount > 0) {
                     $project->status = 'partially_paid';
+                } else {
+                    $project->status = 'pending';
                 }
 
                 $project->save();
             }
+
+
 
             DB::commit();
 
@@ -407,13 +412,6 @@ class AdvanceReceiveController extends Controller
                 ->with('success', 'Advance Payment Receipt updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-
-            Log::error('Payment update failed', [
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'request_data' => $request->all(),
-            ]);
 
             return redirect()->back()->with('error', 'Update failed! '.$e->getMessage());
         }
@@ -429,27 +427,37 @@ class AdvanceReceiveController extends Controller
         try {
             $receipt = AdvanceProjectReceipt::findOrFail($id);
 
-            $journalVoucher = JournalVoucher::where('transaction_code', $receipt->reference_no)->first();
-            // dd($journalVoucher);
-
+            $journalVoucher = JournalVoucher::where('transaction_code', $receipt->voucher_no)->first();
             $project = Project::findOrFail($receipt->project_id);
 
+            // 🔹 Journal Voucher delete
             if ($journalVoucher) {
                 JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)->delete();
                 $journalVoucher->delete();
             }
 
-            if ($project) {
-                $project->paid_amount -= $receipt->receive_amount;
-                $project->status = ($project->paid_amount >= $project->grand_total) ? 'paid' : 'pending';
-                $project->save();
+            // 🔹 Receipt delete
+            $receipt->delete();
+
+            // 🔹 Project এর paid_amount আবার সব receipt এর যোগফল দিয়ে আপডেট করুন
+            $totalPaid = AdvanceProjectReceipt::where('project_id', $project->id)->sum('receive_amount');
+            $project->paid_amount = $totalPaid;
+
+            // 🔹 Status আপডেট করুন
+            if ($project->paid_amount >= $project->grand_total) {
+                $project->status = 'paid';
+            } elseif ($project->paid_amount > 0) {
+                $project->status = 'partially_paid';
+            } else {
+                $project->status = 'pending';
             }
 
-            $receipt->delete();
+
+            $project->save();
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'Payment receipt deleted successfully, and journal entry updated!');
+            return redirect()->back()->with('success', 'Payment receipt deleted successfully, project and journal updated!');
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -460,9 +468,9 @@ class AdvanceReceiveController extends Controller
             ]);
 
             return redirect()->back()->with('error', 'Failed to delete payment receipt! '.$e->getMessage());
-            // return redirect()->back()->with('success', 'Payment receipt deleted successfully, and journal entry updated!');
         }
     }
+
 
     // Project Store from Modal
     public function projectStore(Request $request)
