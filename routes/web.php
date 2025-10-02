@@ -42,6 +42,7 @@ use App\Http\Controllers\Backend\Inventory\ProductSaleReceiveController;
 use App\Http\Controllers\Backend\Inventory\AdvanceReceiveController;
 
 use App\Http\Controllers\Backend\Hrm\StaffController;
+use App\Http\Controllers\Backend\Hrm\StaffSalaryController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
@@ -520,6 +521,18 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::put('/update/{id}', [StaffController::class, 'update'])->name('admin.staff.update');
         Route::get('/show/{id}', [StaffController::class, 'show'])->name('admin.staff.show');
         Route::get('/delete/{id}', [StaffController::class, 'destroy'])->name('admin.staff.delete');
+    });
+
+    /* ==================== Staff Salary Controller =================== */
+    Route::prefix('staff/salary')->group(function () {
+        Route::get('/', [StaffSalaryController::class, 'index'])->name('admin.staff.salary.index');
+        Route::get('/create', [StaffSalaryController::class, 'create'])->name('admin.staff.salary.create');
+        Route::post('/store', [StaffSalaryController::class, 'store'])->name('admin.staff.salary.store');
+        Route::get('/edit/{id}', [StaffSalaryController::class, 'edit'])->name('admin.staff.salary.edit');
+        Route::put('/update/{id}', [StaffSalaryController::class, 'update'])->name('admin.staff.salary.update');
+        Route::get('/show/{id}', [StaffSalaryController::class, 'show'])->name('admin.staff.salary.show');
+        Route::get('/delete/{id}', [StaffSalaryController::class, 'destroy'])->name('admin.staff.salary.delete');
+        Route::post('/pay', [StaffSalaryController::class, 'paySalary'])->name('admin.staff.salary.pay');
     });
 
 });

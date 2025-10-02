@@ -30,4 +30,9 @@ class Staff extends Model
     {
         return $this->first_name . ' ' . $this->last_name;
     }
+
+    public function salaries()
+    {
+        return $this->hasMany(StaffSalary::class);
+    }
 }

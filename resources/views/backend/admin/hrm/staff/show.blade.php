@@ -63,7 +63,7 @@
                                             <td>{{ $staff->join_date ? $staff->join_date->format('d-m-Y') : '-' }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Salary</th>
+                                            <th>Basic Salary</th>
                                             <td>{{ $staff->salary ? number_format($staff->salary, 2) : '-' }}</td>
                                         </tr>
                                         <tr>

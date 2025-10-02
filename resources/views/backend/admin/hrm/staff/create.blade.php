@@ -136,10 +136,10 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="salary">Salary <span class="text-danger">*</span></label>
+                                                <label for="salary">Basic Salary <span class="text-danger">*</span></label>
                                                 <input type="number" name="salary" id="salary" step="0.01"
                                                     class="form-control @error('salary') is-invalid @enderror"
-                                                    value="{{ old('salary') }}" required placeholder="Enter Salary">
+                                                    value="{{ old('salary') }}" required placeholder="Enter Basic Salary">
                                                 @error('salary')
                                                     <span class="invalid-feedback">{{ $message }}</span>
                                                 @enderror
