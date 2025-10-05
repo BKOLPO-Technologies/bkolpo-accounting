@@ -14,7 +14,6 @@ class Staff extends Model
         'department',
         'designation',
         'join_date',
-        'salary',
         'profile_image',
         'cv',
         'address',
@@ -35,4 +34,11 @@ class Staff extends Model
     {
         return $this->hasMany(StaffSalary::class);
     }
+
+    // Staff.php
+    public function salaryStructure()
+    {
+        return $this->hasOne(SalaryStructure::class, 'staff_id');
+    }
+
 }

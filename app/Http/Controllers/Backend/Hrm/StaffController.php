@@ -7,11 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Staff;
 use App\Models\User;
-use App\Models\Hrm\Education;
-use App\Models\Hrm\Certification;
-use App\Models\Hrm\Award;
-use App\Models\Hrm\EmploymentHistory;
-use App\Models\Hrm\StaffDocument;
+use App\Models\SalaryStructure;
 use Illuminate\Support\Facades\Storage;
 use Exception;
 use DB;
@@ -37,11 +33,13 @@ class StaffController extends Controller
         return view('backend.admin.hrm.staff.create',compact('pageTitle'));
     }
 
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'employee_id' => 'required|unique:staff,employee_id',
             'join_date'   => 'required|date',
@@ -50,7 +48,13 @@ class StaffController extends Controller
             'phone'       => 'nullable|string|max:20',
             'department'  => 'required|string',
             'designation' => 'required|string',
-            'salary'      => 'required|numeric|min:0',
+            'basic'       => 'required|numeric|min:0',
+            'hra'         => 'nullable|numeric|min:0',
+            'medical'     => 'nullable|numeric|min:0',
+            'conveyance'  => 'nullable|numeric|min:0',
+            'pf'          => 'nullable|numeric|min:0',
+            'tax'         => 'nullable|numeric|min:0',
+            'other_deduction' => 'nullable|numeric|min:0',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'cv'            => 'required|mimes:pdf|max:5120', // PDF Allow
             'address'       => 'nullable|string',
@@ -73,7 +77,6 @@ class StaffController extends Controller
             $staff->phone       = $request->phone;
             $staff->department  = $request->department;
             $staff->designation = $request->designation;
-            $staff->salary      = $request->salary;
             $staff->address     = $request->address;
 
             // Profile Image Upload
@@ -91,6 +94,17 @@ class StaffController extends Controller
             }
 
             $staff->save();
+
+            SalaryStructure::create([
+                'staff_id' => $staff->id,
+                'basic' => $request->basic ?? 0,
+                'hra' => $request->hra ?? 0,
+                'medical' => $request->medical ?? 0,
+                'conveyance' => $request->conveyance ?? 0,
+                'pf' => $request->pf ?? 0,
+                'tax' => $request->tax ?? 0,
+                'other_deduction' => $request->other_deduction ?? 0,
+            ]);
 
             DB::commit();
 
@@ -123,7 +137,7 @@ class StaffController extends Controller
      */
     public function edit(string $id)
     {
-        $staff = Staff::findOrFail($id);
+        $staff = Staff::with('salaryStructure')->findOrFail($id);
         $pageTitle = 'Staff Edit';
 
         return view('backend.admin.hrm.staff.edit',compact('staff','pageTitle'));
@@ -142,7 +156,13 @@ class StaffController extends Controller
             'phone'       => 'nullable|string|max:20',
             'department'  => 'required|string',
             'designation' => 'required|string',
-            'salary'      => 'required|numeric|min:0',
+            'basic'       => 'required|numeric|min:0',
+            'hra'         => 'nullable|numeric|min:0',
+            'medical'     => 'nullable|numeric|min:0',
+            'conveyance'  => 'nullable|numeric|min:0',
+            'pf'          => 'nullable|numeric|min:0',
+            'tax'         => 'nullable|numeric|min:0',
+            'other_deduction' => 'nullable|numeric|min:0',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'cv'            => 'nullable|mimes:pdf|max:5120',
             'address'       => 'nullable|string',
@@ -158,13 +178,11 @@ class StaffController extends Controller
             $staff->phone       = $request->phone;
             $staff->department  = $request->department;
             $staff->designation = $request->designation;
-            $staff->salary      = $request->salary;
             $staff->address     = $request->address;
-            $staff->status = $request->status;
+            $staff->status      = $request->status;
 
             // Profile Image Upload
             if ($request->hasFile('profile_image')) {
-                // Delete old image
                 if ($staff->profile_image && file_exists(public_path($staff->profile_image))) {
                     unlink(public_path($staff->profile_image));
                 }
@@ -175,7 +193,6 @@ class StaffController extends Controller
 
             // CV Upload
             if ($request->hasFile('cv')) {
-                // Delete old CV
                 if ($staff->cv && file_exists(public_path($staff->cv))) {
                     unlink(public_path($staff->cv));
                 }
@@ -185,6 +202,23 @@ class StaffController extends Controller
             }
 
             $staff->save();
+
+            // Update or create salary structure
+            $salaryData = [
+                'basic' => $request->basic ?? 0,
+                'hra' => $request->hra ?? 0,
+                'medical' => $request->medical ?? 0,
+                'conveyance' => $request->conveyance ?? 0,
+                'pf' => $request->pf ?? 0,
+                'tax' => $request->tax ?? 0,
+                'other_deduction' => $request->other_deduction ?? 0,
+            ];
+
+            $staff->salaryStructure()->updateOrCreate(
+                ['staff_id' => $staff->id],
+                $salaryData
+            );
+
             DB::commit();
 
             return redirect()->route('admin.staff.index')
@@ -196,6 +230,7 @@ class StaffController extends Controller
             return redirect()->back()->withInput()->with('error', 'Failed to update staff! ' . $e->getMessage());
         }
     }
+
 
 
 

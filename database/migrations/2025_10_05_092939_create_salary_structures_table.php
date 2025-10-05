@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('staff_salaries', function (Blueprint $table) {
+        Schema::create('salary_structures', function (Blueprint $table) {
             $table->id();
             $table->foreignId('staff_id')->constrained('staff')->onDelete('cascade');
-            $table->date('salary_month');
             $table->decimal('basic', 10, 2)->default(0);
             $table->decimal('hra', 10, 2)->default(0);
             $table->decimal('medical', 10, 2)->default(0);
@@ -24,9 +23,7 @@ return new class extends Migration
             $table->decimal('other_deduction', 10, 2)->default(0);
             $table->decimal('gross', 10, 2)->default(0);
             $table->decimal('net', 10, 2)->default(0);
-            $table->decimal('payment_amount', 10, 2)->default(0);
-            $table->enum('status', ['pending','approved', 'unpaid','partial_paid', 'paid', 'hold', 'rejected'])->default('pending');
-            $table->timestamps(); 
+            $table->timestamps();
         });
     }
 
@@ -35,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('staff_salaries');
+        Schema::dropIfExists('salary_structures');
     }
 };

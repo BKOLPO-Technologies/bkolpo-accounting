@@ -23,12 +23,12 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card card-primary card-outline shadow-lg">
-                             <div class="card-header py-2">
+                            <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? '' }}</h4>
-                                     <a href="{{ route('admin.staff.index') }}" class="btn btn-sm btn-danger rounded-0">
-                                    <i class="fa-solid fa-arrow-left"></i> Back To List Staff
-                                </a>
+                                    <a href="{{ route('admin.staff.index') }}" class="btn btn-sm btn-danger rounded-0">
+                                        <i class="fa-solid fa-arrow-left"></i> Back To List Staff
+                                    </a>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -115,17 +115,6 @@
                                                 <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
                                         </div>
-
-                                        <div class="col-md-4">
-                                            <label for="salary">Basic Salary <span class="text-danger">*</span></label>
-                                            <input type="number" name="salary" id="salary" step="0.01"
-                                                class="form-control @error('salary') is-invalid @enderror"
-                                                value="{{ old('salary', $staff->salary) }}" required>
-                                            @error('salary')
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
                                         <div class="col-md-4">
                                             <div class="row">
                                                 <div class="col-md-10 mb-3">
@@ -144,36 +133,87 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="row mt-2">
                                         <div class="col-md-4">
-                                            <div class="row">
+                                            <div class="row align-items-end">
                                                 <div class="col-md-10 mb-3">
                                                     <label for="cv" class="form-label">CV (PDF Format) <span
                                                             class="text-danger">*</span></label>
                                                     <input type="file" class="form-control" id="cv"
                                                         name="cv" accept="application/pdf">
-                                                    @if ($staff->cv)
-                                                        <a href="{{ url($staff->cv) }}" target="_blank"
-                                                            class="btn btn-sm btn-success mt-1">View CV</a>
-                                                    @endif
-                                                </div>
-                                                <div class="col-md-2 mb-3">
-                                                    <!-- Button preview -->
-                                                    <div class="mt-4">
-                                                        <a id="cvPreviewBtn" href="#" target="_blank"
-                                                            class="btn btn-sm btn-info d-none">View CV</a>
-                                                    </div>
                                                 </div>
 
+                                                <div class="col-md-2 mb-3 text-end">
+                                                    <!-- Old CV Button -->
+                                                    @if ($staff->cv)
+                                                        <a id="oldCvBtn" href="{{ url($staff->cv) }}" target="_blank"
+                                                            class="btn btn-sm btn-success mb-1 w-100">View</a>
+                                                    @endif
+
+                                                    <!-- New CV Preview Button (Initially Hidden) -->
+                                                    <a id="cvPreviewBtn" href="#" target="_blank"
+                                                        class="btn btn-sm btn-info d-none w-100">Preview</a>
+                                                </div>
                                             </div>
                                         </div>
+
+                                    </div>
+
+                                    <h5 class="mt-2 text-success font-weight-bolder">Salary Structure</h5>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="basic">Basic Salary</label>
+                                            <input type="number" min="0" name="basic" id="basic" class="form-control"
+                                                placeholder="Enter Basic Salary" value="{{ old('salary', $staff->salaryStructure->basic ?? 0) }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="hra">HRA</label>
+                                            <input type="number" min="0" name="hra" id="hra" class="form-control"
+                                                placeholder="Enter House Rent" value="{{ old('hra', $staff->salaryStructure->hra ?? 0) }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="medical">Medical</label>
+                                            <input type="number" name="medical" id="medical" class="form-control"
+                                                placeholder="Enter Medical" value="{{ old('medical', $staff->salaryStructure->medical ?? 0) }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="conveyance">Conveyance</label>
+                                            <input type="number" min="0" name="conveyance" id="conveyance" class="form-control"
+                                                placeholder="Enter Conveyance" value="{{ old('medical', $staff->salaryStructure->conveyance ?? 0) }}">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-3">
+                                            <label for="pf">PF</label>
+                                            <input type="number" name="pf" id="pf" class="form-control"
+                                                placeholder="Enter Provident Found" value="{{ old('medical', $staff->salaryStructure->pf ?? 0) }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="tax">Tax</label>
+                                            <input type="number" min="0" name="tax" id="tax" class="form-control"
+                                                placeholder="Enter Tax" value="{{ old('medical', $staff->salaryStructure->tax ?? 0) }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="other_deduction">Other Deduction</label>
+                                            <input type="number" min="0" name="other_deduction" id="other_deduction"
+                                                class="form-control" placeholder="Enter Other Deducation"
+                                                value="{{ old('medical', $staff->salaryStructure->other_deduction ?? 0) }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="other_deduction">Gross Salary</label>
+                                            <input type="number" min="0" name="gross_salary" id="gross_salary"
+                                                class="form-control" placeholder="Enter Gross Salary"
+                                                value="{{ old('medical', $staff->salaryStructure->gross ?? 0) }}" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-2">
                                         <div class="col-md-4">
                                             <label for="status">Status</label>
                                             <select name="status" id="status" class="form-control">
                                                 <option value="1"
-                                                    {{ old('status', $staff->status ?? 1) == 1 ? 'selected' : '' }}>Running Employee
+                                                    {{ old('status', $staff->status ?? 1) == 1 ? 'selected' : '' }}>Running
+                                                    Employee
                                                 </option>
                                                 <option value="0"
                                                     {{ old('status', $staff->status ?? 1) == 0 ? 'selected' : '' }}>
@@ -225,16 +265,67 @@
         // CV Preview
         document.getElementById('cv').addEventListener('change', function(event) {
             let file = event.target.files[0];
-            let btn = document.getElementById('cvPreviewBtn');
+            let previewBtn = document.getElementById('cvPreviewBtn');
+            let oldBtn = document.getElementById('oldCvBtn');
 
             if (file && file.type === "application/pdf") {
                 let fileURL = URL.createObjectURL(file);
-                btn.href = fileURL;
-                btn.classList.remove("d-none"); // Show button
+
+                // Show preview of new CV
+                previewBtn.href = fileURL;
+                previewBtn.classList.remove("d-none");
+
+                // Hide old CV button
+                if (oldBtn) {
+                    oldBtn.classList.add("d-none");
+                }
             } else {
-                btn.classList.add("d-none"); // Hide button if not PDF
+                // Invalid file, hide preview
+                previewBtn.classList.add("d-none");
+
+                // Optionally show old CV again if user clears selection
+                if (oldBtn) {
+                    oldBtn.classList.remove("d-none");
+                }
+
                 alert("Please upload a valid PDF file.");
             }
         });
     </script>
+      <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const basic = document.getElementById('basic');
+        const hra = document.getElementById('hra');
+        const medical = document.getElementById('medical');
+        const conveyance = document.getElementById('conveyance');
+        const pf = document.getElementById('pf');
+        const tax = document.getElementById('tax');
+        const other_deduction = document.getElementById('other_deduction');
+        const gross_salary = document.getElementById('gross_salary');
+
+        function calculateGrossSalary() {
+            // Convert all input values to float safely
+            const basicVal = parseFloat(basic.value) || 0;
+            const hraVal = parseFloat(hra.value) || 0;
+            const medicalVal = parseFloat(medical.value) || 0;
+            const conveyanceVal = parseFloat(conveyance.value) || 0;
+            const pfVal = parseFloat(pf.value) || 0;
+            const taxVal = parseFloat(tax.value) || 0;
+            const otherDeductionVal = parseFloat(other_deduction.value) || 0;
+
+            // Formula: Total Earnings - Total Deductions
+            const totalEarnings = basicVal + hraVal + medicalVal + conveyanceVal;
+            const totalDeductions = pfVal + taxVal + otherDeductionVal;
+            const gross = totalEarnings - totalDeductions;
+
+            gross_salary.value = gross.toFixed(2);
+        }
+
+        // Attach keyup listeners
+        [basic, hra, medical, conveyance, pf, tax, other_deduction].forEach(input => {
+            input.addEventListener('keyup', calculateGrossSalary);
+            input.addEventListener('change', calculateGrossSalary);
+        });
+    });
+</script>
 @endpush

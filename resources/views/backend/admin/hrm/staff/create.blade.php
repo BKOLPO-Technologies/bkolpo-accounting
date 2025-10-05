@@ -134,7 +134,7 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        {{-- <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="salary">Basic Salary <span class="text-danger">*</span></label>
                                                 <input type="number" name="salary" id="salary" step="0.01"
@@ -144,7 +144,7 @@
                                                     <span class="invalid-feedback">{{ $message }}</span>
                                                 @enderror
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-md-4">
                                             <div class="row">
                                                 <div class="col-md-10 mb-3">
@@ -163,8 +163,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="row">
                                                 <div class="col-md-10 mb-3">
@@ -184,7 +182,55 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <h5 class="mt-2 text-success font-weight-bolder">Salary Structure</h5>
+                                    <hr>
                                     <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="basic">Basic Salary</label>
+                                            <input type="number" min="0" name="basic" id="basic" class="form-control"
+                                                placeholder="Enter Basic Salary" value="{{ old('salary') }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="hra">HRA</label>
+                                            <input type="number" min="0" name="hra" id="hra" class="form-control"
+                                                placeholder="Enter House Rent" value="{{ old('hra') }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="medical">Medical</label>
+                                            <input type="number" min="0" name="medical" id="medical" class="form-control"
+                                                placeholder="Enter Medical" value="{{ old('medical') }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="conveyance">Conveyance</label>
+                                            <input type="number" min="0" name="conveyance" id="conveyance" class="form-control"
+                                                placeholder="Enter Conveyance" value="{{ old('conveyance') }}">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-3">
+                                            <label for="pf">PF</label>
+                                            <input type="number" min="0" name="pf" id="pf" class="form-control"
+                                                placeholder="Enter Provident Found" value="{{ old('pf') }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="tax">Tax</label>
+                                            <input type="number" min="0" name="tax" id="tax" class="form-control"
+                                                placeholder="Enter Tax" value="{{ old('tax') }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="other_deduction">Other Deduction</label>
+                                            <input type="number" min="0" name="other_deduction" id="other_deduction"
+                                                class="form-control" placeholder="Enter Other Deducation"
+                                                value="{{ old('other_deduction') }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="other_deduction">Gross Salary</label>
+                                            <input type="number" min="0" name="gross_salary" id="gross_salary"
+                                                class="form-control" placeholder="Enter Gross Salary"
+                                                value="{{ old('gross_salary') }}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="address">Address</label>
@@ -255,4 +301,41 @@
             }
         });
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const basic = document.getElementById('basic');
+        const hra = document.getElementById('hra');
+        const medical = document.getElementById('medical');
+        const conveyance = document.getElementById('conveyance');
+        const pf = document.getElementById('pf');
+        const tax = document.getElementById('tax');
+        const other_deduction = document.getElementById('other_deduction');
+        const gross_salary = document.getElementById('gross_salary');
+
+        function calculateGrossSalary() {
+            // Convert all input values to float safely
+            const basicVal = parseFloat(basic.value) || 0;
+            const hraVal = parseFloat(hra.value) || 0;
+            const medicalVal = parseFloat(medical.value) || 0;
+            const conveyanceVal = parseFloat(conveyance.value) || 0;
+            const pfVal = parseFloat(pf.value) || 0;
+            const taxVal = parseFloat(tax.value) || 0;
+            const otherDeductionVal = parseFloat(other_deduction.value) || 0;
+
+            // Formula: Total Earnings - Total Deductions
+            const totalEarnings = basicVal + hraVal + medicalVal + conveyanceVal;
+            const totalDeductions = pfVal + taxVal + otherDeductionVal;
+            const gross = totalEarnings - totalDeductions;
+
+            gross_salary.value = gross.toFixed(2);
+        }
+
+        // Attach keyup listeners
+        [basic, hra, medical, conveyance, pf, tax, other_deduction].forEach(input => {
+            input.addEventListener('keyup', calculateGrossSalary);
+            input.addEventListener('change', calculateGrossSalary);
+        });
+    });
+</script>
+
 @endpush

@@ -64,8 +64,55 @@
                                         </tr>
                                         <tr>
                                             <th>Basic Salary</th>
-                                            <td>{{ $staff->salary ? number_format($staff->salary, 2) : '-' }}</td>
+                                            <td class="font-weight-bolder"> {{ bdt() }}
+                                                {{ number_format($staff->salaryStructure->basic ?? 0, 2) }}</td>
                                         </tr>
+                                        <tr>
+                                            <th>HRA</th>
+                                            <td class="font-weight-bolder"> {{ bdt() }}
+                                                {{ number_format($staff->salaryStructure->hra ?? 0, 2) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Medical</th>
+                                            <td class="font-weight-bolder"> {{ bdt() }}
+                                                {{ number_format($staff->salaryStructure->medical ?? 0, 2) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Conveyance</th>
+                                            <td class="font-weight-bolder"> {{ bdt() }}
+                                                {{ number_format($staff->salaryStructure->conveyance ?? 0, 2) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>PF</th>
+                                            <td class="font-weight-bolder"> {{ bdt() }}
+                                                {{ number_format($staff->salaryStructure->pf ?? 0, 2) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Tax</th>
+                                            <td class="font-weight-bolder"> {{ bdt() }}
+                                                {{ number_format($staff->salaryStructure->tax ?? 0, 2) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Other Deduction</th>
+                                            <td class="font-weight-bolder"> {{ bdt() }}
+                                                {{ number_format($staff->salaryStructure->other_deduction ?? 0, 2) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Gross Salary</th>
+                                            <td class="font-weight-bolder text-success">
+                                                {{ bdt() }}
+                                                {{ number_format($staff->salaryStructure->gross ?? 0, 2) }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Net Salary</th>
+                                            <td class="font-weight-bolder text-primary">
+                                                {{ bdt() }}
+                                                {{ number_format($staff->salaryStructure->net ?? 0, 2) }}
+                                            </td>
+                                        </tr>
+
+
                                         <tr>
                                             <th>Profile Image</th>
                                             <td>

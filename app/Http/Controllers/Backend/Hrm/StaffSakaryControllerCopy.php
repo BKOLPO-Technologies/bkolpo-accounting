@@ -16,7 +16,7 @@ class StaffSalaryController extends Controller
     /**
      * Display a listing of the resource.
      */
-      public function index(Request $request)
+    public function index(Request $request)
     {
         $query = StaffSalary::with('staff');
 
@@ -25,9 +25,9 @@ class StaffSalaryController extends Controller
             $query->where('salary_month', $salaryMonth);
         }
 
-        $pageTitle = 'Staff Salary Generate List';
-        $salaries = $query->latest()->paginate(10); // pagination optional
-        return view('backend.admin.hrm.salary.index', compact('salaries','pageTitle'));
+        $salaries = $query->latest()->paginate(20); // pagination optional
+        $ledgers = Ledger::whereIn('type', ['Bank', 'Cash'])->get();
+        return view('backend.admin.hrm.salary.index', compact('salaries','ledgers'));
     }
     
 
@@ -65,73 +65,72 @@ class StaffSalaryController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
-
-            // Basic validation
+            // Validation
             $request->validate([
-                'month' => 'required|numeric|min:1|max:12',
-                'year' => 'required|numeric',
+                'month' => 'required|integer|min:1|max:12',
+                'year' => 'required|integer|min:2000',
                 'staff_id' => 'required|array',
+                'staff_id.*' => 'exists:staff,id',
+                'basic_salary' => 'required|array',
+                'payment_method' => 'required',
+                'payment_amount' => 'required|array', // Add validation for payment_amount
             ]);
 
-            // Salary month format: YYYY-MM-01
-            $salaryMonth = $request->year . '-' . str_pad($request->month, 2, '0', STR_PAD_LEFT) . '-01';
+            // Salary Month (Year + Month → Date)
+            $salaryMonth = $request->year.'-'.str_pad($request->month, 2, '0', STR_PAD_LEFT).'-01';
 
-            foreach ($request->staff_id as $index => $staffId) {
-                $basic = $request->basic_salary[$index] ?? 0;
-                $hra = $request->hra[$index] ?? 0;
-                $medical = $request->medical[$index] ?? 0;
-                $conveyance = $request->conveyance[$index] ?? 0;
-                $pf = $request->pf[$index] ?? 0;
-                $tax = $request->tax[$index] ?? 0;
-                $other = $request->other_deductions[$index] ?? 0;
+            foreach ($request->staff_id as $key => $staffId) {
+                $basic = $request->basic_salary[$key] ?? 0;
+                $hra = $request->hra[$key] ?? 0;
+                $medical = $request->medical[$key] ?? 0;
+                $conveyance = $request->conveyance[$key] ?? 0;
+                $pf = $request->pf[$key] ?? 0;
+                $tax = $request->tax[$key] ?? 0;
+                $otherDeduct = $request->other_deductions[$key] ?? 0;
 
                 $gross = $basic + $hra + $medical + $conveyance;
-                $net = $gross - ($pf + $tax + $other);
-                $paymentAmount = $request->payment_amount[$index] ?? $net;
+                $deductions = $pf + $tax + $otherDeduct;
+                $net = $gross - $deductions;
 
-                // Prevent duplicate salary entry for same month
-                $exists = StaffSalary::where('staff_id', $staffId)
-                    ->where('salary_month', $salaryMonth)
-                    ->exists();
+                $ledger = Ledger::findOrFail($request->payment_method);
+                $payment_method = $ledger->type; // Cash or Bank
 
-                if ($exists) {
-                    continue; // Skip duplicate entry
+                $paymentAmount = $request->payment_amount[$key] ?? 0;
+
+                // Determine status based on payment amount
+                if ($paymentAmount >= $net) {
+                    $status = 'Paid';
+                } elseif ($paymentAmount > 0 && $paymentAmount < $net) {
+                    $status = 'partial_paid';
+                } else {
+                    $status = 'Pending';
                 }
 
-                // Save new salary record
                 StaffSalary::create([
                     'staff_id' => $staffId,
+                    'ledger_id' => $request->payment_method,
                     'salary_month' => $salaryMonth,
-                    'basic' => $basic,
+                    'basic_salary' => $basic,
                     'hra' => $hra,
                     'medical' => $medical,
                     'conveyance' => $conveyance,
                     'pf' => $pf,
                     'tax' => $tax,
-                    'other_deduction' => $other,
-                    'gross' => $gross,
-                    'net' => $net,
-                    'payment_amount' => $paymentAmount,
-                    'status' => 'Pending',
+                    'other_deductions' => $otherDeduct,
+                    'gross_salary' => $gross,
+                    'net_salary' => $net,
+                    'payment_method' => $payment_method,
+                    'payment_amount' => $paymentAmount, // Save paid amount
+                    'status' => $status, // Dynamic status
                 ]);
             }
 
-            DB::commit();
-
             return redirect()->route('admin.staff.salary.index')
-                ->with('success', 'Staff salary generated successfully!');
-        } catch (\Throwable $e) {
-            DB::rollBack();
+                ->with('success', 'Staff salaries created successfully!');
 
-            // Optional: Log error for debugging
-            // \Log::error('Salary Generate Error: ' . $e->getMessage(), [
-            //     'trace' => $e->getTraceAsString(),
-            // ]);
-
-            return back()
-                ->withInput()
-                ->with('error', 'Something went wrong while generating salaries. Please try again.');
+        } catch (\Exception $e) {
+            // \Log::error('Salary Store Error: '.$e->getMessage());
+            return back()->with('error', 'Something went wrong while creating salaries. Please try again.');
         }
     }
 

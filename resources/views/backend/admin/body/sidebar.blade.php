@@ -686,7 +686,7 @@
                 class="nav-link {{ $isStaffActive ? 'active' : '' }}">
                 <i class="nav-icon fas fa-users"></i>
                 <p>
-                    HRM Management
+                    HR Management
                     <i class="fas fa-angle-left right"></i>
                 </p>
             </a>
@@ -702,7 +702,7 @@
                     <a href="{{ route('admin.staff.salary.index') }}"
                         class="nav-link {{ Route::is('admin.staff.salary.index') || Route::is('admin.staff.salary.create') || Route::is('admin.staff.salary.edit') || Route::is('admin.staff.salary.show') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
-                        <p>Staff Salary List</p>
+                        <p>Salary Generate List</p>
                     </a>
                 </li>
                 <li class="nav-item">

@@ -1,4 +1,4 @@
-@extends('layouts.admin', [$pageTitle => 'Staff Salary Create'])
+@extends('layouts.admin', [$pageTitle => 'Staff Salary Generate Create'])
 
 @section('admin')
     <div class="content-wrapper">
@@ -34,11 +34,6 @@
                             </div>
 
                             <div class="card shadow-lg border-0">
-                                <div class="card-header bg-success text-white">
-                                    <h5 class="mb-0"><i class="fas fa-money-check-alt me-2"></i> Staff Salary Generate
-                                    </h5>
-                                </div>
-
                                 <form action="{{ route('admin.staff.salary.store') }}" method="POST">
                                     @csrf
                                     <div class="card-body">
@@ -83,101 +78,78 @@
                                                         <th>Other Deduction</th>
                                                         <th>Gross</th>
                                                         <th>Net</th>
-                                                        <th>Payment Amount</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($staffs as $key => $staff)
                                                         <tr>
-                                                            <td class="fw-bold text-start">{{ $staff->name }}</td>
+                                                            <td class="fw-bold text-start col-1">{{ $staff->name }}</td>
                                                             <input type="hidden" name="staff_id[]"
                                                                 value="{{ $staff->id }}">
 
                                                             <td><input type="number" min="0" step="any"
                                                                     name="basic_salary[]"
                                                                     class="form-control text-end basic_salary"
-                                                                    value="{{ old('basic_salary.' . $key, $staff->salary ?? 0) }}">
+                                                                    value="{{ old('basic_salary.' . $key, $staff->salaryStructure->basic ?? 0) }}">
                                                             </td>
 
                                                             <td><input type="number" min="0" step="any"
                                                                     name="hra[]" class="form-control text-end hra"
-                                                                    value="{{ old('hra.' . $key, 0) }}"></td>
+                                                                    value="{{ old('hra.' . $key, $staff->salaryStructure->hra ?? 0) }}">
+                                                            </td>
 
                                                             <td><input type="number" min="0" step="any"
                                                                     name="medical[]" class="form-control text-end medical"
-                                                                    value="{{ old('medical.' . $key, 0) }}"></td>
+                                                                    value="{{ old('medical.' . $key, $staff->salaryStructure->medical ?? 0) }}">
+                                                            </td>
 
                                                             <td><input type="number" min="0" step="any"
                                                                     name="conveyance[]"
                                                                     class="form-control text-end conveyance"
-                                                                    value="{{ old('conveyance.' . $key, 0) }}"></td>
+                                                                    value="{{ old('conveyance.' . $key, $staff->salaryStructure->conveyance ?? 0) }}">
+                                                            </td>
 
                                                             <td><input type="number" min="0" step="any"
                                                                     name="pf[]" class="form-control text-end pf"
-                                                                    value="{{ old('pf.' . $key, 0) }}"></td>
+                                                                    value="{{ old('pf.' . $key, $staff->salaryStructure->pf ?? 0) }}">
+                                                            </td>
 
                                                             <td><input type="number" min="0" step="any"
                                                                     name="tax[]" class="form-control text-end tax"
-                                                                    value="{{ old('tax.' . $key, 0) }}"></td>
+                                                                    value="{{ old('tax.' . $key, $staff->salaryStructure->tax ?? 0) }}">
+                                                            </td>
 
                                                             <td><input type="number" min="0" step="any"
                                                                     name="other_deductions[]"
                                                                     class="form-control text-end other_deductions"
-                                                                    value="{{ old('other_deductions.' . $key, 0) }}"></td>
+                                                                    value="{{ old('other_deductions.' . $key, $staff->salaryStructure->other_deduction ?? 0) }}">
+                                                            </td>
 
                                                             <td><input type="number" readonly
                                                                     class="form-control text-end bg-light gross_salary"
-                                                                    value="{{ old('gross_salary.' . $key, $staff->salary ?? 0) }}">
-                                                            </td>
+                                                                    value="{{ $staff->salaryStructure->gross ?? 0 }}"></td>
 
                                                             <td><input type="number" readonly
                                                                     class="form-control text-end bg-light net_salary"
-                                                                    value="{{ old('net_salary.' . $key, $staff->salary ?? 0) }}">
-                                                            </td>
+                                                                    value="{{ $staff->salaryStructure->net ?? 0 }}"></td>
 
-                                                            <td><input type="number" min="0" step="any"
-                                                                    name="payment_amount[]"
-                                                                    class="form-control text-end payment_amount"
-                                                                    value="{{ old('payment_amount.' . $key, 0) }}"></td>
-                                                            <!-- New -->
                                                         </tr>
                                                     @endforeach
 
+
                                                 </tbody>
                                             </table>
-                                        </div>
-                                        {{-- Payment Mode --}}
-                                        <div class="row justify-content-center mt-4">
-                                            <!-- Payment Method -->
-                                            <div class="col-md-6 mb-3">
-                                                <label for="ledger_group_id" class="form-label">Select Payment
-                                                    Method:</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text"><i class="fas fa-book"></i></span>
-                                                    <select class="form-control" name="payment_method"
-                                                        id="payment_method" required>
-                                                        <option value="">Choose Payment Method</option>
-                                                        @foreach ($ledgers as $ledger)
-                                                            <option value="{{ $ledger->id }}"
-                                                                data-type="{{ $ledger->type }}">{{ $ledger->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
 
                                     {{-- Submit Button --}}
                                     <div class="card-footer text-center">
                                         <button type="submit" class="btn btn-success w-50 shadow-sm">
-                                            <i class="fas fa-paper-plane"></i> Create Salary
+                                            <i class="fas fa-paper-plane"></i> Create Salary Generate
                                         </button>
                                     </div>
                                 </form>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -190,29 +162,26 @@
     <script>
         $(document).ready(function() {
             $('.select2').select2();
+        });
+    </script>
+    <script>
+        $(document).on('input', '.basic_salary, .hra, .medical, .conveyance, .pf, .tax, .other_deductions', function() {
+            const row = $(this).closest('tr');
 
-            // Dynamic gross and net salary calculation
-            $('tbody tr').each(function() {
-                const row = $(this);
+            const basic = parseFloat(row.find('.basic_salary').val()) || 0;
+            const hra = parseFloat(row.find('.hra').val()) || 0;
+            const medical = parseFloat(row.find('.medical').val()) || 0;
+            const conveyance = parseFloat(row.find('.conveyance').val()) || 0;
+            const pf = parseFloat(row.find('.pf').val()) || 0;
+            const tax = parseFloat(row.find('.tax').val()) || 0;
+            const other = parseFloat(row.find('.other_deductions').val()) || 0;
 
-                function calculate() {
-                    let basic = parseFloat(row.find('.basic_salary').val()) || 0;
-                    let hra = parseFloat(row.find('.hra').val()) || 0;
-                    let medical = parseFloat(row.find('.medical').val()) || 0;
-                    let conveyance = parseFloat(row.find('.conveyance').val()) || 0;
-                    let pf = parseFloat(row.find('.pf').val()) || 0;
-                    let tax = parseFloat(row.find('.tax').val()) || 0;
-                    let other = parseFloat(row.find('.other_deductions').val()) || 0;
+            const gross = basic + hra + medical + conveyance;
+            const net = gross - (pf + tax + other);
 
-                    let gross = basic + hra + medical + conveyance;
-                    let net = gross - (pf + tax + other);
-
-                    row.find('.gross_salary').val(gross.toFixed(2));
-                    row.find('.net_salary').val(net.toFixed(2));
-                }
-
-                row.find('input').on('input', calculate);
-            });
+            row.find('.gross_salary').val(gross.toFixed(2));
+            row.find('.net_salary').val(net.toFixed(2));
+            row.find('.payment_amount').val(net.toFixed(2));
         });
     </script>
 @endpush

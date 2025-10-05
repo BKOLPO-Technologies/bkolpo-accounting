@@ -28,7 +28,7 @@
                                     <h4 class="mb-0">{{ $pageTitle ?? '' }}</h4>
                                     <a href="{{ route('admin.staff.salary.create') }}"
                                         class="btn btn-sm btn-success rounded-0">
-                                        <i class="fas fa-plus fa-sm"></i> Add Salary
+                                        <i class="fas fa-plus fa-sm"></i> Add Salary Generate
                                     </a>
                                 </div>
                             </div>
@@ -60,158 +60,163 @@
                                         <div class="col-md-2">
                                             <button type="submit" class="btn btn-primary">Search</button>
                                             <a href="{{ route('admin.staff.salary.index') }}"
-                                                class="btn btn-danger">Reload</a>
+                                                class="btn btn-danger">Clear</a>
+                                        </div>
+                                        {{-- Print Button --}}
+                                        <div class="col-md-4 text-right">
+                                            <button type="button" class="btn btn-info shadow-sm" onclick="togglePrintView()">
+                                                <i class="fas fa-print me-1"></i> Print Salary Generate List
+                                            </button>
                                         </div>
                                     </div>
                                 </form>
 
-                                <!-- Salary Table -->
-                                <table id="example1" class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Sl</th>
-                                            <th>Photo</th>
-                                            <th>Name</th>
-                                            <th>Salary</th>
-                                            <th>Payment</th>
-                                            <th>Due</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse ($salaries as $key => $salary)
-                                            <tr>
-                                                <td>{{ $key + 1 }}</td>
-                                                <td>
-                                                    <img src="{{ !empty($salary->staff->profile_image) ? url($salary->staff->profile_image) : url('https://via.placeholder.com/70x60') }}"
-                                                        class="staff-profile-image-small" alt="Profile Image"
-                                                        style="width: 50px; height: 50px; border-radius: 50%;">
-                                                </td>
-                                                <td>{{ $salary->staff->name ?? '' }}</td>
+                                <!-- Normal View -->
+                                <div id="normalView">
+                                    <!-- Salary Table -->
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped">
+                                            <thead class="table-success text-center">
+                                                <tr>
+                                                    <th>Sl</th>
+                                                    <th>Photo</th>
+                                                    <th>Name</th>
+                                                    <th>Department</th>
+                                                    <th>Month</th>
+                                                    <th>Gross</th>
+                                                    <th>Net</th>
+                                                    <th>Status</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="text-center">
+                                                @forelse ($salaries as $key => $salary)
+                                                    <tr>
+                                                        <td>{{ $salaries->firstItem() + $key }}</td>
+                                                        <td>
+                                                            <img src="{{ !empty($salary->staff->profile_image) ? url($salary->staff->profile_image) : 'https://via.placeholder.com/70x60' }}"
+                                                                class="rounded-circle" style="width:50px;height:50px;">
+                                                        </td>
+                                                        <td>{{ $salary->staff->name ?? '-' }}</td>
+                                                        <td>{{ $salary->staff->department ?? '-' }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($salary->salary_month)->format('F Y') }}</td>
+                                                        <td>{{ bdt() }} {{ number_format($salary->gross, 2) }}</td>
+                                                        <td>{{ bdt() }} {{ number_format($salary->net, 2) }}</td>
+                                                        <td>
+                                                            <span
+                                                                class="badge {{ $salary->status == 'Paid' ? 'bg-success' : 'bg-warning' }}">
+                                                                {{ $salary->status }}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <a href="{{ route('admin.staff.salary.show', $salary->id) }}"
+                                                                class="btn btn-success btn-sm">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                            <a href="{{ route('admin.staff.salary.delete', $salary->id) }}"
+                                                                id="delete" class="btn btn-danger btn-sm">
+                                                                <i class="fas fa-trash"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="10" class="text-center">No records found.</td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
 
-                                                <!-- Salary / Payment / Due -->
-                                                <td class="font-weight-bolder">
-                                                    {{ bdt() }} {{ number_format($salary->net_salary, 2) }}
-                                                </td>
-                                                <td class="font-weight-bolder">
-                                                    {{ bdt() }}
-                                                    {{ number_format($salary->payment_amount ?? 0, 2) }}
-                                                </td>
-                                                <td class="font-weight-bolder">
-                                                    {{ bdt() }}
-                                                    {{ number_format($salary->net_salary - ($salary->payment_amount ?? 0), 2) }}
-                                                </td>
+                                    <!-- Pagination -->
+                                    <div class="d-flex justify-content-end mt-3">
+                                        {{ $salaries->links('pagination::bootstrap-5') }}
+                                    </div>
+                                </div>
 
-                                                <td>
-                                                    @if ($salary->status == 'Paid')
-                                                        <span class="p-1 bg-success text-white rounded">Paid</span>
-                                                    @elseif ($salary->status == 'partial_paid')
-                                                        <span class="p-1 bg-warning text-white rounded">Partially
-                                                            Paid</span>
-                                                    @elseif ($salary->status == 'Unpaid')
-                                                        <span class="p-1 bg-danger text-white rounded">Not Paid</span>
-                                                    @else
-                                                        <span class="p-1 bg-secondary text-white rounded">Undefined</span>
-                                                    @endif
+                                <!-- Print View (Hidden by Default) -->
+                                <div id="printView" style="display: none;">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <button type="button" class="btn btn-secondary" onclick="togglePrintView()">
+                                            <i class="fas fa-arrow-left me-1"></i> Back to Normal View
+                                        </button>
+                                        <button type="button" class="btn btn-success" onclick="printSalaryList()">
+                                            <i class="fas fa-print me-1"></i> Print Now
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="print-container">
+                                        <!-- Print Header -->
+                                        <div class="print-header text-center mb-4 p-3 border-bottom">
+                                            <h2 class="mb-1">Staff Salary Generate List</h2>
+                                            <p class="mb-1 text-light">
+                                                Period: 
+                                                @if(request()->month && request()->year)
+                                                    {{ \Carbon\Carbon::create()->month(request()->month)->format('F') }} {{ request()->year }}
+                                                @else
+                                                    All Time
+                                                @endif
+                                            </p>
+                                            <p class="mb-0 text-light">
+                                                Generated on: {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}
+                                            </p>
+                                        </div>
 
-                                                </td>
-                                                <td>
-                                                    <a href="{{ route('admin.staff.salary.show', $salary->id) }}"
-                                                        class="btn btn-success btn-sm">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
-                                                        data-target="#paymentModal{{ $salary->id }}">
-                                                        <i class="fas fa-dollar-sign"></i> Pay
-                                                    </button>
-                                                    <a href="{{ route('admin.staff.salary.delete', $salary->id) }}"
-                                                        id="delete" class="btn btn-danger btn-sm">
-                                                        <i class="fas fa-trash"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                        <!-- Print Table -->
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead class="table-dark">
+                                                    <tr>
+                                                        <th>Sl</th>
+                                                        <th>Name</th>
+                                                        <th>Department</th>
+                                                        <th>Month</th>
+                                                        <th>Gross Salary</th>
+                                                        <th>Net Salary</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @forelse ($salaries as $key => $salary)
+                                                        <tr>
+                                                            <td class="text-center">{{ $loop->iteration }}</td>
+                                                            <td>{{ $salary->staff->name ?? '-' }}</td>
+                                                            <td>{{ $salary->staff->department ?? '-' }}</td>
+                                                            <td class="text-left">{{ \Carbon\Carbon::parse($salary->salary_month)->format('F Y') }}</td>
+                                                            <td class="text-left">{{ bdt() }} {{ number_format($salary->gross, 2) }}</td>
+                                                            <td class="text-left">{{ bdt() }} {{ number_format($salary->net, 2) }}</td>
+                                                        </tr>
+                                                    @empty
+                                                        <tr>
+                                                            <td colspan="6" class="text-center">No records found.</td>
+                                                        </tr>
+                                                    @endforelse
+                                                </tbody>
+                                                @if($salaries->count() > 0)
+                                                <tfoot>
+                                                    <tr class="table-info">
+                                                        <td colspan="4" class="text-right"><strong>Total:</strong></td>
+                                                        <td class="text-left"><strong>{{ bdt() }} {{ number_format($salaries->sum('gross'), 2) }}</strong></td>
+                                                        <td class="text-left"><strong>{{ bdt() }} {{ number_format($salaries->sum('net'), 2) }}</strong></td>
+                                                    </tr>
+                                                </tfoot>
+                                                @endif
+                                            </table>
+                                        </div>
 
-                                            <!-- Payment Modal -->
-                                            <div class="modal fade" id="paymentModal{{ $salary->id }}" tabindex="-1"
-                                                role="dialog" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <form action="{{ route('admin.staff.salary.pay') }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="salary_id"
-                                                                value="{{ $salary->id }}">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Salary Payment
-                                                                    ({{ $salary->staff->name ?? '' }})
-                                                                </h5>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <input type="hidden" name="salary_id"
-                                                                    value="{{ $salary->id }}">
-                                                                <p><b>Salary:</b>
-                                                                    {{ number_format($salary->net_salary, 2) }}</p>
-                                                                <p><b>Paid:</b>
-                                                                    {{ number_format($salary->payment_amount ?? 0, 2) }}
-                                                                </p>
-                                                                <p><b>Due:</b>
-                                                                    {{ number_format(($salary->net_salary ?? 0) - ($salary->payment_amount ?? 0), 2) }}
-                                                                </p>
-
-
-                                                                <!-- Payment Amount -->
-                                                                <div class="mb-3">
-                                                                    <label for="payment_amount" class="form-label">Payment
-                                                                        Amount</label>
-                                                                    <input type="number" class="form-control"
-                                                                        name="payment_amount"
-                                                                        max="{{ ($salary->net_salary ?? 0) - ($salary->payment_amount ?? 0) }}"
-                                                                        value="{{ ($salary->net_salary ?? 0) - ($salary->payment_amount ?? 0) }}"
-                                                                        required>
-                                                                </div>
-
-                                                                <!-- Payment Method -->
-                                                                <div class="mb-3">
-                                                                    <label for="payment_method" class="form-label">Select
-                                                                        Payment Method</label>
-                                                                    <select class="form-control" name="payment_method"
-                                                                        id="payment_method" required>
-                                                                        <option value="">Choose Payment Method
-                                                                        </option>
-                                                                        @foreach ($ledgers as $ledger)
-                                                                            <option value="{{ $ledger->id }}"
-                                                                                data-type="{{ $ledger->type }}"
-                                                                                {{ $salary->ledger_id == $ledger->id ? 'selected' : '' }}>
-                                                                                {{ $ledger->name }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </div>
-
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="submit" class="btn btn-success">Save
-                                                                    Payment</button>
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-dismiss="modal">Close</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
+                                        <!-- Print Footer -->
+                                        <div class="print-footer mt-4 p-3 border-top">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <p class="mb-1"><strong>Total Records:</strong> {{ $salaries->count() }}</p>
+                                                    <p class="mb-0"><strong>Printed by:</strong> {{ Auth::user()->name ?? 'Admin' }}</p>
+                                                </div>
+                                                <div class="col-6 text-right">
+                                                    <p class="mb-0"><strong>Print Date:</strong> {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}</p>
                                                 </div>
                                             </div>
-                                        @empty
-                                            <tr>
-                                                <td colspan="8" class="text-center">No records found.</td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -221,13 +226,91 @@
     </div>
 @endsection
 
+@push('css')
+<style>
+    /* Print-specific styles */
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        #printView, #printView * {
+            visibility: visible;
+        }
+        #printView {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            background: white;
+        }
+        .print-header {
+            background: white !important;
+            color: black !important;
+        }
+        .table-bordered th,
+        .table-bordered td {
+            border-color: #000 !important;
+        }
+        .btn {
+            display: none !important;
+        }
+    }
+
+    /* Print view styles */
+    .print-container {
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .print-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .print-header h2 {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .print-footer {
+        background: #f8f9fa;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+</style>
+@endpush
+
 @push('js')
-    <script>
-        $(document).ready(function() {
-            $('form').on('submit', function() {
-                // Change button text to "Reloading..." when form is being submitted
-                $('button[type="submit"]').text('Reloading...').prop('disabled', true);
-            });
+<script>
+    $(document).ready(function() {
+        $('form').on('submit', function() {
+            $('button[type="submit"]').text('Reloading...').prop('disabled', true);
         });
-    </script>
+    });
+
+    function togglePrintView() {
+        const normalView = document.getElementById('normalView');
+        const printView = document.getElementById('printView');
+        
+        if (normalView.style.display !== 'none') {
+            // Switch to print view
+            normalView.style.display = 'none';
+            printView.style.display = 'block';
+            // Scroll to top
+            window.scrollTo(0, 0);
+        } else {
+            // Switch back to normal view
+            normalView.style.display = 'block';
+            printView.style.display = 'none';
+        }
+    }
+
+    function printSalaryList() {
+        window.print();
+    }
+</script>
 @endpush

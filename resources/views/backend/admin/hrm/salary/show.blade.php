@@ -39,66 +39,111 @@
                                             <th>Staff Name</th>
                                             <td>{{ $salary->staff->name ?? '-' }}</td>
                                         </tr>
+
+                                        <tr>
+                                            <th>Department</th>
+                                            <td>{{ $salary->staff->department ?? '-' }}</td>
+                                        </tr>
+
                                         <tr>
                                             <th>Salary Month</th>
                                             <td>{{ \Carbon\Carbon::parse($salary->salary_month)->format('F, Y') }}</td>
                                         </tr>
+
                                         <tr>
-                                            <th>Basic Salary</th>
-                                            <td> {{ bdt() }} {{ number_format($salary->basic_salary, 2) }}</td>
+                                            <th>Basic</th>
+                                            <td>{{ bdt() }} {{ number_format($salary->basic, 2) }}</td>
                                         </tr>
+
                                         <tr>
                                             <th>HRA</th>
-                                            <td> {{ bdt() }} {{ number_format($salary->hra, 2) }}</td>
+                                            <td>{{ bdt() }} {{ number_format($salary->hra, 2) }}</td>
                                         </tr>
+
                                         <tr>
                                             <th>Medical</th>
-                                            <td> {{ bdt() }} {{ number_format($salary->medical, 2) }}</td>
+                                            <td>{{ bdt() }} {{ number_format($salary->medical, 2) }}</td>
                                         </tr>
+
                                         <tr>
                                             <th>Conveyance</th>
-                                            <td> {{ bdt() }} {{ number_format($salary->conveyance, 2) }}</td>
+                                            <td>{{ bdt() }} {{ number_format($salary->conveyance, 2) }}</td>
                                         </tr>
+
                                         <tr>
                                             <th>PF</th>
-                                            <td> {{ bdt() }} {{ number_format($salary->pf, 2) }}</td>
+                                            <td>{{ bdt() }} {{ number_format($salary->pf, 2) }}</td>
                                         </tr>
+
                                         <tr>
                                             <th>Tax</th>
-                                            <td> {{ bdt() }} {{ number_format($salary->tax, 2) }}</td>
+                                            <td>{{ bdt() }} {{ number_format($salary->tax, 2) }}</td>
                                         </tr>
+
                                         <tr>
-                                            <th>Other Deductions</th>
-                                            <td> {{ bdt() }} {{ number_format($salary->other_deductions, 2) }}
-                                            </td>
+                                            <th>Other Deduction</th>
+                                            <td>{{ bdt() }} {{ number_format($salary->other_deduction, 2) }}</td>
                                         </tr>
+
                                         <tr>
                                             <th>Gross Salary</th>
-                                            <td> {{ bdt() }} {{ number_format($salary->gross_salary, 2) }}</td>
+                                            <td class="font-weight-bolder text-success">{{ bdt() }}
+                                                {{ number_format($salary->gross, 2) }}</td>
                                         </tr>
+
                                         <tr>
                                             <th>Net Salary</th>
-                                            <td> {{ bdt() }} {{ number_format($salary->net_salary, 2) }}</td>
+                                            <td class="font-weight-bolder text-primary">{{ bdt() }}
+                                                {{ number_format($salary->net, 2) }}</td>
                                         </tr>
+
+                                        {{-- <tr>
+                                            <th>Payment Amount</th>
+                                            <td class="font-weight-bolder text-dark">{{ bdt() }}
+                                                {{ number_format($salary->payment_amount, 2) }}</td>
+                                        </tr> --}}
+
                                         <tr>
                                             <th>Payment Status</th>
                                             <td>
-                                                @if ($salary->status == 'Paid')
-                                                    <span class="badge bg-success">Paid</span>
-                                                @elseif($salary->status == 'partial_paid')
-                                                    <span class="badge bg-warning">Partially Paid</span>
-                                                @elseif($salary->status == 'Unpaid')
-                                                    <span class="badge bg-danger">Not Paid</span>
-                                                @else
-                                                    <span class="badge bg-secondary">{{ $salary->status }}</span>
-                                                @endif
+                                                @switch($salary->status)
+                                                    @case('approved')
+                                                        <span class="badge bg-success">Approved</span>
+                                                    @break
+
+                                                    @case('pending')
+                                                        <span class="badge bg-warning text-dark">Pending</span>
+                                                    @break
+
+                                                    @case('unpaid')
+                                                        <span class="badge bg-danger">Unpaid</span>
+                                                    @break
+
+                                                    @case('partial_paid')
+                                                        <span class="badge bg-info text-dark">Partial Paid</span>
+                                                    @break
+
+                                                    @case('paid')
+                                                        <span class="badge bg-primary">Paid</span>
+                                                    @break
+
+                                                    @case('hold')
+                                                        <span class="badge bg-dark">Hold</span>
+                                                    @break
+
+                                                    @case('rejected')
+                                                        <span class="badge bg-secondary">Rejected</span>
+                                                    @break
+
+                                                    @default
+                                                        <span class="badge bg-light text-dark">Unknown</span>
+                                                @endswitch
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Payment Method</th>
-                                            <td>{{ ucfirst($salary->payment_method ?? '-') }}</td>
+                                            <th>Created At</th>
+                                            <td>{{ $salary->created_at->format('d M, Y h:i A') }}</td>
                                         </tr>
-
                                     </tbody>
                                 </table>
                             </div>
