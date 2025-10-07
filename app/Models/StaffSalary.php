@@ -27,6 +27,7 @@ class StaffSalary extends Model
         'payment_date',
         'note',
         'status',
+        'voucher_no',
     ];
 
     // Auto calculate gross & net before saving

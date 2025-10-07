@@ -155,7 +155,7 @@
                                                                 style="{{ $salary->status === 'paid' ? 'pointer-events: none; cursor: not-allowed;' : '' }}">
                                                                 <i class="fas fa-dollar-sign"></i> Pay
                                                             </button>
-                                                            <a href="{{ route('admin.staff.salary.delete', $salary->id) }}"
+                                                            <a href="{{ route('admin.staff.salary.payment.delete', $salary->id) }}"
                                                                 id="delete" class="btn btn-danger btn-sm">
                                                                 <i class="fas fa-trash"></i>
                                                             </a>

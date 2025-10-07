@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('staff_id')->constrained('staff')->onDelete('cascade');
             $table->foreignId('ledger_id')->nullable()->constrained('ledgers')->onDelete('cascade');
+            $table->string('voucher_no')->unique()->nullable();
             $table->date('salary_month');
             $table->decimal('basic', 10, 2)->default(0);
             $table->decimal('hra', 10, 2)->default(0);
