@@ -119,7 +119,6 @@ class StaffSalaryController extends Controller
                     'other_deductions' => $otherDeduct,
                     'gross_salary' => $gross,
                     'net_salary' => $net,
-                    'payment_method' => $payment_method,
                     'payment_amount' => $paymentAmount, // Save paid amount
                     'status' => $status, // Dynamic status
                 ]);

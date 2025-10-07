@@ -85,7 +85,7 @@
                                                     <th>Month</th>
                                                     <th>Gross</th>
                                                     <th>Net</th>
-                                                    <th>Status</th>
+                                                    {{-- <th>Status</th> --}}
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
@@ -102,12 +102,40 @@
                                                         <td>{{ \Carbon\Carbon::parse($salary->salary_month)->format('F Y') }}</td>
                                                         <td>{{ bdt() }} {{ number_format($salary->gross, 2) }}</td>
                                                         <td>{{ bdt() }} {{ number_format($salary->net, 2) }}</td>
-                                                        <td>
-                                                            <span
-                                                                class="badge {{ $salary->status == 'Paid' ? 'bg-success' : 'bg-warning' }}">
-                                                                {{ $salary->status }}
-                                                            </span>
-                                                        </td>
+                                                        {{-- <td>
+                                                           @switch($salary->status)
+                                                                @case('approved')
+                                                                    <span class="badge bg-success">Approved</span>
+                                                                @break
+
+                                                                @case('pending')
+                                                                    <span class="badge bg-warning text-dark">Pending</span>
+                                                                @break
+
+                                                                @case('unpaid')
+                                                                    <span class="badge bg-danger">Unpaid</span>
+                                                                @break
+
+                                                                @case('partial_paid')
+                                                                    <span class="badge bg-info text-dark">Partial Paid</span>
+                                                                @break
+
+                                                                @case('paid')
+                                                                    <span class="badge bg-primary">Paid</span>
+                                                                @break
+
+                                                                @case('hold')
+                                                                    <span class="badge bg-dark">Hold</span>
+                                                                @break
+
+                                                                @case('rejected')
+                                                                    <span class="badge bg-secondary">Rejected</span>
+                                                                @break
+
+                                                                @default
+                                                                    <span class="badge bg-light text-dark">Unknown</span>
+                                                            @endswitch
+                                                        </td> --}}
                                                         <td>
                                                             <a href="{{ route('admin.staff.salary.show', $salary->id) }}"
                                                                 class="btn btn-success btn-sm">

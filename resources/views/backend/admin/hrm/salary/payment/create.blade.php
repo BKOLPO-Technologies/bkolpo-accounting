@@ -1,4 +1,4 @@
-@extends('layouts.admin', [$pageTitle => 'Staff Salary Payment Create'])
+@extends('layouts.admin', [$pageTitle => 'Staff Salary Generate Create'])
 
 @section('admin')
     <div class="content-wrapper">
@@ -26,7 +26,7 @@
                             <div class="card-header py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $pageTitle ?? '' }}</h4>
-                                    <a href="{{ route('admin.staff.salary.index') }}"
+                                    <a href="{{ route('admin.staff.salary.payment.index') }}"
                                         class="btn btn-sm btn-danger rounded-0">
                                         <i class="fa-solid fa-arrow-left"></i> Back To List
                                     </a>
@@ -34,7 +34,7 @@
                             </div>
 
                             <div class="card shadow-lg border-0">
-                                <form action="{{ route('admin.staff.salary.store') }}" method="POST">
+                                <form action="{{ route('admin.staff.salary.payment.store') }}" method="POST">
                                     @csrf
                                     <div class="card-body">
 
@@ -69,15 +69,12 @@
                                                 <thead class="table-success">
                                                     <tr>
                                                         <th>Staff Name</th>
-                                                        <th>Basic</th>
-                                                        <th>HRA</th>
-                                                        <th>Medical</th>
-                                                        <th>Conveyance</th>
-                                                        <th>PF</th>
-                                                        <th>Tax</th>
-                                                        <th>Other Deduction</th>
                                                         <th>Gross</th>
                                                         <th>Net</th>
+                                                        <th>Payment Amount</th>
+                                                        <th>Due Amount</th>
+                                                        <th>Payment Method</th>
+                                                        <th>Note</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -87,65 +84,51 @@
                                                             <input type="hidden" name="staff_id[]"
                                                                 value="{{ $staff->id }}">
 
-                                                            <td><input type="number" min="0" step="any"
-                                                                    name="basic_salary[]"
-                                                                    class="form-control text-end basic_salary"
-                                                                    value="{{ old('basic_salary.' . $key, $staff->salaryStructure->basic ?? 0) }}">
-                                                            </td>
 
-                                                            <td><input type="number" min="0" step="any"
-                                                                    name="hra[]" class="form-control text-end hra"
-                                                                    value="{{ old('hra.' . $key, $staff->salaryStructure->hra ?? 0) }}">
-                                                            </td>
 
-                                                            <td><input type="number" min="0" step="any"
-                                                                    name="medical[]" class="form-control text-end medical"
-                                                                    value="{{ old('medical.' . $key, $staff->salaryStructure->medical ?? 0) }}">
-                                                            </td>
-
-                                                            <td><input type="number" min="0" step="any"
-                                                                    name="conveyance[]"
-                                                                    class="form-control text-end conveyance"
-                                                                    value="{{ old('conveyance.' . $key, $staff->salaryStructure->conveyance ?? 0) }}">
-                                                            </td>
-
-                                                            <td><input type="number" min="0" step="any"
-                                                                    name="pf[]" class="form-control text-end pf"
-                                                                    value="{{ old('pf.' . $key, $staff->salaryStructure->pf ?? 0) }}">
-                                                            </td>
-
-                                                            <td><input type="number" min="0" step="any"
-                                                                    name="tax[]" class="form-control text-end tax"
-                                                                    value="{{ old('tax.' . $key, $staff->salaryStructure->tax ?? 0) }}">
-                                                            </td>
-
-                                                            <td><input type="number" min="0" step="any"
-                                                                    name="other_deductions[]"
-                                                                    class="form-control text-end other_deductions"
-                                                                    value="{{ old('other_deductions.' . $key, $staff->salaryStructure->other_deduction ?? 0) }}">
-                                                            </td>
-
-                                                            <td><input type="number" readonly
-                                                                    class="form-control text-end bg-light gross_salary"
+                                                            <td><input type="number" min="0" readonly
+                                                                    class="form-control bg-warning-subtle gross_salary"
                                                                     value="{{ $staff->salaryStructure->gross ?? 0 }}"></td>
 
-                                                            <td><input type="number" readonly
-                                                                    class="form-control text-end bg-light net_salary"
+                                                            <td><input type="number" min="0" readonly
+                                                                    class="form-control bg-warning-subtle net_salary"
                                                                     value="{{ $staff->salaryStructure->net ?? 0 }}"></td>
 
+                                                            <td><input type="number" min="0" name="payment_amount[]"
+                                                                    placeholder="Enter Payment Amount"
+                                                                    class="form-control text-end  payment_amount"></td>
+                                                            <td>
+                                                                <input type="number" readonly
+                                                                    class="form-control text-end bg-warning-subtle due_amount"
+                                                                    value="{{ $staff->salaryStructure->net ?? 0 }}">
+                                                            </td>
+
+                                                            <td class="col-2">
+                                                                <select name="payment_method[]" class="form-control">
+                                                                    <option value="">Choose Method</option>
+                                                                    @foreach ($ledgers as $ledger)
+                                                                        <option value="{{ $ledger->id }}"
+                                                                            data-type="{{ $ledger->type }}">
+                                                                            {{ $ledger->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <textarea name="note[]" rows="2" placeholder="Enter note (optional)" class="form-control text-start"></textarea>
+                                                            </td>
                                                         </tr>
                                                     @endforeach
-
-
                                                 </tbody>
                                             </table>
                                         </div>
+
                                     </div>
 
                                     {{-- Submit Button --}}
                                     <div class="card-footer text-center">
                                         <button type="submit" class="btn btn-success w-50 shadow-sm">
-                                            <i class="fas fa-paper-plane"></i> Create Salary Generate
+                                            <i class="fas fa-paper-plane"></i> Create Salary Payment
                                         </button>
                                     </div>
                                 </form>
@@ -182,6 +165,28 @@
             row.find('.gross_salary').val(gross.toFixed(2));
             row.find('.net_salary').val(net.toFixed(2));
             row.find('.payment_amount').val(net.toFixed(2));
+        });
+
+        // Payment amount and due validation
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('payment_amount')) {
+                const row = e.target.closest('tr');
+                const net = parseFloat(row.querySelector('.net_salary').value) || 0;
+                const pay = parseFloat(e.target.value) || 0;
+                const due = Math.max(net - pay, 0);
+                row.querySelector('.due_amount').value = due.toFixed(2);
+
+                // Validation
+                if (pay > net) {
+                    // Show toastr error
+                    toastr.error('Payment amount cannot exceed net salary!');
+                    // Highlight border in red
+                    e.target.style.border = '2px solid red';
+                } else {
+                    // Remove red border
+                    e.target.style.border = '';
+                }
+            }
         });
     </script>
 @endpush

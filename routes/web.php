@@ -43,6 +43,7 @@ use App\Http\Controllers\Backend\Inventory\AdvanceReceiveController;
 
 use App\Http\Controllers\Backend\Hrm\StaffController;
 use App\Http\Controllers\Backend\Hrm\StaffSalaryController;
+use App\Http\Controllers\Backend\Hrm\StaffSalaryPaymentController;
 
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
@@ -532,7 +533,18 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         Route::put('/update/{id}', [StaffSalaryController::class, 'update'])->name('admin.staff.salary.update');
         Route::get('/show/{id}', [StaffSalaryController::class, 'show'])->name('admin.staff.salary.show');
         Route::get('/delete/{id}', [StaffSalaryController::class, 'destroy'])->name('admin.staff.salary.delete');
-        Route::post('/pay', [StaffSalaryController::class, 'paySalary'])->name('admin.staff.salary.pay');
+    });
+
+    /* ==================== Staff Salary Payment Controller =================== */
+    Route::prefix('staff/salary/payment')->group(function () {
+        Route::get('/', [StaffSalaryPaymentController::class, 'index'])->name('admin.staff.salary.payment.index');
+        Route::get('/create', [StaffSalaryPaymentController::class, 'create'])->name('admin.staff.salary.payment.create');
+        Route::post('/store', [StaffSalaryPaymentController::class, 'store'])->name('admin.staff.salary.payment.store');
+        Route::get('/edit/{id}', [StaffSalaryPaymentController::class, 'edit'])->name('admin.staff.salary.payment.edit');
+        Route::put('/update/{id}', [StaffSalaryPaymentController::class, 'update'])->name('admin.staff.salary.payment.update');
+        Route::get('/show/{id}', [StaffSalaryPaymentController::class, 'show'])->name('admin.staff.salary.payment.show');
+        Route::get('/delete/{id}', [StaffSalaryPaymentController::class, 'destroy'])->name('admin.staff.salary.payment.delete');
+        Route::post('/pay', [StaffSalaryPaymentController::class, 'paySalary'])->name('admin.staff.salary.payment.pay');
     });
 
 });

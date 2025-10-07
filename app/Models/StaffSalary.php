@@ -11,6 +11,7 @@ class StaffSalary extends Model
 
     protected $fillable = [
         'staff_id',
+        'ledger_id',
         'salary_month',
         'basic',
         'hra',
@@ -22,6 +23,9 @@ class StaffSalary extends Model
         'gross',
         'net',
         'payment_amount',
+        'payment_method',
+        'payment_date',
+        'note',
         'status',
     ];
 
@@ -38,6 +42,11 @@ class StaffSalary extends Model
     public function staff()
     {
         return $this->belongsTo(Staff::class, 'staff_id');
+    }
+
+    public function ledger()
+    {
+        return $this->belongsTo(Ledger::class, 'ledger_id');
     }
 
     // Optional: Accessor for formatted salary month (for views)

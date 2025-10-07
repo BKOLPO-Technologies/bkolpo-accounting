@@ -32,13 +32,13 @@ class Staff extends Model
 
     public function salaries()
     {
-        return $this->hasMany(StaffSalary::class);
+        return $this->hasMany(StaffSalary::class, 'staff_id');
     }
 
-    // Staff.php
     public function salaryStructure()
     {
-        return $this->hasOne(SalaryStructure::class, 'staff_id');
+        return $this->hasOne(SalaryStructure::class, 'staff_id', 'id');
     }
+    
 
 }

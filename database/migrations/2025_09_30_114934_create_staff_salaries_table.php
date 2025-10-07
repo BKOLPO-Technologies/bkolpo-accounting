@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('staff_salaries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('staff_id')->constrained('staff')->onDelete('cascade');
+            $table->foreignId('ledger_id')->nullable()->constrained('ledgers')->onDelete('cascade');
             $table->date('salary_month');
             $table->decimal('basic', 10, 2)->default(0);
             $table->decimal('hra', 10, 2)->default(0);
@@ -25,7 +26,10 @@ return new class extends Migration
             $table->decimal('gross', 10, 2)->default(0);
             $table->decimal('net', 10, 2)->default(0);
             $table->decimal('payment_amount', 10, 2)->default(0);
+            $table->enum('payment_method', ['Cash', 'Bank'])->nullable();
             $table->enum('status', ['pending','approved', 'unpaid','partial_paid', 'paid', 'hold', 'rejected'])->default('pending');
+            $table->date('payment_date')->nullable();
+            $table->text('note')->nullable();
             $table->timestamps(); 
         });
     }
