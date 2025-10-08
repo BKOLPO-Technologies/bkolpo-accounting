@@ -291,19 +291,14 @@
                                         <div class="print-container">
                                             <!-- Print Header -->
                                             <div class="print-header text-center mb-4 p-3 border-bottom">
-                                                <h2 class="mb-1">Staff Salary Generate List</h2>
-                                                <p class="mb-1 text-light">
-                                                    Period:
-                                                    @if (request()->month && request()->year)
-                                                        {{ \Carbon\Carbon::create()->month(request()->month)->format('F') }}
-                                                        {{ request()->year }}
-                                                    @else
-                                                        All Time
-                                                    @endif
-                                                </p>
-                                                <p class="mb-0 text-light">
-                                                    Generated on: {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}
-                                                </p>
+                                                <h2 class="mb-1">
+                                                    <img src="{{ !empty(get_company()->logo) ? url('upload/company/' . get_company()->logo) : asset('backend/logo.jpg') }}"
+                                                        alt="Company Logo"
+                                                        style="height: 40px; vertical-align: middle; margin-right: 10px;">
+                                                    {{ get_company()->name ?? '' }}
+                                                </h2>
+                                                <p class="mb-0"><strong>Staff Salary List</strong></p>
+                                                <p class="mb-0">Date: {{ now()->format('d M, Y') }}</p>
                                             </div>
 
                                             <!-- Print Table -->
@@ -314,9 +309,11 @@
                                                             <th>Sl</th>
                                                             <th>Name</th>
                                                             <th>Department</th>
+                                                            <th>Account</th>
                                                             <th>Month</th>
                                                             <th>Gross Salary</th>
                                                             <th>Net Salary</th>
+                                                            <th>Payment</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -325,6 +322,7 @@
                                                                 <td class="text-center">{{ $loop->iteration }}</td>
                                                                 <td>{{ $salary->staff->name ?? '-' }}</td>
                                                                 <td>{{ $salary->staff->department ?? '-' }}</td>
+                                                                <td>{{ $salary->payment_method ?? '-' }}</td>
                                                                 <td class="text-left">
                                                                     {{ \Carbon\Carbon::parse($salary->salary_month)->format('F Y') }}
                                                                 </td>
@@ -332,17 +330,19 @@
                                                                     {{ number_format($salary->gross, 2) }}</td>
                                                                 <td class="text-left">{{ bdt() }}
                                                                     {{ number_format($salary->net, 2) }}</td>
+                                                                <td class="text-left">{{ bdt() }}
+                                                                    {{ number_format($salary->payment_amount, 2) }}</td>
                                                             </tr>
                                                         @empty
                                                             <tr>
-                                                                <td colspan="6" class="text-center">No records found.</td>
+                                                                <td colspan="7" class="text-center">No records found.</td>
                                                             </tr>
                                                         @endforelse
                                                     </tbody>
                                                     @if ($salaries->count() > 0)
                                                         <tfoot>
                                                             <tr class="table-info">
-                                                                <td colspan="4" class="text-right"><strong>Total:</strong>
+                                                                <td colspan="5" class="text-right"><strong>Total:</strong>
                                                                 </td>
                                                                 <td class="text-left"><strong>{{ bdt() }}
                                                                         {{ number_format($salaries->sum('gross'), 2) }}</strong>
@@ -350,26 +350,13 @@
                                                                 <td class="text-left"><strong>{{ bdt() }}
                                                                         {{ number_format($salaries->sum('net'), 2) }}</strong>
                                                                 </td>
+                                                                <td class="text-left"><strong>{{ bdt() }}
+                                                                        {{ number_format($salaries->sum('payment_amount'), 2) }}</strong>
+                                                                </td>
                                                             </tr>
                                                         </tfoot>
                                                     @endif
                                                 </table>
-                                            </div>
-
-                                            <!-- Print Footer -->
-                                            <div class="print-footer mt-4 p-3 border-top">
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <p class="mb-1"><strong>Total Records:</strong>
-                                                            {{ $salaries->count() }}</p>
-                                                        <p class="mb-0"><strong>Printed by:</strong>
-                                                            {{ Auth::user()->name ?? 'Admin' }}</p>
-                                                    </div>
-                                                    <div class="col-6 text-right">
-                                                        <p class="mb-0"><strong>Print Date:</strong>
-                                                            {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}</p>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>

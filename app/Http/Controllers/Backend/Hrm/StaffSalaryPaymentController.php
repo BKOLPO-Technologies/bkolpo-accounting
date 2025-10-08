@@ -110,7 +110,7 @@ class StaffSalaryPaymentController extends Controller
                     $companyInfo = get_company();
                     $currentMonth = now()->format('m');
                     $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
-                    $voucherPrefix = 'BCL-SAL-' . $fiscalYearWithoutHyphen . $currentMonth;
+                    $voucherPrefix = 'BCL-SAL-PAY-' . $fiscalYearWithoutHyphen . $currentMonth;
 
                     // Generate unique voucher number
                     $lastVoucher = JournalVoucher::latest()->first();
@@ -130,9 +130,9 @@ class StaffSalaryPaymentController extends Controller
 
                     // Get Ledger Info
                     $cashBankLedger = $ledger; // নগদ/ব্যাংক
-                    $salaryLedger = Ledger::where('type', 'Salary')->first();
+                    $salaryPayableLedger = Ledger::where('type', 'Salary Payable')->first();
 
-                    if ($cashBankLedger && $salaryLedger) {
+                    if ($cashBankLedger && $salaryPayableLedger) {
                         // Create Journal Voucher
                         $journalVoucher = JournalVoucher::create([
                             'transaction_code' => $voucherNo,
@@ -143,26 +143,27 @@ class StaffSalaryPaymentController extends Controller
                             'status' => 1,
                         ]);
 
-                        // Journal Entry 1: Salary Expense (Debit)
+                        // Entry 1: Salary Payable (Debit)
                         JournalVoucherDetail::create([
                             'journal_voucher_id' => $journalVoucher->id,
-                            'ledger_id' => $salaryLedger->id,
+                            'ledger_id' => $salaryPayableLedger->id,
                             'reference_no' => $voucherNo,
-                            'description' => 'Salary Expense',
+                            'description' => 'Salary Payable adjustment for ' . \Carbon\Carbon::parse($salaryMonth)->format('F Y'),
                             'debit' => $paymentAmount,
                             'credit' => 0,
                         ]);
 
-                        // Journal Entry 2: Cash/Bank (Credit)
+                        // Entry 2: Cash/Bank (Credit)
                         JournalVoucherDetail::create([
                             'journal_voucher_id' => $journalVoucher->id,
                             'ledger_id' => $cashBankLedger->id,
                             'reference_no' => $voucherNo,
-                            'description' => 'Payment from ' . $cashBankLedger->name,
+                            'description' => 'Salary payment made from ' . $cashBankLedger->name,
                             'debit' => 0,
                             'credit' => $paymentAmount,
                         ]);
                     }
+
                 }
             }
 
@@ -194,21 +195,30 @@ class StaffSalaryPaymentController extends Controller
             'salary_id' => 'required|exists:staff_salaries,id',
             'payment_amount' => 'required|numeric|min:0',
             'payment_method' => 'required|exists:ledgers,id',
+            'note' => 'nullable|string|max:500',
         ]);
 
         DB::beginTransaction();
         try {
+            // Fetch salary & ledger
             $salary = StaffSalary::findOrFail($request->salary_id);
-            $ledger = Ledger::findOrFail($request->payment_method); // Cash/Bank ledger
-            $salaryLedger = Ledger::where('type', 'Salary')->firstOrFail();
+            $ledger = Ledger::findOrFail($request->payment_method); // Cash/Bank
+            $salaryPayableLedger = Ledger::where('type', 'Salary Payable')->first();
 
-            // Update salary payment (cumulative)
-            $salary->payment_amount += $request->payment_amount;
+            if (! $salaryPayableLedger) {
+                throw new \Exception('Salary Payable ledger not found!');
+            }
+
+            $currentPayment = $request->payment_amount;
+
+            // Update salary cumulative
+            $salary->payment_amount += $currentPayment;
             $salary->ledger_id = $ledger->id;
             $salary->payment_method = $ledger->type;
             $salary->payment_date = now();
+            $salary->note = $request->note ?? $salary->note;
 
-            // status calculation
+            // Update status
             $due = $salary->net - $salary->payment_amount;
             if ($salary->payment_amount == 0) {
                 $salary->status = 'unpaid';
@@ -218,17 +228,15 @@ class StaffSalaryPaymentController extends Controller
                 $salary->status = 'paid';
             }
 
-            // Prepare / ensure voucher number
+            // Generate or get voucher
             $voucherNo = $salary->voucher_no;
+            $companyInfo = get_company();
+            $currentMonth = now()->format('m');
+            $fiscalYear = str_replace('-', '', $companyInfo->fiscal_year);
+            $prefix = 'BCL-SAL-PAY-' . $fiscalYear . $currentMonth;
 
             if (! $voucherNo) {
-                // create a new voucher
-                $companyInfo = get_company();
-                $currentMonth = now()->format('m');
-                $fiscalYear = str_replace('-', '', $companyInfo->fiscal_year);
-                $prefix = 'BCL-SAL-' . $fiscalYear . $currentMonth;
-
-                $lastVoucher = JournalVoucher::latest()->first();
+                $lastVoucher = JournalVoucher::orderBy('id','desc')->first();
                 $nextNo = $lastVoucher ? $lastVoucher->id + 1 : 1;
                 $voucherNo = $prefix . str_pad($nextNo, 4, '0', STR_PAD_LEFT);
 
@@ -236,45 +244,20 @@ class StaffSalaryPaymentController extends Controller
                     'transaction_code' => $voucherNo,
                     'transaction_date' => now(),
                     'company_id' => $companyInfo->id,
-                    'branch_id' => $companyInfo->branch->id,
+                    'branch_id' => $companyInfo->branch->id ?? null,
                     'description' => 'Salary payment for ' . \Carbon\Carbon::parse($salary->salary_month)->format('F Y'),
                     'status' => 1,
                     'salary_id' => $salary->id,
                 ]);
 
-                // create two details (debit salary, credit cash/bank)
-                JournalVoucherDetail::create([
-                    'journal_voucher_id' => $journalVoucher->id,
-                    'ledger_id' => $salaryLedger->id,
-                    'reference_no' => $voucherNo,
-                    'description' => 'Salary Expense',
-                    'debit' => $salary->payment_amount,
-                    'credit' => 0,
-                ]);
-
-                JournalVoucherDetail::create([
-                    'journal_voucher_id' => $journalVoucher->id,
-                    'ledger_id' => $ledger->id,
-                    'reference_no' => $voucherNo,
-                    'description' => 'Payment from ' . $ledger->name,
-                    'debit' => 0,
-                    'credit' => $salary->payment_amount,
-                ]);
-
-                // save voucher_no to salary
+                // Save voucher_no to salary
                 $salary->voucher_no = $voucherNo;
             } else {
-                // existing voucher: find it
                 $journalVoucher = JournalVoucher::where('transaction_code', $voucherNo)->first();
 
                 if (! $journalVoucher) {
-                    // (fallback) recreate voucher if not found
-                    $companyInfo = get_company();
-                    $currentMonth = now()->format('m');
-                    $fiscalYear = str_replace('-', '', $companyInfo->fiscal_year);
-                    $prefix = 'BCL-SAL-' . $fiscalYear . $currentMonth;
-
-                    $lastVoucher = JournalVoucher::latest()->first();
+                    // Fallback if voucher missing
+                    $lastVoucher = JournalVoucher::orderBy('id','desc')->first();
                     $nextNo = $lastVoucher ? $lastVoucher->id + 1 : 1;
                     $voucherNo = $prefix . str_pad($nextNo, 4, '0', STR_PAD_LEFT);
 
@@ -282,89 +265,45 @@ class StaffSalaryPaymentController extends Controller
                         'transaction_code' => $voucherNo,
                         'transaction_date' => now(),
                         'company_id' => $companyInfo->id,
-                        'branch_id' => $companyInfo->branch->id,
+                        'branch_id' => $companyInfo->branch->id ?? null,
                         'description' => 'Salary payment for ' . \Carbon\Carbon::parse($salary->salary_month)->format('F Y'),
                         'status' => 1,
                         'salary_id' => $salary->id,
                     ]);
 
-                    // create details fresh
-                    JournalVoucherDetail::create([
-                        'journal_voucher_id' => $journalVoucher->id,
-                        'ledger_id' => $salaryLedger->id,
-                        'reference_no' => $voucherNo,
-                        'description' => 'Salary Expense',
-                        'debit' => $salary->payment_amount,
-                        'credit' => 0,
-                    ]);
-
-                    JournalVoucherDetail::create([
-                        'journal_voucher_id' => $journalVoucher->id,
-                        'ledger_id' => $ledger->id,
-                        'reference_no' => $voucherNo,
-                        'description' => 'Payment from ' . $ledger->name,
-                        'debit' => 0,
-                        'credit' => $salary->payment_amount,
-                    ]);
-
                     $salary->voucher_no = $voucherNo;
-                } else {
-                    // get details as a Collection (never null)
-                    $details = $journalVoucher->details()->get();
-
-                    if ($details->isEmpty()) {
-                        // if there are no details for some reason, create them
-                        JournalVoucherDetail::create([
-                            'journal_voucher_id' => $journalVoucher->id,
-                            'ledger_id' => $salaryLedger->id,
-                            'reference_no' => $journalVoucher->transaction_code,
-                            'description' => 'Salary Expense',
-                            'debit' => $salary->payment_amount,
-                            'credit' => 0,
-                        ]);
-
-                        JournalVoucherDetail::create([
-                            'journal_voucher_id' => $journalVoucher->id,
-                            'ledger_id' => $ledger->id,
-                            'reference_no' => $journalVoucher->transaction_code,
-                            'description' => 'Payment from ' . $ledger->name,
-                            'debit' => 0,
-                            'credit' => $salary->payment_amount,
-                        ]);
-                    } else {
-                        // update existing details:
-                        foreach ($details as $detail) {
-                            // If this detail is the Salary ledger (debit), update debit
-                            if ($detail->ledger_id == $salaryLedger->id || $detail->debit > 0) {
-                                $detail->update([
-                                    'ledger_id' => $salaryLedger->id,
-                                    'description' => 'Salary Expense',
-                                    'debit' => $salary->payment_amount,
-                                    'credit' => 0,
-                                ]);
-                            } else {
-                                // otherwise treat as cash/bank credit detail — update ledger_id & credit
-                                $detail->update([
-                                    'ledger_id' => $ledger->id,
-                                    'description' => 'Payment from ' . $ledger->name,
-                                    'debit' => 0,
-                                    'credit' => $salary->payment_amount,
-                                ]);
-                            }
-                        }
-                    }
                 }
             }
+
+            // 🔹 Create new JournalVoucherDetail for current payment
+            JournalVoucherDetail::create([
+                'journal_voucher_id' => $journalVoucher->id,
+                'ledger_id' => $salaryPayableLedger->id,
+                'reference_no' => $voucherNo,
+                'description' => 'Salary Payable adjustment for ' . \Carbon\Carbon::parse($salary->salary_month)->format('F Y'),
+                'debit' => $currentPayment,
+                'credit' => 0,
+            ]);
+
+            JournalVoucherDetail::create([
+                'journal_voucher_id' => $journalVoucher->id,
+                'ledger_id' => $ledger->id,
+                'reference_no' => $voucherNo,
+                'description' => 'Payment from ' . $ledger->name,
+                'debit' => 0,
+                'credit' => $currentPayment,
+            ]);
 
             $salary->save();
             DB::commit();
 
-            return redirect()->back()->with('success', 'Salary payment and journal updated successfully!');
+            return redirect()->back()->with('success', 'Salary payment updated and journal entry created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
+
 
 
 

@@ -177,15 +177,7 @@
                                         <!-- Print Header -->
                                         <div class="print-header text-center mb-4 p-3 border-bottom">
                                             <h2 class="mb-1">Staff Salary Generate List</h2>
-                                            <p class="mb-1 text-light">
-                                                Period: 
-                                                @if(request()->month && request()->year)
-                                                    {{ \Carbon\Carbon::create()->month(request()->month)->format('F') }} {{ request()->year }}
-                                                @else
-                                                    All Time
-                                                @endif
-                                            </p>
-                                            <p class="mb-0 text-light">
+                                            <p class="mb-0 text-secondary">
                                                 Generated on: {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}
                                             </p>
                                         </div>
@@ -232,7 +224,7 @@
                                         </div>
 
                                         <!-- Print Footer -->
-                                        <div class="print-footer mt-4 p-3 border-top">
+                                        {{-- <div class="print-footer mt-4 p-3 border-top">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <p class="mb-1"><strong>Total Records:</strong> {{ $salaries->count() }}</p>
@@ -242,7 +234,7 @@
                                                     <p class="mb-0"><strong>Print Date:</strong> {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}</p>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
