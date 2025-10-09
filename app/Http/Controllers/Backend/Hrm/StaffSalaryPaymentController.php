@@ -82,9 +82,32 @@ class StaffSalaryPaymentController extends Controller
 
         DB::beginTransaction();
         try {
+            $month = str_pad($request->month, 2, '0', STR_PAD_LEFT);
+            $salaryMonth = "{$request->year}-{$month}-01";
+
+            // Company info and voucher generation (once)
+            $companyInfo = get_company();
+            $currentMonth = now()->format('m');
+            $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
+            $voucherPrefix = 'BCL-SAL-PAY-' . $fiscalYearWithoutHyphen . $currentMonth;
+
+            $lastVoucher = JournalVoucher::latest()->first();
+            $nextNo = $lastVoucher ? $lastVoucher->id + 1 : 1;
+            $voucherNo = $voucherPrefix . str_pad($nextNo, 4, '0', STR_PAD_LEFT);
+
+            // Create Journal Voucher master (one for all staff)
+            $journalVoucher = JournalVoucher::create([
+                'transaction_code' => $voucherNo,
+                'transaction_date' => now(),
+                'company_id' => $companyInfo->id,
+                'branch_id' => $companyInfo->branch->id ?? null,
+                'description' => 'Salary payment for ' . \Carbon\Carbon::parse($salaryMonth)->format('F Y'),
+                'status' => 1,
+            ]);
+
             foreach ($request->staff_id as $index => $staffId) {
-                $month = str_pad($request->month, 2, '0', STR_PAD_LEFT);
-                $salaryMonth = "{$request->year}-{$month}-01";
+                $staff = Staff::find($staffId);
+                $staffName = $staff->name;
                 $paymentAmount = $request->payment_amount[$index] ?? 0;
                 $paymentMethod = $request->payment_method[$index] ?? null;
                 $note = $request->note[$index] ?? null;
@@ -99,25 +122,16 @@ class StaffSalaryPaymentController extends Controller
                 if ($salary) {
                     $due = max($salary->net - $paymentAmount, 0);
 
-                    $status = 'partial_paid';
+                    // Status calculation
                     if ($paymentAmount == 0) {
                         $status = 'unpaid';
-                    } elseif ($due == 0) {
+                    } elseif ($due > 0) {
+                        $status = 'partial_paid';
+                    } else {
                         $status = 'paid';
                     }
 
-                    // Company info for voucher number
-                    $companyInfo = get_company();
-                    $currentMonth = now()->format('m');
-                    $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
-                    $voucherPrefix = 'BCL-SAL-PAY-' . $fiscalYearWithoutHyphen . $currentMonth;
-
-                    // Generate unique voucher number
-                    $lastVoucher = JournalVoucher::latest()->first();
-                    $nextNo = $lastVoucher ? $lastVoucher->id + 1 : 1;
-                    $voucherNo = $voucherPrefix . str_pad($nextNo, 4, '0', STR_PAD_LEFT);
-
-                    // 🔹 Update salary payment with voucher_no
+                    // Update salary payment
                     $salary->update([
                         'ledger_id' => $ledger->id,
                         'payment_method' => $payment_method,
@@ -125,49 +139,36 @@ class StaffSalaryPaymentController extends Controller
                         'payment_date' => now(),
                         'status' => $status,
                         'note' => $note,
-                        'voucher_no' => $voucherNo, 
                     ]);
 
                     // Get Ledger Info
-                    $cashBankLedger = $ledger; // নগদ/ব্যাংক
                     $salaryPayableLedger = Ledger::where('type', 'Salary Payable')->first();
 
-                    if ($cashBankLedger && $salaryPayableLedger) {
-                        // Create Journal Voucher
-                        $journalVoucher = JournalVoucher::create([
-                            'transaction_code' => $voucherNo,
-                            'transaction_date' => now(),
-                            'company_id' => $companyInfo->id,
-                            'branch_id' => $companyInfo->branch->id,
-                            'description' => 'Salary payment for ' . \Carbon\Carbon::parse($salaryMonth)->format('F Y'),
-                            'status' => 1,
-                        ]);
-
-                        // Entry 1: Salary Payable (Debit)
+                    if ($salaryPayableLedger) {
+                        // Journal entry per staff
                         JournalVoucherDetail::create([
                             'journal_voucher_id' => $journalVoucher->id,
                             'ledger_id' => $salaryPayableLedger->id,
                             'reference_no' => $voucherNo,
-                            'description' => 'Salary Payable adjustment for ' . \Carbon\Carbon::parse($salaryMonth)->format('F Y'),
+                            'description' => 'Salary Payable adjustment for staff  ' . $staffName,
                             'debit' => $paymentAmount,
                             'credit' => 0,
                         ]);
 
-                        // Entry 2: Cash/Bank (Credit)
                         JournalVoucherDetail::create([
                             'journal_voucher_id' => $journalVoucher->id,
-                            'ledger_id' => $cashBankLedger->id,
+                            'ledger_id' => $ledger->id,
                             'reference_no' => $voucherNo,
-                            'description' => 'Salary payment made from ' . $cashBankLedger->name,
+                            'description' => 'Salary payment from ' . $ledger->name . ' for staff ' . $staffName,
                             'debit' => 0,
                             'credit' => $paymentAmount,
                         ]);
                     }
-
                 }
             }
 
             DB::commit();
+
             return redirect()->route('admin.staff.salary.payment.index')
                 ->with('success', 'Staff salary payments updated and journal created successfully!');
         } catch (\Exception $e) {
@@ -175,7 +176,6 @@ class StaffSalaryPaymentController extends Controller
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
-
 
 
 
@@ -328,37 +328,92 @@ class StaffSalaryPaymentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+      public function destroy($id)
     {
         DB::beginTransaction();
 
         try {
             $salary = StaffSalary::findOrFail($id);
 
-            $journalVoucher = JournalVoucher::where('transaction_code', $salary->voucher_no)->first();
-            // 🔹 Journal Voucher delete
-            if ($journalVoucher) {
-                JournalVoucherDetail::where('journal_voucher_id', $journalVoucher->id)->delete();
-                $journalVoucher->delete();
+            // 🔹 Delete related Journal Voucher Entries
+            $journalDetails = JournalVoucherDetail::where('staff_salary_id', $salary->id)->get();
+
+            foreach ($journalDetails as $detail) {
+                // যদি main voucher থাকে, সে voucher ও মুছবো
+                $voucher = JournalVoucher::find($detail->journal_voucher_id);
+                $detail->delete();
+                if ($voucher && $voucher->details()->count() == 0) {
+                    $voucher->delete();
+                }
             }
 
-            // 🔹 salay delete
+            // 🔹 Finally salary delete
             $salary->delete();
 
             DB::commit();
+            return redirect()->back()->with('success', 'Salary and related journal deleted successfully.');
 
-            return redirect()->back()->with('success', 'Salary record and related journal deleted successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-
-            Log::error('Error deleting payment receipt', [
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-            ]);
-
-            return redirect()->back()->with('error', 'Failed to delete payment receipt! '.$e->getMessage());
+            return redirect()->back()->with('error', 'Delete failed: ' . $e->getMessage());
         }
     }
+
+    public function reverse($id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $salary = StaffSalary::findOrFail($id);
+
+            if ($salary->status !== 'paid' && $salary->status !== 'partial_paid') {
+                return back()->with('error', 'Only paid or partially paid salaries can be reversed.');
+            }
+
+            // Get Ledger Info
+            $salaryPayable = Ledger::where('type', 'Salary Payable')->first();
+            $cashBank = Ledger::find($salary->ledger_id);
+
+            // Reverse Voucher Number Generate
+            $reverseVoucher = 'REV-' . $salary->voucher_no;
+
+            // Create Reverse Journal Voucher
+            $journal = JournalVoucher::create([
+                'transaction_code' => $reverseVoucher,
+                'transaction_date' => now(),
+                'description' => 'Reverse salary payment for ' . $salary->staff->name,
+                'status' => 1,
+            ]);
+
+            // Reverse Entry - Cash/Bank Debit
+            JournalVoucherDetail::create([
+                'journal_voucher_id' => $journal->id,
+                'ledger_id' => $cashBank->id,
+                'debit' => $salary->payment_amount,
+                'credit' => 0,
+            ]);
+
+            // Reverse Entry - Salary Payable Credit
+            JournalVoucherDetail::create([
+                'journal_voucher_id' => $journal->id,
+                'ledger_id' => $salaryPayable->id,
+                'debit' => 0,
+                'credit' => $salary->payment_amount,
+            ]);
+
+            // Salary status update
+            $salary->update([
+                'status' => 'reversed',
+            ]);
+
+            DB::commit();
+            return back()->with('success', 'Salary reversed successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Reverse failed: ' . $e->getMessage());
+        }
+    }
+
 
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('journal_voucher_id')->constrained()->onDelete('cascade');
             $table->foreignId('ledger_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('staff_salary_id')->nullable();
             $table->string('reference_no')->nullable();
             $table->text('description')->nullable();
             $table->decimal('debit', 15, 2)->default(0.00);

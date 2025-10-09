@@ -113,7 +113,7 @@
                                                         </div>
                                                         <div class="col-md-6 text-right">
                                                             <strong>Date:</strong> {{ date('d M, Y', strtotime($voucher->transaction_date)) }}<br>
-                                                            <strong>Status:</strong> 
+                                                            {{-- <strong>Status:</strong> 
                                                             @php
                                                                 $statusLabels = [
                                                                     0 => ['label' => 'Draft', 'class' => 'badge-secondary'],
@@ -123,7 +123,7 @@
                                                             @endphp
                                                             <span class="badge {{ $statusLabels[$voucher->status]['class'] ?? 'badge-primary' }}">
                                                                 {{ $statusLabels[$voucher->status]['label'] ?? 'Unknown' }}
-                                                            </span>
+                                                            </span> --}}
                                                         </div>
 
                                                     </div>

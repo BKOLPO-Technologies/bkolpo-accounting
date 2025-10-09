@@ -9,6 +9,7 @@ class JournalVoucherDetail extends Model
     protected $fillable = [
         'journal_voucher_id',
         'ledger_id',
+        'staff_salary_id',
         'reference_no',
         'description',
         'debit',

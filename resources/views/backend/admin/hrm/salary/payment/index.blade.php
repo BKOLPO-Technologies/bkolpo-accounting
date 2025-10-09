@@ -155,10 +155,14 @@
                                                                 style="{{ $salary->status === 'paid' ? 'pointer-events: none; cursor: not-allowed;' : '' }}">
                                                                 <i class="fas fa-dollar-sign"></i> Pay
                                                             </button>
-                                                            <a href="{{ route('admin.staff.salary.payment.delete', $salary->id) }}"
-                                                                id="delete" class="btn btn-danger btn-sm">
-                                                                <i class="fas fa-trash"></i>
-                                                            </a>
+                                                            {{-- @if($salary->status == 'paid' || $salary->status == 'partial_paid')
+                                                                <form action="#" method="POST" style="display:inline-block">
+                                                                    @csrf
+                                                                    <button type="submit" class="btn btn-warning btn-sm">
+                                                                        <i class="fas fa-undo"></i> Reverse
+                                                                    </button>
+                                                                </form>
+                                                            @endif --}}
                                                         </td>
                                                     </tr>
                                                     <!-- Payment Modal -->

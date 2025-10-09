@@ -141,10 +141,10 @@
                                                                 class="btn btn-success btn-sm">
                                                                 <i class="fas fa-eye"></i>
                                                             </a>
-                                                            <a href="{{ route('admin.staff.salary.delete', $salary->id) }}"
+                                                            {{-- <a href="{{ route('admin.staff.salary.delete', $salary->id) }}"
                                                                 id="delete" class="btn btn-danger btn-sm">
                                                                 <i class="fas fa-trash"></i>
-                                                            </a>
+                                                            </a> --}}
                                                         </td>
                                                     </tr>
                                                 @empty

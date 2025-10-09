@@ -83,6 +83,29 @@ class StaffSalaryController extends Controller
 
             $salaryMonth = Carbon::createFromDate($request->year, $request->month, 1)->toDateString();
 
+            // ✅ First create ONE voucher ONLY
+            $companyInfo = get_company();
+            $currentMonth = now()->format('m');
+            $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
+            $voucherPrefix = 'BCL-SAL-SHEET-' . $fiscalYearWithoutHyphen . $currentMonth;
+
+            $lastVoucher = JournalVoucher::latest()->first();
+            $nextNo = $lastVoucher ? $lastVoucher->id + 1 : 1;
+            $voucherNo = $voucherPrefix . str_pad($nextNo, 4, '0', STR_PAD_LEFT);
+
+            $journalVoucher = JournalVoucher::create([
+                'transaction_code' => $voucherNo,
+                'transaction_date' => now(),
+                'company_id' => $companyInfo->id,
+                'branch_id' => $companyInfo->branch->id ?? null,
+                'description' => 'Salary sheet for ' . Carbon::parse($salaryMonth)->format('F Y'),
+                'status' => 1,
+            ]);
+
+            // ✅ Ledgers
+            $salaryExpense = Ledger::where('type', 'Salary')->first();
+            $salaryPayable = Ledger::where('type', 'Salary Payable')->first();
+
             foreach ($request->staff_id as $index => $staffId) {
                 $staff = Staff::find($staffId);
                 $basic = $request->basic_salary[$index] ?? 0;
@@ -97,14 +120,12 @@ class StaffSalaryController extends Controller
                 $net = $gross - ($pf + $tax + $other);
                 $paymentAmount = $request->payment_amount[$index] ?? $net;
 
-                // check existing
-                $exists = StaffSalary::where('staff_id', $staffId)
-                    ->where('salary_month', $salaryMonth)
-                    ->exists();
+                // Skip duplicate salary
+                if (StaffSalary::where('staff_id', $staffId)->where('salary_month', $salaryMonth)->exists()) {
+                    continue;
+                }
 
-                if ($exists) continue;
-
-                // Save Salary Record
+                // ✅ Save Salary record
                 StaffSalary::create([
                     'staff_id' => $staffId,
                     'salary_month' => $salaryMonth,
@@ -120,63 +141,36 @@ class StaffSalaryController extends Controller
                     'status' => 'Pending',
                 ]);
 
-                // Prepare voucher info
-                $companyInfo = get_company();
-                $currentMonth = now()->format('m');
-                $fiscalYearWithoutHyphen = str_replace('-', '', $companyInfo->fiscal_year);
-                $voucherPrefix = 'BCL-SAL-SHEET-' . $fiscalYearWithoutHyphen . $currentMonth;
+                // ✅ Journal Entries (Multiple Rows - Same Voucher)
+                $staffName = $staff ? $staff->name : 'Unknown Staff';
 
-                $lastVoucher = JournalVoucher::latest()->first();
-                $nextNo = $lastVoucher ? $lastVoucher->id + 1 : 1;
-                $voucherNo = $voucherPrefix . str_pad($nextNo, 4, '0', STR_PAD_LEFT);
+                // Debit Salary Expense
+                JournalVoucherDetail::create([
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id' => $salaryExpense->id,
+                    'reference_no' => $voucherNo,
+                    'description' => "Salary Expense for $staffName",
+                    'debit' => $paymentAmount,
+                    'credit' => 0,
+                ]);
 
-                // ✅ Ledger for Salary Expense & Salary Payable
-                $salaryExpense = Ledger::where('type', 'Salary')->first();
-                $salaryPayable = Ledger::where('type', 'Salary Payable')->first();
-
-                if ($salaryExpense && $salaryPayable) {
-                    // Create Voucher Master
-                    $journalVoucher = JournalVoucher::create([
-                        'transaction_code' => $voucherNo,
-                        'transaction_date' => now(),
-                        'company_id' => $companyInfo->id,
-                        'branch_id' => $companyInfo->branch->id ?? null,
-                        'description' => 'Salary sheet for ' . Carbon::parse($salaryMonth)->format('F Y'),
-                        'status' => 1,
-                    ]);
-
-                    $staffName = $staff ? $staff->name : 'Unknown Staff';
-
-                    // Journal Entry 1: Salary Expense (Debit)
-                    JournalVoucherDetail::create([
-                        'journal_voucher_id' => $journalVoucher->id,
-                        'ledger_id' => $salaryExpense->id,
-                        'reference_no' => $voucherNo,
-                        'description' => 'Salary Expense for ' . $staffName,
-                        'debit' => $paymentAmount,
-                        'credit' => 0,
-                    ]);
-
-                    // Journal Entry 2: Salary Payable (Credit)
-                    JournalVoucherDetail::create([
-                        'journal_voucher_id' => $journalVoucher->id,
-                        'ledger_id' => $salaryPayable->id,
-                        'reference_no' => $voucherNo,
-                        'description' => 'Salary Payable for ' . $staffName,
-                        'debit' => 0,
-                        'credit' => $paymentAmount,
-                    ]);
-                }
+                // Credit Salary Payable
+                JournalVoucherDetail::create([
+                    'journal_voucher_id' => $journalVoucher->id,
+                    'ledger_id' => $salaryPayable->id,
+                    'reference_no' => $voucherNo,
+                    'description' => "Salary Payable for $staffName",
+                    'debit' => 0,
+                    'credit' => $paymentAmount,
+                ]);
             }
 
             DB::commit();
-
             return redirect()->route('admin.staff.salary.index')
-                ->with('success', 'Staff salary generated and journal entries created successfully!');
+                ->with('success', '✅ Salary sheet generated with ONE journal voucher successfully!');
 
         } catch (\Throwable $e) {
             DB::rollBack();
-            \Log::error('Salary generation error: ' . $e->getMessage());
             return back()->with('error', 'Error: ' . $e->getMessage());
         }
     }
